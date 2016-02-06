@@ -1,0 +1,138 @@
+﻿#ifndef YM_CONFIG_H
+#define YM_CONFIG_H
+
+/// @file ym_config.h
+/// @brief システム検査関係の基本定義ファイル
+/// @author Yusuke Matsunaga (松永 裕介)
+///
+/// Copyright (C) 2016 Yusuke Matsunaga
+/// All rights reserved.
+
+
+//////////////////////////////////////////////////////////////////////
+// システム検査の結果
+//////////////////////////////////////////////////////////////////////
+
+// UNIX の時 true となるマクロ
+#cmakedefine YM_UNIX
+
+// MAC OS-X の時 true となるマクロ
+#cmakedefine YM_APPLE
+
+// Windows の時 true となるマクロ
+#cmakedefine YM_WIN32
+
+
+//////////////////////////////////////////////////////////////////////
+// 標準ヘッダファイルのインクルード
+//////////////////////////////////////////////////////////////////////
+
+@INCLUDE_STDLIB@
+@INCLUDE_STRING@
+@INCLUDE_UNISTD@
+@INCLUDE_LIMITS@
+@INCLUDE_FLOAT@
+@INCLUDE_MATH@
+
+
+//////////////////////////////////////////////////////////////////////
+// サイズ固定の組み込み型
+//////////////////////////////////////////////////////////////////////
+
+#define SIZEOF_SHORT @SHORT_SIZE@
+#define SIZEOF_INT @INT_SIZE@
+#define SIZEOF_LONG @LONG_SIZE@
+#define SIZEOF_LONG_LONG @LLONG_SIZE@
+
+/// @brief 符号付き整数型
+typedef int ymint;
+
+/// @brief 符号なし整数型
+typedef unsigned int ymuint;
+
+/// @brief 符号付きlong型
+typedef long int ymlong;
+
+/// @brief 符号なしlong型
+typedef unsigned long int ymulong;
+
+/// @brief 符号付き8ビット整数型
+typedef char ymint8;
+
+/// @brief 符号なし8ビット整数型
+typedef unsigned char ymuint8;
+
+/// @brief 符号付き16ビット整数型
+typedef @INT16_TYPE@ ymint16;
+
+/// @brief 符号なし16ビット整数型
+typedef @UINT16_TYPE@ ymuint16;
+
+/// @brief 符号付き32ビット整数型
+typedef @INT32_TYPE@ ymint32;
+
+/// @brief 符号なし32ビット整数型
+typedef @UINT32_TYPE@ ymuint32;
+
+/// @brief 符号付き64ビット整数型
+typedef @INT64_TYPE@ ymint64;
+
+/// @brief 符号なし64ビット整数型
+typedef @UINT64_TYPE@ ymuint64;
+
+/// @brief ポインタと同サイズの符号なし整数型
+typedef @PTRINT_TYPE@ ympuint;
+
+
+//////////////////////////////////////////////////////////////////////
+// 名前空間の定義
+//////////////////////////////////////////////////////////////////////
+
+/// @brief 名前空間の開始
+///
+/// @param[in] nm 開始する名前空間名
+///
+/// namespace でインデントするのがいやなので define マクロでごまかす．
+#define BEGIN_NAMESPACE(nm) namespace nm {
+
+/// @brief 名前空間の終了
+///
+/// @param[in] nm 終了する名前空間名
+///
+/// 実は nm は使っていない．プログラマの確認用
+#define END_NAMESPACE(nm) }
+
+/// @brief 無名の名前空間の開始
+#define BEGIN_NONAMESPACE namespace {
+
+/// @brief 無名の名前空間の終了
+#define END_NONAMESPACE }
+
+/// @brief 標準(std)の名前空間の開始
+#define BEGIN_NAMESPACE_STD BEGIN_NAMESPACE(std)
+
+/// @brief 標準(std)の名前空間の終了
+#define END_NAMESPACE_STD  END_NAMESPACE(std)
+
+/// @brief ANSI-C 用の名前空間の開始
+#define BEGIN_EXTERN_C extern "C" {
+
+/// @brief ANSI-C 用の名前空間の終了
+#define END_EXTERN_C }
+
+
+//////////////////////////////////////////////////////////////////////
+// ym-common 用の名前空間の定義用マクロ
+//////////////////////////////////////////////////////////////////////
+
+/// @brief ym-common 用の名前空間の開始
+#define BEGIN_NAMESPACE_YM BEGIN_NAMESPACE(@YM_NAMESPACE@)
+
+/// @brief ym-common 用の名前空間の終了
+#define END_NAMESPACE_YM END_NAMESPACE(@YM_NAMESPACE@)
+
+// 雑多な定義
+#include "ym/ym_stl.h"
+#include "ym/ym_assert.h"
+
+#endif // YM_CONFIG_H
