@@ -72,4 +72,5 @@ set (YM_COMMON_SOURCES
 ym_add_library (ym_common
   SHARED
   ${YM_COMMON_SOURCES}
+  DESTINATION lib
   )

@@ -1,12 +1,25 @@
 ﻿
 # release, relwithdeb, debug ターゲットライブラリの設定
+#
+# USAGE: ym_add_library ( <target-name>
+#                         [SHARED|STATIC|OBJECT]
+#                         [DESTINATION <destination-path>]
+#                         <source-file> [<source-file>]
+#                       )
 function (ym_add_library)
+  set (_option "SHARED")
+  set (_dbg_option "STATIC")
+  set (_destination 0)
+  set (_read_destination 0)
   foreach ( pos RANGE 0 ${ARGC} )
     if ( ${pos} EQUAL ${ARGC} )
       break()
     endif ()
     list (GET ARGV ${pos} argv)
-    if ( ${pos} EQUAL 0 )
+    if ( ${_read_destination} EQUAL 1 )
+      set (_destination ${argv})
+      set (_read_destination 0)
+    elseif ( ${pos} EQUAL 0 )
       # ターゲット名の設定
       # - 最適化モード
       # - プロファイルモード (_p)
@@ -15,20 +28,14 @@ function (ym_add_library)
       set (_target_name "${argv}")
       set (_target_name_p "${argv}_p")
       set (_target_name_d "${argv}_d")
-    elseif ( ${pos} EQUAL 1 )
-      if ( ${argv} STREQUAL "SHARED" )
-	set (_option "SHARED")
-	# debug モードでは常にスタティック
-	set (_dbg_option "STATIC")
-      elseif ( ${argv} STREQUAL "STATIC" )
-	set (_option "STATIC")
-	set (_dbg_option "STATIC")
-      elseif ( ${argv} STREQUAL "OBJECT" )
-	set (_option "OBJECT")
-	set (_dbg_option "OBJECT")
-      else ()
-	list (APPEND _sources ${argv})
-      endif ()
+    elseif ( ${argv} STREQUAL "SHARED" )
+      set (_option "SHARED")
+    elseif ( ${argv} STREQUAL "STATIC" )
+      set (_option "STATIC")
+    elseif ( ${argv} STREQUAL "OBJECT" )
+      set (_option "OBJECT")
+    elseif ( ${argv} STREQUAL "DESTINATION" )
+      set (_read_destination 1)
     else ()
       list (APPEND _sources ${argv})
     endif ()
@@ -76,5 +83,12 @@ function (ym_add_library)
   target_compile_definitions (${_target_name_d}
     PRIVATE
     )
+
+  if ( NOT ${_destination} EQUAL 0 )
+    # インストールルール
+    install ( TARGETS ${_target_name} ${_target_name_p} ${_target_name_d}
+      DESTINATION ${_destination}
+      )
+  endif ()
 
 endfunction ()
