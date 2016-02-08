@@ -103,4 +103,4 @@ MStopWatch::time(ymuint id) const
 
 END_NAMESPACE_YM
 
-#endif // YMUTILS_MSTOPWATCH_H
+#endif // YM_MSTOPWATCH_H

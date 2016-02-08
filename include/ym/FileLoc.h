@@ -16,7 +16,7 @@
 BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
-/// @class FileLoc FileLoc.h "YmUtils/FileLoc.h"
+/// @class FileLoc FileLoc.h "ym/FileLoc.h"
 /// @ingroup YmUtils
 /// @brief ファイル位置を表すクラス
 ///
