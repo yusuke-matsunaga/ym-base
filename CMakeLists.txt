@@ -71,7 +71,7 @@ add_subdirectory ( cython-src )
 # コンフィグレーション依存のファイルの生成
 # ===================================================================
 configure_file(
-  "${PROJECT_SOURCE_DIR}/etc/CodecTypeConf.h.in"
+  "${CMAKE_CURRENT_SOURCE_DIR}/etc/CodecTypeConf.h.in"
   "${PROJECT_BINARY_DIR}/CodecTypeConf.h"
   )
 
