@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "YmTools.h"
+#include "ym_config.h"
 #include <lzma.h>
 
 

@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "YmTools.h"
+#include "ym_config.h"
 #include "ym/IDO.h"
 #include "ym/FileInfo.h"
 #include "ym/FileLoc.h"

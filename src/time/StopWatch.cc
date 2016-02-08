@@ -122,12 +122,12 @@ USTime
 StopWatch::cur_time()
 {
   double u, s, r;
-#if defined(HAVE_GETRUSAGE)
+#if defined(YM_HAVE_GETRUSAGE)
   struct rusage ru;
   getrusage(RUSAGE_SELF, &ru);
   u = xchg(ru.ru_utime);
   s = xchg(ru.ru_stime);
-#elif defined(HAVE_TIMES)
+#elif defined(YM_HAVE_TIMES)
   struct tms buffer;
   (void) times(&buffer);
   u = (double)buffer.tms_utime * 1000.0 * 1000.0 / (double)CLK_TCK;
