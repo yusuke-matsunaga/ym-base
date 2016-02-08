@@ -12,20 +12,20 @@
 #include "ym/MStopWatch.h"
 
 
-#if defined(HAVE_SYS_TIME_H) && defined(HAVE_TIME_H)
+#if defined(YM_HAVE_SYS_TIME_H) && defined(YM_HAVE_TIME_H)
 #  include <sys/time.h>
 #  include <time.h>
-#elif defined(HAVE_SYS_TIME_H)
+#elif defined(YM_HAVE_SYS_TIME_H)
 #  include <sys/time.h>
-#elif defined(HAVE_TIME_H)
+#elif defined(YM_HAVE_TIME_H)
 #  include <time.h>
 #else
 #  error "Neither <sys/time.h> nor <time.h> are not found."
 #endif
 
-#if defined(HAVE_GETRUSAGE)
+#if defined(YM_HAVE_GETRUSAGE)
 #  include <sys/resource.h>
-#elif defined(HAVE_TIMES)
+#elif defined(YM_HAVE_TIMES)
 // System V 系では rusage() の代りに times() を使う．
 #  include <sys/param.h>
 #  include <sys/times.h>
