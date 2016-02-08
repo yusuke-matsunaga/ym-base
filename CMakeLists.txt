@@ -116,7 +116,7 @@ set ( IO_SOURCES
   )
 
 if ( ZLIB_FOUND )
-  set (io_SOURCES ${io_SOURCES}
+  set (IO_SOURCES ${IO_SOURCES}
     src/io/GzCoder.cc
     src/io/GzDecoder.cc
     src/io/zstream.cc
@@ -124,14 +124,14 @@ if ( ZLIB_FOUND )
 endif ( ZLIB_FOUND )
 
 if ( BZIP2_FOUND )
-  set (io_SOURCES ${io_SOURCES}
+  set (IO_SOURCES ${IO_SOURCES}
     src/io/BzCoder.cc
     src/io/BzDecoder.cc
     )
 endif ( BZIP2_FOUND )
 
 if ( LIBLZMA_FOUND )
-  set (io_SOURCES ${io_SOURCES}
+  set (IO_SOURCES ${IO_SOURCES}
     src/io/LzmaCoder.cc
     src/io/LzmaDecoder.cc
     )
@@ -170,6 +170,7 @@ set ( TIME_SOURCES
 set (YM_COMMON_SOURCES
   ${ALLOC_SOURCES}
   ${BINDER_SOURCES}
+  ${FILE_INFO_SOURCES}
   ${IO_SOURCES}
   ${MSG_SOURCES}
   ${POPT_SOURCES}
@@ -182,8 +183,35 @@ set (YM_COMMON_SOURCES
 # ===================================================================
 #  ターゲットの設定
 # ===================================================================
+
 ym_add_library (ym_common
   SHARED
   ${YM_COMMON_SOURCES}
-  DESTINATION lib
+  DESTINATION ${YM_INSTALL_LIBDIR}
   )
+
+if (ZLIB_FOUND)
+  list (APPEND libs ${ZLIB_LIBRARIES})
+endif (ZLIB_FOUND)
+
+if (BZIP2_FOUND)
+  list (APPEND libs ${BZIP2_LIBRARIES})
+endif (BZIP2_FOUND)
+
+if (LIBLZMA_FOUND)
+  list (APPEND libs ${LIBLZMA_LIBRARIES})
+endif (LIBLZMA_FOUND)
+
+if (POPT_FOUND)
+  list (APPEND libs ${POPT_LIBRARY})
+endif (POPT_FOUND)
+
+foreach (_libname ym_common ym_common_p ym_common_d)
+  target_link_libraries (${_libname} ${libs})
+endforeach ()
+
+if (GPERFTOOLS_FOUND)
+  target_link_libraries(ym_common_p
+    ${GPERFTOOLS_LIBRARIES}
+    )
+endif (GPERFTOOLS_FOUND)
