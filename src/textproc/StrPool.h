@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
 /// @class StrPool StrPool.h "StrPool.h"
-/// @ingroup YmUtils
+/// @ingroup ym
 /// @brief 文字列を共有するためのプール
 ///
 /// メンバ関数 reg() で文字列を登録する．

@@ -126,7 +126,7 @@ private:
 /// @{
 
 /// @relates ShString
-/// @ingroup YmUtils
+/// @ingroup ym
 /// @brief 等価比較演算子
 /// @param[in] a, b 比較対象の文字列
 /// @return a と b が同じ文字列の時 true を返す．
@@ -135,7 +135,7 @@ operator==(const ShString& a,
 	   const ShString& b);
 
 /// @relates ShString
-/// @ingroup YmUtils
+/// @ingroup ym
 /// @brief 非等価比較演算子
 /// @param[in] a, b 比較対象の文字列
 /// @return a と b が異なる文字列の時 true を返す．
@@ -144,7 +144,7 @@ operator!=(const ShString& a,
 	   const ShString& b);
 
 /// @relates ShString
-/// @ingroup YmUtils
+/// @ingroup ym
 /// @brief 等価比較演算子
 /// @param[in] a, b 比較対象の文字列
 /// @return a と b が同じ文字列を表しているとき true を返す．
@@ -154,7 +154,7 @@ operator==(const ShString& a,
 	   const char* b);
 
 /// @relates ShString
-/// @ingroup YmUtils
+/// @ingroup ym
 /// @brief 等価比較演算子
 /// @param[in] a, b 比較対象の文字列
 /// @return a と b が同じ文字列を表しているとき true を返す．
@@ -164,7 +164,7 @@ operator==(const char* a,
 	   const ShString& b);
 
 /// @relates ShString
-/// @ingroup YmUtils
+/// @ingroup ym
 /// @brief 等価比較演算子
 /// @param[in] a, b 比較対象の文字列
 /// @return a と b が同じ文字列を表しているとき true を返す．
@@ -174,7 +174,7 @@ operator!=(const ShString& a,
 	   const char* b);
 
 /// @relates ShString
-/// @ingroup YmUtils
+/// @ingroup ym
 /// @brief 等価比較演算子
 /// @param[in] a, b 比較対象の文字列
 /// @return a と b が同じ文字列を表しているとき true を返す．
@@ -184,7 +184,7 @@ operator!=(const char* a,
 	   const ShString& b);
 
 /// @relates ShString
-/// @ingroup YmUtils
+/// @ingroup ym
 /// @brief ShString 用のストリーム出力演算子
 /// @param[in] s 出力ストリーム
 /// @param[in] str 出力対象の文字列

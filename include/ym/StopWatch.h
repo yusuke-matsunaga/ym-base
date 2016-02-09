@@ -17,7 +17,7 @@ BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
 /// @class StopWatch StopWatch.h "ym/StopWatch.h"
-/// @ingroup YmUtils
+/// @ingroup ym
 /// @brief ストップウォッチのクラス
 /// @note
 /// - {"停止中", "計時中"}の2つの内部状態を持つ．

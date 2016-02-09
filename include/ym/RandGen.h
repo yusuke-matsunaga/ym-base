@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
 /// @class RandGen RandGen.h "ym/RandGen.h"
-/// @ingroup YmUtils
+/// @ingroup ym
 /// @brief MT19937 を利用した乱数生成器
 ///
 /// @note もとは MT19937 のコードを流用している．

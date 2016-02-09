@@ -17,7 +17,7 @@ BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
 /// @class StrBuff StrBuff.h "ym/StrBuff.h"
-/// @ingroup YmUtils
+/// @ingroup ym
 /// @brief 文字列バッファ
 ///
 /// 基本的にはただの文字列バッファなので string でも代用できるが

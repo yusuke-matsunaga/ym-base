@@ -15,7 +15,7 @@ BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
 /// @class USTime USTime.h "ym/USTime.h"
-/// @ingroup YmUtils
+/// @ingroup ym
 /// @brief ユーザー時間とシステム時間および実時間をもつクラス
 /// @sa StopWatch, MStopWatch
 //////////////////////////////////////////////////////////////////////
@@ -126,7 +126,7 @@ private:
 /// @{
 
 /// @relates USTime
-/// @ingroup YmUtils
+/// @ingroup ym
 /// @brief 加算
 /// @param[in] a 第一引数
 /// @param[in] b 第二引数
@@ -137,7 +137,7 @@ operator+(const USTime& a,
 	  const USTime& b);
 
 /// @relates USTime
-/// @ingroup YmUtils
+/// @ingroup ym
 /// @brief 減算
 /// @param[in] a 第一引数
 /// @param[in] b 第二引数
@@ -148,7 +148,7 @@ operator-(const USTime& a,
 	  const USTime& b);
 
 /// @relates USTime
-/// @ingroup YmUtils
+/// @ingroup ym
 /// @brief 時間をストリームに出力する．
 /// @param[in] s 出力先のストリーム
 /// @param[in] time 出力対象の時間

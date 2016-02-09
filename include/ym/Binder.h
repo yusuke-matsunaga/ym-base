@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 /// @defgroup BinderGroup 汎用バインダ
-/// @ingroup YmUtils
+/// @ingroup ym
 ///
 /// オブジェクトの動作を他のオブジェクトに関連づけるメカニズム
 ///
