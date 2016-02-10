@@ -96,6 +96,18 @@ set ( FILE_INFO_SOURCES
   src/file_info/FileInfoMgr.cc
   )
 
+set ( GEN_SOURCES
+  src/gen/CombiGen.cc
+  src/gen/GenBase.cc
+  src/gen/MultiCombiGen.cc
+  src/gen/MultiGenBase.cc
+  src/gen/MultiPermGen.cc
+  src/gen/MultiSetCombiGen.cc
+  src/gen/MultiSetGenBase.cc
+  src/gen/MultiSetPermGen.cc
+  src/gen/PermGen.cc
+  )
+
 set ( IO_SOURCES
   src/io/CodecType.cc
   src/io/FileBuff.cc
@@ -137,6 +149,16 @@ if ( LIBLZMA_FOUND )
     )
 endif ( LIBLZMA_FOUND )
 
+set ( ITVL_SOURCES
+  src/itvl/ItvlMgr.cc
+  src/itvl/ItvlMgrImpl.cc
+  src/itvl/NameMgr.cc
+  )
+
+set ( MISC_SOURCES
+  src/misc/MFSet.cc
+  )
+
 set ( MSG_SOURCES
   src/msg/MsgHandler.cc
   src/msg/MsgMgr.cc
@@ -171,7 +193,10 @@ set (YM_COMMON_SOURCES
   ${ALLOC_SOURCES}
   ${BINDER_SOURCES}
   ${FILE_INFO_SOURCES}
+  ${GEN_SOURCES}
   ${IO_SOURCES}
+  ${ITVL_SOURCES}
+  ${MISC_SOURCES}
   ${MSG_SOURCES}
   ${POPT_SOURCES}
   ${RANDOM_SOURCES}
