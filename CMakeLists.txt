@@ -92,6 +92,7 @@ set ( BINDER_SOURCES
   )
 
 set ( FILE_INFO_SOURCES
+  src/file_info/File.cc
   src/file_info/FileInfo.cc
   src/file_info/FileInfoMgr.cc
   )
