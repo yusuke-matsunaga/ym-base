@@ -64,7 +64,7 @@ endif (POPT_FOUND)
 # サブディレクトリの設定
 # ===================================================================
 
-add_subdirectory ( cython-src )
+#add_subdirectory ( cython-src )
 
 
 # ===================================================================
@@ -80,24 +80,24 @@ configure_file(
 #  ソースの設定
 # ===================================================================
 
-set ( ALLOC_SOURCES
+set ( alloc_SOURCES
   src/alloc/Alloc.cc
   src/alloc/FragAlloc.cc
   src/alloc/SimpleAlloc.cc
   src/alloc/UnitAlloc.cc
   )
 
-set ( BINDER_SOURCES
+set ( binder_SOURCES
   src/binder/Binder.cc
   )
 
-set ( FILE_INFO_SOURCES
+set ( file_info_SOURCES
   src/file_info/File.cc
   src/file_info/FileInfo.cc
   src/file_info/FileInfoMgr.cc
   )
 
-set ( GEN_SOURCES
+set ( gen_SOURCES
   src/gen/CombiGen.cc
   src/gen/GenBase.cc
   src/gen/MultiCombiGen.cc
@@ -109,7 +109,7 @@ set ( GEN_SOURCES
   src/gen/PermGen.cc
   )
 
-set ( IO_SOURCES
+set ( io_SOURCES
   src/io/CodecType.cc
   src/io/FileBuff.cc
   src/io/FileBuff.h
@@ -129,7 +129,7 @@ set ( IO_SOURCES
   )
 
 if ( ZLIB_FOUND )
-  set (IO_SOURCES ${IO_SOURCES}
+  set (io_SOURCES ${io_SOURCES}
     src/io/GzCoder.cc
     src/io/GzDecoder.cc
     src/io/zstream.cc
@@ -137,72 +137,72 @@ if ( ZLIB_FOUND )
 endif ( ZLIB_FOUND )
 
 if ( BZIP2_FOUND )
-  set (IO_SOURCES ${IO_SOURCES}
+  set (io_SOURCES ${io_SOURCES}
     src/io/BzCoder.cc
     src/io/BzDecoder.cc
     )
 endif ( BZIP2_FOUND )
 
 if ( LIBLZMA_FOUND )
-  set (IO_SOURCES ${IO_SOURCES}
+  set (io_SOURCES ${io_SOURCES}
     src/io/LzmaCoder.cc
     src/io/LzmaDecoder.cc
     )
 endif ( LIBLZMA_FOUND )
 
-set ( ITVL_SOURCES
+set ( itvl_SOURCES
   src/itvl/ItvlMgr.cc
   src/itvl/ItvlMgrImpl.cc
   src/itvl/NameMgr.cc
   )
 
-set ( MISC_SOURCES
+set ( misc_SOURCES
   src/misc/MFSet.cc
   )
 
-set ( MSG_SOURCES
+set ( msg_SOURCES
   src/msg/MsgHandler.cc
   src/msg/MsgMgr.cc
   src/msg/MsgMgrImpl.cc
   )
 
 if ( POPT_FOUND )
-  set ( POPT_SOURCES
+  set ( popt_SOURCES
     src/popt/PoptMainApp.cc
     )
 else ( POPT_FOUND )
-  set ( POPT_SOURCES )
+  set ( popt_SOURCES )
 endif ( POPT_FOUND )
 
-set ( RANDOM_SOURCES
+set ( random_SOURCES
   src/random/RandGen.cc
   src/random/RandSampler.cc
   )
 
-set ( TEXTPROC_SOURCES
+set ( textproc_SOURCES
   src/textproc/Scanner.cc
   src/textproc/StrBuff.cc
   src/textproc/StrPool.cc
   )
 
-set ( TIME_SOURCES
+set ( time_SOURCES
   src/time/StopWatch.cc
   )
 
 
-set (YM_COMMON_SOURCES
-  ${ALLOC_SOURCES}
-  ${BINDER_SOURCES}
-  ${FILE_INFO_SOURCES}
-  ${GEN_SOURCES}
-  ${IO_SOURCES}
-  ${ITVL_SOURCES}
-  ${MISC_SOURCES}
-  ${MSG_SOURCES}
-  ${POPT_SOURCES}
-  ${RANDOM_SOURCES}
-  ${TEXTPROC_SOURCES}
-  ${TIME_SOURCES}
+set ( ym_common_SOURCES
+  ${alloc_SOURCES}
+  ${binder_SOURCES}
+  ${file_info_SOURCES}
+  ${gen_SOURCES}
+  ${io_SOURCES}
+  ${itvl_SOURCES}
+  ${misc_SOURCES}
+  ${msg_SOURCES}
+  ${popt_SOURCES}
+  ${random_SOURCES}
+  ${textproc_SOURCES}
+  ${time_SOURCES}
   )
 
 
@@ -210,10 +210,23 @@ set (YM_COMMON_SOURCES
 #  ターゲットの設定
 # ===================================================================
 
-ym_add_library (ym_common
-  SHARED
-  ${YM_COMMON_SOURCES}
-  DESTINATION ${YM_INSTALL_LIBDIR}
+#ym_add_library (ym_common
+#  SHARED
+#  ${YM_COMMON_SOURCES}
+#  DESTINATION ${YM_INSTALL_LIBDIR}
+#  )
+
+add_library ( ym_common
+  OBJECT
+  ${ym_common_SOURCES}
+  )
+
+target_compile_options ( ym_common
+  PRIVATE "-O3" "-fPIC"
+  )
+
+target_compile_definitions ( ym_common
+  PRIVATE "-DNDEBUG"
   )
 
 if (ZLIB_FOUND)
@@ -232,12 +245,12 @@ if (POPT_FOUND)
   list (APPEND libs ${POPT_LIBRARY})
 endif (POPT_FOUND)
 
-foreach (_libname ym_common ym_common_p ym_common_d)
-  target_link_libraries (${_libname} ${libs})
-endforeach ()
+#foreach (_libname ym_common ym_common_p ym_common_d)
+#  target_link_libraries (${_libname} ${libs})
+#endforeach ()
 
-if (GPERFTOOLS_FOUND)
-  target_link_libraries(ym_common_p
-    ${GPERFTOOLS_LIBRARIES}
-    )
-endif (GPERFTOOLS_FOUND)
+#if (GPERFTOOLS_FOUND)
+#  target_link_libraries(ym_common_p
+#    ${GPERFTOOLS_LIBRARIES}
+#    )
+#endif (GPERFTOOLS_FOUND)
