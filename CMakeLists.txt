@@ -19,11 +19,6 @@ set ( YM_NAMESPACE "nsYm" )
 # ===================================================================
 # パッケージの検査
 # ===================================================================
-include (FindBZip2)
-include (FindLibLZMA)
-include (FindZLIB)
-
-include (FindPOPT)
 
 
 # ===================================================================
@@ -38,21 +33,21 @@ ym_gen_header ()
 # インクルードパスの設定
 # ===================================================================
 
-if (ZLIB_FOUND)
+if ( ZLIB_FOUND )
   include_directories(${ZLIBINCLUDE_DIRS})
-endif (ZLIB_FOUND)
+endif ()
 
-if (BZIP2_FOUND)
+if ( BZIP2_FOUND )
   include_directories(${BZIP2_INCLUDE_DIRS})
-endif (BZIP2_FOUND)
+endif ()
 
-if (LIBLZMA_FOUND)
+if ( LIBLZMA_FOUND )
   include_directories(${LIBLZMA_INCLUDE_DIRS})
-endif (LIBLZMA_FOUND)
+endif ()
 
-if (POPT_FOUND)
+if ( POPT_FOUND )
   include_directories(${POPT_INCLUDE_DIR})
-endif (POPT_FOUND)
+endif ()
 
 
 # ===================================================================
@@ -170,9 +165,9 @@ if ( POPT_FOUND )
   set ( popt_SOURCES
     src/popt/PoptMainApp.cc
     )
-else ( POPT_FOUND )
+else ( )
   set ( popt_SOURCES )
-endif ( POPT_FOUND )
+endif ( )
 
 set ( random_SOURCES
   src/random/RandGen.cc
@@ -188,7 +183,6 @@ set ( textproc_SOURCES
 set ( time_SOURCES
   src/time/StopWatch.cc
   )
-
 
 set ( ym_common_SOURCES
   ${alloc_SOURCES}
@@ -210,47 +204,6 @@ set ( ym_common_SOURCES
 #  ターゲットの設定
 # ===================================================================
 
-#ym_add_library (ym_common
-#  SHARED
-#  ${YM_COMMON_SOURCES}
-#  DESTINATION ${YM_INSTALL_LIBDIR}
-#  )
-
-add_library ( ym_common
-  OBJECT
+ym_add_object_library (ym_common
   ${ym_common_SOURCES}
   )
-
-target_compile_options ( ym_common
-  PRIVATE "-O3" "-fPIC"
-  )
-
-target_compile_definitions ( ym_common
-  PRIVATE "-DNDEBUG"
-  )
-
-if (ZLIB_FOUND)
-  list (APPEND libs ${ZLIB_LIBRARIES})
-endif (ZLIB_FOUND)
-
-if (BZIP2_FOUND)
-  list (APPEND libs ${BZIP2_LIBRARIES})
-endif (BZIP2_FOUND)
-
-if (LIBLZMA_FOUND)
-  list (APPEND libs ${LIBLZMA_LIBRARIES})
-endif (LIBLZMA_FOUND)
-
-if (POPT_FOUND)
-  list (APPEND libs ${POPT_LIBRARY})
-endif (POPT_FOUND)
-
-#foreach (_libname ym_common ym_common_p ym_common_d)
-#  target_link_libraries (${_libname} ${libs})
-#endforeach ()
-
-#if (GPERFTOOLS_FOUND)
-#  target_link_libraries(ym_common_p
-#    ${GPERFTOOLS_LIBRARIES}
-#    )
-#endif (GPERFTOOLS_FOUND)
