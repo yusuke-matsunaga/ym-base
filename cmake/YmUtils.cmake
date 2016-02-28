@@ -14,39 +14,44 @@
 #       LZMA_FOUND  lzma が使用可能の時セットされる．
 #       ZLIB_FOUND  gzip が使用可能の時セットされる．
 #       POPT_FOUND  popt が使用可能の時セットされる．
-macro ( ym_init )
+macro ( ym_init opt_args )
 
   # bzip2 ライブラリを使う．
-  set ( USE_BZIP2 OFF )
+  set ( __USE_BZIP2 OFF )
 
   # LZMA ライブラリを使う．
-  set ( USE_LZMA OFF )
+  set ( __USE_LZMA OFF )
 
   # gzip ライブラリを使う．
-  set ( USE_ZLIB OFF )
+  set ( __USE_ZLIB OFF )
 
   # popt ライブラリを使う．
-  set ( USE_POPT OFF )
+  set ( __USE_POPT OFF )
 
-  foreach ( ym_pos RANGE 0 ${ARGC} )
-    if ( ${ym_pos} EQUAL ${ARGC} )
-      break()
+  set ( __tmp_str ${opt_args} )
+  while ( NOT ${__tmp_str} STREQUAL "" )
+    string ( FIND ${__tmp_str} ":" __pos )
+    if ( ${__pos} EQUAL -1 )
+      set ( __arg ${__tmp_str} )
+      set ( __tmp_str "" )
+    else ()
+      string ( SUBSTRING ${__tmp_str} 0 ${__pos} __arg )
+      math ( EXPR __pos_1 "${__pos} + 1" )
+      string ( SUBSTRING ${__tmp_str} ${__pos_1} -1 __tmp_str )
     endif ()
-    list ( GET ARGV ${ym_pos} ym_argv )
-    if ( ${ym_argv} STREQUAL "USE_BZIP2" )
-      set ( USE_BZIP2 ON )
-    elseif ( ${ym_argv} STREQUAL "USE_LZMA" )
-      set ( USE_LZMA ON )
-    elseif ( ${ym_argv} STREQUAL "USE_ZLIB" )
-      set ( USE_ZLIB ON )
-    elseif ( ${ym_argv} STREQUAL "USE_POPT" )
-      set ( USE_POPT ON )
+    if ( ${__arg} STREQUAL USE_BZIP2 )
+      set ( __USE_BZIP2 ON )
+    elseif ( ${__arg} STREQUAL USE_LZMA )
+      set ( __USE_LZMA ON )
+    elseif ( ${__arg} STREQUAL USE_ZLIB )
+      set ( __USE_ZLIB ON )
+    elseif ( ${__arg} STREQUAL USE_POPT )
+      set ( __USE_POPT ON )
     else ()
       # エラー
-      message ( FATAL_ERROR
-	"illegal argument in ym_init()" )
+      message ( FATAL_ERROR "illegal argument in ym_init(): " ${__arg} )
     endif ()
-  endforeach ()
+  endwhile ()
 
   # ===================================================================
   # システムの検査
@@ -67,19 +72,19 @@ macro ( ym_init )
   # パッケージの検査
   # ===================================================================
 
-  if ( USE_BZIP2 )
+  if ( __USE_BZIP2 )
     include (FindBZip2)
   endif ()
 
-  if ( USE_LZMA )
+  if ( __USE_LZMA )
     include (FindLibLZMA)
   endif ()
 
-  if ( USE_ZLIB )
+  if ( __USE_ZLIB )
     include (FindZLIB)
   endif ()
 
-  if ( USE_POPT )
+  if ( __USE_POPT )
     include (FindPOPT)
   endif ()
 
