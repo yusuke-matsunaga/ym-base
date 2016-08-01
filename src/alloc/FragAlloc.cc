@@ -29,13 +29,17 @@ FragAlloc::FragAlloc(ymuint64 max_size) :
 
   mMinSize = 1;
   mMinLogSize = 0;
-  for ( ; mMinSize < ALIGNOF_DOUBLE; mMinSize <<= 1, ++ mMinLogSize) ;
+  for ( ; mMinSize < ALIGNOF_DOUBLE; mMinSize <<= 1, ++ mMinLogSize) {
+    ; // ダミー
+  }
   ASSERT_COND( mMinSize == ALIGNOF_DOUBLE );
 
   ASSERT_COND( max_size > 0 );
   mMaxPowerSize = 1;
   mMaxLogSize = 0;
-  for ( ; mMaxPowerSize < max_size; mMaxPowerSize <<= 1, ++ mMaxLogSize) ;
+  for ( ; mMaxPowerSize < max_size; mMaxPowerSize <<= 1, ++ mMaxLogSize) {
+    ; // ダミー
+  }
 
   mBlockListArray = new Block*[mMaxLogSize - mMinLogSize + 1];
   for (ymuint64 i = mMinLogSize; i <= mMaxLogSize; ++ i ) {
