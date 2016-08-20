@@ -126,6 +126,24 @@ protected:
   _reg_cell(Cell* cell);
 
 
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // 継承クラスのデストラクタ用の関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief ハッシュ表のサイズを得る．
+  ymuint
+  hash_size();
+
+  /// @brief ハッシュ表の先頭のセルを得る．
+  Cell*
+  hash_top(ymuint pos);
+
+  /// @brief テーブルを削除する．
+  void
+  _clear();
+
+
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
@@ -421,6 +439,36 @@ HashBase<Key_Type>::_reg_cell(Cell* cell)
   cell->mLink = mHashTable[h];
   mHashTable[h] = cell;
   ++ mNum;
+}
+
+// @brief ハッシュ表のサイズを得る．
+template<typename Key_Type>
+inline
+ymuint
+HashBase<Key_Type>::hash_size()
+{
+  return mHashSize;
+}
+
+// @brief ハッシュ表の先頭のセルを得る．
+template<typename Key_Type>
+inline
+HashBaseCell<Key_Type>*
+HashBase<Key_Type>::hash_top(ymuint pos)
+{
+  return mHashTable[pos];
+}
+
+// @brief テーブルを削除する．
+template<typename Key_Type>
+inline
+void
+HashBase<Key_Type>::_clear()
+{
+  delete [] mHashTable;
+  mHashTable = nullptr;
+  mHashSize = 0;
+  mNum = 0;
 }
 
 // @brief 空のコンストラクタ

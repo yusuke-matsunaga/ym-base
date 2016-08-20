@@ -195,6 +195,16 @@ template<typename Key_Type,
 inline
 HashMap<Key_Type, Value_Type>::~HashMap()
 {
+  // HashBase のデストラクタでは Cell がキャストされているので
+  // Cell のデストラクタが働かない．
+  for (ymuint i = 0; i < HashBase<Key_Type>::hash_size(); ++ i) {
+    for (Cell* cell = reinterpret_cast<Cell*>(HashBase<Key_Type>::hash_top(i)); cell != nullptr; ) {
+      Cell* tmp = cell;
+      cell = reinterpret_cast<Cell*>(tmp->mLink);
+      delete tmp;
+    }
+  }
+  HashBase<Key_Type>::_clear();
 }
 
 // @brief キーで検索して要素を得る．
