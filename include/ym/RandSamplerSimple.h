@@ -77,10 +77,6 @@ private:
   // 要素数
   ymuint mNum;
 
-  // 各要素の重みの配列
-  // サイズは mNum
-  ymuint *mWeightArray;
-
   // 各要素の重みの累積和の配列
   // サイズは mNum + 1
   // mAccumArray[i] = sum mWeightArray[j] ( 0 <= j < i )
