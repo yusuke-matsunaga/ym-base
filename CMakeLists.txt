@@ -58,7 +58,7 @@ endif ()
 # サブディレクトリの設定
 # ===================================================================
 
-#add_subdirectory ( cython-src )
+add_subdirectory ( tests )
 
 
 # ===================================================================
@@ -171,6 +171,7 @@ endif ( )
 set ( random_SOURCES
   src/random/RandGen.cc
   src/random/RandSampler.cc
+  src/random/RandSamplerSimple.cc
   )
 
 set ( textproc_SOURCES
