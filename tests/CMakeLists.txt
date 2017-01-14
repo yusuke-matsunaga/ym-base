@@ -35,5 +35,6 @@ target_compile_options ( RandSamplerSimpleTest
 
 target_link_libraries ( RandSamplerSimpleTest
   pthread
+  ${YM_LIB_DEPENDS}
   ${GTEST_BOTH_LIBRARIES}
   )
