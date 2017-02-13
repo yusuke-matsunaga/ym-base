@@ -18,6 +18,19 @@ BEGIN_NAMESPACE_YM
 /// @class PermGen PermGen.h "ym/PermGen.h"
 /// @ingroup GeneratorGroup
 /// @brief 順列生成器を表すクラス
+///
+/// @code
+/// ymuint n = 10;
+/// ymuint k =  3;
+/// for (PermGen pg(n, k); !pg.is_end(); ++ pg)
+///    for (ymuint i = 0; i < k; ++ i) {
+///       elem[i] = cg(i);
+///    }
+///    // elem[0] - elem[2] に選ばれた要素(番号)が入る．
+/// }
+/// @endcode
+///
+/// という風に使う．
 //////////////////////////////////////////////////////////////////////
 class PermGen :
   public GenBase

@@ -18,6 +18,19 @@ BEGIN_NAMESPACE_YM
 /// @class CombiGen CombiGen.h "ym/CombiGen.h"
 /// @ingroup GeneratorGroup
 /// @brief 組み合わせ生成器を表すクラス
+///
+/// @code
+/// ymuint n = 10;
+/// ymuint k =  3;
+/// for (CombiGen cg(n, k); !cg.is_end(); ++ cg)
+///    for (ymuint i = 0; i < k; ++ i) {
+///       elem[i] = cg(i);
+///    }
+///    // elem[0] - elem[2] に選ばれた要素(番号)が入る．
+/// }
+/// @endcode
+///
+/// という風に使う．
 //////////////////////////////////////////////////////////////////////
 class CombiGen :
   public GenBase
