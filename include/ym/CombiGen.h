@@ -26,7 +26,7 @@ BEGIN_NAMESPACE_YM
 ///    for (ymuint i = 0; i < k; ++ i) {
 ///       elem[i] = cg(i);
 ///    }
-///    // elem[0] - elem[2] に選ばれた要素(番号)が入る．
+///    // elem[0] - elem[k - 1] に選ばれた要素(番号)が入る．
 /// }
 /// @endcode
 ///

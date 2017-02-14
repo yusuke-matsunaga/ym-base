@@ -18,6 +18,27 @@ BEGIN_NAMESPACE_YM
 /// @class MultiCombiGen MultiCombiGen.h "ym/MultiCombiGen.h"
 /// @ingroup GeneratorGroup
 /// @brief 複数の要素のグループの組み合わせを生成するクラス
+///
+/// 意味的には (n_1, k_1), (n_2, k_2), ... という複数の CombiGen
+/// の出力の直積を作るイメージ．
+///
+/// @code
+/// vector<pair<ymuint, ymuint> > nk_array(2);
+/// nk_array[0] = make_pair(3, 1);
+/// nk_array[1] = make_pair(5, 2);
+/// for (MultiCombiGen mcg(nk_array); !mcg.is_end(); ++ mcg) {
+///    for (ymuint g = 0; g < 2; ++ g) {
+///        ymuint k1 = mcg.k(g);
+///        for (ymuint i = 0; i < k1; ++ i) {
+///            elem[g][i] = mcg(g, i);
+///        }
+///    }
+///    // elem[0][0] に最初のグループの要素が
+///    // elem[1][0] - elem[1][1] に次のグループの要素が入る．
+/// }
+/// @endcode
+///
+/// という風に使う．
 //////////////////////////////////////////////////////////////////////
 class MultiCombiGen :
   public MultiGenBase

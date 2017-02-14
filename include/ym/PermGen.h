@@ -24,9 +24,9 @@ BEGIN_NAMESPACE_YM
 /// ymuint k =  3;
 /// for (PermGen pg(n, k); !pg.is_end(); ++ pg)
 ///    for (ymuint i = 0; i < k; ++ i) {
-///       elem[i] = cg(i);
+///       elem[i] = pg(i);
 ///    }
-///    // elem[0] - elem[2] に選ばれた要素(番号)が入る．
+///    // elem[0] - elem[k - 1] に選ばれた要素(番号)が入る．
 /// }
 /// @endcode
 ///

@@ -18,6 +18,27 @@ BEGIN_NAMESPACE_YM
 /// @class MultiPermGen MultiPermGen.h "ym/MultiPermGen.h"
 /// @ingroup GeneratorGroup
 /// @brief 複数の要素のグループの順列を生成するクラス
+///
+/// 意味的には (n_1, k_1), (n_2, k_2), ... という複数の PemGen
+/// の出力の直積を作るイメージ．
+///
+/// @code
+/// vector<pair<ymuint, ymuint> > nk_array(2);
+/// nk_array[0] = make_pair(3, 1);
+/// nk_array[1] = make_pair(5, 2);
+/// for (MultiPemGen mpg(nk_array); !mpg.is_end(); ++ mpg) {
+///    for (ymuint g = 0; g < 2; ++ g) {
+///        ymuint k1 = mpg.k(g);
+///        for (ymuint i = 0; i < k1; ++ i) {
+///            elem[g][i] = mpg(g, i);
+///        }
+///    }
+///    // elem[0][0] に最初のグループの要素が
+///    // elem[1][0] - elem[1][1] に次のグループの要素が入る．
+/// }
+/// @endcode
+///
+/// という風に使う．
 //////////////////////////////////////////////////////////////////////
 class MultiPermGen :
   public MultiGenBase
