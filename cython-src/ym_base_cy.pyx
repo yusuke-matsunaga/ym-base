@@ -1,12 +1,12 @@
-# @file ym_common-cy.pyx
-# @brief ym_common の cython ソース
+# @file ym_base-cy.pyx
+# @brief ym_base の cython ソース
 # @author Yusuke Matsunaga (松永 裕介)
 #
 # Copyright (C) 2015, 2016 Yusuke Matsunaga
 # All rights reserved.
 
 
-cimport CXX_ym_common as cxx
+cimport CXX_ym_base as cxx
 
 
 cdef extern from "stdlib.h" :

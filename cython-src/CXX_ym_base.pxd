@@ -1,6 +1,6 @@
 ﻿#
-# @file CXX_ym_common.pxd
-# @brief ym_common-cython 用の定義ファイル
+# @file CXX_ym_base.pxd
+# @brief ym_base-cython 用の定義ファイル
 # @author Yusuke Matsunaga (松永 裕介)
 #
 # Copyright (C) 2016 Yusuke Matsunaga
