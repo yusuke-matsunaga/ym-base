@@ -26,7 +26,7 @@ set ( RandSamplerSimpleTest_SOURCES
 
 add_executable ( RandSamplerSimpleTest
   RandSamplerSimpleTest.cc
-  $<TARGET_OBJECTS:ym_common_d>
+  $<TARGET_OBJECTS:ym_base_d>
   )
 
 target_compile_options ( RandSamplerSimpleTest
