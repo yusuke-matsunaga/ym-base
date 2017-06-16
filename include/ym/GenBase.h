@@ -58,12 +58,12 @@ public:
   /// @brief 全要素数を得る．
   /// @return 全要素数
   ymuint
-  n() const;
+  num() const;
 
   /// @brief 選択する要素数を得る．
   /// @return 選択する要素数
   ymuint
-  k() const;
+  combi_num() const;
 
   /// @brief 最初の要素を指すように初期化する．
   void
@@ -122,7 +122,7 @@ private:
 // 全要素数を得る．
 inline
 ymuint
-GenBase::n() const
+GenBase::num() const
 {
   return mN;
 }
@@ -130,7 +130,7 @@ GenBase::n() const
 // 選択する要素数を得る．
 inline
 ymuint
-GenBase::k() const
+GenBase::combi_num() const
 {
   return mK;
 }
@@ -158,8 +158,8 @@ inline
 bool
 GenBase::is_end() const
 {
-  // 末尾の時には範囲外の値(= n())を持っている．
-  return operator()(0) == n();
+  // 末尾の時には範囲外の値(= num())を持っている．
+  return operator()(0) == num();
 }
 
 END_NAMESPACE_YM

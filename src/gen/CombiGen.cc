@@ -50,16 +50,18 @@ CombiGen::~CombiGen()
 void
 CombiGen::operator++()
 {
-  for (ymuint pos = k(); pos -- > 0; ) {
-    if ( elem(pos) < n() - k() + pos ) {
+  ymuint n = num();
+  ymuint k = combi_num();
+  for (ymuint pos = k; pos -- > 0; ) {
+    if ( elem(pos) < n - k + pos ) {
       ++ elem(pos);
-      for (ymuint pos1 = pos + 1; pos1 < k(); ++ pos1) {
+      for (ymuint pos1 = pos + 1; pos1 < k; ++ pos1) {
 	elem(pos1) = elem(pos1 - 1) + 1;
       }
       break;
     }
     else if ( pos == 0 ) {
-      elem(0) = n();
+      elem(0) = n;
     }
   }
 }
