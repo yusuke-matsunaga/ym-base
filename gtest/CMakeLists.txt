@@ -22,21 +22,7 @@ include_directories(
 #  テスト用のターゲットの設定
 # ===================================================================
 
-add_executable ( CombiGenTest
+ym_add_gtest ( CombiGenTest
   gen/CombiGenTest.cc
   $<TARGET_OBJECTS:ym_base_d>
-  )
-
-target_compile_options ( CombiGenTest
-  PRIVATE "-g"
-  )
-
-target_link_libraries ( CombiGenTest
-  ${YM_LIB_DEPENDS}
-  pthread
-  ${GTEST_BOTH_LIBRARIES}
-  )
-
-add_test ( CombiGenTest
-  CombiGenTest
   )
