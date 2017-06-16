@@ -21,7 +21,7 @@ include_directories(
 # ===================================================================
 
 set ( CYTHON_SOURCES
-  ym_base_cy.pyx
+  cym_base.pyx
   )
 
 set_source_files_properties (
@@ -34,23 +34,24 @@ set_source_files_properties (
 #  module ターゲットの設定
 # ===================================================================
 
-cython_add_module ( ym_base_cy
+cython_add_module ( cym_base
   ${CYTHON_SOURCES}
+  $<TARGET_OBJECTS:ym_base>
   )
 
-target_compile_options ( ym_base_cy
+target_compile_options ( cym_base
   PRIVATE "-O3"
   )
 
-target_compile_definitions ( ym_base_cy
+target_compile_definitions ( cym_base
   PRIVATE "-DNDEBUG"
   )
 
-target_link_libraries ( ym_base_cy
-  ym_base
+target_link_libraries ( cym_base
+  ${YM_LIB_DEPENDS}
   )
 
-install (TARGETS
-  ym_base_cy
-  DESTINATION lib/python/ym_base
-  )
+#install (TARGETS
+#  ym_base_cy
+#  DESTINATION lib/python/ym_base
+#  )

@@ -53,6 +53,7 @@ endif ()
 # サブディレクトリの設定
 # ===================================================================
 
+add_subdirectory ( py3/cython-src )
 add_subdirectory ( tests )
 
 
