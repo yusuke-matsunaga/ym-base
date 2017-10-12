@@ -53,7 +53,6 @@ endif ()
 # サブディレクトリの設定
 # ===================================================================
 
-add_subdirectory ( cython-src )
 add_subdirectory ( gtest )
 add_subdirectory ( tests )
 
