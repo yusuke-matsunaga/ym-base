@@ -396,6 +396,7 @@ HashBase<Key_Type>::reg_cell(Cell* cell)
     alloc_table(mHashSize * 2);
   }
   _reg_cell(cell);
+  ++ mNum;
 }
 
 // @brief ハッシュ表を確保する．
@@ -438,7 +439,6 @@ HashBase<Key_Type>::_reg_cell(Cell* cell)
   ymuint h = hash_func(cell->mKey) % mHashSize;
   cell->mLink = mHashTable[h];
   mHashTable[h] = cell;
-  ++ mNum;
 }
 
 // @brief ハッシュ表のサイズを得る．
