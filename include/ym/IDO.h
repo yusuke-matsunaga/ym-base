@@ -173,6 +173,38 @@ operator>>(IDO& s,
 /// @return IDO を返す．
 IDO&
 operator>>(IDO& s,
+	   ymint8& val);
+
+/// @brief 2バイトの読み出し
+/// @param[in] s 入力元のストリーム
+/// @param[out] val 値を格納する変数
+/// @return IDO を返す．
+IDO&
+operator>>(IDO& s,
+	   ymint16& val);
+
+/// @brief 4バイトの読み出し
+/// @param[in] s 入力元のストリーム
+/// @param[out] val 値を格納する変数
+/// @return IDO を返す．
+IDO&
+operator>>(IDO& s,
+	   ymint32& val);
+
+/// @brief 8バイトの読み出し
+/// @param[in] s 入力元のストリーム
+/// @param[out] val 値を格納する変数
+/// @return IDO を返す．
+IDO&
+operator>>(IDO& s,
+	   ymint64& val);
+
+/// @brief 1バイトの読み出し
+/// @param[in] s 入力元のストリーム
+/// @param[out] val 値を格納する変数
+/// @return IDO を返す．
+IDO&
+operator>>(IDO& s,
 	   ymuint8& val);
 
 /// @brief 2バイトの読み出し
@@ -238,6 +270,58 @@ operator>>(IDO& s,
 	   bool& val)
 {
   val = static_cast<bool>(s.read_8() != 0);
+  return s;
+}
+
+// @brief 1バイトの読み出し
+// @param[in] s 入力元のストリーム
+// @param[out] val 値を格納する変数
+// @return IDO を返す．
+inline
+IDO&
+operator>>(IDO& s,
+	   ymint8& val)
+{
+  val = static_cast<ymint8>(s.read_8());
+  return s;
+}
+
+// @brief 2バイトの読み出し
+// @param[in] s 入力元のストリーム
+// @param[out] val 値を格納する変数
+// @return IDO を返す．
+inline
+IDO&
+operator>>(IDO& s,
+	   ymint16& val)
+{
+  val = static_cast<ymint16>(s.read_16());
+  return s;
+}
+
+// @brief 4バイトの読み出し
+// @param[in] s 入力元のストリーム
+// @param[out] val 値を格納する変数
+// @return IDO を返す．
+inline
+IDO&
+operator>>(IDO& s,
+	   ymint32& val)
+{
+  val = static_cast<ymint32>(s.read_32());
+  return s;
+}
+
+// @brief 8バイトの読み出し
+// @param[in] s 入力元のストリーム
+// @param[out] val 値を格納する変数
+// @return IDO を返す．
+inline
+IDO&
+operator>>(IDO& s,
+	   ymint64& val)
+{
+  val = static_cast<ymint64>(s.read_64());
   return s;
 }
 

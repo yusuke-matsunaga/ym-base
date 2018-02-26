@@ -122,6 +122,38 @@ operator<<(ODO& s,
 /// @return ODO を返す．
 ODO&
 operator<<(ODO& s,
+	   ymint8 val);
+
+/// @brief 2バイトの書き込み
+/// @param[in] s 出力先のストリーム
+/// @param[in] val 値
+/// @return ODO を返す．
+ODO&
+operator<<(ODO& s,
+	   ymint16 val);
+
+/// @brief 4バイトの書き込み
+/// @param[in] s 出力先のストリーム
+/// @param[in] val 値
+/// @return ODO を返す．
+ODO&
+operator<<(ODO& s,
+	   ymint32 val);
+
+/// @brief 8バイトの書き込み
+/// @param[in] s 出力先のストリーム
+/// @param[in] val 値
+/// @return ODO を返す．
+ODO&
+operator<<(ODO& s,
+	   ymint64 val);
+
+/// @brief 1バイトの書き込み
+/// @param[in] s 出力先のストリーム
+/// @param[in] val 値
+/// @return ODO を返す．
+ODO&
+operator<<(ODO& s,
 	   ymuint8 val);
 
 /// @brief 2バイトの書き込み
@@ -205,6 +237,58 @@ operator<<(ODO& s,
 	   bool val)
 {
   s.write_8(val);
+  return s;
+}
+
+// @brief 1バイトの書き込み
+// @param[in] s 出力先のストリーム
+// @param[in] val 値
+// @return ODO を返す．
+inline
+ODO&
+operator<<(ODO& s,
+	   ymint8 val)
+{
+  s.write_8(static_cast<ymuint8>(val));
+  return s;
+}
+
+// @brief 2バイトの書き込み
+// @param[in] s 出力先のストリーム
+// @param[in] val 値
+// @return ODO を返す．
+inline
+ODO&
+operator<<(ODO& s,
+	   ymint16 val)
+{
+  s.write_16(static_cast<ymuint16>(val));
+  return s;
+}
+
+// @brief 4バイトの書き込み
+// @param[in] s 出力先のストリーム
+// @param[in] val 値
+// @return ODO を返す．
+inline
+ODO&
+operator<<(ODO& s,
+	   ymint32 val)
+{
+  s.write_32(static_cast<ymuint32>(val));
+  return s;
+}
+
+// @brief 8バイトの書き込み
+// @param[in] s 出力先のストリーム
+// @param[in] val 値
+// @return ODO を返す．
+inline
+ODO&
+operator<<(ODO& s,
+	   ymint64 val)
+{
+  s.write_64(static_cast<ymuint64>(val));
   return s;
 }
 
