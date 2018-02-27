@@ -41,7 +41,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief dereference 演算子
-  T
+  const T&
   operator*() const
   {
     return *mObjPtr;
