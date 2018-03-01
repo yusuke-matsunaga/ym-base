@@ -17,6 +17,7 @@ BEGIN_NAMESPACE_YM
 // 文字列を共有するためのプール
 //////////////////////////////////////////////////////////////////////
 
+#if 0
 // ハッシュ関数
 inline
 int
@@ -29,6 +30,7 @@ StrPool::hash_func(const char* str)
   }
   return h;
 }
+#endif
 
 // コンストラクタ
 StrPool::StrPool() :
@@ -52,8 +54,10 @@ StrPool::reg(const char* str)
     alloc_table(1024);
   }
 
+  HashFunc<const char*> hash_func;
+
   // まず str と同一の文字列が登録されていないか調べる．
-  int hash_value = hash_func(str);
+  HashType hash_value = hash_func(str);
   int pos = hash_value & mHashMask;
   for ( Cell* cell = mTable[pos]; cell; cell = cell->mLink ) {
     if ( memcmp(str, cell->mStr, cell->mSize) == 0 ) {
@@ -71,7 +75,7 @@ StrPool::reg(const char* str)
       Cell* next;
       for ( Cell* cell = old_table[i]; cell; cell = next ) {
 	next = cell->mLink;
-	int pos = hash_func(cell->mStr) & mHashMask;
+	HashType pos = hash_func(cell->mStr) & mHashMask;
 	cell->mLink = mTable[pos];
 	mTable[pos] = cell;
       }

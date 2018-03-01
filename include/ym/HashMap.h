@@ -52,7 +52,7 @@ public:
 
   /// @brief コンストラクタ
   /// @param[in] size 表の初期サイズ
-  HashMap(ymuint size = 1024);
+  HashMap(int size = 1024);
 
   /// @brief デストラクタ
   ~HashMap();
@@ -184,7 +184,7 @@ private:
 template<typename Key_Type,
 	 typename Value_Type>
 inline
-HashMap<Key_Type, Value_Type>::HashMap(ymuint size) :
+HashMap<Key_Type, Value_Type>::HashMap(int size) :
   HashBase<Key_Type>(size)
 {
 }
@@ -197,8 +197,9 @@ HashMap<Key_Type, Value_Type>::~HashMap()
 {
   // HashBase のデストラクタでは Cell がキャストされているので
   // Cell のデストラクタが働かない．
-  for (ymuint i = 0; i < HashBase<Key_Type>::hash_size(); ++ i) {
-    for (Cell* cell = reinterpret_cast<Cell*>(HashBase<Key_Type>::hash_top(i)); cell != nullptr; ) {
+  for ( int i = 0; i < HashBase<Key_Type>::hash_size(); ++ i ) {
+    for ( Cell* cell = reinterpret_cast<Cell*>(HashBase<Key_Type>::hash_top(i));
+	  cell != nullptr; ) {
       Cell* tmp = cell;
       cell = reinterpret_cast<Cell*>(tmp->mLink);
       delete tmp;

@@ -14,21 +14,23 @@
 
 BEGIN_NAMESPACE_YM
 
+typedef unsigned int HashType;
+
 //////////////////////////////////////////////////////////////////////
 /// @class HashFunc HashFunc.h "ym/HashFunc.h"
 /// @brief ハッシュ関数を表すファンクタクラス
 ///
-/// 下のコードを見ればわかるが Key_Type が直接 ymuint にキャスト
+/// 下のコードを見ればわかるが Key_Type が直接 unsigned int にキャスト
 /// できない場合にはデフォルト実装ではエラーとなるので
 /// 個別に特殊化する必要がある．
 //////////////////////////////////////////////////////////////////////
 template<typename Key_Type>
 struct HashFunc
 {
-  ymuint
+  HashType
   operator()(const Key_Type& key)
   {
-    // Key_Type が ymuint にキャストできなければエラーになる．
+    // Key_Type が unsigned int にキャストできなければエラーになる．
     return key;
   }
 };
@@ -41,11 +43,11 @@ template<>
 struct
 HashFunc<void*>
 {
-  ymuint
+  HashType
   operator()(void* key) const
   {
     ympuint tmp = reinterpret_cast<ympuint>(key) / sizeof(void*);
-    return static_cast<ymuint>(tmp);
+    return static_cast<HashType>(tmp);
   }
 };
 
@@ -57,25 +59,25 @@ template<>
 struct
 HashFunc<int>
 {
-  ymuint
+  HashType
   operator()(int key) const
   {
-    return static_cast<ymuint>(key);
+    return static_cast<HashType>(key);
   }
 };
 
 
 //////////////////////////////////////////////////////////////////////
-// HashFunc<ymuint> の特殊化
+// HashFunc<unsigned int> の特殊化
 //////////////////////////////////////////////////////////////////////
 template<>
 struct
-HashFunc<ymuint>
+HashFunc<unsigned int>
 {
-  ymuint
-  operator()(ymuint key) const
+  HashType
+  operator()(unsigned int key) const
   {
-    return key;
+    return static_cast<HashType>(key);
   }
 };
 
@@ -87,12 +89,32 @@ template<>
 struct
 HashFunc<string>
 {
-  ymuint
+  HashType
   operator()(const string& key) const
   {
-    ymuint h = 0;
-    for (ymuint i = 0; i < key.size(); ++ i) {
-      h = h * 33 + key[i];
+    HashType h = 0;
+    for ( int i = 0; i < key.size(); ++ i ) {
+      h = h * 33 + static_cast<HashType>(key[i]);
+    }
+    return h;
+  }
+};
+
+
+//////////////////////////////////////////////////////////////////////
+// HashFunc<const char*> の特殊化
+//////////////////////////////////////////////////////////////////////
+template<>
+struct
+HashFunc<const char*>
+{
+  HashType
+  operator()(const char* key) const
+  {
+    HashType h = 0;
+    char c;
+    while ( (c = *key ++) ) {
+      h = h * 33 + static_cast<HashType>(c);
     }
     return h;
   }
