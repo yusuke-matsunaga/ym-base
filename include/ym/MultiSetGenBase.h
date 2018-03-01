@@ -25,8 +25,8 @@ public:
   /// @brief コンストラクタ
   /// @param[in] num_array 各要素の重複度を納めた配列
   /// @param[in] k 選び出す要素数
-  MultiSetGenBase(const vector<ymuint>& num_array,
-		  ymuint k);
+  MultiSetGenBase(const vector<int>& num_array,
+		  int k);
 
   /// @brief デストラクタ
   ~MultiSetGenBase();
@@ -38,16 +38,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素の種類の数を得る．
-  ymuint
+  int
   group_num() const;
 
   /// @brief 各要素の重複度を得る．
   /// @param[in] grp ( 0 <= grp < group_num() )
-  ymuint
-  n(ymuint grp) const;
+  int
+  n(int grp) const;
 
   /// @brief 選択する要素数を返す．
-  ymuint
+  int
   k() const;
 
   /// @brief 初期化する．
@@ -56,8 +56,8 @@ public:
 
   /// @brief 要素の取得
   /// @param[in] pos 取り出す要素の位置
-  ymuint
-  operator()(ymuint pos) const;
+  int
+  operator()(int pos) const;
 
   /// @brief 末尾のチェック
   /// @return 末尾の時に true を返す．
@@ -78,8 +78,8 @@ protected:
   /// @brief 要素の参照の取得
   /// @param[in] pos 取り出す要素の位置 (最初の位置は 0)
   /// @return pos 番目の要素への参照
-  ymuint&
-  elem(ymuint pos);
+  int&
+  elem(int pos);
 
 
 private:
@@ -88,13 +88,13 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 要素の重複度
-  vector<ymuint32> mNumArray;
+  vector<int> mNumArray;
 
   // 選択する要素数
-  ymuint32 mK;
+  int mK;
 
   // 現在の要素
-  vector<ymuint32> mElem;
+  vector<int> mElem;
 
 };
 
@@ -105,17 +105,17 @@ private:
 
 // @brief 要素の種類の数を得る．
 inline
-ymuint
+int
 MultiSetGenBase::group_num() const
 {
-  return static_cast<ymuint>(mNumArray.size());
+  return static_cast<int>(mNumArray.size());
 }
 
 // @brief 各要素の重複度を得る．
 // @param[in] grp ( 0 <= grp < group_num() )
 inline
-ymuint
-MultiSetGenBase::n(ymuint grp) const
+int
+MultiSetGenBase::n(int grp) const
 {
   ASSERT_COND( grp < group_num() );
 
@@ -124,7 +124,7 @@ MultiSetGenBase::n(ymuint grp) const
 
 // @brief 選択する要素数を返す．
 inline
-ymuint
+int
 MultiSetGenBase::k() const
 {
   return mK;
@@ -133,8 +133,8 @@ MultiSetGenBase::k() const
 // @brief 要素の取得
 // @param[in] pos 取り出す要素の位置
 inline
-ymuint
-MultiSetGenBase::operator()(ymuint pos) const
+int
+MultiSetGenBase::operator()(int pos) const
 {
   return mElem[pos];
 }
@@ -152,8 +152,8 @@ MultiSetGenBase::is_end() const
 // @param[in] pos 取り出す要素の位置 (最初の位置は 0)
 // @return pos 番目の要素への参照
 inline
-ymuint&
-MultiSetGenBase::elem(ymuint pos)
+int&
+MultiSetGenBase::elem(int pos)
 {
   return mElem[pos];
 }

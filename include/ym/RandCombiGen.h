@@ -27,8 +27,8 @@ public:
   /// @brief コンストラクタ
   /// @param[in] n 全要素数
   /// @param[in] k 組み合わせの要素数
-  RandCombiGen(ymuint n,
-	       ymuint k);
+  RandCombiGen(int n,
+	       int k);
 
   /// @brief デストラクタ
   ~RandCombiGen();
@@ -37,11 +37,11 @@ public:
 public:
 
   /// @brief 全要素数を返す．
-  ymuint
+  int
   num() const;
 
   /// @brief 組み合わせの要素数を返す．
-  ymuint
+  int
   combi_num() const;
 
   /// @brief ランダムな組み合わせを生成する．
@@ -51,8 +51,8 @@ public:
 
   /// @brief 組み合わせの要素を取り出す．
   /// @param[in] pos 要素の位置番号 ( 0 <= pos < combi_num() )
-  ymuint32
-  elem(ymuint pos) const;
+  int
+  elem(int pos) const;
 
 
 private:
@@ -61,13 +61,13 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 要素数
-  ymuint32 mNum;
+  int mNum;
 
   // 組み合わせの要素数
-  ymuint32 mCombiNum;
+  int mCombiNum;
 
   // 現在の順列
-  ymuint32* mArray;
+  int* mArray;
 
 };
 

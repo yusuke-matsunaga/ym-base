@@ -26,7 +26,7 @@ public:
 
   /// @brief コンストラクタ
   /// @param[in] n 要素数
-  RandPermGen(ymuint n);
+  RandPermGen(int n);
 
   /// @brief デストラクタ
   ~RandPermGen();
@@ -35,7 +35,7 @@ public:
 public:
 
   /// @brief 要素数を返す．
-  ymuint
+  int
   num() const;
 
   /// @brief ランダムな順列を生成する．
@@ -45,8 +45,8 @@ public:
 
   /// @brief 順列の要素を取り出す．
   /// @param[in] pos 要素の位置番号 ( 0 <= pos < num() )
-  ymuint32
-  elem(ymuint pos) const;
+  int
+  elem(int pos) const;
 
 
 private:
@@ -55,10 +55,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 要素数
-  ymuint32 mNum;
+  int mNum;
 
   // 現在の順列
-  ymuint32* mArray;
+  int* mArray;
 
 };
 

@@ -39,7 +39,7 @@ ZCoder::~ZCoder()
 bool
 ZCoder::open(const char* filename,
 	     mode_t mode,
-	     ymuint level)
+	     int level)
 {
   m_state = kStart;
 
@@ -90,22 +90,22 @@ ZCoder::is_ready() const
 // @param[in] num 書き込むデータ数(バイト)
 // @return 実際に書き込んだバイト数を返す．
 // @note エラーが起こったら -1 を返す．
-ymint64
+int
 ZCoder::write(const ymuint8* wbuff,
-	      ymuint64 num)
+	      int num)
 {
   if ( num == 0 ) {
     return 0;
   }
 
-  ymuint64 count = num;
+  int count = num;
   const ymuint8* bp = wbuff;
 
   if ( m_state == kStart ) {
     m_state = kMiddle;
 
     m_maxmaxcode = 1ULL << m_maxbits;
-    ymint64 n = mBuff.write(k_MAGICHEADER, sizeof(k_MAGICHEADER));
+    int n = mBuff.write(k_MAGICHEADER, sizeof(k_MAGICHEADER));
     if ( n != sizeof(k_MAGICHEADER) ) {
       return -1;
     }
@@ -265,7 +265,7 @@ int
 ZCoder::output(code_int ocode)
 {
   int r_off = m_offset;
-  ymuint32 bits = m_n_bits;
+  int bits = m_n_bits;
   char_type* bp = m_buf;
 
   if ( ocode >= 0 ) {
@@ -296,7 +296,7 @@ ZCoder::output(code_int ocode)
       bp = m_buf;
       bits = m_n_bits;
       m_bytes_out += bits;
-      ymint64 n = mBuff.write(bp, bits);
+      int n = mBuff.write(bp, bits);
       if ( n != bits ) {
 	return -1;
       }
@@ -311,7 +311,7 @@ ZCoder::output(code_int ocode)
       // Write the whole buffer, because the input side won't
       // discover the size increase until after it has read it.
       if ( m_offset > 0 ) {
-	ymint64 n = mBuff.write(m_buf, m_n_bits);
+	int n = mBuff.write(m_buf, m_n_bits);
 	if ( n != m_n_bits ) {
 	  return -1;
 	}
@@ -338,7 +338,7 @@ ZCoder::output(code_int ocode)
     // At EOF, write the rest of the buffer.
     if ( m_offset > 0 ) {
       m_offset = (m_offset + 7) / 8;
-      ymint64 n = mBuff.write(m_buf, m_offset);
+      int n = mBuff.write(m_buf, m_offset);
       if ( n != m_offset ) {
 	return -1;
       }

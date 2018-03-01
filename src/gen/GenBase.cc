@@ -18,8 +18,8 @@ BEGIN_NAMESPACE_YM
 
 // コンストラクタ
 // 全要素数 n と選択する要素数 k を必ず指定する．
-GenBase::GenBase(ymuint n,
-		 ymuint k) :
+GenBase::GenBase(int n,
+		 int k) :
   mN(n),
   mK(k),
   mElem(k)
@@ -44,7 +44,7 @@ GenBase::~GenBase()
 void
 GenBase::init()
 {
-  for (ymuint i = 0; i < mK; ++ i) {
+  for (int i = 0; i < mK; ++ i) {
     mElem[i] = i;
   }
 }
@@ -58,7 +58,7 @@ GenBase::copy(const GenBase& src)
   if ( mElem.size() != mK ) {
     mElem.resize(mK);
   }
-  for (ymuint i = 0; i < mK; ++ i) {
+  for (int i = 0; i < mK; ++ i) {
     mElem[i] = src.mElem[i];
   }
 }

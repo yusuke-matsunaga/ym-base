@@ -44,7 +44,7 @@ GzCoder::is_ready() const
 bool
 GzCoder::open(const char* filename,
 	      mode_t mode,
-	      ymuint level)
+	      int level)
 {
   static ymuint8 header[] = { GZIP_MAGIC0, GZIP_MAGIC1, Z_DEFLATED, 0,
 			      0, 0, 0, 0,
@@ -119,7 +119,7 @@ GzCoder::close()
       goto end;
     }
 
-    ymuint64 wr = mBuff.buff_size() - mZ.avail_out();
+    int wr = mBuff.buff_size() - mZ.avail_out();
     if ( wr > 0 ) {
       mBuff.seek(wr);
       bool stat = mBuff.flush();
@@ -148,7 +148,7 @@ GzCoder::close()
     ymuint8 trail[8];
     conv_to_4bytes(mCRC, &trail[0]);
     conv_to_4bytes(mOutSize, &trail[4]);
-    ymint64 tsize = mBuff.write(trail, sizeof(trail));
+    int tsize = mBuff.write(trail, sizeof(trail));
     if ( tsize != sizeof(trail) ) {
       // エラー
       goto end;
@@ -163,9 +163,9 @@ GzCoder::close()
 // @param[in] buff データを収めた領域のアドレス
 // @param[in] n データサイズ
 // @return 実際に書き出した量を返す．
-ymint64
+int
 GzCoder::write(const ymuint8* buff,
-	       ymuint64 n)
+	       int n)
 {
   if ( n == 0 ) {
     return 0;
@@ -195,7 +195,7 @@ GzCoder::write(const ymuint8* buff,
       goto error_out;
     }
 
-    ymuint64 wr = mBuff.buff_size() - mZ.avail_out();
+    int wr = mBuff.buff_size() - mZ.avail_out();
     mBuff.seek(wr);
 
     if ( mZ.avail_in() == 0 ) {

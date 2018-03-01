@@ -146,7 +146,7 @@ IDO::read_line(string& str)
   StrBuff buf;
   for ( ; ; ) {
     ymuint8 c;
-    ymuint64 ret = read(&c, 1);
+    int ret = read(&c, 1);
     if ( ret == 0 ) {
       break;
     }
@@ -166,10 +166,10 @@ IDO::read_line(string& str)
 // @brief read() を呼び出して結果をチェックする．
 void
 IDO::_read(ymuint8* buff,
-	   ymuint64 n)
+	   int n)
 {
-  ymint64 ret = read(buff, n);
-  if ( static_cast<ymuint64>(ret) != n ) {
+  int ret = read(buff, n);
+  if ( ret != n ) {
     ostringstream buf;
     buf << "IDO::_read(" << n << ") failed. read " << ret << " bytes.";
     MsgMgr::put_msg(__FILE__, __LINE__,

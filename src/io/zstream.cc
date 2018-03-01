@@ -15,7 +15,7 @@ BEGIN_NAMESPACE_YM
 // @brief 入力用のコンストラクタ
 // @param[in] s 入力ストリーム
 zstream_buff::zstream_buff(istream* s,
-			   ymuint size) :
+			   int size) :
   mInStream(s),
   mOutStream(nullptr),
   mBuff(new Bytef[size]),
@@ -30,7 +30,7 @@ zstream_buff::zstream_buff(istream* s,
 // @brief 出力用のコンストラクタ
 // @param[in] s 出力ストリーム
 zstream_buff::zstream_buff(ostream* s,
-			   ymuint size) :
+			   int size) :
   mInStream(nullptr),
   mOutStream(s),
   mBuff(new Bytef[size]),
@@ -55,7 +55,7 @@ zstream_buff::~zstream_buff()
 // @note 結果は出力ストリームに書き込まれる．
 void
 zstream_buff::compress(Bytef* buff,
-		       ymuint size,
+		       int size,
 		       int flush)
 {
   set_inbuf(buff, size);
@@ -83,9 +83,9 @@ zstream_buff::compress(Bytef* buff,
 // @param[in] バッファ中の空きサイズ(in byte)
 // @return バッファに書き出されたサイズ(in bytes)を返す．
 // @note データは入力ストリームから読み込まれる．
-ymuint
+int
 zstream_buff::decompress(Bytef* buff,
-			 ymuint size)
+			 int size)
 {
   set_outbuf(buff, size);
   int orig_size = avail_out();

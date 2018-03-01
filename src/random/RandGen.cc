@@ -96,13 +96,13 @@ RandGen::init(ymuint32 s)
 /* slight change for C++, 2004/2/26 */
 void
 RandGen::init_by_array(ymuint32 init_key[],
-		       ymuint key_length)
+		       int key_length)
 {
   init(19650218UL);
 
-  ymuint i = 1;
-  ymuint j = 0;
-  ymuint k = (N > key_length ? N : key_length);
+  int i = 1;
+  int j = 0;
+  int k = (N > key_length ? N : key_length);
   for ( ; k; -- k) {
     mV[i] = (mV[i] ^ ((mV[i - 1] ^ (mV[i - 1] >> 30)) * 1664525UL))
       + init_key[j] + j; /* non linear */
@@ -143,7 +143,7 @@ RandGen::int32()
     if ( mIdx == N + 1 )   /* if init_genrand() has not been called, */
       init(5489UL); /* a default initial seed is used */
 
-    ymuint kk;
+    int kk;
     for ( kk = 0; kk < N - M; ++ kk) {
       unsigned long y = (mV[kk] & UPPER_MASK) | (mV[kk + 1] & LOWER_MASK);
       mV[kk] = mV[kk + M] ^ (y >> 1) ^ mag01[y & 0x1UL];
@@ -190,8 +190,8 @@ RandGen::ulong()
   return (tmp1 << 32) | tmp2;
 #else
   ymulong ans = 0UL;
-  ymuint n = SIZEOF_LONG / 4;
-  for (ymuint i = 0; i < n; ++ i) {
+  int n = SIZEOF_LONG / 4;
+  for (int i = 0; i < n; ++ i) {
     ans <<= 32;
     ans |= int32();
   }
@@ -206,9 +206,9 @@ RandGen::ulong()
 
 // @brief コンストラクタ
 // @param[in] n 要素数
-RandPermGen::RandPermGen(ymuint n) :
+RandPermGen::RandPermGen(int n) :
   mNum(n),
-  mArray(new ymuint32[n])
+  mArray(new int[n])
 {
 }
 
@@ -219,7 +219,7 @@ RandPermGen::~RandPermGen()
 }
 
 // @brief 要素数を返す．
-ymuint
+int
 RandPermGen::num() const
 {
   return mNum;
@@ -229,14 +229,14 @@ RandPermGen::num() const
 void
 RandPermGen::generate(RandGen& randgen)
 {
-  for (ymuint i = 0; i < mNum; ++ i) {
+  for (int i = 0; i < mNum; ++ i) {
     mArray[i] = i;
   }
-  for (ymuint i = 0; i < mNum; ++ i) {
-    ymuint n = mNum - i;
-    ymuint p = (randgen.int32() % n) + i;
+  for (int i = 0; i < mNum; ++ i) {
+    int n = mNum - i;
+    int p = (randgen.int32() % n) + i;
     if ( p != i ) {
-      ymuint v = mArray[p];
+      int v = mArray[p];
       mArray[p] = mArray[i];
       mArray[i] = v;
     }
@@ -245,8 +245,8 @@ RandPermGen::generate(RandGen& randgen)
 
 // @brief 順列の要素を取り出す．
 // @param[in] pos 要素の位置番号 ( 0 <= pos < num() )
-ymuint32
-RandPermGen::elem(ymuint pos) const
+int
+RandPermGen::elem(int pos) const
 {
   return mArray[pos];
 }
@@ -259,11 +259,11 @@ RandPermGen::elem(ymuint pos) const
 // @brief コンストラクタ
 // @param[in] n 全要素数
 // @param[in] k 組み合わせの要素数
-RandCombiGen::RandCombiGen(ymuint n,
-			   ymuint k) :
+RandCombiGen::RandCombiGen(int n,
+			   int k) :
   mNum(n),
   mCombiNum(k),
-  mArray(new ymuint32[n])
+  mArray(new int[n])
 {
 }
 
@@ -274,14 +274,14 @@ RandCombiGen::~RandCombiGen()
 }
 
 // @brief 全要素数を返す．
-ymuint
+int
 RandCombiGen::num() const
 {
   return mNum;
 }
 
 // @brief 組み合わせの要素数を返す．
-ymuint
+int
 RandCombiGen::combi_num() const
 {
   return mCombiNum;
@@ -292,14 +292,14 @@ RandCombiGen::combi_num() const
 void
 RandCombiGen::generate(RandGen& randgen)
 {
-  for (ymuint i = 0; i < mNum; ++ i) {
+  for (int i = 0; i < mNum; ++ i) {
     mArray[i] = i;
   }
-  for (ymuint i = 0; i < mCombiNum; ++ i) {
-    ymuint n = mNum - i;
-    ymuint p = (randgen.int32() % n) + i;
+  for (int i = 0; i < mCombiNum; ++ i) {
+    int n = mNum - i;
+    int p = (randgen.int32() % n) + i;
     if ( p != i ) {
-      ymuint v = mArray[p];
+      int v = mArray[p];
       mArray[p] = mArray[i];
       mArray[i] = v;
     }
@@ -308,8 +308,8 @@ RandCombiGen::generate(RandGen& randgen)
 
 // @brief 組み合わせの要素を取り出す．
 // @param[in] pos 要素の位置番号 ( 0 <= pos < combi_num() )
-ymuint32
-RandCombiGen::elem(ymuint pos) const
+int
+RandCombiGen::elem(int pos) const
 {
   return mArray[pos];
 }

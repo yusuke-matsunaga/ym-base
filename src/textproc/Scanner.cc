@@ -42,13 +42,13 @@ Scanner::update()
   for ( ; ; ) {
     if ( mReadPos >= mEndPos ) {
       mReadPos = 0;
-      ymint64 n = mIDO.read(mBuff, 4096);
+      int n = mIDO.read(mBuff, 4096);
       if ( n < 0 ) {
 	// ファイル読み込みエラー
 	c = -1;
 	break;
       }
-      mEndPos = static_cast<ymuint32>(n);
+      mEndPos = n;
     }
     if ( mEndPos == 0 ) {
       c = EOF;
@@ -117,7 +117,7 @@ Scanner::set_first_loc()
 // @param[in] line 行番号
 // @note デフォルトではなにもしない．
 void
-Scanner::check_line(ymuint line)
+Scanner::check_line(int line)
 {
 }
 

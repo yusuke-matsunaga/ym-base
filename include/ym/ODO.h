@@ -84,9 +84,9 @@ public:
   /// @param[in] n データサイズ
   /// @return 実際に書き出した量を返す．
   virtual
-  ymint64
+  int
   write(const ymuint8* buff,
-	ymuint64 n) = 0;
+	int n) = 0;
 
 
 private:
@@ -99,7 +99,7 @@ private:
   /// @param[in] n データサイズ
   void
   _write(const ymuint8* buff,
-	 ymuint64 n);
+	 int n);
 
 };
 

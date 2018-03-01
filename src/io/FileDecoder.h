@@ -112,9 +112,9 @@ public:
   /// @return 実際に読み出したバイト数を返す．
   /// @note エラーが起こったら -1 を返す．
   virtual
-  ymint64
+  int
   read(ymuint8* rbuff,
-       ymuint64 num) = 0;
+       int num) = 0;
 
 };
 

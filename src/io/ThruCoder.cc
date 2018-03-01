@@ -39,7 +39,7 @@ ThruCoder::~ThruCoder()
 bool
 ThruCoder::open(const char* filename,
 		mode_t mode,
-		ymuint level)
+		int level)
 {
   return mBuff.open(filename, O_WRONLY | O_CREAT | O_TRUNC, mode);
 }
@@ -63,9 +63,9 @@ ThruCoder::is_ready() const
 // @param[in] num 書き込むデータ数(バイト)
 // @return 実際に書き込んだバイト数を返す．
 // @note エラーが起こったら -1 を返す．
-ymint64
+int
 ThruCoder::write(const ymuint8* wbuff,
-		 ymuint64 num)
+		 int num)
 {
   return mBuff.write(wbuff, num);
 }

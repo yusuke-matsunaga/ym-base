@@ -19,8 +19,8 @@ BEGIN_NAMESPACE_YM
 // @brief コンストラクタ
 // @param[in] num_array 各要素の重複度を納めた配列
 // @param[in] k 選び出す要素数
-MultiSetGenBase::MultiSetGenBase(const vector<ymuint>& num_array,
-				 ymuint k) :
+MultiSetGenBase::MultiSetGenBase(const vector<int>& num_array,
+				 int k) :
   mNumArray(num_array),
   mK(k),
   mElem(k)
@@ -37,9 +37,9 @@ MultiSetGenBase::~MultiSetGenBase()
 void
 MultiSetGenBase::init()
 {
-  ymuint pos = 0;
-  ymuint count = 0;
-  for (ymuint i = 0; i < mK; ++ i) {
+  int pos = 0;
+  int count = 0;
+  for (int i = 0; i < mK; ++ i) {
     if ( count >= mNumArray[pos] ) {
       ++ pos;
       count = 0;

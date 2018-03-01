@@ -92,7 +92,7 @@ protected:
   /// @note デフォルトではなにもしない．
   virtual
   void
-  check_line(ymuint line);
+  check_line(int line);
 
 
 private:
@@ -117,34 +117,34 @@ private:
   ymuint8 mBuff[4096];
 
   // バッファ中の読み出し位置
-  ymuint32 mReadPos;
+  int mReadPos;
 
   // バッファの末尾
-  ymuint32 mEndPos;
+  int mEndPos;
 
   // 直前の文字が \r の時に true となるフラグ
   bool mCR;
 
   // 現在の行番号
-  ymuint32 mCurLine;
+  int mCurLine;
 
   // 現在のコラム位置
-  ymuint32 mCurColumn;
+  int mCurColumn;
 
   // トークンの最初の行番号
-  ymuint32 mFirstLine;
+  int mFirstLine;
 
   // トークンの最初のコラム位置
-  ymuint32 mFirstColumn;
+  int mFirstColumn;
 
   // peek() した文字
-  ymint16 mNextChar;
+  int mNextChar;
 
   // peek() した文字の行番号
-  ymuint32 mNextLine;
+  int mNextLine;
 
   // peek() した文字のコラム位置
-  ymuint32 mNextColumn;
+  int mNextColumn;
 
   // 新しい文字を読み込む必要がある時 true となるフラグ
   bool mNeedUpdate;

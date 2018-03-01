@@ -85,12 +85,12 @@ public:
   id() const;
 
   /// @brief ハッシュ用のキーを返す．
-  ymuint
+  int
   hash() const;
 
   /// @brief ShString 関連でアロケートされたメモリサイズ
   static
-  ymuint64
+  int
   allocated_size();
 
   /// @brief ShString 関連でアロケートされたメモリをすべて開放する．
@@ -302,11 +302,11 @@ ShString::id() const
 
 // @brief ハッシュ用のキーを返す．
 inline
-ymuint
+int
 ShString::hash() const
 {
   ympuint tmp = reinterpret_cast<ympuint>(mPtr)/sizeof(void*);
-  return static_cast<ymuint>(tmp);
+  return static_cast<int>(tmp);
 }
 
 // 等価比較演算子

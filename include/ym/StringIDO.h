@@ -110,9 +110,9 @@ public:
   /// @param[in] n 読み込むデータサイズ
   /// @return 実際に読み込んだ量を返す．
   virtual
-  ymint64
+  int
   read(ymuint8* buff,
-       ymuint64 n);
+       int n);
 
 
 private:

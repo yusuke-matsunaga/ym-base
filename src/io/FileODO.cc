@@ -45,7 +45,7 @@ FileODO::operator bool() const
 bool
 FileODO::open(const char* filename,
 	      mode_t mode,
-	      ymuint opt)
+	      int opt)
 {
   close();
   return mCoder->open(filename, mode, opt);
@@ -58,7 +58,7 @@ FileODO::open(const char* filename,
 bool
 FileODO::open(const string& filename,
 	      mode_t mode,
-	      ymuint opt)
+	      int opt)
 {
   return open(filename.c_str(), mode, opt);
 }
@@ -75,9 +75,9 @@ FileODO::close()
 // @param[in] buff データを収めた領域のアドレス
 // @param[in] n データサイズ
 // @return 実際に書き出した量を返す．
-ymint64
+int
 FileODO::write(const ymuint8* buff,
-	       ymuint64 n)
+	       int n)
 {
   return mCoder->write(buff, n);
 }

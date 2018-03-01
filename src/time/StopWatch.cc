@@ -161,8 +161,8 @@ StopWatch::cur_time()
 
 
 // コンストラクタ，時計の数と最初にアクティブな時計番号
-MStopWatch::MStopWatch(ymuint n,
-		       ymuint id) :
+MStopWatch::MStopWatch(int n,
+		       int id) :
   mNum(n),
   mCur(id),
   mWarray(new StopWatch[n])
@@ -181,10 +181,10 @@ MStopWatch::~MStopWatch()
 }
 
 // アクティブな時計を切替える．昔の時計番号を返す
-ymuint
-MStopWatch::change(ymuint new_id)
+int
+MStopWatch::change(int new_id)
 {
-  ymuint old_id = mCur;
+  int old_id = mCur;
 
   // 範囲外の場合は何もしない．
   if ( new_id < mNum ) {

@@ -17,23 +17,23 @@ int
 RandSamplerSimpleTest(int argc,
 		      char** argv)
 {
-  ymuint w_array[] = { 2, 4, 10, 1 };
-  ymuint num_data = sizeof(w_array) / sizeof(ymuint);
+  int w_array[] = { 2, 4, 10, 1 };
+  int num_data = sizeof(w_array) / sizeof(int);
 
   RandSamplerSimple rs(num_data, w_array);
 
   RandGen rg;
 
-  ymuint sample_num = 100000;
+  int sample_num = 100000;
 
-  vector<ymuint> count(num_data, 0);
-  for (ymuint i = 0; i < sample_num; ++ i) {
-    ymuint pos = rs.get_sample(rg);
+  vector<int> count(num_data, 0);
+  for (int i = 0; i < sample_num; ++ i) {
+    int pos = rs.get_sample(rg);
     ASSERT_COND( pos < num_data );
     ++ count[pos];
   }
 
-  for (ymuint i = 0; i < num_data; ++ i) {
+  for (int i = 0; i < num_data; ++ i) {
     cout << "Data#" << i << ": " << count[i] << endl;
   }
 

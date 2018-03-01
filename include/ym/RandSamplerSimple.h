@@ -26,13 +26,13 @@ public:
 
   /// @brief コンストラクタ
   /// @param[in] weight_array 重みの配列
-  RandSamplerSimple(const vector<ymuint>& weight_array);
+  RandSamplerSimple(const vector<int>& weight_array);
 
   /// @brief コンストラクタ
   /// @param[in] num 要素数
   /// @param[in] weight_array 重みの配列
-  RandSamplerSimple(ymuint num,
-		    ymuint weight_array[]);
+  RandSamplerSimple(int num,
+		    int weight_array[]);
 
   /// @brief デストラクタ
   ~RandSamplerSimple();
@@ -44,18 +44,18 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素数を返す．
-  ymuint
+  int
   num() const;
 
   /// @brief 要素の重みを返す．
   /// @param[in] pos 位置番号 ( 0 <= pos < num() )
-  ymuint
-  weight(ymuint pos) const;
+  int
+  weight(int pos) const;
 
   /// @brief サンプリングを行う．
   /// @param[in] randgen 乱数発生器
   /// @return サンプリング結果を返す．
-  ymuint
+  int
   get_sample(RandGen& randgen);
 
 
@@ -75,12 +75,12 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 要素数
-  ymuint mNum;
+  int mNum;
 
   // 各要素の重みの累積和の配列
   // サイズは mNum + 1
   // mAccumArray[i] = sum mWeightArray[j] ( 0 <= j < i )
-  ymuint *mAccumArray;
+  int *mAccumArray;
 
 };
 

@@ -26,8 +26,8 @@ public:
   /// @brief コンストラクタ
   /// @param[in] num_array 各要素の重複度を納めた配列
   /// @param[in] k 選び出す要素数
-  MultiSetCombiGen(const vector<ymuint>& num_array,
-		   ymuint k);
+  MultiSetCombiGen(const vector<int>& num_array,
+		   int k);
 
   /// @brief コピーコンストラクタ
   /// @param[in] src コピー元のオブジェクト

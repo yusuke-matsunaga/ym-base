@@ -49,7 +49,7 @@ public:
   ///
   /// 成功したら LZMA_OK を返す．
   lzma_ret
-  easy_encoder(ymuint32 preset = 6,
+  easy_encoder(int preset = 6,
 	       lzma_check check = LZMA_CHECK_CRC64);
 
   /// @brief xz 伸長用の初期化を行う．
@@ -57,7 +57,7 @@ public:
   /// @param[in] flags 動作制御用のフラグ
   /// @return 終了コードを返す．
   lzma_ret
-  stream_decoder(ymuint64 memlimit = 128 * 1024 * 1024,
+  stream_decoder(int memlimit = 128 * 1024 * 1024,
 		 ymuint32 flags = 0);
 
   /// @brief 終了処理を行う．
@@ -93,21 +93,21 @@ public:
   /// @param[in] size バッファのサイズ
   void
   set_inbuf(const ymuint8* buf,
-	    ymuint64 size);
+	    int size);
 
   /// @brief out バッファを設定する．
   /// @param[in] buf バッファ本体
   /// @param[in] size バッファのサイズ
   void
   set_outbuf(ymuint8* buf,
-	     ymuint64 size);
+	     int size);
 
   /// @brief 読み出せるデータのバイト数を返す．
-  ymuint
+  int
   avail_in();
 
   /// @brief 書き込めるデータのバイト数を返す．
-  ymuint
+  int
   avail_out();
 
 
@@ -150,7 +150,7 @@ LzmaEngine::~LzmaEngine()
 // @return 終了コードを返す．
 inline
 lzma_ret
-LzmaEngine::easy_encoder(ymuint32 preset,
+LzmaEngine::easy_encoder(int preset,
 			 lzma_check check)
 {
   return lzma_easy_encoder(&mLzmaStream, preset, check);
@@ -162,7 +162,7 @@ LzmaEngine::easy_encoder(ymuint32 preset,
 // @return 終了コードを返す．
 inline
 lzma_ret
-LzmaEngine::stream_decoder(ymuint64 memlimit,
+LzmaEngine::stream_decoder(int memlimit,
 			   ymuint32 flags)
 {
   return lzma_stream_decoder(&mLzmaStream, memlimit, flags);
@@ -192,7 +192,7 @@ LzmaEngine::code(lzma_action action)
 inline
 void
 LzmaEngine::set_inbuf(const ymuint8* buf,
-		      ymuint64 size)
+		      int size)
 {
   mLzmaStream.next_in = buf;
   mLzmaStream.avail_in = size;
@@ -204,7 +204,7 @@ LzmaEngine::set_inbuf(const ymuint8* buf,
 inline
 void
 LzmaEngine::set_outbuf(ymuint8* buf,
-		       ymuint64 size)
+		       int size)
 {
   mLzmaStream.next_out = buf;
   mLzmaStream.avail_out = size;
@@ -212,7 +212,7 @@ LzmaEngine::set_outbuf(ymuint8* buf,
 
 // @brief 読み出せるデータのバイト数を返す．
 inline
-ymuint
+int
 LzmaEngine::avail_in()
 {
   return mLzmaStream.avail_in;
@@ -220,7 +220,7 @@ LzmaEngine::avail_in()
 
 // @brief 書き込めるデータのバイト数を返す．
 inline
-ymuint
+int
 LzmaEngine::avail_out()
 {
   return mLzmaStream.avail_out;

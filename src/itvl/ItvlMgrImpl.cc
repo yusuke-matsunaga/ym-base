@@ -812,14 +812,15 @@ ItvlMgrImpl::dump_cell(ODO& s,
 		       ItvlCell* cell) const
 {
   if ( cell ) {
-    s << static_cast<ymuint8>(cell->mBalance)
+    s << cell->mBalance
       << cell->mStart
       << cell->mEnd;
     dump_cell(s, cell->mLchd);
     dump_cell(s, cell->mRchd);
   }
   else {
-    s << static_cast<ymuint8>(0xFF);
+    ymint8 end_mark = -128;
+    s << end_mark;
   }
 }
 
@@ -836,24 +837,23 @@ ItvlMgrImpl::restore(IDO& s)
 ItvlCell*
 ItvlMgrImpl::restore_cell(IDO& s)
 {
-  ymuint8 balance;
+  ymint8 balance;
   s >> balance;
-  if ( balance < 0xFF ) {
-    ymuint32 start;
-    ymuint32 end;
-    s >> start
-      >> end;
-    ItvlCell* cell = new_cell(start, end);
-    cell->mBalance = static_cast<ymint8>(balance);
-    ItvlCell* lchd = restore_cell(s);
-    ItvlCell* rchd = restore_cell(s);
-    cell->mLchd = lchd;
-    cell->mRchd = rchd;
-    return cell;
-  }
-  else {
+  if ( balance == -128 ) {
     return nullptr;
   }
+
+  int start;
+  int end;
+  s >> start
+    >> end;
+  ItvlCell* cell = new_cell(start, end);
+  cell->mBalance = balance;
+  ItvlCell* lchd = restore_cell(s);
+  ItvlCell* rchd = restore_cell(s);
+  cell->mLchd = lchd;
+  cell->mRchd = rchd;
+  return cell;
 }
 
 // @brief 新しいセルを確保する．

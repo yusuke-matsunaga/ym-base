@@ -54,10 +54,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 開始点
-  ymuint32 mStart;
+  int mStart;
 
   // 終了点
-  ymuint32 mEnd;
+  int mEnd;
 
   // 平衡度
   ymint8 mBalance;
@@ -93,7 +93,7 @@ inline
 int
 ItvlCell::start() const
 {
-  return static_cast<int>(mStart);
+  return mStart;
 }
 
 // @brief 終了点を得る．
@@ -101,7 +101,7 @@ inline
 int
 ItvlCell::end() const
 {
-  return static_cast<int>(mEnd);
+  return mEnd;
 }
 
 // @brief 平衡度を得る．

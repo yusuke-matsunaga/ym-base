@@ -71,16 +71,16 @@ ZDecoder::is_ready() const
 // @param[in] num 読み出すデータ数(バイト)
 // @return 実際に読み出したバイト数を返す．
 // @note エラーが起こったら -1 を返す．
-ymint64
+int
 ZDecoder::read(ymuint8* rbuff,
-	       ymuint64 num)
+	       int num)
 {
   if ( num == 0 ) {
     cerr << "num == 0" << endl;
     return 0;
   }
 
-  ymuint64 count = num;
+  int count = num;
   ymuint8* bp = rbuff;
 
   switch ( m_state ) {
@@ -98,7 +98,7 @@ ZDecoder::read(ymuint8* rbuff,
   // 先頭のマジックナンバーと最大ビット数を読む．
   {
     ymuint8 header[3];
-    ymint64 n = mBuff.read(header, sizeof(header));
+    int n = mBuff.read(header, sizeof(header));
     if ( n != sizeof(header) ||
 	 memcmp(header, k_MAGICHEADER, sizeof(k_MAGICHEADER)) != 0 ) {
       // ファイルタイプミスマッチ
@@ -208,16 +208,16 @@ ZDecoder::getcode()
       m_maxcode = MAXCODE(m_n_bits = k_INIT_BITS);
       m_clear_flg = 0;
     }
-    ymint64 n = mBuff.read(m_gbuf, m_n_bits);
+    int n = mBuff.read(m_gbuf, m_n_bits);
     if ( n <= 0 ) {
       return -1;
     }
     m_roffset = 0;
-    ymuint n1 = static_cast<ymuint>(n);
+    int n1 = n;
     m_size = (n1 << 3) - (m_n_bits - 1);
   }
-  ymuint r_off = m_roffset;
-  ymuint bits = m_n_bits;
+  int r_off = m_roffset;
+  int bits = m_n_bits;
 
   // Get to the first byte.
   bp += static_cast<ymuint8>(r_off >> 3);

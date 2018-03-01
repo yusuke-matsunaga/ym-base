@@ -5,7 +5,7 @@
 /// @brief IDO のヘッダファイル
 /// @author Yusuke Matsunaga
 ///
-/// Copyright (C) 2013-204 Yusuke Matsunaga
+/// Copyright (C) 2013-2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -133,9 +133,9 @@ public:
   /// @param[in] n 読み込むデータサイズ
   /// @return 実際に読み込んだ量を返す．
   virtual
-  ymint64
+  int
   read(ymuint8* buff,
-       ymuint64 n) = 0;
+       int n) = 0;
 
 
 private:
@@ -150,7 +150,7 @@ private:
   /// 読みだしたサイズが n と異なっていたらエラーメッセージを出力する．
   void
   _read(ymuint8* buff,
-	ymuint64 n);
+	int n);
 
 };
 

@@ -26,10 +26,10 @@ BEGIN_NAMESPACE_YM
 inline
 void
 ODO::_write(const ymuint8* buff,
-	    ymuint64 n)
+	    int n)
 {
-  ymint64 ret = write(buff, n);
-  if ( static_cast<ymuint64>(ret) != n ) {
+  int ret = write(buff, n);
+  if ( ret != n ) {
     ostringstream buf;
     buf << "ODO::write(" << n << ") failed. wrote " << ret << " bytes.";
     MsgMgr::put_msg(__FILE__, __LINE__,
@@ -131,7 +131,7 @@ ODO::write_double(double val)
 void
 ODO::write_str(const char* val)
 {
-  ymuint64 l = 0;
+  int l = 0;
   if ( val ) {
     l = strlen(val);
   }
@@ -162,9 +162,9 @@ StreamODO::~StreamODO()
 // @param[in] buff データを収めた領域のアドレス
 // @param[in] n データサイズ
 // @return 実際に書き出した量を返す．
-ymint64
+int
 StreamODO::write(const ymuint8* buff,
-		 ymuint64 n)
+		 int n)
 {
   mS.write(reinterpret_cast<const char*>(buff), n);
   if ( mS.bad() ) {

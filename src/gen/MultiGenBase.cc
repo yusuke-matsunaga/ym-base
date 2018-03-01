@@ -18,12 +18,12 @@ BEGIN_NAMESPACE_YM
 
 // コンストラクタ
 // 全要素数 n と選択する要素数 k のベクタを指定する．
-MultiGenBase::MultiGenBase(const vector<pair<ymuint, ymuint> >& nk_array) :
+MultiGenBase::MultiGenBase(const vector<pair<int, int> >& nk_array) :
   mNkArray(nk_array),
   mElemArray(nk_array.size())
 {
-  ymuint ng = static_cast<ymuint>(mNkArray.size());
-  for (ymuint g = 0; g < ng; ++ g) {
+  int ng = static_cast<int>(mNkArray.size());
+  for (int g = 0; g < ng; ++ g) {
     mElemArray[g].resize(k(g));
   }
   init();
@@ -46,7 +46,7 @@ MultiGenBase::~MultiGenBase()
 void
 MultiGenBase::init()
 {
-  for (ymuint group = 0; group < mNkArray.size(); ++ group) {
+  for (int group = 0; group < mNkArray.size(); ++ group) {
     init_group(group);
   }
 }
@@ -65,9 +65,9 @@ MultiGenBase::copy(const MultiGenBase& src)
 // @param[in] grp グループ番号
 // @note grp 番目のグループの要素配列を初期化する．
 void
-MultiGenBase::init_group(ymuint grp)
+MultiGenBase::init_group(int grp)
 {
-  for (ymuint i = 0; i < k(grp); ++ i) {
+  for (int i = 0; i < k(grp); ++ i) {
     elem(grp)[i] = i;
   }
 }

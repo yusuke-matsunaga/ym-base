@@ -43,7 +43,7 @@ LzmaCoder::is_ready() const
 bool
 LzmaCoder::open(const char* filename,
 		mode_t mode,
-		ymuint level)
+		int level)
 {
   bool stat = mBuff.open(filename, O_WRONLY | O_CREAT | O_TRUNC, mode);
   if ( !stat ) {
@@ -82,7 +82,7 @@ LzmaCoder::close()
       goto end;
     }
 
-    ymuint64 wr = mBuff.buff_size() - mCompEngine.avail_out();
+    int wr = mBuff.buff_size() - mCompEngine.avail_out();
     if ( wr > 0 ) {
       mBuff.seek(wr);
       bool stat = mBuff.flush();
@@ -110,9 +110,9 @@ LzmaCoder::close()
 // @param[in] buff データを収めた領域のアドレス
 // @param[in] n データサイズ
 // @return 実際に書き出した量を返す．
-ymint64
+int
 LzmaCoder::write(const ymuint8* buff,
-		 ymuint64 n)
+		 int n)
 {
   if ( !mBuff.is_ready() ) {
     return -1;
@@ -135,7 +135,7 @@ LzmaCoder::write(const ymuint8* buff,
     }
 
     // 今の処理で書き込まれた分だけバッファのポインタを進める．
-    ymuint64 wr = mBuff.buff_size() - mCompEngine.avail_out();
+    int wr = mBuff.buff_size() - mCompEngine.avail_out();
     mBuff.seek(wr);
 
     if ( mCompEngine.avail_out() == 0 ) {

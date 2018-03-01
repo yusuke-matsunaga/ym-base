@@ -50,7 +50,7 @@ public:
   bool
   open(const char* filename,
        mode_t mode = 0666,
-       ymuint level = 0);
+       int level = 0);
 
   /// @brief ファイルを閉じる．
   virtual
@@ -68,9 +68,9 @@ public:
   /// @return 実際に書き込んだバイト数を返す．
   /// @note エラーが起こったら -1 を返す．
   virtual
-  ymint64
+  int
   write(const ymuint8* wbuff,
-	ymuint64 num);
+	int num);
 
 
 private:

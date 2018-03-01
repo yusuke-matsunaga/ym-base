@@ -51,7 +51,7 @@ public:
   bool
   open(const char* filename,
        mode_t mode = 0666,
-       ymuint level = 0);
+       int level = 0);
 
   /// @brief ファイルを閉じる．
   virtual
@@ -69,9 +69,9 @@ public:
   /// @return 実際に書き込んだバイト数を返す．
   /// @note エラーが起こったら -1 を返す．
   virtual
-  ymint64
+  int
   write(const ymuint8* wbuff,
-	ymuint64 num);
+	int num);
 
 
 private:
@@ -101,10 +101,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // コードあたりのビット数
-  ymuint32 m_n_bits;
+  int m_n_bits;
 
   // n_bits の最大値
-  ymuint32 m_maxbits;
+  int m_maxbits;
 
   // Maximum code
   code_int m_maxcode;
@@ -116,23 +116,23 @@ private:
 
   code_int m_free_ent;
 
-  ymint32 m_block_compress;
+  int m_block_compress;
 
-  ymint32 m_clear_flg;
+  int m_clear_flg;
 
   count_int m_htab[k_HSIZE];
 
   code_int m_codetab[k_HSIZE];
 
-  ymlong m_fcode;
+  long m_fcode;
 
   code_int m_ent;
 
   code_int m_hsize_reg;
 
-  ymint32 m_hshift;
+  int m_hshift;
 
-  ymuint32 m_offset;
+  int m_offset;
 
   code_int m_hsize;
 
@@ -144,7 +144,7 @@ private:
 
   count_int m_out_count;
 
-  ymlong m_bytes_out;
+  long m_bytes_out;
 
   char_type m_buf[k_BITS];
 

@@ -30,8 +30,8 @@ public:
   /// @brief コンストラクタ.
   /// @param[in] n 時計の数
   /// @param[in] id 最初にアクティブな時計番号
-  MStopWatch(ymuint n,
-	     ymuint id = 0);
+  MStopWatch(int n,
+	     int id = 0);
 
   /// @brief デストラクタ
   ~MStopWatch();
@@ -45,19 +45,19 @@ public:
   /// @brief アクティブな時計を切替える.
   /// @param[in] new_id アクティブにする時計番号
   /// @return 昔の時計番号を返す
-  ymuint
-  change(ymuint new_id);
+  int
+  change(int new_id);
 
   /// @brief 現在アクティブな時計番号を返す.
   /// @return 現在アクティブな時計番号を返す.
-  ymuint
+  int
   cur_id() const;
 
   /// @brief 経過時間の取得
   /// @param[in] id 対象の時計番号
   /// @return id で指定された時計の経過時間
   USTime
-  time(ymuint id) const;
+  time(int id) const;
 
 
 private:
@@ -66,10 +66,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 時計の数
-  ymuint mNum;
+  int mNum;
 
   // 現在アクティブな時計の番号
-  ymuint mCur;
+  int mCur;
 
   // StopWatchの配列
   StopWatch* mWarray;
@@ -83,7 +83,7 @@ private:
 
 // 現在アクティブな時計番号を返す．
 inline
-ymuint
+int
 MStopWatch::cur_id() const
 {
   return mCur;
@@ -92,7 +92,7 @@ MStopWatch::cur_id() const
 // idで指定された時計の経過時間を返す
 inline
 USTime
-MStopWatch::time(ymuint id) const
+MStopWatch::time(int id) const
 {
   // 範囲外の場合は補正する．
   if ( id >= mNum ) {

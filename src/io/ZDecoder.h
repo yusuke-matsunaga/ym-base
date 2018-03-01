@@ -67,9 +67,9 @@ public:
   /// @return 実際に読み出したバイト数を返す．
   /// @note エラーが起こったら -1 を返す．
   virtual
-  ymint64
+  int
   read(ymuint8* rbuff,
-       ymuint64 num);
+       int num);
 
 
 private:
@@ -106,9 +106,9 @@ private:
   /// @param[in] buff データを格納するバッファ
   /// @param[in] num 読み込むバイト数．
   /// @return 実際に読み込んだバイト数を返す．
-  ymint64
+  int
   _read(ymuint8* buff,
-	ymuint64 num);
+	int num);
 
 
 private:
@@ -117,10 +117,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // コードあたりのビット数
-  ymuint32 m_n_bits;
+  int m_n_bits;
 
   // n_bits の最大値
-  ymuint32 m_maxbits;
+  int m_maxbits;
 
   // Maximum code
   code_int m_maxcode;
@@ -132,9 +132,9 @@ private:
 
   code_int m_free_ent;
 
-  ymint32 m_block_compress;
+  int m_block_compress;
 
-  ymint32 m_clear_flg;
+  int m_clear_flg;
 
   char_type mStack[8000];
 
@@ -150,9 +150,9 @@ private:
 
   code_int m_incode;
 
-  ymuint32 m_roffset;
+  int m_roffset;
 
-  ymuint32 m_size;
+  int m_size;
 
   char_type m_gbuf[k_BITS];
 

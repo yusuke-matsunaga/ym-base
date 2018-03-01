@@ -107,21 +107,21 @@ public:
   /// @param[in] size バッファのサイズ
   void
   set_inbuf(const ymuint8* buf,
-	    ymuint64 size);
+	    int size);
 
   /// @brief out バッファを設定する．
   /// @param[in] buf バッファ本体
   /// @param[in] size バッファのサイズ
   void
   set_outbuf(ymuint8* buf,
-	     ymuint64 size);
+	     int size);
 
   /// @brief 読み出せるデータのバイト数を返す．
-  ymuint
+  int
   avail_in();
 
   /// @brief 書き込めるデータのバイト数を返す．
-  ymuint
+  int
   avail_out();
 
 
@@ -223,7 +223,7 @@ BzEngine::decompress_end()
 inline
 void
 BzEngine::set_inbuf(const ymuint8* buf,
-		    ymuint64 size)
+		    int size)
 {
   // void* を利用した巧妙なキャスト
   // といっても本当は良くないコード
@@ -238,7 +238,7 @@ BzEngine::set_inbuf(const ymuint8* buf,
 inline
 void
 BzEngine::set_outbuf(ymuint8* buf,
-		     ymuint64 size)
+		     int size)
 {
   // void* を利用した巧妙なキャスト
   // といっても本当は良くないコード
@@ -249,7 +249,7 @@ BzEngine::set_outbuf(ymuint8* buf,
 
 // @brief 読み出せるデータのバイト数を返す．
 inline
-ymuint
+int
 BzEngine::avail_in()
 {
   return mBzStream.avail_in;
@@ -257,7 +257,7 @@ BzEngine::avail_in()
 
 // @brief 書き込めるデータのバイト数を返す．
 inline
-ymuint
+int
 BzEngine::avail_out()
 {
   return mBzStream.avail_out;

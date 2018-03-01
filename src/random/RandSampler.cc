@@ -15,11 +15,11 @@ BEGIN_NAMESPACE_YM
 
 // @brief コンストラクタ
 // @param[in] weight_array 重みの配列
-RandSampler::RandSampler(const vector<ymuint>& weight_array)
+RandSampler::RandSampler(const vector<int>& weight_array)
 {
-  mNum = static_cast<ymuint>(weight_array.size());
-  mWeightArray = new ymuint[mNum];
-  for (ymuint i = 0; i < mNum; ++ i) {
+  mNum = static_cast<int>(weight_array.size());
+  mWeightArray = new int[mNum];
+  for (int i = 0; i < mNum; ++ i) {
     mWeightArray[i] = weight_array[i];
   }
   init();
@@ -28,12 +28,12 @@ RandSampler::RandSampler(const vector<ymuint>& weight_array)
 // @brief コンストラクタ
 // @param[in] num 要素数
 // @param[in] weight_array 重みの配列
-RandSampler::RandSampler(ymuint num,
-			 ymuint weight_array[])
+RandSampler::RandSampler(int num,
+			 int weight_array[])
 {
   mNum = num;
-  mWeightArray = new ymuint[mNum];
-  for (ymuint i = 0; i < mNum; ++ i) {
+  mWeightArray = new int[mNum];
+  for (int i = 0; i < mNum; ++ i) {
     mWeightArray[i] = weight_array[i];
   }
   init();
@@ -45,8 +45,8 @@ RandSampler::init()
 {
   mNodeArray = new RsNode[mNum * 2 - 1];
   RsNode** node_heap = new RsNode*[mNum];
-  ymuint heap_end = 0;
-  for (ymuint i = 0; i < mNum; ++ i) {
+  int heap_end = 0;
+  for (int i = 0; i < mNum; ++ i) {
     RsNode* node = &mNodeArray[i];
     node->mIndex = i;
     node->mWeight = mWeightArray[i];
@@ -57,7 +57,7 @@ RandSampler::init()
     ++ heap_end;
   }
 
-  ymuint next_pos = mNum;
+  int next_pos = mNum;
   while ( heap_end > 1 ) {
     RsNode* node1 = node_heap[0];
     -- heap_end;
@@ -88,7 +88,7 @@ RandSampler::~RandSampler()
 }
 
 // @brief 要素数を返す．
-ymuint
+int
 RandSampler::num() const
 {
   return mNum;
@@ -96,8 +96,8 @@ RandSampler::num() const
 
 // @brief 要素の重みを返す．
 // @param[in] pos 位置番号 ( 0 <= pos < num() )
-ymuint
-RandSampler::weight(ymuint pos) const
+int
+RandSampler::weight(int pos) const
 {
   ASSERT_COND( pos < num() );
 
@@ -107,13 +107,13 @@ RandSampler::weight(ymuint pos) const
 // @brief サンプリングを行う．
 // @param[in] randgen 乱数発生器
 // @return サンプリング結果を返す．
-ymuint
+int
 RandSampler::get_sample(RandGen& randgen)
 {
   ASSERT_COND( mRoot != nullptr );
 
-  ymuint total_weight = mRoot->mWeight;
-  ymuint val = randgen.int32() % total_weight;
+  int total_weight = mRoot->mWeight;
+  int val = randgen.int32() % total_weight;
 
   for (RsNode* node = mRoot; ; ) {
     RsNode* l_node = node->mLeft;
@@ -135,11 +135,11 @@ RandSampler::get_sample(RandGen& randgen)
 // @param[in] pos 対象の位置
 void
 RandSampler::move_up(RsNode** heap,
-		     ymuint pos)
+		     int pos)
 {
   while ( pos > 0 ) {
     RsNode* node = heap[pos];
-    ymuint p_pos = (pos - 1) >> 1;
+    int p_pos = (pos - 1) >> 1;
     RsNode* p_node = heap[p_pos];
     if ( p_node->mWeight > node->mWeight ) {
       heap[p_pos] = node;
@@ -158,13 +158,13 @@ RandSampler::move_up(RsNode** heap,
 // @param[in] pos 対象の位置
 void
 RandSampler::move_down(RsNode** heap,
-		       ymuint heap_size,
-		       ymuint pos)
+		       int heap_size,
+		       int pos)
 {
-  ymuint p_pos = pos;
+  int p_pos = pos;
   for ( ; ; ) {
-    ymuint l_pos = p_pos + p_pos + 1;
-    ymuint r_pos = l_pos + 1;
+    int l_pos = p_pos + p_pos + 1;
+    int r_pos = l_pos + 1;
     if ( r_pos > heap_size ) {
       // 左右の子供を持たない
       break;

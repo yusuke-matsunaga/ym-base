@@ -44,7 +44,7 @@ GzDecoder::open(const char* filename)
 
   // ヘッダを解釈する．
   ymuint8 header[10];
-  ymuint hsize = mBuff.read(header, sizeof(header));
+  int hsize = mBuff.read(header, sizeof(header));
   if ( hsize != sizeof(header) ||
        header[0] != GZIP_MAGIC0 ||
        ((header[1] != GZIP_MAGIC1) && (header[1] != GZIP_OMAGIC1)) ) {
@@ -72,8 +72,8 @@ GzDecoder::open(const char* filename)
     if ( mBuff.read(tmp_buff, 2) != 2 ) {
       goto error_out;
     }
-    ymuint size = static_cast<ymuint>(tmp_buff[0]) |
-      (static_cast<ymuint>(tmp_buff[1]) << 8);
+    int size = static_cast<int>(tmp_buff[0]) |
+      (static_cast<int>(tmp_buff[1]) << 8);
     if ( !mBuff.dummy_read(size) ) {
       goto error_out;
     }
@@ -165,9 +165,9 @@ END_NONAMESPACE
 // @brief 圧縮されたデータを伸長してバッファに書き込む．
 // @param[in] buff 伸長したデータを格納するバッファ
 // @param[in] size バッファの空きサイズ
-ymint64
+int
 GzDecoder::read(ymuint8* buff,
-		ymuint64 size)
+		int size)
 {
   mZS.set_outbuf(buff, size);
 
@@ -180,14 +180,14 @@ GzDecoder::read(ymuint8* buff,
     }
 
     // 入力データをセットする．
-    ymuint old_size = mBuff.buff_size();
+    int old_size = mBuff.buff_size();
     mZS.set_inbuf(mBuff.buff_ptr(), old_size);
 
     // 伸長する．
     ret = mZS.inflate(Z_FINISH);
 
     // 今回の inflate で消費した分だけ入力バッファを空読みする．
-    ymuint in_size = old_size - mZS.avail_in();
+    int in_size = old_size - mZS.avail_in();
     mBuff.seek(in_size);
 
     switch ( ret ) {
@@ -232,7 +232,7 @@ GzDecoder::read(ymuint8* buff,
   }
 
   // バッファに書き込まれた量を計算する．
-  ymuint wr = size - mZS.avail_out();
+  int wr = size - mZS.avail_out();
   if ( wr != 0 ) {
     // CRC 値を更新しておく．
     mCRC = crc32(mCRC, (const Bytef*)buff, wr);
@@ -262,7 +262,7 @@ GzDecoder::read(ymuint8* buff,
       // truncated input
       goto end;
     }
-    ymuint32 orig_len = conv_4bytes(tmp_buff);
+    int orig_len = static_cast<int>(conv_4bytes(tmp_buff));
     if ( orig_len != mOutSize ) {
       cerr << "data-length ERROR!" << endl;
       return -1;

@@ -57,7 +57,7 @@ NameMgr::new_name(bool add_name)
   int d = mInterval.avail_num();
   ASSERT_COND( d >= 0 );
 
-  ymuint size = static_cast<ymuint>(mPrefix.size() + mSuffix.size() + 10);
+  int size = mPrefix.size() + mSuffix.size() + 10;
   mTmpString.reserve(size);
   mTmpString.clear();
   mTmpString.put_str(mPrefix);
@@ -113,9 +113,9 @@ NameMgr::erase(const char* name)
 int
 NameMgr::str_to_num(const char* name) const
 {
-  ymuint plen = static_cast<ymuint>(mPrefix.size());
-  ymuint slen = static_cast<ymuint>(mSuffix.size());
-  ymuint nlen = static_cast<ymuint>(strlen(name));
+  int plen = mPrefix.size();
+  int slen = mSuffix.size();
+  int nlen = strlen(name);
 
   // 接頭語と接尾語を足した長さのほうが長ければ数値があるわけない．
   if ( plen + slen >= nlen ) {
@@ -123,13 +123,13 @@ NameMgr::str_to_num(const char* name) const
   }
 
   // prefix を比較
-  for (ymuint i = 0; i < plen; ++ i) {
+  for ( int i = 0; i < plen; ++ i ) {
     if ( mPrefix[i] != name[i] ) {
       return -1;
     }
   }
   // suffix を比較
-  for (ymuint i = 0; i < slen; ++ i ) {
+  for ( int i = 0; i < slen; ++ i ) {
     if ( mSuffix[i] != name[nlen - slen + i] ) {
       return -1;
     }
@@ -137,7 +137,7 @@ NameMgr::str_to_num(const char* name) const
 
   // 数字を抜き出す．
   int d = 0;
-  for (ymuint i = plen; i < nlen - slen; ++ i) {
+  for ( int i = plen; i < nlen - slen; ++ i ) {
     char c = name[i];
     if ( !isdigit(c) ) {
       // 数字以外の文字があった．

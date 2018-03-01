@@ -31,7 +31,7 @@ public:
 
   /// @brief コンストラクタ
   /// @param[in] buff_size バッファサイズ
-  FileBuff(ymuint buff_size = 4096);
+  FileBuff(int buff_size = 4096);
 
   /// @brief デストラクタ
   ~FileBuff();
@@ -68,24 +68,24 @@ public:
   /// @param[in] buff データを格納したバッファ
   /// @param[in] num 書き込むバイト数
   /// @return 実際に書き込んだバイト数を返す．
-  ymint64
+  int
   write(const ymuint8* buff,
-	ymuint64 num);
+	int num);
 
   /// @brief num バイトを読み込み buff[] に格納する．
   /// @param[in] buff データを格納するバッファ
   /// @param[in] num 読み込むバイト数．
   /// @return 実際に読み込んだバイト数を返す．
-  ymint64
+  int
   read(ymuint8* buff,
-       ymuint64 num);
+       int num);
 
   /// @brief num バイトを読み込む
   /// @note ただし読み込んだデータは捨てる．
   /// @param[in] num 読み込むバイト数．
   /// @return 実際に読み込んだバイト数を返す．
-  ymint64
-  dummy_read(ymuint64 num);
+  int
+  dummy_read(int num);
 
   /// @brief バッファにデータを読みだす．
   bool
@@ -102,12 +102,12 @@ public:
   /// @brief バッファのサイズを返す．
   /// @note 読み出しモードの場合にはバッファ中のデータ量を返す．
   /// @note 書き込みモードの場合にはバッファの空き容量を返す．
-  ymuint64
+  int
   buff_size() const;
 
   /// @brief バッファの最終位置を進める．
   void
-  seek(ymuint64 num);
+  seek(int num);
 
 
 protected:
@@ -125,16 +125,16 @@ protected:
   bool mNeedFlush;
 
   // バッファサイズ
-  ymuint64 mBuffSize;
+  int mBuffSize;
 
   // バッファ
   ymuint8* mBuff;
 
   // 有効なデータのサイズ ( <= mBuffSize )
-  ymuint64 mDataSize;
+  int mDataSize;
 
   // 読み出し/書き込み位置
-  ymuint64 mPos;
+  int mPos;
 
 };
 
@@ -146,7 +146,7 @@ protected:
 // @brief コンストラクタ
 // @param[in] buff_size バッファサイズ
 inline
-FileBuff::FileBuff(ymuint buff_size)
+FileBuff::FileBuff(int buff_size)
 {
   mFd = -1;
   mBuffSize = buff_size;
@@ -233,11 +233,11 @@ bool
 FileBuff::flush()
 {
 #if defined(YM_WIN32)
-  ymint64 n = _write(mFd, mBuff, static_cast<ymuint>(mPos));
+  int n = _write(mFd, mBuff, static_cast<ymuint>(mPos));
 #else
-  ymint64 n = ::write(mFd, mBuff, mPos);
+  int n = ::write(mFd, mBuff, mPos);
 #endif
-  if ( n < static_cast<ymint64>(mPos) ) {
+  if ( n < mPos ) {
     // 書き込みが失敗した．
     return false;
   }
@@ -258,7 +258,7 @@ FileBuff::buff_ptr() const
 // @note 読み出しモードの場合にはバッファ中のデータ量を返す．
 // @note 書き込みモードの場合にはバッファの空き容量を返す．
 inline
-ymuint64
+int
 FileBuff::buff_size() const
 {
   return mDataSize - mPos;
@@ -267,7 +267,7 @@ FileBuff::buff_size() const
 // @brief バッファの最終位置を進める．
 inline
 void
-FileBuff::seek(ymuint64 num)
+FileBuff::seek(int num)
 {
   ASSERT_COND( mPos + num <= mDataSize );
 

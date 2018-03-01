@@ -95,7 +95,7 @@ public:
   /// slight change for C++, 2004/2/26
   void
   init_by_array(ymuint32 init_key[],
-		ymuint key_length);
+		int key_length);
 
   /// @brief 32ビット符号無し整数の乱数を発生させる．
   /// @note 以下，原文\n

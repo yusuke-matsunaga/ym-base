@@ -69,9 +69,9 @@ public:
   /// @return 実際に書き込んだバイト数を返す．
   /// @note エラーが起こったら -1 を返す．
   virtual
-  ymint64
+  int
   write(const ymuint8* wbuff,
-	ymuint64 num);
+	int num);
 
 
 private:
@@ -86,10 +86,10 @@ private:
   zstream mZ;
 
   // CRC コード
-  ymuint32 mCRC;
+  int mCRC;
 
   // 出力されたデータサイズ
-  ymuint32 mOutSize;
+  int mOutSize;
 
 };
 

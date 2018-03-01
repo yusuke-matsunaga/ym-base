@@ -50,7 +50,7 @@ public:
   /// @brief 確保した文字列領域の総量を得る．
   /// @return 確保した文字列領域の総量を得る．
   /// @note デバッグ/解析用 -- 通常は使わない．
-  ymuint64
+  int
   accum_alloc_size() const;
 
   /// @brief メモリを全部開放する．
@@ -68,13 +68,13 @@ private:
   /// @param[in] str ハッシュ対象の文字列
   /// @return str のハッシュ値
   static
-  ymuint32
+  int
   hash_func(const char* str);
 
   /// @brief テーブルを確保して初期化する．
   /// @param[in] new_size 新しいテーブルサイズ
   void
-  alloc_table(ymuint32 new_size);
+  alloc_table(int new_size);
 
 
 private:
@@ -90,7 +90,7 @@ private:
     Cell* mLink;
 
     // 文字数 (末尾の \0 を含む)
-    ymuint32 mSize;
+    int mSize;
 
     // 文字列領域の先頭を指すダミー
     // 実際には必要なサイズの領域を確保する．
@@ -107,16 +107,16 @@ private:
   Cell** mTable;
 
   // ハッシュ表のサイズ
-  ymuint32 mTableSize;
+  int mTableSize;
 
   // ハッシュ表の実効サイズ
-  ymuint32 mHashMask;
+  int mHashMask;
 
   // 登録されている要素数
-  ymuint32 mNum;
+  int mNum;
 
   // 次に拡張する基準
-  ymuint32 mExpandLimit;
+  int mExpandLimit;
 
   // Cell を確保するためのアロケータ
   SimpleAlloc mCellAlloc;

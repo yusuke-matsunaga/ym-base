@@ -145,14 +145,14 @@ public:
   /// @param[in] size バッファのサイズ
   void
   set_inbuf(const ymuint8* buf,
-	    ymuint64 size);
+	    int size);
 
   /// @brief out バッファを設定する．
   /// @param[in] buf バッファ本体
   /// @param[in] size バッファのサイズ
   void
   set_outbuf(ymuint8* buf,
-	     ymuint64 size);
+	     int size);
 
   /// @brief msg を得る．
   const char*
@@ -277,14 +277,14 @@ public:
   /// @param[in] size バッファサイズ
   explicit
   zstream_buff(istream* s,
-	       ymuint size = kBufSize);
+	       int size = kBufSize);
 
   /// @brief 出力用のコンストラクタ
   /// @param[in] s 出力ストリーム
   /// @param[in] size バッファサイズ
   explicit
   zstream_buff(ostream* s,
-	       ymuint size = kBufSize);
+	       int size = kBufSize);
 
   /// @brief デストラクタ
   ~zstream_buff();
@@ -299,7 +299,7 @@ public:
   /// @note 結果は出力ストリームに書き込まれる．
   void
   compress(Bytef* buff,
-	   ymuint size,
+	   int size,
 	   int flush);
 
   /// @brief データの伸長を行う．
@@ -307,9 +307,9 @@ public:
   /// @param[in] size バッファ中の空きサイズ(in bytes)
   /// @return バッファに書き出されたサイズ(in bytes)を返す．
   /// @note データは入力ストリームから読み込まれる．
-  ymuint
+  int
   decompress(Bytef* buff,
-	     ymuint size);
+	     int size);
 
   /// @brief 入力ストリームを取り出す．
   istream*
@@ -337,7 +337,7 @@ private:
 
   // バッファサイズ
   static
-  const ymuint kBufSize = 4096;
+  const int kBufSize = 4096;
 
 
 private:
@@ -355,7 +355,7 @@ private:
   Bytef* mBuff;
 
   // mBuff のサイズ
-  ymuint32 mSize;
+  int mSize;
 
   // 伸長モードの時のフラッシュフラグ
   int mInFlush;
@@ -388,7 +388,7 @@ public:
   /// @param[in] size バッファサイズ
   explicit
   basic_zlib_streambuf(istream& s,
-		       ymuint size = kBufSize) :
+		       int size = kBufSize) :
     mZbuf(&s, size),
     mBuff(nullptr),
     mSize(size),
@@ -404,7 +404,7 @@ public:
   /// @param[in] size バッファサイズ
   explicit
   basic_zlib_streambuf(ostream& s,
-		       ymuint size = kBufSize) :
+		       int size = kBufSize) :
     mZbuf(&s, size),
     mBuff(nullptr),
     mSize(size),
@@ -436,7 +436,7 @@ protected:
   virtual
   streambuf_type*
   setbuf(char_type* buf,
-	 ymuint size)
+	 int size)
   {
     if ( mZbuf.in() ) {
       this->setg(buf, buf, buf + size);
@@ -510,15 +510,15 @@ protected:
   }
 
   // char_type 単位のサイズを Bytef 単位のサイズに変換する
-  ymuint
-  byte_size(ymuint size)
+  int
+  byte_size(int size)
   {
     return size * sizeof(char_type) / sizeof(Bytef);
   }
 
   // Bytef 単位のサイズを char_type 単位のサイズに変換する
-  ymuint
-  char_size(ymuint size)
+  int
+  char_size(int size)
   {
     return size * sizeof(Bytef) / sizeof(char_type);
   }
@@ -531,7 +531,7 @@ private:
 
   // バッファサイズ
   static
-  const ymuint kBufSize = 4096;
+  const int kBufSize = 4096;
 
 
 private:
@@ -545,7 +545,7 @@ private:
   char_type* mBuff;
 
   // mBuff のサイズ
-  ymuint32 mSize;
+  int mSize;
 
   // デフォルトのバッファ
   char_type* mBuff0;
@@ -775,7 +775,7 @@ zstream::end()
 inline
 void
 zstream::set_inbuf(const ymuint8* buf,
-		   ymuint64 size)
+		   int size)
 {
   mZ.next_in = const_cast<Bytef*>(buf);
   mZ.avail_in = size;
@@ -785,7 +785,7 @@ zstream::set_inbuf(const ymuint8* buf,
 inline
 void
 zstream::set_outbuf(ymuint8* buf,
-		    ymuint64 size)
+		    int size)
 {
   mZ.next_out = buf;
   mZ.avail_out = size;

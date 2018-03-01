@@ -18,8 +18,8 @@ BEGIN_NAMESPACE_YM
 
 // コンストラクタ
 // 全要素数 n と選択する要素数 k を必ず指定する．
-CombiGen::CombiGen(ymuint n,
-		   ymuint k) :
+CombiGen::CombiGen(int n,
+		   int k) :
   GenBase(n, k)
 {
 }
@@ -50,12 +50,12 @@ CombiGen::~CombiGen()
 void
 CombiGen::operator++()
 {
-  ymuint n = num();
-  ymuint k = combi_num();
-  for (ymuint pos = k; pos -- > 0; ) {
+  int n = num();
+  int k = combi_num();
+  for (int pos = k; pos -- > 0; ) {
     if ( elem(pos) < n - k + pos ) {
       ++ elem(pos);
-      for (ymuint pos1 = pos + 1; pos1 < k; ++ pos1) {
+      for (int pos1 = pos + 1; pos1 < k; ++ pos1) {
 	elem(pos1) = elem(pos1 - 1) + 1;
       }
       break;

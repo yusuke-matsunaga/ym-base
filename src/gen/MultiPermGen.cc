@@ -18,7 +18,7 @@ BEGIN_NAMESPACE_YM
 
 // コンストラクタ
 // 全要素数 n と選択する要素数 k のベクタを指定する．
-MultiPermGen::MultiPermGen(const vector<pair<ymuint, ymuint> >& nk_array) :
+MultiPermGen::MultiPermGen(const vector<pair<int, int> >& nk_array) :
   MultiGenBase(nk_array)
 {
 }
@@ -49,14 +49,14 @@ MultiPermGen::~MultiPermGen()
 void
 MultiPermGen::operator++()
 {
-  for (ymuint g = group_num(); g -- > 0; ) {
+  for (int g = group_num(); g -- > 0; ) {
     vector<int> bitmap(n(g), 0);
-    for (ymuint pos = 0; pos < k(g); ++ pos) {
+    for (int pos = 0; pos < k(g); ++ pos) {
       bitmap[elem(g)[pos]] = 1;
     }
-    for (ymuint pos = k(g); pos -- > 0; ) {
+    for (int pos = k(g); pos -- > 0; ) {
       bool found = false;
-      for (ymuint val = elem(g)[pos]; ++ val < n(g); ) {
+      for (int val = elem(g)[pos]; ++ val < n(g); ) {
 	if ( bitmap[val] == 0 ) {
 	  bitmap[elem(g)[pos]] = 0;
 	  elem(g)[pos] = val;
@@ -66,8 +66,8 @@ MultiPermGen::operator++()
 	}
       }
       if ( found ) {
-	ymuint val = 0;
-	for (ymuint j = pos + 1; j < k(g); ++ j) {
+	int val = 0;
+	for (int j = pos + 1; j < k(g); ++ j) {
 	  for ( ; bitmap[val] == 1; ++ val) ;
 	  bitmap[val] = 1;
 	  elem(g)[j] = val;

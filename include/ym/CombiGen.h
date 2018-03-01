@@ -20,10 +20,10 @@ BEGIN_NAMESPACE_YM
 /// @brief 組み合わせ生成器を表すクラス
 ///
 /// @code
-/// ymuint n = 10;
-/// ymuint k =  3;
+/// int n = 10;
+/// int k =  3;
 /// for (CombiGen cg(n, k); !cg.is_end(); ++ cg)
-///    for (ymuint i = 0; i < k; ++ i) {
+///    for (int i = 0; i < k; ++ i) {
 ///       elem[i] = cg(i);
 ///    }
 ///    // elem[0] - elem[k - 1] に選ばれた要素(番号)が入る．
@@ -40,8 +40,8 @@ public:
   /// @brief コンストラクタ
   /// @param[in] n 全要素数
   /// @param[in] k 選び出す要素数
-  CombiGen(ymuint n,
-	   ymuint k);
+  CombiGen(int n,
+	   int k);
 
   /// @brief コピーコンストラクタ
   /// @param[in] src コピー元のオブジェクト

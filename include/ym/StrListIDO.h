@@ -110,9 +110,9 @@ public:
   /// @param[in] n 読み込むデータサイズ
   /// @return 実際に読み込んだ量を返す．
   virtual
-  ymint64
+  int
   read(ymuint8* buff,
-       ymuint64 n);
+       int n);
 
 
 private:
@@ -128,10 +128,10 @@ private:
   vector<string> mStrList;
 
   // 現在処理中の行番号
-  ymuint32 mLineNum;
+  int mLineNum;
 
   // 次に読み出す位置
-  ymuint32 mColumnNum;
+  int mColumnNum;
 
 };
 

@@ -5,7 +5,7 @@
 /// @brief 組み合わせ生成器と順列生成器のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2013-2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 /// @defgroup GeneratorGroup 組み合わせ生成器と順列生成器
@@ -40,8 +40,8 @@ public:
   /// @brief コンストラクタ
   /// @param[in] n 全要素数
   /// @param[in] k 選び出す要素数
-  GenBase(ymuint n,
-	  ymuint k);
+  GenBase(int n,
+	  int k);
 
   /// @brief コピーコンストラクタ
   GenBase(const GenBase& src);
@@ -57,12 +57,12 @@ public:
 
   /// @brief 全要素数を得る．
   /// @return 全要素数
-  ymuint
+  int
   num() const;
 
   /// @brief 選択する要素数を得る．
   /// @return 選択する要素数
-  ymuint
+  int
   combi_num() const;
 
   /// @brief 最初の要素を指すように初期化する．
@@ -72,8 +72,8 @@ public:
   /// @brief 要素の取得
   /// @param[in] pos 取り出す要素の位置 (最初の位置は 0)
   /// @return pos 番目の要素
-  ymuint
-  operator()(ymuint pos) const;
+  int
+  operator()(int pos) const;
 
   /// @brief 末尾のチェック
   /// @return 末尾の時に true を返す．
@@ -94,8 +94,8 @@ protected:
   /// @brief 要素の参照の取得
   /// @param[in] pos 取り出す要素の位置 (最初の位置は 0)
   /// @return pos 番目の要素への参照
-  ymuint&
-  elem(ymuint pos);
+  int&
+  elem(int pos);
 
 
 private:
@@ -104,13 +104,13 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 全要素数
-  ymuint32 mN;
+  int mN;
 
   // 選択する要素数
-  ymuint32 mK;
+  int mK;
 
   // 現在の要素
-  vector<ymuint32> mElem;
+  vector<int> mElem;
 
 };
 
@@ -121,7 +121,7 @@ private:
 
 // 全要素数を得る．
 inline
-ymuint
+int
 GenBase::num() const
 {
   return mN;
@@ -129,7 +129,7 @@ GenBase::num() const
 
 // 選択する要素数を得る．
 inline
-ymuint
+int
 GenBase::combi_num() const
 {
   return mK;
@@ -137,8 +137,8 @@ GenBase::combi_num() const
 
 // pos 番目の要素を取り出す．
 inline
-ymuint
-GenBase::operator()(ymuint pos) const
+int
+GenBase::operator()(int pos) const
 {
   ASSERT_COND( pos < mK );
 
@@ -147,8 +147,8 @@ GenBase::operator()(ymuint pos) const
 
 // pos 番目の要素への参照を取り出す．
 inline
-ymuint&
-GenBase::elem(ymuint pos)
+int&
+GenBase::elem(int pos)
 {
   return mElem[pos];
 }

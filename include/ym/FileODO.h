@@ -56,7 +56,7 @@ public:
   bool
   open(const char* filename,
        mode_t mode = 0666,
-       ymuint opt = 0);
+       int opt = 0);
 
   /// @brief ファイルを開く
   /// @param[in] filename ファイル名
@@ -65,7 +65,7 @@ public:
   bool
   open(const string& filename,
        mode_t mode = 0666,
-       ymuint opt = 0);
+       int opt = 0);
 
   /// @brief ファイルを閉じる．
   /// @note 以降の書き込みは行われない．
@@ -83,9 +83,9 @@ public:
   /// @param[in] n データサイズ
   /// @return 実際に書き出した量を返す．
   virtual
-  ymint64
+  int
   write(const ymuint8* buff,
-	ymuint64 n);
+	int n);
 
 
 private:

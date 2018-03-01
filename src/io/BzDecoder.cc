@@ -67,9 +67,9 @@ BzDecoder::is_ready() const
 // @brief 圧縮されたデータを伸長してバッファに書き込む．
 // @param[in] buff 伸長したデータを格納するバッファ
 // @param[in] size バッファの空きサイズ
-ymint64
+int
 BzDecoder::read(ymuint8* buff,
-		ymuint64 size)
+		int size)
 {
   mDecompEngine.set_outbuf(buff, size);
 
@@ -82,7 +82,7 @@ BzDecoder::read(ymuint8* buff,
     }
 
     // 入力データをセットする．
-    ymuint old_size = mBuff.buff_size();
+    int old_size = mBuff.buff_size();
     if ( old_size == 0 ) {
       // 入力の読み込みが末尾に達している．
       return 0;
@@ -94,7 +94,7 @@ BzDecoder::read(ymuint8* buff,
     int rcode = mDecompEngine.decompress();
 
     // 今回の decompress で消費した分だけ入力バッファを空読みする．
-    ymuint in_size = old_size - mDecompEngine.avail_in();
+    int in_size = old_size - mDecompEngine.avail_in();
     mBuff.seek(in_size);
 
     switch ( rcode ) {

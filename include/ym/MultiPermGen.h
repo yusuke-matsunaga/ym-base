@@ -23,13 +23,13 @@ BEGIN_NAMESPACE_YM
 /// の出力の直積を作るイメージ．
 ///
 /// @code
-/// vector<pair<ymuint, ymuint> > nk_array(2);
+/// vector<pair<int, int> > nk_array(2);
 /// nk_array[0] = make_pair(3, 1);
 /// nk_array[1] = make_pair(5, 2);
 /// for (MultiPemGen mpg(nk_array); !mpg.is_end(); ++ mpg) {
-///    for (ymuint g = 0; g < 2; ++ g) {
-///        ymuint k1 = mpg.k(g);
-///        for (ymuint i = 0; i < k1; ++ i) {
+///    for (int g = 0; g < 2; ++ g) {
+///        int k1 = mpg.k(g);
+///        for (int i = 0; i < k1; ++ i) {
 ///            elem[g][i] = mpg(g, i);
 ///        }
 ///    }
@@ -47,7 +47,7 @@ public:
 
   /// @brief コンストラクタ
   /// @param[in] nk_array 全要素数 n と選択する要素数 k のベクタ
-  MultiPermGen(const vector<pair<ymuint, ymuint> >& nk_array);
+  MultiPermGen(const vector<pair<int, int> >& nk_array);
 
   /// @brief コピーコンストラクタ
   /// @param[in] src コピー元のオブジェクト
