@@ -26,3 +26,8 @@ ym_add_gtest ( CombiGenTest
   gen/CombiGenTest.cc
   $<TARGET_OBJECTS:ym_base_d>
   )
+
+ym_add_gtest ( RangeTest
+  misc/RangeTest.cc
+  $<TARGET_OBJECTS:ym_base_d>
+  )
