@@ -21,6 +21,11 @@ BEGIN_NAMESPACE_YM
 class Alloc
 {
 public:
+
+  // サイズの指定に使う型
+  typedef unsigned int SizeType;
+
+public:
   //////////////////////////////////////////////////////////////////////
   /// @name コンストラクタ/デストラクタ
   /// @{
@@ -44,13 +49,13 @@ public:
   /// @brief n バイトの領域を確保する．
   /// @param[in] n 確保するメモリ量(単位はバイト)
   void*
-  get_memory(ymuint64 n);
+  get_memory(SizeType n);
 
   /// @brief n バイトの領域を開放する．
   /// @param[in] n 確保したメモリ量(単位はバイト)
   /// @param[in] blk 開放するメモリ領域の先頭番地
   void
-  put_memory(ymuint64 n,
+  put_memory(SizeType n,
 	     void* blk);
 
   /// @brief 今までに確保した全ての領域を破棄する．
@@ -72,10 +77,10 @@ public:
   /// @param[in] limit 制限値(単位はバイト)
   /// @note limit が 0 の時は制限なし
   void
-  set_mem_limit(ymuint64 limit);
+  set_mem_limit(SizeType limit);
 
   /// @brief メモリ量の制限値を返す．
-  ymuint64
+  SizeType
   mem_limit() const;
 
   /// @}
@@ -88,19 +93,19 @@ public:
   /// @{
 
   /// @brief 使用されているメモリ量を返す．
-  ymuint64
+  SizeType
   used_size() const;
 
   /// @brief used_size() の今までの最大値を返す．
-  ymuint64
+  SizeType
   max_used_size() const;
 
   /// @brief 実際に確保したメモリ量を返す．
-  ymuint64
+  SizeType
   allocated_size() const;
 
   /// @brief 実際に確保した回数を返す．
-  ymuint64
+  int
   allocated_count() const;
 
   /// @brief 内部状態を出力する．
@@ -121,13 +126,13 @@ protected:
   /// @param[in] n 確保するメモリ量(単位はバイト)
   /// @note 確保した総量が制限値を越えていたら 0 を返す．
   void*
-  alloc(ymuint64 n);
+  alloc(SizeType n);
 
   /// @brief 新のフリー関数
   /// @param[in] n 解放するメモリ量(単位はバイト)
   /// @param[in] blk 解放するメモリ領域
   void
-  free(ymuint64 n,
+  free(SizeType n,
        void* blk);
 
   /// @}
@@ -144,14 +149,14 @@ private:
   /// @param[in] n 確保するメモリ量(単位はバイト)
   virtual
   void*
-  _get_memory(ymuint64 n) = 0;
+  _get_memory(SizeType n) = 0;
 
   /// @brief 実際にメモリ領域の開放を行う関数
   /// @param[in] n 確保したメモリ量(単位はバイト)
   /// @param[in] blk 開放するメモリ領域の先頭番地
   virtual
   void
-  _put_memory(ymuint64 n,
+  _put_memory(SizeType n,
 	      void* blk) = 0;
 
   /// @brief 実際に destory() の処理を行う関数
@@ -166,19 +171,19 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // メモリ量の制限値
-  ymuint64 mMemLimit;
+  SizeType mMemLimit;
 
   // 使用中のメモリサイズ
-  ymuint64 mUsedSize;
+  SizeType mUsedSize;
 
   // 使用した最大のメモリサイズ
-  ymuint64 mMaxUsedSize;
+  SizeType mMaxUsedSize;
 
   // 確保したメモリサイズ
-  ymuint64 mAllocSize;
+  SizeType mAllocSize;
 
   // 確保した回数
-  ymuint64 mAllocCount;
+  int mAllocCount;
 
 };
 
@@ -192,14 +197,14 @@ private:
 // @note limit が 0 の時は制限なし
 inline
 void
-Alloc::set_mem_limit(ymuint64 limit)
+Alloc::set_mem_limit(SizeType limit)
 {
   mMemLimit = limit;
 }
 
 // @brief メモリ量の制限値を返す．
 inline
-ymuint64
+Alloc::SizeType
 Alloc::mem_limit() const
 {
   return mMemLimit;
@@ -207,7 +212,7 @@ Alloc::mem_limit() const
 
 // @brief 使用されているメモリ量を返す．
 inline
-ymuint64
+Alloc::SizeType
 Alloc::used_size() const
 {
   return mUsedSize;
@@ -215,7 +220,7 @@ Alloc::used_size() const
 
 // @brief used_size() の今までの最大値を返す．
 inline
-ymuint64
+Alloc::SizeType
 Alloc::max_used_size() const
 {
   return mMaxUsedSize;
@@ -223,7 +228,7 @@ Alloc::max_used_size() const
 
 // @brief 実際に確保したメモリ量を返す．
 inline
-ymuint64
+Alloc::SizeType
 Alloc::allocated_size() const
 {
   return mAllocSize;
@@ -231,7 +236,7 @@ Alloc::allocated_size() const
 
 // @brief 実際に確保した回数を返す．
 inline
-ymuint64
+int
 Alloc::allocated_count() const
 {
   return mAllocCount;

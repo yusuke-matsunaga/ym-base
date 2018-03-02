@@ -17,8 +17,8 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-UnitAlloc::UnitAlloc(ymuint64 unit_size,
-		     ymuint64 block_size) :
+UnitAlloc::UnitAlloc(SizeType unit_size,
+		     SizeType block_size) :
   mUnitSize(unit_size),
   mBlockSize(block_size),
   mAvailTop(nullptr)
@@ -37,7 +37,7 @@ UnitAlloc::~UnitAlloc()
 
 // @brief n バイトの領域を確保する．
 void*
-UnitAlloc::_get_memory(ymuint64 n)
+UnitAlloc::_get_memory(SizeType n)
 {
   if ( n != mUnitSize ) {
     // mUnitSize と異なっていたら普通のアロケータを使う．
@@ -63,7 +63,7 @@ UnitAlloc::_get_memory(ymuint64 n)
 
 // @brief n バイトの領域を開放する．
 void
-UnitAlloc::_put_memory(ymuint64 n,
+UnitAlloc::_put_memory(SizeType n,
 		       void* block)
 {
   if ( n != mUnitSize ) {
@@ -80,9 +80,7 @@ UnitAlloc::_put_memory(ymuint64 n,
 void
 UnitAlloc::_destroy()
 {
-  for (list<void*>::iterator p = mAllocList.begin();
-       p != mAllocList.end(); ++ p) {
-    void* chunk = *p;
+  for ( auto chunk: mAllocList ) {
     free(mUnitSize * mBlockSize, chunk);
   }
   mAllocList.clear();

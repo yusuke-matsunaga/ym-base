@@ -33,7 +33,7 @@ Alloc::~Alloc()
 
 // @brief n バイトの領域を確保する．
 void*
-Alloc::get_memory(ymuint64 n)
+Alloc::get_memory(SizeType n)
 {
   if ( n == 0 ) {
     return nullptr;
@@ -49,7 +49,7 @@ Alloc::get_memory(ymuint64 n)
 
 // @brief n バイトの領域を開放する．
 void
-Alloc::put_memory(ymuint64 n,
+Alloc::put_memory(SizeType n,
 		  void* block)
 {
   mUsedSize -= n;
@@ -80,7 +80,7 @@ Alloc::print_stats(ostream& s) const
 // @param[in] n 確保するメモリ量(単位はバイト)
 // @note 確保した総量が制限値を越えていたら 0 を返す．
 void*
-Alloc::alloc(ymuint64 n)
+Alloc::alloc(SizeType n)
 {
   if ( mMemLimit > 0 && mAllocSize + n >= mMemLimit ) {
     // 総量が制限値を越えた．
@@ -95,7 +95,7 @@ Alloc::alloc(ymuint64 n)
 // @param[in] n 解放するメモリ量(単位はバイト)
 // @param[in] blk 解放するメモリ領域
 void
-Alloc::free(ymuint64 n,
+Alloc::free(SizeType n,
 	    void* blk)
 {
   mAllocSize -= n;

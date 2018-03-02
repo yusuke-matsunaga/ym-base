@@ -17,7 +17,7 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-FragAlloc::FragAlloc(ymuint64 max_size) :
+FragAlloc::FragAlloc(SizeType max_size) :
   mMaxSize(max_size)
 {
   // double 型の整列境界値
@@ -42,7 +42,7 @@ FragAlloc::FragAlloc(ymuint64 max_size) :
   }
 
   mBlockListArray = new Block*[mMaxLogSize - mMinLogSize + 1];
-  for (ymuint64 i = mMinLogSize; i <= mMaxLogSize; ++ i ) {
+  for ( int i = mMinLogSize; i <= mMaxLogSize; ++ i ) {
     mBlockListArray[i - mMinLogSize] = nullptr;
   }
 }
@@ -56,7 +56,7 @@ FragAlloc::~FragAlloc()
 
 // @brief n バイトの領域を確保する．
 void*
-FragAlloc::_get_memory(ymuint64 n)
+FragAlloc::_get_memory(SizeType n)
 {
   if ( n > mMaxSize ) {
     // デフォルトのアロケータを使う．
@@ -64,8 +64,8 @@ FragAlloc::_get_memory(ymuint64 n)
   }
 
   // 2の巾乗のサイズに整える．
-  ymuint64 alloc_size = mMinSize;
-  ymuint64 pos0 = mMinLogSize;
+  SizeType alloc_size = mMinSize;
+  int pos0 = mMinLogSize;
   while ( alloc_size < n ) {
     alloc_size <<= 1;
     ++ pos0;
@@ -76,7 +76,7 @@ FragAlloc::_get_memory(ymuint64 n)
 
 // @brief n バイトの領域を開放する．
 void
-FragAlloc::_put_memory(ymuint64 n,
+FragAlloc::_put_memory(SizeType n,
 		       void* block)
 {
   if ( n > mMaxSize ) {
@@ -86,8 +86,8 @@ FragAlloc::_put_memory(ymuint64 n,
     char* cblock = static_cast<char*>(block);
 
     // 2の巾乗のサイズに整える．
-    ymuint64 alloc_size = mMinSize;
-    ymuint64 pos0 = mMinLogSize;
+    SizeType alloc_size = mMinSize;
+    int pos0 = mMinLogSize;
     while ( alloc_size < n ) {
       alloc_size <<= 1;
       ++ pos0;
@@ -100,12 +100,10 @@ FragAlloc::_put_memory(ymuint64 n,
 void
 FragAlloc::_destroy()
 {
-  for (ymuint64 i = mMinLogSize; i <= mMaxLogSize; ++ i ) {
+  for ( int i = mMinLogSize; i <= mMaxLogSize; ++ i ) {
     mBlockListArray[i - mMinLogSize] = nullptr;
   }
-  for (list<char*>::iterator p = mAllocList.begin();
-       p != mAllocList.end(); ++ p) {
-    char* chunk = *p;
+  for ( auto chunk: mAllocList ) {
     free(mMaxPowerSize, static_cast<void*>(chunk));
   }
   mAllocList.clear();
@@ -113,7 +111,7 @@ FragAlloc::_destroy()
 
 // サイズ 2^p のブロックを確保する．
 char*
-FragAlloc::alloc_block(ymuint64 p)
+FragAlloc::alloc_block(int p)
 {
   char* block = get_block(p);
   if ( block ) {
@@ -136,7 +134,7 @@ FragAlloc::alloc_block(ymuint64 p)
 // サイズ 2^p のブロックがあれば返す．
 // なければ nullptr を返す．
 char*
-FragAlloc::get_block(ymuint64 p)
+FragAlloc::get_block(int p)
 {
   Block* b = mBlockListArray[p - mMinLogSize];
   if ( b ) {
@@ -148,7 +146,7 @@ FragAlloc::get_block(ymuint64 p)
 
 // サイズ 2^p のブロックをリストに戻す．
 void
-FragAlloc::put_block(ymuint64 p,
+FragAlloc::put_block(int p,
 		     char* block)
 {
   Block* b = reinterpret_cast<Block*>(block);

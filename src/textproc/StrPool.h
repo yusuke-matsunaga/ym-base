@@ -64,15 +64,6 @@ private:
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-#if 0
-  /// @brief ハッシュ関数
-  /// @param[in] str ハッシュ対象の文字列
-  /// @return str のハッシュ値
-  static
-  int
-  hash_func(const char* str);
-#endif
-
   /// @brief テーブルを確保して初期化する．
   /// @param[in] new_size 新しいテーブルサイズ
   void

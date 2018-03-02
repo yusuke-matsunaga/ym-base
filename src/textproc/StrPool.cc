@@ -17,27 +17,14 @@ BEGIN_NAMESPACE_YM
 // 文字列を共有するためのプール
 //////////////////////////////////////////////////////////////////////
 
-#if 0
-// ハッシュ関数
-inline
-int
-StrPool::hash_func(const char* str)
-{
-  int h = 0;
-  int c;
-  for ( ; (c = static_cast<int>(*str)); ++ str) {
-    h = h * 37 + c;
-  }
-  return h;
-}
-#endif
-
 // コンストラクタ
 StrPool::StrPool() :
+  mTable(nullptr),
+  mTableSize(0),
+  mNum(0),
   mCellAlloc(4096)
 {
   alloc_table(1024);
-  mNum = 0;
 }
 
 // デストラクタ
@@ -50,16 +37,15 @@ StrPool::~StrPool()
 const char*
 StrPool::reg(const char* str)
 {
-  if ( mTableSize == 0 ) {
-    alloc_table(1024);
-  }
-
   HashFunc<const char*> hash_func;
+
+  cout << "str = " << str << endl;
 
   // まず str と同一の文字列が登録されていないか調べる．
   HashType hash_value = hash_func(str);
   int pos = hash_value & mHashMask;
-  for ( Cell* cell = mTable[pos]; cell; cell = cell->mLink ) {
+  for ( Cell* cell = mTable[pos]; cell != nullptr; cell = cell->mLink ) {
+    cout << "cell->mStr = " << cell->mStr << endl;
     if ( memcmp(str, cell->mStr, cell->mSize) == 0 ) {
       return cell->mStr;
     }
@@ -72,12 +58,12 @@ StrPool::reg(const char* str)
     int old_size = mTableSize;
     alloc_table(mTableSize << 1);
     for ( int i = 0; i < old_size; ++ i ) {
-      Cell* next;
-      for ( Cell* cell = old_table[i]; cell; cell = next ) {
-	next = cell->mLink;
+      for ( Cell* cell = old_table[i]; cell != nullptr; ) {
+	Cell* next = cell->mLink;
 	HashType pos = hash_func(cell->mStr) & mHashMask;
 	cell->mLink = mTable[pos];
 	mTable[pos] = cell;
+	cell = next;
       }
     }
     delete [] old_table;
@@ -86,7 +72,7 @@ StrPool::reg(const char* str)
   }
 
   int len = strlen(str);
-  int cell_size = len + sizeof(Cell);
+  Alloc::SizeType cell_size = len + sizeof(Cell);
   void* p = mCellAlloc.get_memory(cell_size);
   Cell* new_cell = new (p) Cell;
   memcpy(new_cell->mStr, str, len + 1);

@@ -28,7 +28,7 @@ public:
   /// @note page_size 以上のメモリ領域はデフォルトのアロケーターを
   /// 使用する．
   explicit
-  SimpleAlloc(ymuint64 page_size = 4096);
+  SimpleAlloc(SizeType page_size = 4096);
 
   /// @brief デストラクタ
   virtual
@@ -44,14 +44,14 @@ private:
   /// @param[in] n 確保するメモリ量(単位はバイト)
   virtual
   void*
-  _get_memory(ymuint64 n);
+  _get_memory(SizeType n);
 
   /// @brief n バイトの領域を開放する．
   /// @param[in] n 確保したメモリ量(単位はバイト)
   /// @param[in] blk 開放するメモリ領域の先頭番地
   virtual
   void
-  _put_memory(ymuint64 n,
+  _put_memory(SizeType n,
 	      void* blk);
 
   /// @brief 今までに確保した全ての領域を破棄する．
@@ -69,8 +69,8 @@ private:
 
   /// @brief アラインメントを考慮してサイズを調節する．
   static
-  ymuint64
-  align(ymuint64 req_size);
+  SizeType
+  align(SizeType req_size);
 
 
 private:
@@ -88,7 +88,7 @@ private:
     }
 
     // 利用可能な先頭番地
-    ymuint64 mNextPos;
+    SizeType mNextPos;
 
     // メモリチャンク
     char* mChunk;
@@ -98,7 +98,7 @@ private:
   struct BigBlock
   {
     // サイズ
-    ymuint64 mSize;
+    SizeType mSize;
 
     // 次のブロックを指すリンク
     BigBlock* mNext;
@@ -113,13 +113,13 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 一度に確保するメモリの単位
-  ymuint64 mPageSize;
+  SizeType mPageSize;
 
   // 使用可能なメモリ領域のリスト
   list<Page> mAvailList;
 
   // 使用中のメモリ領域のリスト
-  list<Page> mUsedList;
+  list<char*> mUsedList;
 
   // BigBlock の先頭
   BigBlock* mBlockTop;

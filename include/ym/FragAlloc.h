@@ -28,7 +28,7 @@ public:
   /// @note max_size 以上のメモリ領域はデフォルトのアロケーターを
   /// 使用する．
   explicit
-  FragAlloc(ymuint64 max_size = 4096);
+  FragAlloc(SizeType max_size = 4096);
 
   /// @brief デストラクタ
   virtual
@@ -44,15 +44,15 @@ private:
   /// @param[in] n 確保するメモリ量(単位はバイト)
   virtual
   void*
-  _get_memory(ymuint64 n);
+  _get_memory(SizeType n);
 
   /// @brief n バイトの領域を開放する．
   /// @param[in] n 確保したメモリ量(単位はバイト)
   /// @param[in] blk 開放するメモリ領域の先頭番地
   virtual
   void
-  _put_memory(ymuint64 n,
-	     void* blk);
+  _put_memory(SizeType n,
+	      void* blk);
 
   /// @brief 今までに確保した全ての領域を破棄する．
   /// 個々のオブジェクトのデストラクタなどは起動されない
@@ -69,16 +69,16 @@ private:
 
   // サイズ 2^p のブロックを確保する．
   char*
-  alloc_block(ymuint64 p);
+  alloc_block(int p);
 
   // サイズ 2^p のブロックがあれば返す．
   // なければ nullptr を返す．
   char*
-  get_block(ymuint64 p);
+  get_block(int p);
 
   // サイズ 2^p のブロックをリストに戻す．
   void
-  put_block(ymuint64 p,
+  put_block(int p,
 	    char* block);
 
 
@@ -101,19 +101,19 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 最小のサイズ
-  ymuint64 mMinSize;
+  SizeType mMinSize;
 
   // mMinSize の log
-  ymuint64 mMinLogSize;
+  int mMinLogSize;
 
   // コンストラクタの引数
-  ymuint64 mMaxSize;
+  SizeType mMaxSize;
 
   // mMaxSize を越えない2の巾乗の数．
-  ymuint64 mMaxPowerSize;
+  SizeType mMaxPowerSize;
 
   // mMaxPowerSize の log
-  ymuint64 mMaxLogSize;
+  int mMaxLogSize;
 
   // サイズごとに分けられたブロックリストの配列
   // 配列の大きさは mMaxLogSize + 1

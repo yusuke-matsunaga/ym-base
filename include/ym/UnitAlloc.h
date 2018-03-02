@@ -27,8 +27,8 @@ public:
   /// @param[in] unit_size メモリ割り当ての単位となるサイズ
   /// @param[in] block_size 一度に確保する個数
   explicit
-  UnitAlloc(ymuint64 unit_size,
-	    ymuint64 block_size = 1024);
+  UnitAlloc(SizeType unit_size,
+	    SizeType block_size = 1024);
 
   /// @brief デストラクタ
   virtual
@@ -44,14 +44,14 @@ private:
   /// @param[in] n 確保するメモリ量(単位はバイト)
   virtual
   void*
-  _get_memory(ymuint64 n);
+  _get_memory(SizeType n);
 
   /// @brief n バイトの領域を開放する．
   /// @param[in] n 確保したメモリ量(単位はバイト)
   /// @param[in] blk 開放するメモリ領域の先頭番地
   virtual
   void
-  _put_memory(ymuint64 n,
+  _put_memory(SizeType n,
 	      void* blk);
 
   /// @brief 今までに確保した全ての領域を破棄する．
@@ -66,16 +66,6 @@ private:
   //////////////////////////////////////////////////////////////////////
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief サイズ 2^p のブロックがあれば返す．
-  /// @note なければ nullptr を返す．
-  char*
-  get_block(ymuint64 p);
-
-  /// @brief サイズ 2^p のブロックをリストに戻す．
-  void
-  put_block(ymuint64 p,
-	    char* block);
 
 
 private:
@@ -97,10 +87,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 単位サイズ
-  ymuint64 mUnitSize;
+  SizeType mUnitSize;
 
   // ブロックサイズ
-  ymuint64 mBlockSize;
+  SizeType mBlockSize;
 
   // 利用可能なメモリ領域のリスト
   Block* mAvailTop;
