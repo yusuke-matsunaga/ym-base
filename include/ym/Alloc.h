@@ -64,6 +64,12 @@ public:
   void
   destroy();
 
+  /// @brief 配列用の領域を確保する(テンプレート)関数
+  /// @param[in] num 要素数
+  template<typename T>
+  T*
+  get_array(int num);
+
   /// @}
   //////////////////////////////////////////////////////////////////////
 
@@ -191,6 +197,20 @@ private:
 //////////////////////////////////////////////////////////////////////
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
+
+/// @brief 配列用の領域を確保する(テンプレート)関数
+/// @param[in] num 要素数
+template<typename T>
+inline
+T*
+Alloc::get_array(int num)
+{
+  if ( num <= 0 ) {
+    return nullptr;
+  }
+  void* p = get_memory(sizeof(T) * num);
+  return new (p) T[num];
+}
 
 // @brief メモリ量の制限値を設定する．
 // @param[in] limit 制限値(単位はバイト)

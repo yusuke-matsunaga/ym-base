@@ -39,13 +39,13 @@ StrPool::reg(const char* str)
 {
   HashFunc<const char*> hash_func;
 
-  cout << "str = " << str << endl;
+  cout << "StrPool::reg(" << str << ")" << endl;
 
   // まず str と同一の文字列が登録されていないか調べる．
   HashType hash_value = hash_func(str);
   int pos = hash_value & mHashMask;
   for ( Cell* cell = mTable[pos]; cell != nullptr; cell = cell->mLink ) {
-    cout << "cell->mStr = " << cell->mStr << endl;
+    cout << "  cell->mStr = " << cell->mStr << endl;
     if ( memcmp(str, cell->mStr, cell->mSize) == 0 ) {
       return cell->mStr;
     }
@@ -71,15 +71,11 @@ StrPool::reg(const char* str)
     pos = hash_value & mHashMask;
   }
 
-  int len = strlen(str);
-  Alloc::SizeType cell_size = len + sizeof(Cell);
-  void* p = mCellAlloc.get_memory(cell_size);
-  Cell* new_cell = new (p) Cell;
-  memcpy(new_cell->mStr, str, len + 1);
-  new_cell->mSize = len + 1;
+  Cell* new_cell = alloc_cell(str);
   new_cell->mLink = mTable[pos];
   mTable[pos] = new_cell;
   ++ mNum;
+
   return new_cell->mStr;
 }
 
@@ -112,6 +108,21 @@ StrPool::alloc_table(int new_size)
   for ( int i = 0; i < mTableSize; ++ i ) {
     mTable[i] = nullptr;
   }
+}
+
+// @brief 新しい文字列を表す Cell を確保する．
+// @param[in] str 文字列
+StrPool::Cell*
+StrPool::alloc_cell(const char* str)
+{
+  int len = strlen(str);
+  Alloc::SizeType cell_size = sizeof(Cell) + sizeof(char) * len;
+  void* p = mCellAlloc.get_memory(cell_size);
+  Cell* new_cell = new (p) Cell;
+  memcpy(new_cell->mStr, str, len + 1);
+  new_cell->mSize = len + 1;
+
+  return new_cell;
 }
 
 
