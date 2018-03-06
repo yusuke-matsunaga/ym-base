@@ -24,6 +24,8 @@ StrPool::StrPool() :
   mNum(0),
   mCellAlloc(4096)
 {
+  cout << "StrPool::StrPool()" << endl;
+
   alloc_table(1024);
 }
 
@@ -54,19 +56,7 @@ StrPool::reg(const char* str)
   // なければ新しい Cell を用意する．
   // とその前にテーブルの拡張が必要かどうか調べる．
   if ( mNum >= mExpandLimit ) {
-    Cell** old_table = mTable;
-    int old_size = mTableSize;
     alloc_table(mTableSize << 1);
-    for ( int i = 0; i < old_size; ++ i ) {
-      for ( Cell* cell = old_table[i]; cell != nullptr; ) {
-	Cell* next = cell->mLink;
-	HashType pos = hash_func(cell->mStr) & mHashMask;
-	cell->mLink = mTable[pos];
-	mTable[pos] = cell;
-	cell = next;
-      }
-    }
-    delete [] old_table;
     // サイズを拡張したので pos が古くなっている．
     pos = hash_value & mHashMask;
   }
@@ -101,6 +91,8 @@ StrPool::destroy()
 void
 StrPool::alloc_table(int new_size)
 {
+  Cell** old_table = mTable;
+  int old_size = mTableSize;
   mTableSize = new_size;
   mHashMask = mTableSize - 1;
   mExpandLimit = static_cast<int>(mTableSize * 1.8);
@@ -108,6 +100,18 @@ StrPool::alloc_table(int new_size)
   for ( int i = 0; i < mTableSize; ++ i ) {
     mTable[i] = nullptr;
   }
+
+  HashFunc<const char*> hash_func;
+  for ( int i = 0; i < old_size; ++ i ) {
+    for ( Cell* cell = old_table[i]; cell != nullptr; ) {
+      Cell* tmp = cell;
+      cell = cell->mLink;
+      HashType pos = hash_func(tmp->mStr) & mHashMask;
+      tmp->mLink = mTable[pos];
+      mTable[pos] = tmp;
+    }
+  }
+  delete [] old_table;
 }
 
 // @brief 新しい文字列を表す Cell を確保する．
@@ -115,12 +119,12 @@ StrPool::alloc_table(int new_size)
 StrPool::Cell*
 StrPool::alloc_cell(const char* str)
 {
-  int len = strlen(str);
-  Alloc::SizeType cell_size = sizeof(Cell) + sizeof(char) * len;
+  int len = strlen(str) + 1;
+  Alloc::SizeType cell_size = sizeof(Cell) + sizeof(char) * (len - 1);
   void* p = mCellAlloc.get_memory(cell_size);
   Cell* new_cell = new (p) Cell;
-  memcpy(new_cell->mStr, str, len + 1);
-  new_cell->mSize = len + 1;
+  memcpy(new_cell->mStr, str, len);
+  new_cell->mSize = len;
 
   return new_cell;
 }
