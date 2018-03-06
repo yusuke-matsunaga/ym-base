@@ -249,6 +249,7 @@ Range::Range(int start,
 // @param[in] end 終了位置
 //
 // start = 0, step = 1 とする．
+inline
 Range::Range(int end) :
   mStart(0),
   mEnd(end),
