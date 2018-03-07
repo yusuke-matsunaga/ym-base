@@ -13,6 +13,58 @@
 
 BEGIN_NAMESPACE_YM
 
+BEGIN_NONAMESPACE
+
+ymuint64
+calc_hashsize(ymuint64 num)
+{
+  static struct Data
+  {
+    ymuint64 size;
+    ymuint64 mask;
+  } data_list[] = {
+    {1024, 1021},
+    {2048, 2039},
+    {4096, 4093},
+    {8192, 8191},
+    {16384, 16381},
+    {32768, 32749},
+    {65536, 65521},
+    {131072, 131071},
+    {262144, 262139},
+    {524288, 524287},
+    {1048576, 1048573},
+    {2097152, 2097143},
+    {4194304, 4194301},
+    {8388608, 8388593},
+    {16777216, 16777213},
+    {33554432, 33554393},
+    {67108864, 67108859},
+    {134217728, 134217689},
+    {268435456, 268435399},
+    {536870912, 536870909},
+    {1073741824, 1073741789},
+    {2147483648, 2147483647},
+    {4294967296, 4294967291},
+    {8589934592, 8589934583},
+    {17179869184, 17179869143},
+    {34359738368, 34359738337},
+    {68719476736, 68719476731},
+    {137438953472, 137438953447},
+    {274877906944, 274877906899},
+    {549755813888, 549755813881},
+  };
+
+  for ( auto data: data_list ) {
+    if ( data.size == num ) {
+      return data.mask;
+    }
+  }
+  return num;
+}
+
+END_NONAMESPACE
+
 //////////////////////////////////////////////////////////////////////
 // 文字列を共有するためのプール
 //////////////////////////////////////////////////////////////////////
@@ -24,8 +76,6 @@ StrPool::StrPool() :
   mNum(0),
   mCellAlloc(4096)
 {
-  cout << "StrPool::StrPool()" << endl;
-
   alloc_table(1024);
 }
 
@@ -41,13 +91,10 @@ StrPool::reg(const char* str)
 {
   HashFunc<const char*> hash_func;
 
-  cout << "StrPool::reg(" << str << ")" << endl;
-
   // まず str と同一の文字列が登録されていないか調べる．
   HashType hash_value = hash_func(str);
-  int pos = hash_value & mHashMask;
+  ymuint64 pos = hash_value % mHashSize;
   for ( Cell* cell = mTable[pos]; cell != nullptr; cell = cell->mLink ) {
-    cout << "  cell->mStr = " << cell->mStr << endl;
     if ( memcmp(str, cell->mStr, cell->mSize) == 0 ) {
       return cell->mStr;
     }
@@ -58,19 +105,18 @@ StrPool::reg(const char* str)
   if ( mNum >= mExpandLimit ) {
     alloc_table(mTableSize << 1);
     // サイズを拡張したので pos が古くなっている．
-    pos = hash_value & mHashMask;
+    pos = hash_value % mHashSize;
   }
 
   Cell* new_cell = alloc_cell(str);
-  new_cell->mLink = mTable[pos];
-  mTable[pos] = new_cell;
+  add_cell(pos, new_cell);
   ++ mNum;
 
   return new_cell->mStr;
 }
 
 // 確保した文字列領域の総量を得る．
-int
+ymuint64
 StrPool::accum_alloc_size() const
 {
   return mCellAlloc.allocated_size();
@@ -89,26 +135,25 @@ StrPool::destroy()
 
 // テーブルを確保して初期化する．
 void
-StrPool::alloc_table(int new_size)
+StrPool::alloc_table(ymuint64 new_size)
 {
   Cell** old_table = mTable;
-  int old_size = mTableSize;
+  ymuint64 old_size = mTableSize;
   mTableSize = new_size;
-  mHashMask = mTableSize - 1;
+  mHashSize = calc_hashsize(mTableSize);
   mExpandLimit = static_cast<int>(mTableSize * 1.8);
   mTable = new Cell*[mTableSize];
-  for ( int i = 0; i < mTableSize; ++ i ) {
+  for ( ymuint64 i = 0; i < mTableSize; ++ i ) {
     mTable[i] = nullptr;
   }
 
   HashFunc<const char*> hash_func;
-  for ( int i = 0; i < old_size; ++ i ) {
+  for ( ymuint64 i = 0; i < old_size; ++ i ) {
     for ( Cell* cell = old_table[i]; cell != nullptr; ) {
       Cell* tmp = cell;
       cell = cell->mLink;
-      HashType pos = hash_func(tmp->mStr) & mHashMask;
-      tmp->mLink = mTable[pos];
-      mTable[pos] = tmp;
+      HashType pos = hash_func(tmp->mStr) % mHashSize;
+      add_cell(pos, tmp);
     }
   }
   delete [] old_table;

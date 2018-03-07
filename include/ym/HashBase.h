@@ -193,6 +193,10 @@ public:
   HashBaseCell<Key_Type>*
   cell() const;
 
+  /// @brief cell() の別名
+  HashBaseCell<Key_Type>*
+  operator*() const;
+
   /// @brief 一つ進める(前置演算子)
   /// @return 進めた後の反復子を返す．
   HashBaseIterator
@@ -367,7 +371,7 @@ HashBase<Key_Type>::begin() const
       return HashBaseIterator<Key_Type>(mHashTable, mHashSize, i, mHashTable[i]);
     }
   }
-  return HashBaseIterator<Key_Type>(nullptr, 0, 0, nullptr);
+  return end();
 }
 
 // @brief セルの末尾の反復子を返す．
@@ -415,9 +419,9 @@ HashBase<Key_Type>::alloc_table(int req_size)
   }
   for ( int i = 0; i < old_size; ++ i ) {
     for ( Cell* cell = old_table[i]; cell != nullptr; ) {
-      Cell* next = cell->mLink;
-      _reg_cell(cell);
-      cell = next;
+      Cell* tmp = cell;
+      cell = cell->mLink;
+      _reg_cell(tmp);
     }
   }
   delete [] old_table;
@@ -522,6 +526,15 @@ HashBaseCell<Key_Type>*
 HashBaseIterator<Key_Type>::cell() const
 {
   return mCell;
+}
+
+// @brief cell() の別名
+template<typename Key_Type>
+inline
+HashBaseCell<Key_Type>*
+HashBaseIterator<Key_Type>::operator*() const
+{
+  return cell();
 }
 
 // @brief 一つ進める(前置演算子)

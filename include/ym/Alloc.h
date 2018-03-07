@@ -23,7 +23,7 @@ class Alloc
 public:
 
   // サイズの指定に使う型
-  typedef unsigned int SizeType;
+  typedef ymuint64 SizeType;
 
 public:
   //////////////////////////////////////////////////////////////////////

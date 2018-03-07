@@ -114,9 +114,9 @@ SimpleAlloc::align(SizeType req_size)
 {
   // double 型の整列境界値
 #if defined(WIN32)
-  const int ALIGNOF_DOUBLE = __alignof(double);
+  const SizeType ALIGNOF_DOUBLE = __alignof(double);
 #else
-  const int ALIGNOF_DOUBLE = __alignof__(double);
+  const SizeType ALIGNOF_DOUBLE = __alignof__(double);
 #endif
   return ((req_size + ALIGNOF_DOUBLE - 1) / ALIGNOF_DOUBLE) * ALIGNOF_DOUBLE;
 }

@@ -52,7 +52,7 @@ public:
   /// @return 確保した文字列領域の総量を得る．
   ///
   /// デバッグ/解析用 -- 通常は使わない．
-  int
+  ymuint64
   accum_alloc_size() const;
 
   /// @brief メモリを全部開放する．
@@ -91,12 +91,17 @@ private:
   /// @brief テーブルを確保して初期化する．
   /// @param[in] new_size 新しいテーブルサイズ
   void
-  alloc_table(int new_size);
+  alloc_table(ymuint64 new_size);
 
   /// @brief 新しい文字列を表す Cell を確保する．
   /// @param[in] str 文字列
   Cell*
   alloc_cell(const char* str);
+
+  /// @brief セルをリンクに追加する．
+  void
+  add_cell(ymuint64 pos,
+	   Cell* cell);
 
 
 private:
@@ -108,21 +113,36 @@ private:
   Cell** mTable;
 
   // ハッシュ表のサイズ
-  int mTableSize;
+  ymuint64 mTableSize;
 
   // ハッシュ表の実効サイズ
-  int mHashMask;
+  ymuint64 mHashSize;
 
   // 登録されている要素数
-  int mNum;
+  ymuint64 mNum;
 
   // 次に拡張する基準
-  int mExpandLimit;
+  ymuint64 mExpandLimit;
 
   // Cell を確保するためのアロケータ
   SimpleAlloc mCellAlloc;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief セルをリンクに追加する．
+inline
+void
+StrPool::add_cell(ymuint64 pos,
+		  Cell* cell)
+{
+  cell->mLink = mTable[pos];
+  mTable[pos] = cell;
+}
 
 END_NAMESPACE_YM
 

@@ -22,9 +22,9 @@ FragAlloc::FragAlloc(SizeType max_size) :
 {
   // double 型の整列境界値
 #if defined(WIN32)
-  const int ALIGNOF_DOUBLE = __alignof(double);
+  const SizeType ALIGNOF_DOUBLE = __alignof(double);
 #else
-  const int ALIGNOF_DOUBLE = __alignof__(double);
+  const SizeType ALIGNOF_DOUBLE = __alignof__(double);
 #endif
 
   mMinSize = 1;
