@@ -13,10 +13,8 @@
 
 BEGIN_NAMESPACE_YM
 
-BEGIN_NONAMESPACE
-
 ymuint64
-calc_hashsize(ymuint64 num)
+calc_maxprime(ymuint64 num)
 {
   static struct Data
   {
@@ -63,7 +61,6 @@ calc_hashsize(ymuint64 num)
   return num;
 }
 
-END_NONAMESPACE
 
 //////////////////////////////////////////////////////////////////////
 // 文字列を共有するためのプール
@@ -92,8 +89,8 @@ StrPool::reg(const char* str)
   HashFunc<const char*> hash_func;
 
   // まず str と同一の文字列が登録されていないか調べる．
-  HashType hash_value = hash_func(str);
-  ymuint64 pos = hash_value % mHashSize;
+  SizeType hash_value = hash_func(str);
+  SizeType pos = hash_value % mHashSize;
   for ( Cell* cell = mTable[pos]; cell != nullptr; cell = cell->mLink ) {
     if ( memcmp(str, cell->mStr, cell->mSize) == 0 ) {
       return cell->mStr;
@@ -116,7 +113,7 @@ StrPool::reg(const char* str)
 }
 
 // 確保した文字列領域の総量を得る．
-ymuint64
+SizeType
 StrPool::accum_alloc_size() const
 {
   return mCellAlloc.allocated_size();
@@ -135,24 +132,24 @@ StrPool::destroy()
 
 // テーブルを確保して初期化する．
 void
-StrPool::alloc_table(ymuint64 new_size)
+StrPool::alloc_table(SizeType new_size)
 {
   Cell** old_table = mTable;
-  ymuint64 old_size = mTableSize;
+  SizeType old_size = mTableSize;
   mTableSize = new_size;
-  mHashSize = calc_hashsize(mTableSize);
+  mHashSize = calc_maxprime(mTableSize);
   mExpandLimit = static_cast<int>(mTableSize * 1.8);
   mTable = new Cell*[mTableSize];
-  for ( ymuint64 i = 0; i < mTableSize; ++ i ) {
+  for ( SizeType i = 0; i < mTableSize; ++ i ) {
     mTable[i] = nullptr;
   }
 
   HashFunc<const char*> hash_func;
-  for ( ymuint64 i = 0; i < old_size; ++ i ) {
+  for ( SizeType i = 0; i < old_size; ++ i ) {
     for ( Cell* cell = old_table[i]; cell != nullptr; ) {
       Cell* tmp = cell;
       cell = cell->mLink;
-      HashType pos = hash_func(tmp->mStr) % mHashSize;
+      SizeType pos = hash_func(tmp->mStr) % mHashSize;
       add_cell(pos, tmp);
     }
   }
@@ -165,7 +162,7 @@ StrPool::Cell*
 StrPool::alloc_cell(const char* str)
 {
   int len = strlen(str) + 1;
-  Alloc::SizeType cell_size = sizeof(Cell) + sizeof(char) * (len - 1);
+  SizeType cell_size = sizeof(Cell) + sizeof(char) * (len - 1);
   void* p = mCellAlloc.get_memory(cell_size);
   Cell* new_cell = new (p) Cell;
   memcpy(new_cell->mStr, str, len);
@@ -193,7 +190,7 @@ ShString::set(const char* str)
 }
 
 // @brief ShString 関連でアロケートされたメモリサイズ
-int
+SizeType
 ShString::allocated_size()
 {
   return thePool.accum_alloc_size();

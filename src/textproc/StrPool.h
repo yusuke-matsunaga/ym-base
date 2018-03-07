@@ -52,7 +52,7 @@ public:
   /// @return 確保した文字列領域の総量を得る．
   ///
   /// デバッグ/解析用 -- 通常は使わない．
-  ymuint64
+  SizeType
   accum_alloc_size() const;
 
   /// @brief メモリを全部開放する．
@@ -113,16 +113,16 @@ private:
   Cell** mTable;
 
   // ハッシュ表のサイズ
-  ymuint64 mTableSize;
+  SizeType mTableSize;
 
   // ハッシュ表の実効サイズ
-  ymuint64 mHashSize;
+  SizeType mHashSize;
 
   // 登録されている要素数
-  ymuint64 mNum;
+  SizeType mNum;
 
   // 次に拡張する基準
-  ymuint64 mExpandLimit;
+  SizeType mExpandLimit;
 
   // Cell を確保するためのアロケータ
   SimpleAlloc mCellAlloc;

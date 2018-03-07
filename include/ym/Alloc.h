@@ -22,9 +22,6 @@ class Alloc
 {
 public:
 
-  // サイズの指定に使う型
-  typedef ymuint64 SizeType;
-
 public:
   //////////////////////////////////////////////////////////////////////
   /// @name コンストラクタ/デストラクタ
@@ -224,7 +221,7 @@ Alloc::set_mem_limit(SizeType limit)
 
 // @brief メモリ量の制限値を返す．
 inline
-Alloc::SizeType
+SizeType
 Alloc::mem_limit() const
 {
   return mMemLimit;
@@ -232,7 +229,7 @@ Alloc::mem_limit() const
 
 // @brief 使用されているメモリ量を返す．
 inline
-Alloc::SizeType
+SizeType
 Alloc::used_size() const
 {
   return mUsedSize;
@@ -240,7 +237,7 @@ Alloc::used_size() const
 
 // @brief used_size() の今までの最大値を返す．
 inline
-Alloc::SizeType
+SizeType
 Alloc::max_used_size() const
 {
   return mMaxUsedSize;
@@ -248,7 +245,7 @@ Alloc::max_used_size() const
 
 // @brief 実際に確保したメモリ量を返す．
 inline
-Alloc::SizeType
+SizeType
 Alloc::allocated_size() const
 {
   return mAllocSize;

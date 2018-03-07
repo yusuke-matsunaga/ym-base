@@ -109,7 +109,7 @@ SimpleAlloc::_destroy()
 
 // @brief アラインメントを考慮してサイズを調節する．
 inline
-Alloc::SizeType
+SizeType
 SimpleAlloc::align(SizeType req_size)
 {
   // double 型の整列境界値

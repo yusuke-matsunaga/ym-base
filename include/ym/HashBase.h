@@ -18,6 +18,14 @@ BEGIN_NAMESPACE_YM
 template<typename Key_Type>
 class HashBaseIterator;
 
+/// @brief 2のべき乗数を超えない最大の素数を求める．
+/// @param[in] num 2のべき乗の数．
+/// @retun num を超えない最大の素数を返す．
+extern
+SizeType
+calc_maxprime(SizeType num);
+
+
 //////////////////////////////////////////////////////////////////////
 /// @class HashBaseCell HashBase.h "ym/HashBase.h"
 /// @brief HashBase 用のセル
@@ -44,13 +52,14 @@ struct HashBaseCell
 template<typename Key_Type>
 class HashBase
 {
+public:
   typedef HashBaseCell<Key_Type> Cell;
 
 protected:
 
   /// @brief コンストラクタ
   /// @param[in] size 表の初期サイズ
-  HashBase(int size);
+  HashBase(SizeType size);
 
   /// @brief デストラクタ
   ~HashBase();
@@ -66,7 +75,7 @@ public:
   clear();
 
   /// @brief 要素数を返す．
-  int
+  SizeType
   num() const;
 
   /// @brief 要素の有無をチェックする．
@@ -115,7 +124,7 @@ protected:
   /// @brief ハッシュ表を確保する．
   /// @param[in] req_size 表のサイズ
   void
-  alloc_table(int req_size);
+  alloc_table(SizeType req_size);
 
   /// @brief 要素を登録する．
   /// @param[in] cell 登録する要素
@@ -132,12 +141,12 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ハッシュ表のサイズを得る．
-  int
+  SizeType
   hash_size();
 
   /// @brief ハッシュ表の先頭のセルを得る．
   Cell*
-  hash_top(int pos);
+  hash_top(SizeType pos);
 
   /// @brief テーブルを削除する．
   void
@@ -149,17 +158,20 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ハッシュ表のサイズ
-  int mHashSize;
+  // mHashTable の本当のサイズ
+  SizeType mTableSize;
 
   // ハッシュ表
   Cell** mHashTable;
 
+  // ハッシュ表の実効的なサイズ
+  SizeType mHashSize;
+
   // 拡大する目安
-  int mNextLimit;
+  SizeType mNextLimit;
 
   // 要素数
-  int mNum;
+  SizeType mNum;
 
 };
 
@@ -224,8 +236,8 @@ private:
 
   /// @brief 内容を指定するコンストラクタ
   HashBaseIterator(HashBaseCell<Key_Type>** table,
-		   int table_size,
-		   int index,
+		   SizeType table_size,
+		   SizeType index,
 		   HashBaseCell<Key_Type>* cell);
 
   /// @brief ポインタを進める．
@@ -242,10 +254,10 @@ private:
   HashBaseCell<Key_Type>** mTable;
 
   // ハッシュ表のサイズ
-  int mTableSize;
+  SizeType mTableSize;
 
   // 現在のインデックス
-  int mIndex;
+  SizeType mIndex;
 
   // 現在のセル
   HashBaseCell<Key_Type>* mCell;
@@ -260,8 +272,9 @@ private:
 // @brief コンストラクタ
 template<typename Key_Type>
 inline
-HashBase<Key_Type>::HashBase(int size)
+HashBase<Key_Type>::HashBase(SizeType size)
 {
+  mTableSize = 0;
   mHashSize = 0;
   mHashTable = nullptr;
   mNum = 0;
@@ -283,7 +296,7 @@ inline
 void
 HashBase<Key_Type>::clear()
 {
-  for ( int i = 0; i < mHashSize; ++ i ) {
+  for ( SizeType i = 0; i < mHashSize; ++ i ) {
     for ( Cell* cell = mHashTable[i]; cell != nullptr; ) {
       Cell* tmp = cell;
       cell = tmp->mLink;
@@ -297,7 +310,7 @@ HashBase<Key_Type>::clear()
 // @brief 要素数を返す．
 template<typename Key_Type>
 inline
-int
+SizeType
 HashBase<Key_Type>::num() const
 {
   return mNum;
@@ -325,7 +338,7 @@ void
 HashBase<Key_Type>::erase(Key_Type key)
 {
   HashFunc<Key_Type> hash_func;
-  HashType h = hash_func(key) % mHashSize;
+  SizeType h = hash_func(key) % mHashSize;
   Cell** pprev = &mHashTable[h];
   Cell* cell;
   while ( (cell = *pprev) != nullptr ) {
@@ -351,7 +364,7 @@ HashBaseCell<Key_Type>*
 HashBase<Key_Type>::find_cell(Key_Type key) const
 {
   HashFunc<Key_Type> hash_func;
-  HashType h = hash_func(key) % mHashSize;
+  SizeType h = hash_func(key) % mHashSize;
   for ( Cell* cell = mHashTable[h]; cell != nullptr; cell = cell->mLink) {
     if ( cell->mKey == key ) {
       return cell;
@@ -366,7 +379,7 @@ inline
 HashBaseIterator<Key_Type>
 HashBase<Key_Type>::begin() const
 {
-  for ( int i = 0; i < mHashSize; ++ i ) {
+  for ( SizeType i = 0; i < mHashSize; ++ i ) {
     if ( mHashTable[i] != nullptr ) {
       return HashBaseIterator<Key_Type>(mHashTable, mHashSize, i, mHashTable[i]);
     }
@@ -396,7 +409,7 @@ HashBase<Key_Type>::reg_cell(Cell* cell)
     return;
   }
   if ( mNum >= mNextLimit ) {
-    alloc_table(mHashSize * 2);
+    alloc_table(mTableSize * 2);
   }
   _reg_cell(cell);
   ++ mNum;
@@ -407,17 +420,18 @@ HashBase<Key_Type>::reg_cell(Cell* cell)
 template<typename Key_Type>
 inline
 void
-HashBase<Key_Type>::alloc_table(int req_size)
+HashBase<Key_Type>::alloc_table(SizeType req_size)
 {
-  int old_size = mHashSize;
+  SizeType old_size = mTableSize;
   Cell** old_table = mHashTable;
-  mHashSize = req_size;
-  mNextLimit = static_cast<int>(mHashSize * 1.8);
-  mHashTable = new Cell*[mHashSize];
-  for ( int i = 0; i < mHashSize; ++ i ) {
+  mTableSize = req_size;
+  mNextLimit = static_cast<SizeType>(mTableSize * 1.8);
+  mHashTable = new Cell*[mTableSize];
+  mHashSize = calc_maxprime(mTableSize);
+  for ( SizeType i = 0; i < mTableSize; ++ i ) {
     mHashTable[i] = nullptr;
   }
-  for ( int i = 0; i < old_size; ++ i ) {
+  for ( SizeType i = 0; i < old_size; ++ i ) {
     for ( Cell* cell = old_table[i]; cell != nullptr; ) {
       Cell* tmp = cell;
       cell = cell->mLink;
@@ -438,7 +452,7 @@ void
 HashBase<Key_Type>::_reg_cell(Cell* cell)
 {
   HashFunc<Key_Type> hash_func;
-  HashType h = hash_func(cell->mKey) % mHashSize;
+  SizeType h = hash_func(cell->mKey) % mHashSize;
   cell->mLink = mHashTable[h];
   mHashTable[h] = cell;
 }
@@ -446,7 +460,7 @@ HashBase<Key_Type>::_reg_cell(Cell* cell)
 // @brief ハッシュ表のサイズを得る．
 template<typename Key_Type>
 inline
-int
+SizeType
 HashBase<Key_Type>::hash_size()
 {
   return mHashSize;
@@ -456,7 +470,7 @@ HashBase<Key_Type>::hash_size()
 template<typename Key_Type>
 inline
 HashBaseCell<Key_Type>*
-HashBase<Key_Type>::hash_top(int pos)
+HashBase<Key_Type>::hash_top(SizeType pos)
 {
   return mHashTable[pos];
 }
@@ -556,7 +570,7 @@ inline
 HashBaseIterator<Key_Type>
 HashBaseIterator<Key_Type>::operator++(int)
 {
-  int cur_index = mIndex;
+  SizeType cur_index = mIndex;
   HashBaseCell<Key_Type>* cur_cell = mCell;
   next_ptr();
   return HashBaseIterator<Key_Type>(mTable, mTableSize, cur_index, cur_cell);
@@ -584,8 +598,8 @@ HashBaseIterator<Key_Type>::operator!=(const HashBaseIterator& src) const
 template<typename Key_Type>
 inline
 HashBaseIterator<Key_Type>::HashBaseIterator(HashBaseCell<Key_Type>** table,
-					     int size,
-					     int index,
+					     SizeType size,
+					     SizeType index,
 					     HashBaseCell<Key_Type>* cell)
 {
   mTable = table;

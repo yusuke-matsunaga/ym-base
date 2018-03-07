@@ -14,8 +14,6 @@
 
 BEGIN_NAMESPACE_YM
 
-typedef unsigned int HashType;
-
 //////////////////////////////////////////////////////////////////////
 /// @class HashFunc HashFunc.h "ym/HashFunc.h"
 /// @brief ハッシュ関数を表すファンクタクラス
@@ -27,7 +25,7 @@ typedef unsigned int HashType;
 template<typename Key_Type>
 struct HashFunc
 {
-  HashType
+  SizeType
   operator()(const Key_Type& key)
   {
     // Key_Type が unsigned int にキャストできなければエラーになる．
@@ -43,11 +41,11 @@ template<>
 struct
 HashFunc<void*>
 {
-  HashType
+  SizeType
   operator()(void* key) const
   {
     ympuint tmp = reinterpret_cast<ympuint>(key) / sizeof(void*);
-    return static_cast<HashType>(tmp);
+    return static_cast<SizeType>(tmp);
   }
 };
 
@@ -59,10 +57,10 @@ template<>
 struct
 HashFunc<int>
 {
-  HashType
+  SizeType
   operator()(int key) const
   {
-    return static_cast<HashType>(key);
+    return static_cast<SizeType>(key);
   }
 };
 
@@ -74,10 +72,10 @@ template<>
 struct
 HashFunc<unsigned int>
 {
-  HashType
+  SizeType
   operator()(unsigned int key) const
   {
-    return static_cast<HashType>(key);
+    return static_cast<SizeType>(key);
   }
 };
 
@@ -89,12 +87,12 @@ template<>
 struct
 HashFunc<string>
 {
-  HashType
+  SizeType
   operator()(const string& key) const
   {
-    HashType h = 0;
+    SizeType h = 0;
     for ( int i = 0; i < key.size(); ++ i ) {
-      h = h * 33 + static_cast<HashType>(key[i]);
+      h = h * 33 + static_cast<SizeType>(key[i]);
     }
     return h;
   }
@@ -108,13 +106,13 @@ template<>
 struct
 HashFunc<const char*>
 {
-  HashType
+  SizeType
   operator()(const char* key) const
   {
-    HashType h = 0;
+    SizeType h = 0;
     char c;
     while ( (c = *key ++) ) {
-      h = h * 33 + static_cast<HashType>(c);
+      h = h * 33 + static_cast<SizeType>(c);
     }
     return h;
   }

@@ -85,12 +85,12 @@ public:
   id() const;
 
   /// @brief ハッシュ用のキーを返す．
-  HashType
+  SizeType
   hash() const;
 
   /// @brief ShString 関連でアロケートされたメモリサイズ
   static
-  int
+  SizeType
   allocated_size();
 
   /// @brief ShString 関連でアロケートされたメモリをすべて開放する．
@@ -200,7 +200,7 @@ operator<<(ostream& s,
 template <>
 struct HashFunc<ShString>
 {
-  HashType
+  SizeType
   operator()(const ShString& str) const
   {
     return str.hash();
@@ -302,11 +302,11 @@ ShString::id() const
 
 // @brief ハッシュ用のキーを返す．
 inline
-HashType
+SizeType
 ShString::hash() const
 {
   ympuint tmp = reinterpret_cast<ympuint>(mPtr)/sizeof(void*);
-  return static_cast<HashType>(tmp);
+  return static_cast<SizeType>(tmp);
 }
 
 // 等価比較演算子
