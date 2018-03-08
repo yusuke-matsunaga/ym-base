@@ -94,6 +94,10 @@ public:
   Key_Type
   key() const;
 
+  /// @brief key() の別名
+  Key_Type
+  operator*() const;
+
   /// @brief 一つ進める(前置演算子)
   /// @return 進めた後の反復子を返す．
   HashSetIterator
@@ -245,6 +249,15 @@ HashSetIterator<Key_Type>::key() const
 {
   HashBaseCell<Key_Type>* cell = mBase.cell();
   return cell->mKey;
+}
+
+// @brief key() の別名
+template<typename Key_Type>
+inline
+Key_Type
+HashSetIterator<Key_Type>::operator*() const
+{
+  return key();
 }
 
 // @brief 一つ進める(前置演算子)
