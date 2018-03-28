@@ -3,7 +3,7 @@
 /// @brief UnitAlloc の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -49,7 +49,7 @@ UnitAlloc::_get_memory(SizeType n)
     mAllocList.push_back(chunk);
 
     char* p = static_cast<char*>(chunk);
-    for (ymuint64 i = 0; i < mBlockSize; ++ i, p += mUnitSize) {
+    for ( SizeType i = 0; i < mBlockSize; ++ i, p += mUnitSize ) {
       Block* b = reinterpret_cast<Block*>(p);
       b->mLink = mAvailTop;
       mAvailTop = b;

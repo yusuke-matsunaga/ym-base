@@ -5,7 +5,7 @@
 /// @brief StrPool のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -75,7 +75,7 @@ private:
     Cell* mLink;
 
     // 文字数 (末尾の \0 を含む)
-    int mSize;
+    SizeType mSize;
 
     // 文字列領域の先頭を指すダミー
     // 実際には必要なサイズの領域を確保する．
@@ -91,7 +91,7 @@ private:
   /// @brief テーブルを確保して初期化する．
   /// @param[in] new_size 新しいテーブルサイズ
   void
-  alloc_table(ymuint64 new_size);
+  alloc_table(SizeType new_size);
 
   /// @brief 新しい文字列を表す Cell を確保する．
   /// @param[in] str 文字列
@@ -100,7 +100,7 @@ private:
 
   /// @brief セルをリンクに追加する．
   void
-  add_cell(ymuint64 pos,
+  add_cell(SizeType pos,
 	   Cell* cell);
 
 
@@ -137,7 +137,7 @@ private:
 // @brief セルをリンクに追加する．
 inline
 void
-StrPool::add_cell(ymuint64 pos,
+StrPool::add_cell(SizeType pos,
 		  Cell* cell)
 {
   cell->mLink = mTable[pos];

@@ -3,7 +3,7 @@
 /// @brief MsgHandler の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -18,7 +18,7 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-MsgHandler::MsgHandler(ymuint32 mask) :
+MsgHandler::MsgHandler(MsgBitMask mask) :
   mMask(mask)
 {
 }
@@ -30,13 +30,13 @@ MsgHandler::~MsgHandler()
 
 // @brief メッセージマスクの設定
 void
-MsgHandler::set_mask(ymuint32 mask)
+MsgHandler::set_mask(MsgBitMask mask)
 {
   mMask = mask;
 }
 
 // @brief メッセージマスクの取得
-ymuint32
+MsgBitMask
 MsgHandler::mask() const
 {
   return mMask;
@@ -93,7 +93,7 @@ MsgHandler::event_proc(const char* src_file,
 		       const char* label,
 		       const char* body)
 {
-  ymuint32 bit = conv2bitmask(type);
+  MsgBitMask bit = conv2bitmask(type);
   if ( mMask & bit ) {
     if ( loc.is_valid() ) {
       put_msg(src_file, src_line, loc, type, label, body);

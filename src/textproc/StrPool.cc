@@ -3,7 +3,7 @@
 /// @brief StrPool と ShString の実装ファイル
 /// @author Yusuke Matsunaga
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -13,13 +13,13 @@
 
 BEGIN_NAMESPACE_YM
 
-ymuint64
-calc_maxprime(ymuint64 num)
+SizeType
+calc_maxprime(SizeType num)
 {
   static struct Data
   {
-    ymuint64 size;
-    ymuint64 mask;
+    SizeType size;
+    SizeType mask;
   } data_list[] = {
     {1024, 1021},
     {2048, 2039},
@@ -138,7 +138,7 @@ StrPool::alloc_table(SizeType new_size)
   SizeType old_size = mTableSize;
   mTableSize = new_size;
   mHashSize = calc_maxprime(mTableSize);
-  mExpandLimit = static_cast<int>(mTableSize * 1.8);
+  mExpandLimit = static_cast<SizeType>(mTableSize * 1.8);
   mTable = new Cell*[mTableSize];
   for ( SizeType i = 0; i < mTableSize; ++ i ) {
     mTable[i] = nullptr;
@@ -161,7 +161,7 @@ StrPool::alloc_table(SizeType new_size)
 StrPool::Cell*
 StrPool::alloc_cell(const char* str)
 {
-  int len = strlen(str) + 1;
+  SizeType len = strlen(str) + 1;
   SizeType cell_size = sizeof(Cell) + sizeof(char) * (len - 1);
   void* p = mCellAlloc.get_memory(cell_size);
   Cell* new_cell = new (p) Cell;

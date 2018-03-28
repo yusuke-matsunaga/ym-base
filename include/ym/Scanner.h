@@ -5,7 +5,7 @@
 /// @brief Scanner のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2013 Yusuke Matsunaga
+/// Copyright (C) 2013, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -22,9 +22,9 @@ BEGIN_NAMESPACE_YM
 /// @class Scanner Scanner.h "ym/Scanner.h"
 /// @brief 位置情報のトラッキング付きの入力データ読み出し器
 ///
+/// 入力データはコンストラクタで指定する．
+/// 途中で切り替えることはできない．
 /// このクラスで行える処理は
-/// - 入力データのアタッチ (attach)
-/// - 入力データのデタッチ (dettach)
 /// - 一文字読み出し     (get)
 /// - 一文字の先読み     (peek)
 /// - 先読みした文字の確定 (accept)

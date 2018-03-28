@@ -34,7 +34,7 @@ ODO::_write(const ymuint8* buff,
     buf << "ODO::write(" << n << ") failed. wrote " << ret << " bytes.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    FileRegion(),
-		    kMsgFailure,
+		    MsgType::Failure,
 		    "ODO",
 		    buf.str());
   }

@@ -56,7 +56,7 @@ FileBuff::write(const ymuint8* buff,
       ymuint8* tmp_buff = mBuff;
       while ( tmp_size > 0 ) {
 #if defined(YM_WIN32)
-	int n = _write(mFd, reinterpret_cast<void*>(tmp_buff), static_cast<ymuint>(tmp_size));
+	int n = _write(mFd, reinterpret_cast<void*>(tmp_buff), tmp_size);
 #else
 	int n = ::write(mFd, reinterpret_cast<void*>(tmp_buff), tmp_size);
 #endif
@@ -161,7 +161,7 @@ FileBuff::prepare()
   if ( mPos == mDataSize ) {
     // バッファが空なら実際に読み込む．
 #if defined(YM_WIN32)
-    int n = _read(mFd, reinterpret_cast<void*>(mBuff), static_cast<ymuint>(mBuffSize));
+    int n = _read(mFd, reinterpret_cast<void*>(mBuff), mBuffSize);
 #else
     int n = ::read(mFd, reinterpret_cast<void*>(mBuff), mBuffSize);
 #endif

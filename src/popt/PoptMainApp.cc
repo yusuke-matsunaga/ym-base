@@ -3,7 +3,7 @@
 /// @brief PoptMainApp の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2013-2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -64,25 +64,25 @@ PoptMainApp::reset()
 // @param[in] argc コマンド行の引数の数
 // @param[in] argv コマンド行の引数配列
 // @param[in] flags フラグ
-tPoptStat
+PoptStat
 PoptMainApp::parse_options(int argc,
 			   const char** argv,
 			   int flags)
 {
   if ( mDone ) {
     cerr << "PoptMainApp::parse_options() is called more than once." << endl;
-    return kPoptAbort;
+    return PoptStat::Abort;
   }
 
   // オプションテーブルを作る．
-  ymuint n = mOptionList.size();
+  int n = mOptionList.size();
   // end-marker の分を1つ足す必要がある．
-  ymuint table_size = n + 1;
+  int table_size = n + 1;
   if ( mAutoHelp ) {
     ++ table_size;
   }
   poptOption* option_table = new poptOption[table_size];
-  for (ymuint i = 0; i < n; ++ i) {
+  for ( int i = 0; i < n; ++ i ) {
     poptOption& option = option_table[i];
     Popt* opt = mOptionList[i];
     option.longName = opt->opt_str();
@@ -132,9 +132,9 @@ PoptMainApp::parse_options(int argc,
       // エラーが起きた．
       cerr << poptBadOption(reinterpret_cast<poptContext>(mCon), POPT_BADOPTION_NOALIAS)
 	   << ": " << poptStrerror(rc) << endl;
-      return kPoptAbort;
+      return PoptStat::Abort;
     }
-    ymuint id = static_cast<ymuint>(rc);
+    int id = rc;
 
     ASSERT_COND( id > 0 );
 
@@ -149,18 +149,18 @@ PoptMainApp::parse_options(int argc,
     if ( !stat ) {
       // 続行不可能なエラーが起きた．
       delete [] option_table;
-      return kPoptAbort;
+      return PoptStat::Abort;
     }
   }
 
   delete [] option_table;
-  return kPoptOk;
+  return PoptStat::Ok;
 }
 
 // @brief 残った引数を得る．
 // @param[in] args 引数を格納するベクタ
 // @return 引数の数を返す．
-ymuint
+int
 PoptMainApp::get_args(vector<string>& args)
 {
   args.clear();
@@ -550,10 +550,10 @@ PoptUint::~PoptUint()
 }
 
 // @brief オプション引数の値を返す．
-ymuint
+unsigned int
 PoptUint::val() const
 {
-  return static_cast<ymuint>(PoptInt::val());
+  return static_cast<unsigned int>(PoptInt::val());
 }
 
 

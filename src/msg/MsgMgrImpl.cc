@@ -3,7 +3,7 @@
 /// @brief MsgMgrImpl の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -68,11 +68,11 @@ MsgMgrImpl::put_msg(const char* src_file,
 		    const char* msg)
 {
   switch ( type ) {
-  case kMsgError:    ++ mErrorNum; break;
-  case kMsgWarning:  ++ mWarningNum; break;
-  case kMsgInfo:     ++ mInfoNum; break;
-  case kMsgFailure:  ++ mFailNum; break;
-  case kMsgDebug:    ++ mDebugNum; break;
+  case MsgType::Error:    ++ mErrorNum; break;
+  case MsgType::Warning:  ++ mWarningNum; break;
+  case MsgType::Info:     ++ mInfoNum; break;
+  case MsgType::Failure:  ++ mFailNum; break;
+  case MsgType::Debug:    ++ mDebugNum; break;
   default: ASSERT_NOT_REACHED;
   }
 
@@ -94,11 +94,11 @@ MsgMgrImpl::put_msg(const char* src_file,
 		    const char* msg)
 {
   switch ( type ) {
-  case kMsgError:    ++ mErrorNum; break;
-  case kMsgWarning:  ++ mWarningNum; break;
-  case kMsgInfo:     ++ mInfoNum; break;
-  case kMsgFailure:  ++ mFailNum; break;
-  case kMsgDebug:    ++ mDebugNum; break;
+  case MsgType::Error:    ++ mErrorNum; break;
+  case MsgType::Warning:  ++ mWarningNum; break;
+  case MsgType::Info:     ++ mInfoNum; break;
+  case MsgType::Failure:  ++ mFailNum; break;
+  case MsgType::Debug:    ++ mDebugNum; break;
   default: ASSERT_NOT_REACHED;
   }
 
@@ -117,42 +117,42 @@ MsgMgrImpl::clear_count()
 }
 
 // @brief 全メッセージ数を得る．
-ymuint32
+int
 MsgMgrImpl::msg_num() const
 {
   return mErrorNum + mWarningNum + mInfoNum + mFailNum + mDebugNum;
 }
 
 // @brief エラーメッセージ数を得る．
-ymuint32
+int
 MsgMgrImpl::error_num() const
 {
   return mErrorNum;
 }
 
 // @brief 警告メッセージ数を得る．
-ymuint32
+int
 MsgMgrImpl::warning_num() const
 {
   return mWarningNum;
 }
 
 // @brief 情報メッセージ数を得る．
-ymuint32
+int
 MsgMgrImpl::info_num() const
 {
   return mInfoNum;
 }
 
 // @brief 失敗メッセージ数を得る．
-ymuint32
+int
 MsgMgrImpl::fail_num() const
 {
   return mFailNum;
 }
 
 // @brief デバッグメッセージ数を得る．
-ymuint32
+int
 MsgMgrImpl::debug_num() const
 {
   return mDebugNum;

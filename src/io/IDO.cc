@@ -174,7 +174,7 @@ IDO::_read(ymuint8* buff,
     buf << "IDO::_read(" << n << ") failed. read " << ret << " bytes.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    FileRegion(),
-		    kMsgFailure,
+		    MsgType::Failure,
 		    "IDO",
 		    buf.str());
   }

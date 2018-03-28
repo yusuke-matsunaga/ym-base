@@ -17,23 +17,31 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 /// @brief メッセージの種類を表す列挙型
 //////////////////////////////////////////////////////////////////////
-enum MsgType {
+enum class MsgType {
   /// @brief エラー
   /// @note 不正なデータなどの再現性のある致命的な不具合
-  kMsgError   = 1,
+  Error   = 1,
   /// @brief 警告
   /// @note 軽微な不具合
-  kMsgWarning = 2,
+  Warning = 2,
   /// @brief 失敗
   /// @note メモリ不足，ファイル読み書き失敗のような外的要因の不具合
-  kMsgFailure = 3,
+  Failure = 3,
   /// @brief 情報
   /// @note 付加的な情報
-  kMsgInfo    = 4,
+  Info    = 4,
   /// @brief デバッグ情報
   /// @note デバッグ用の付加的な情報
-  kMsgDebug   = 5
+  Debug   = 5
 };
+
+/// @brief MsgType に対応するビットマスクの型
+typedef ymuint8 MsgBitMask;
+
+/// @brief メッセータイプからビットマスクを得る．
+constexpr
+MsgBitMask
+conv2bitmask(MsgType type);
 
 /// @brief tMsgType のストリーム出力演算子
 /// @param[in] s 出力先のストリーム
@@ -47,27 +55,45 @@ operator<<(ostream& s,
 // マスク用の定数
 //////////////////////////////////////////////////////////////////////
 
-/// @brief kMsgError 用のビットマスク
-const ymuint32 kMaskError = (1U << static_cast<ymuint32>(kMsgError));
+/// @brief MsgType::Error 用のビットマスク
+const MsgBitMask kMsgMaskError = conv2bitmask(MsgType::Error);
 
-/// @brief kMsgWarning 用のビットマスク
-const ymuint32 kMaskWarning = (1U << static_cast<ymuint32>(kMsgWarning));
+/// @brief MsgType::Warning 用のビットマスク
+const MsgBitMask kMsgMaskWarning = conv2bitmask(MsgType::Warning);
 
-/// @brief kMsgInfo 用のビットマスク
-const ymuint32 kMaskInfo = (1U << static_cast<ymuint32>(kMsgInfo));
+/// @brief MsgType::Info 用のビットマスク
+const MsgBitMask kMsgMaskInfo = conv2bitmask(MsgType::Info);
 
-/// @brief kMsgFailure 用のビットマスク
-const ymuint32 kMaskFailure = (1U << static_cast<ymuint32>(kMsgFailure));
+/// @brief MsgType::Failure 用のビットマスク
+const MsgBitMask kMsgMaskFailure = conv2bitmask(MsgType::Failure);
 
-/// @brief kMsgDebug 用のビットマスク
-const ymuint32 kMaskDebug = (1U << static_cast<ymuint32>(kMsgDebug));
+/// @brief MsgType::Debug 用のビットマスク
+const MsgBitMask kMsgMaskDebug = conv2bitmask(MsgType::Debug);
 
 /// @brief 全てのを含むビットマスク
-const ymuint32 kMaskAll =
-  kMaskError | kMaskWarning | kMaskInfo | kMaskFailure | kMaskDebug;
+const MsgBitMask kMsgMaskAll =
+	  kMsgMaskError |
+	  kMsgMaskWarning |
+	  kMsgMaskInfo |
+	  kMsgMaskFailure |
+	  kMsgMaskDebug;
 
 /// @brief 全てを含まないビットマスク
-const ymuint32 kMaskNone = 0U;
+const MsgBitMask kMsgMaskNone = 0U;
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief メッセータイプからビットマスクを得る．
+inline
+constexpr
+MsgBitMask
+conv2bitmask(MsgType type)
+{
+  return 1U << static_cast<int>(type);
+}
 
 END_NAMESPACE_YM
 

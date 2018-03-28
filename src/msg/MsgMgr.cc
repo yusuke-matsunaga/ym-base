@@ -3,7 +3,7 @@
 /// @brief MsgMgr の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -28,11 +28,11 @@ operator<<(ostream& s,
 	   MsgType type)
 {
   switch ( type ) {
-  case kMsgError:   s << "(ERROR  )"; break;
-  case kMsgWarning: s << "(WARNING)"; break;
-  case kMsgInfo:    s << "(INFO   )"; break;
-  case kMsgFailure: s << "(FAILURE)"; break;
-  case kMsgDebug:   s << "(DEBUG  )"; break;
+  case MsgType::Error:   s << "(ERROR  )"; break;
+  case MsgType::Warning: s << "(WARNING)"; break;
+  case MsgType::Info:    s << "(INFO   )"; break;
+  case MsgType::Failure: s << "(FAILURE)"; break;
+  case MsgType::Debug:   s << "(DEBUG  )"; break;
   }
   return s;
 }
@@ -108,42 +108,42 @@ MsgMgr::clear_count()
 }
 
 // @brief 全メッセージ数を得る．
-ymuint32
+int
 MsgMgr::msg_num()
 {
   return gTheMgr.msg_num();
 }
 
 // @brief エラーメッセージ数を得る．
-ymuint32
+int
 MsgMgr::error_num()
 {
   return gTheMgr.error_num();
 }
 
 // @brief 警告メッセージ数を得る．
-ymuint32
+int
 MsgMgr::warning_num()
 {
   return gTheMgr.warning_num();
 }
 
 // @brief 情報メッセージ数を得る．
-ymuint32
+int
 MsgMgr::info_num()
 {
   return gTheMgr.info_num();
 }
 
 // @brief 失敗メッセージ数を得る．
-ymuint32
+int
 MsgMgr::fail_num()
 {
   return gTheMgr.fail_num();
 }
 
 // @brief デバッグメッセージ数を得る．
-ymuint32
+int
 MsgMgr::debug_num()
 {
   return gTheMgr.debug_num();

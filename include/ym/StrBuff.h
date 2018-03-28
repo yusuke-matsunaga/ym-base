@@ -5,7 +5,7 @@
 /// @brief StrBuff のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -83,7 +83,7 @@ public:
 
   /// @brief 必要なサイズを指定する．
   void
-  reserve(ymuint size);
+  reserve(SizeType size);
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -129,7 +129,7 @@ public:
 
   /// @brief 文字列の長さの取得
   /// @return 文字列の長さ(末尾の '\\0' を含まない)を返す．
-  size_type
+  SizeType
   size() const;
 
   /// @brief pos 番目の文字の取得
@@ -138,13 +138,13 @@ public:
   ///
   /// 範囲外の場合は '\\0' を返す．
   char
-  operator[](size_type pos) const;
+  operator[](SizeType pos) const;
 
   /// @brief c が最初に現れる位置の検索
   /// @param[in] c 検索対象の文字
   /// @retval c が最初に現れる位置
   /// @retval npos 見つからない場合
-  size_type
+  SizeType
   find_first_of(char c) const;
 
   /// @brief 部分文字列の取得
@@ -152,8 +152,8 @@ public:
   /// @param[in] last 部分文字列の終了位置
   /// @return first から last までの部分文字列を切り出す．
   StrBuff
-  substr(size_type first,
-	 size_type last) const;
+  substr(SizeType first,
+	 SizeType last) const;
 
   /// @brief Cスタイルの文字列への変換
   /// @return Cスタイルに変換した文字列を返す．
@@ -174,7 +174,7 @@ private:
 
   // 内部で用いられるコンストラクタ
   // サイズを指定する．
-  StrBuff(size_type size);
+  StrBuff(SizeType size);
 
   // src から dst にコピーする．
   void
@@ -183,7 +183,7 @@ private:
 
   // バッファサイズを拡張する．
   void
-  expand(size_type new_size);
+  expand(SizeType new_size);
 
 
 private:
@@ -192,10 +192,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // バッファのサイズ
-  size_type mSize;
+  SizeType mSize;
 
   // 末尾の位置
-  size_type mEnd;
+  SizeType mEnd;
 
   // バッファ本体
   char* mBuffer;
@@ -254,7 +254,7 @@ StrBuff::StrBuff(const char* str)
 // 内部で用いられるコンストラクタ
 // サイズを指定する．
 inline
-StrBuff::StrBuff(size_type size) :
+StrBuff::StrBuff(SizeType size) :
   mSize(size),
   mEnd(0),
   mBuffer(new char[mSize])
@@ -327,7 +327,7 @@ StrBuff::clear()
 // @brief 必要なサイズを指定する．
 inline
 void
-StrBuff::reserve(ymuint size)
+StrBuff::reserve(SizeType size)
 {
   if ( mSize < size ) {
     expand(size);
@@ -366,7 +366,7 @@ StrBuff::put_str(const StrBuff& str)
 
 // 文字列の長さ(末尾の '\0' を含まない)を返す．
 inline
-StrBuff::size_type
+SizeType
 StrBuff::size() const
 {
   return mEnd;
@@ -376,7 +376,7 @@ StrBuff::size() const
 // 範囲外なら '\0' を返す．
 inline
 char
-StrBuff::operator[](size_type pos) const
+StrBuff::operator[](SizeType pos) const
 {
   if ( pos < mEnd ) {
     return mBuffer[pos];
@@ -440,23 +440,23 @@ operator<<(ostream& s, const StrBuff& strbuf)
 
 template <>
 struct HashFunc<StrBuff> {
-  ymuint
+  SizeType
   operator()(const StrBuff& __x) const {
-    unsigned long __h = 0;
-    for (const char* __s = __x.c_str(); *__s; ++ __s)
+    SizeType __h = 0;
+    for ( const char* __s = __x.c_str(); *__s; ++ __s )
       __h = 37*__h + *__s;
-    return size_t(__h);
+    return static_cast<SizeType>(__h);
   }
 };
 
 template <>
 struct HashFunc<const StrBuff> {
-  ymuint
+  SizeType
   operator()(const StrBuff& __x) const {
-    unsigned long __h = 0;
-    for (const char* __s = __x.c_str(); *__s; ++ __s)
+    SizeType __h = 0;
+    for ( const char* __s = __x.c_str(); *__s; ++ __s )
       __h = 37*__h + *__s;
-    return size_t(__h);
+    return static_cast<SizeType>(__h);
   }
 };
 

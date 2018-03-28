@@ -52,7 +52,7 @@ FileDecoder::new_decoder(CodecType type)
     decoder = new GzDecoder();
 #else
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    kMsgError,
+		    MsgType::Error,
 		    "FileDecoder",
 		    "gzip format is not supported on this system");
 #endif
@@ -62,7 +62,7 @@ FileDecoder::new_decoder(CodecType type)
     decoder = new BzDecoder();
 #else
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    kMsgError,
+		    MsgType::Error,
 		    "FileDecoder",
 		    "bzip2 format is not supported on this system");
 #endif
@@ -72,7 +72,7 @@ FileDecoder::new_decoder(CodecType type)
     decoder = new LzmaDecoder();
 #else
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    kMsgError,
+		    MsgType::Error,
 		    "FileCoder",
 		    "lzma(xz) format is not supported on this system");
 #endif
@@ -107,7 +107,7 @@ FileDecoder::new_gzip_decoder()
   return new GzDecoder();
 #else
   MsgMgr::put_msg(__FILE__, __LINE__,
-		  kMsgError,
+		  MsgType::Error,
 		  "FileDecoder",
 		  "gzip format is not supported on this system");
   return nullptr;
@@ -123,7 +123,7 @@ FileDecoder::new_bzip2_decoder()
   return new BzDecoder();
 #else
   MsgMgr::put_msg(__FILE__, __LINE__,
-		  kMsgError,
+		  MsgType::Error,
 		  "FileDecoder",
 		  "bzip2 format is not supported on this system");
   return nullptr;
@@ -139,7 +139,7 @@ FileDecoder::new_xz_decoder()
   return new LzmaDecoder();
 #else
   MsgMgr::put_msg(__FILE__, __LINE__,
-		  kMsgError,
+		  MsgType::Error,
 		  "FileDecoder",
 		  "xz format is not supported on this system");
   return nullptr;

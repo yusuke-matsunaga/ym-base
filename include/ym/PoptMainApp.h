@@ -1,11 +1,11 @@
-﻿#ifndef UTILS_POPTMAINAPP_H
-#define UTILS_POPTMAINAPP_H
+﻿#ifndef YM_POPTMAINAPP_H
+#define YM_POPTMAINAPP_H
 
 /// @file ym/PoptMainApp.h
 /// @brief PoptMainApp のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2013-2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -17,14 +17,14 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 /// @brief popt のオプション解析結果
 //////////////////////////////////////////////////////////////////////
-enum tPoptStat
+enum class PoptStat
 {
   /// @brief 通常の処理された
-  kPoptOk,
+  Ok,
   /// @brief エラーだが処理を続行する．
-  kPoptError,
+  Error,
   /// @brief 処理を中断する．
-  kPoptAbort
+  Abort
 };
 
 
@@ -117,7 +117,7 @@ private:
   const char* mOptDesc;
 
   // このオプションが指定された回数
-  ymuint32 mCount;
+  int mCount;
 
 };
 
@@ -315,7 +315,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief オプション引数の値を返す．
-  ymint
+  int
   val() const;
 
 
@@ -325,7 +325,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // オプション引数を格納する変数
-  ymint mVal;
+  int mVal;
 
 };
 
@@ -396,7 +396,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief オプション引数の値を返す．
-  ymuint
+  unsigned int
   val() const;
 
 };
@@ -565,7 +565,7 @@ public:
   /// @param[in] argc コマンド行の引数の数
   /// @param[in] argv コマンド行の引数配列
   /// @param[in] flags フラグ
-  tPoptStat
+  PoptStat
   parse_options(int argc,
 		const char** argv,
 		int flags);
@@ -573,7 +573,7 @@ public:
   /// @brief 残った引数を得る．
   /// @param[in] args 引数を格納するベクタ
   /// @return 引数の数を返す．
-  ymuint
+  int
   get_args(vector<string>& args);
 
   /// @brief ヘルプメッセージを出力する．

@@ -99,10 +99,10 @@ FileInfo::parent_loc_list(vector<FileLoc>& loc_list) const
     tmp_list.push_back(loc);
   }
 
-  int n = tmp_list.size();
+  SizeType n = tmp_list.size();
   loc_list.clear();
   loc_list.resize(n);
-  for ( int i = 0; i < n; ++ i ) {
+  for ( SizeType i = 0; i < n; ++ i ) {
     loc_list[i] = tmp_list[n - i - 1];
   }
 }

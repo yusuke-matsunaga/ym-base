@@ -5,7 +5,7 @@
 /// @brief UnitAlloc のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -44,7 +44,7 @@ private:
   /// @param[in] n 確保するメモリ量(単位はバイト)
   virtual
   void*
-  _get_memory(SizeType n);
+  _get_memory(SizeType n) override;
 
   /// @brief n バイトの領域を開放する．
   /// @param[in] n 確保したメモリ量(単位はバイト)
@@ -52,14 +52,14 @@ private:
   virtual
   void
   _put_memory(SizeType n,
-	      void* blk);
+	      void* blk) override;
 
   /// @brief 今までに確保した全ての領域を破棄する．
   /// 個々のオブジェクトのデストラクタなどは起動されない
   /// ので使用には注意が必要
   virtual
   void
-  _destroy();
+  _destroy() override;
 
 
 private:
@@ -96,7 +96,7 @@ private:
   Block* mAvailTop;
 
   // 確保して使用中のメモリ領域のリスト
-  list<void*> mAllocList;
+  vector<void*> mAllocList;
 
 };
 

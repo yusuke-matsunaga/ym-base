@@ -32,9 +32,9 @@ FileInfoMgr::~FileInfoMgr()
 // @brief ファイル名を返す．
 // @param[in] id _FileInfo の ID 番号
 string
-FileInfoMgr::filename(ymuint id)
+FileInfoMgr::filename(int id)
 {
-  ASSERT_COND( id < mFiArray.size() );
+  ASSERT_COND( id >= 0 && id < mFiArray.size() );
 
   const _FileInfo& fi = mFiArray[id];
   return fi.mFileName;
@@ -44,9 +44,9 @@ FileInfoMgr::filename(ymuint id)
 // @param[in] id _FileInfo の ID 番号
 // @note インクルードされていないファイルの場合には無効なデータが返される．
 FileLoc
-FileInfoMgr::parent_loc(ymuint id)
+FileInfoMgr::parent_loc(int id)
 {
-  ASSERT_COND( id < mFiArray.size() );
+  ASSERT_COND( id >= 0 && id < mFiArray.size() );
 
   const _FileInfo& fi = mFiArray[id];
   return fi.mParentLoc;
@@ -55,10 +55,10 @@ FileInfoMgr::parent_loc(ymuint id)
 // @brief 新しい _FileInfo を生成する．
 // @param[in] filename ファイル名
 // @return 生成された _FileInfo の ID 番号
-ymuint
+int
 FileInfoMgr::new_file_info(const char* filename)
 {
-  ymuint id = static_cast<ymuint>(mFiArray.size());
+  int id = mFiArray.size();
   mFiArray.push_back(_FileInfo(filename));
   return id;
 }
@@ -67,11 +67,11 @@ FileInfoMgr::new_file_info(const char* filename)
 // @param[in] filename ファイル名
 // @param[in] parent_loc インクルード元の親ファイルの情報
 // @return 生成された _FileInfo の ID 番号
-ymuint
+int
 FileInfoMgr::new_file_info(const char* filename,
 			   const FileLoc& parent_loc)
 {
-  ymuint id = static_cast<ymuint>(mFiArray.size());
+  int id = mFiArray.size();
   mFiArray.push_back(_FileInfo(filename, parent_loc));
   return id;
 }

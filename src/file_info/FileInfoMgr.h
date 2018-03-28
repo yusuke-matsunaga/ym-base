@@ -5,7 +5,7 @@
 /// @brief FileInfoMgr のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -41,14 +41,14 @@ public:
   /// @brief 新しい _FileInfo を生成する．
   /// @param[in] filename ファイル名
   /// @return 生成された _FileInfo の ID 番号
-  ymuint
+  int
   new_file_info(const char* filename);
 
   /// @brief 新しい _FileInfo を生成する．
   /// @param[in] filename ファイル名
   /// @param[in] parent_loc インクルード元の親ファイルの情報
   /// @return 生成された _FileInfo の ID 番号
-  ymuint
+  int
   new_file_info(const char* filename,
 		const FileLoc& parent_loc);
 
@@ -61,13 +61,13 @@ public:
   /// @brief ファイル名を返す．
   /// @param[in] id _FileInfo の ID 番号
   string
-  filename(ymuint id);
+  filename(int id);
 
   /// @brief インクルード元のファイル位置を返す．
   /// @param[in] id _FileInfo の ID 番号
   /// @note インクルードされていないファイルの場合には無効なデータが返される．
   FileLoc
-  parent_loc(ymuint id);
+  parent_loc(int id);
 
 
 private:

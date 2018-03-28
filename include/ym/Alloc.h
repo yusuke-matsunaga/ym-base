@@ -5,7 +5,7 @@
 /// @brief Alloc のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -65,7 +65,7 @@ public:
   /// @param[in] num 要素数
   template<typename T>
   T*
-  get_array(int num);
+  get_array(SizeType num);
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -108,7 +108,7 @@ public:
   allocated_size() const;
 
   /// @brief 実際に確保した回数を返す．
-  int
+  SizeType
   allocated_count() const;
 
   /// @brief 内部状態を出力する．
@@ -186,7 +186,7 @@ private:
   SizeType mAllocSize;
 
   // 確保した回数
-  int mAllocCount;
+  SizeType mAllocCount;
 
 };
 
@@ -200,7 +200,7 @@ private:
 template<typename T>
 inline
 T*
-Alloc::get_array(int num)
+Alloc::get_array(SizeType num)
 {
   if ( num <= 0 ) {
     return nullptr;
@@ -253,7 +253,7 @@ Alloc::allocated_size() const
 
 // @brief 実際に確保した回数を返す．
 inline
-int
+SizeType
 Alloc::allocated_count() const
 {
   return mAllocCount;

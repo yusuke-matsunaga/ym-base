@@ -5,7 +5,7 @@
 /// @brief MsgMgr のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -130,39 +130,39 @@ public:
 
   /// @brief 全メッセージ数を得る．
   static
-  ymuint32
+  int
   msg_num();
 
   /// @brief エラーメッセージ数を得る．
   static
-  ymuint32
+  int
   error_num();
 
   /// @brief 警告メッセージ数を得る．
   static
-  ymuint32
+  int
   warning_num();
 
   /// @brief 情報メッセージ数を得る．
   static
-  ymuint32
+  int
   info_num();
 
   /// @brief 失敗メッセージ数を得る．
   static
-  ymuint32
+  int
   fail_num();
 
   /// @brief デバッグメッセージ数を得る．
   static
-  ymuint32
+  int
   debug_num();
 
 };
 
 
 //////////////////////////////////////////////////////////////////////
-//　インライン関数の定義
+// インライン関数の定義
 //////////////////////////////////////////////////////////////////////
 
 // @brief メッセージを出力する(パーサー用)．

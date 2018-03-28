@@ -35,7 +35,7 @@ public:
 
   /// @brief コンストラクタ
   /// @param[in] mask メッセージマスク
-  MsgHandler(ymuint32 mask = kMaskAll);
+  MsgHandler(MsgBitMask mask = kMsgMaskAll);
 
   /// @brief デストラクタ
   /// @note 登録されていたら削除する．
@@ -50,10 +50,10 @@ public:
 
   /// @brief メッセージマスクの設定
   void
-  set_mask(ymuint32 mask);
+  set_mask(MsgBitMask mask);
 
   /// @brief メッセージマスクの取得
-  ymuint32
+  MsgBitMask
   mask() const;
 
   /// @brief マスクの付加
@@ -126,11 +126,6 @@ private:
 	     const char* label,
 	     const char* body);
 
-  /// @brief メッセータイプからビットマスクを得る．
-  static
-  ymuint32
-  conv2bitmask(MsgType type);
-
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -138,7 +133,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // メッセージマスク
-  ymuint32 mMask;
+  MsgBitMask mMask;
 
 };
 
@@ -207,19 +202,6 @@ private:
   ostream* mStreamPtr;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-//　インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief メッセータイプからビットマスクを得る．
-inline
-ymuint32
-MsgHandler::conv2bitmask(MsgType type)
-{
-  return 1U << static_cast<ymuint32>(type);
-}
 
 END_NAMESPACE_YM
 

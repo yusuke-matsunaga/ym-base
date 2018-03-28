@@ -17,9 +17,9 @@ void
 StrBuff::put_str(const char* str)
 {
   if ( str ) {
-    size_type len = strlen(str) + mEnd;
+    SizeType len = strlen(str) + mEnd;
     if ( len >= mSize ) {
-      size_type new_size = mSize << 1;
+      SizeType new_size = mSize << 1;
       while ( len >= new_size ) {
 	new_size <<= 1;
       }
@@ -42,10 +42,10 @@ StrBuff::put_digit(int d)
 }
 
 // c が最初に現れる位置を返す．
-StrBuff::size_type
+SizeType
 StrBuff::find_first_of(char c) const
 {
-  for (size_type i = 0; i < mEnd; ++ i) {
+  for ( SizeType i = 0; i < mEnd; ++ i ) {
     if ( mBuffer[i] == c ) return i;
   }
   return npos;
@@ -53,17 +53,17 @@ StrBuff::find_first_of(char c) const
 
 // first から last までの部分文字列を切り出す．
 StrBuff
-StrBuff::substr(size_type first,
-		size_type last) const
+StrBuff::substr(SizeType first,
+		SizeType last) const
 {
   if ( last == npos ) {
     last = mEnd;
   }
-  size_type len = mEnd - first;
+  SizeType len = mEnd - first;
   StrBuff ans(len + 1);
   const char* src = mBuffer + first;
   char* dst = ans.mBuffer;
-  for (size_t i = 0; i < len; ++ i) {
+  for ( SizeType i = 0; i < len; ++ i ) {
     *dst ++ = *src ++;
   }
   *dst = '\0';
@@ -73,7 +73,7 @@ StrBuff::substr(size_type first,
 
 // バッファサイズを拡張する．
 void
-StrBuff::expand(size_type new_size)
+StrBuff::expand(SizeType new_size)
 {
   mSize = new_size;
   char* old = mBuffer;

@@ -3,7 +3,7 @@
 /// @brief SimpleAlloc の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -50,8 +50,8 @@ SimpleAlloc::_get_memory(SizeType n)
   SizeType alloc_size = align(n);
 
   // alloc_size 以上の余りがあるページを探す．
-  list<Page>::iterator p = mAvailList.begin();
-  for ( ; p != mAvailList.end(); ++ p) {
+  vector<Page>::iterator p = mAvailList.begin();
+  for ( ; p != mAvailList.end(); ++ p ) {
     Page& page = *p;
     if ( page.mNextPos + alloc_size <= mPageSize ) {
       // 見つけた．

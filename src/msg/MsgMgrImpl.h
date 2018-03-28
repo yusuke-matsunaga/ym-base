@@ -5,7 +5,7 @@
 /// @brief MsgHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -93,27 +93,27 @@ public:
   clear_count();
 
   /// @brief 全メッセージ数を得る．
-  ymuint32
+  int
   msg_num() const;
 
   /// @brief エラーメッセージ数を得る．
-  ymuint32
+  int
   error_num() const;
 
   /// @brief 警告メッセージ数を得る．
-  ymuint32
+  int
   warning_num() const;
 
   /// @brief 情報メッセージ数を得る．
-  ymuint32
+  int
   info_num() const;
 
   /// @brief 失敗メッセージ数を得る．
-  ymuint32
+  int
   fail_num() const;
 
   /// @brief デバッグメッセージ数を得る．
-  ymuint32
+  int
   debug_num() const;
 
 
@@ -131,19 +131,19 @@ private:
 	    const char*> mMgr;
 
   // エラーメッセージ数
-  ymuint32 mErrorNum;
+  int mErrorNum;
 
   // 警告メッセージ数
-  ymuint32 mWarningNum;
+  int mWarningNum;
 
   // 情報メッセージ数
-  ymuint32 mInfoNum;
+  int mInfoNum;
 
   // 失敗メッセージ数
-  ymuint32 mFailNum;
+  int mFailNum;
 
   // デバッグメッセージ数
-  ymuint32 mDebugNum;
+  int mDebugNum;
 
 };
 
