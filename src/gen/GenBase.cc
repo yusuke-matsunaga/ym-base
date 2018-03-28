@@ -22,7 +22,7 @@ GenBase::GenBase(int n,
 		 int k) :
   mN(n),
   mK(k),
-  mElem(k)
+  mElemList(k)
 {
   init();
 }
@@ -31,7 +31,7 @@ GenBase::GenBase(int n,
 GenBase::GenBase(const GenBase& src) :
   mN(src.mN),
   mK(src.mK),
-  mElem(src.mElem)
+  mElemList(src.mElemList)
 {
 }
 
@@ -44,8 +44,8 @@ GenBase::~GenBase()
 void
 GenBase::init()
 {
-  for (int i = 0; i < mK; ++ i) {
-    mElem[i] = i;
+  for ( int i = 0; i < mK; ++ i ) {
+    mElemList[i] = i;
   }
 }
 
@@ -55,11 +55,11 @@ GenBase::copy(const GenBase& src)
 {
   mN = src.mN;
   mK = src.mK;
-  if ( mElem.size() != mK ) {
-    mElem.resize(mK);
+  if ( mElemList.size() != mK ) {
+    mElemList.resize(mK);
   }
-  for (int i = 0; i < mK; ++ i) {
-    mElem[i] = src.mElem[i];
+  for ( int i = 0; i < mK; ++ i ) {
+    mElemList[i] = src.mElemList[i];
   }
 }
 

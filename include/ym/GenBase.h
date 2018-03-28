@@ -75,6 +75,10 @@ public:
   int
   operator()(int pos) const;
 
+  /// @brief 要素のリストの取得
+  const vector<int>&
+  elem_list() const;
+
   /// @brief 末尾のチェック
   /// @return 末尾の時に true を返す．
   bool
@@ -110,7 +114,7 @@ private:
   int mK;
 
   // 現在の要素
-  vector<int> mElem;
+  vector<int> mElemList;
 
 };
 
@@ -140,9 +144,9 @@ inline
 int
 GenBase::operator()(int pos) const
 {
-  ASSERT_COND( pos < mK );
+  ASSERT_COND( pos >= 0 && pos < mK );
 
-  return mElem[pos];
+  return mElemList[pos];
 }
 
 // pos 番目の要素への参照を取り出す．
@@ -150,7 +154,17 @@ inline
 int&
 GenBase::elem(int pos)
 {
-  return mElem[pos];
+  ASSERT_COND( pos >= 0 && pos < mK );
+
+  return mElemList[pos];
+}
+
+// @brief 要素のリストの取得
+inline
+const vector<int>&
+GenBase::elem_list() const
+{
+  return mElemList;
 }
 
 // 末尾の時に true を返す．

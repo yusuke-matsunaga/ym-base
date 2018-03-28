@@ -22,8 +22,8 @@ BEGIN_NAMESPACE_YM
 /// @code
 /// int n = 10;
 /// int k =  3;
-/// for (PermGen pg(n, k); !pg.is_end(); ++ pg)
-///    for (int i = 0; i < k; ++ i) {
+/// for ( PermGen pg(n, k); !pg.is_end(); ++ pg )
+///    for ( int i = 0; i < k; ++ i ) {
 ///       elem[i] = pg(i);
 ///    }
 ///    // elem[0] - elem[k - 1] に選ばれた要素(番号)が入る．
