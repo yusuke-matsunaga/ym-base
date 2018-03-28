@@ -5,12 +5,13 @@
 /// @brief FileLocのヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
 #include "ym_config.h"
 #include "ym/FileInfo.h"
+#include "ym/FileLineColumn.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -42,8 +43,8 @@ public:
   /// @param[in] line 行番号
   /// @param[in] column コラム番号
   FileLoc(FileInfo file_info,
-	  ymuint line,
-	  ymuint column);
+	  int line,
+	  int column);
 
   /// @brief デストラクタ
   ~FileLoc();
@@ -78,16 +79,16 @@ public:
   /// @param[out] loc_list ファイルの位置情報のリスト
   /// @note トップレベルのファイルが先頭になる．
   void
-  parent_loc_list(list<FileLoc>& loc_list) const;
+  parent_loc_list(vector<FileLoc>& loc_list) const;
 
   /// @brief 行番号の取得
   /// @return 行番号
-  ymuint
+  int
   line() const;
 
   /// @brief コラム位置の取得
   /// @return コラム位置
-  ymuint
+  int
   column() const;
 
 
@@ -100,9 +101,7 @@ private:
   FileInfo mFileInfo;
 
   // 行番号とコラム位置
-  // 上位 20 ビットが行番号
-  // 下位 12 ビットがコラム位置
-  ymuint32 mLineColumn;
+  FileLineColumn mLineColumn;
 
 };
 
@@ -131,8 +130,7 @@ operator<<(ostream& s,
 // 空のコンストラクタ
 // 無効なデータを持つ
 inline
-FileLoc::FileLoc() :
-  mLineColumn(0)
+FileLoc::FileLoc()
 {
   // FileInfo のデフォルトコンストラクタは無効なデータで初期化する．
 }
@@ -143,10 +141,10 @@ FileLoc::FileLoc() :
 // @param[in] column コラム番号
 inline
 FileLoc::FileLoc(FileInfo file_info,
-		 ymuint line,
-		 ymuint column) :
+		 int line,
+		 int column) :
   mFileInfo(file_info),
-  mLineColumn((line << 12) | (column & 0xfff))
+  mLineColumn(line, column)
 {
 }
 
@@ -192,22 +190,32 @@ FileLoc::parent_loc() const
   return file_info().parent_loc();
 }
 
+// @brief インクルード元のファイル位置の情報をすべてリストに積む．
+// @param[out] loc_list ファイルの位置情報のリスト
+// @note トップレベルのファイルが先頭になる．
+inline
+void
+FileLoc::parent_loc_list(vector<FileLoc>& loc_list) const
+{
+  file_info().parent_loc_list(loc_list);
+}
+
 // @brief 行番号の取得
 // @return 行番号
 inline
-ymuint
+int
 FileLoc::line() const
 {
-  return mLineColumn >> 12;
+  return mLineColumn.line();
 }
 
 // @brief コラム位置の取得
 // @return コラム位置
 inline
-ymuint
+int
 FileLoc::column() const
 {
-  return mLineColumn & 0xfff;
+  return mLineColumn.column();
 }
 
 END_NAMESPACE_YM

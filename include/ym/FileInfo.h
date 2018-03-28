@@ -5,7 +5,7 @@
 /// @brief FinleInfo のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -70,7 +70,7 @@ public:
 
   /// @brief ID番号を得る．
   /// @note ほとんど等価比較演算子のための関数
-  ymuint
+  int
   id() const;
 
   /// @brief ファイル名を返す．
@@ -86,7 +86,7 @@ public:
   /// @param[out] loc_list ファイルの位置情報のリスト
   /// @note トップレベルのファイルが先頭になる．
   void
-  parent_loc_list(list<FileLoc>& loc_list) const;
+  parent_loc_list(vector<FileLoc>& loc_list) const;
 
 
 private:
@@ -145,10 +145,10 @@ FileInfo::is_valid() const
 
 // @brief ID番号を得る．
 inline
-ymuint
+int
 FileInfo::id() const
 {
-  return mId;
+  return static_cast<int>(mId);
 }
 
 // @relates FileInfo

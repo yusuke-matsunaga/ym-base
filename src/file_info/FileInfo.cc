@@ -3,7 +3,7 @@
 /// @brief FileInfo の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -31,7 +31,7 @@ END_NONAMESPACE
 // @brief 空のコンストラクタ
 // @note 無効な ID で初期化される．
 FileInfo::FileInfo() :
-  mId(0xFFFF)
+  mId(0xFFFFU)
 {
 }
 
@@ -91,11 +91,19 @@ FileInfo::parent_loc() const
 // @param[out] loc_list ファイルの位置情報のリスト
 // @note トップレベルのファイルが先頭になる．
 void
-FileInfo::parent_loc_list(list<FileLoc>& loc_list) const
+FileInfo::parent_loc_list(vector<FileLoc>& loc_list) const
 {
+  // 逆順にするために一旦 tmp_list に入れる．
+  vector<FileLoc> tmp_list;
+  for ( FileLoc loc = parent_loc(); loc.is_valid(); loc = loc.parent_loc() ) {
+    tmp_list.push_back(loc);
+  }
+
+  int n = tmp_list.size();
   loc_list.clear();
-  for (FileLoc loc = parent_loc(); loc.is_valid(); loc = loc.parent_loc()) {
-    loc_list.push_front(loc);
+  loc_list.resize(n);
+  for ( int i = 0; i < n; ++ i ) {
+    loc_list[i] = tmp_list[n - i - 1];
   }
 }
 
@@ -108,11 +116,9 @@ ostream&
 operator<<(ostream& s,
 	   FileInfo file_info)
 {
-  list<FileLoc> loc_list;
+  vector<FileLoc> loc_list;
   file_info.parent_loc_list(loc_list);
-  for (list<FileLoc>::const_iterator p = loc_list.begin();
-       p != loc_list.end(); ++ p) {
-    const FileLoc& loc = *p;
+  for ( auto loc: loc_list ) {
     s << "In file included from " << loc.filename()
       << ": line " << loc.line() << ":" << endl;
   }
@@ -125,18 +131,6 @@ operator<<(ostream& s,
 //////////////////////////////////////////////////////////////////////
 // クラス FileLoc
 //////////////////////////////////////////////////////////////////////
-
-// @brief インクルード元のファイル位置の情報をすべてリストに積む．
-// @param[out] loc_list ファイルの位置情報のリスト
-// @note トップレベルのファイルが先頭になる．
-void
-FileLoc::parent_loc_list(list<FileLoc>& loc_list) const
-{
-  loc_list.clear();
-  for (FileLoc loc = parent_loc(); loc.is_valid(); loc = loc.parent_loc()) {
-    loc_list.push_front(loc);
-  }
-}
 
 // @brief FileLoc を表示するための関数
 // @param[in] s 出力ストリーム
@@ -168,10 +162,10 @@ operator<<(ostream& s,
 {
   FileInfo first_fi = file_region.start_file_info();
   FileInfo last_fi = file_region.end_file_info();
-  ymuint first_line = file_region.start_line();
-  ymuint first_column = file_region.start_column();
-  ymuint last_line = file_region.end_line();
-  ymuint last_column = file_region.end_column();
+  int first_line = file_region.start_line();
+  int first_column = file_region.start_column();
+  int last_line = file_region.end_line();
+  int last_column = file_region.end_column();
 
   if ( first_fi.is_valid() ) {
     // 意味のあるファイル記述子

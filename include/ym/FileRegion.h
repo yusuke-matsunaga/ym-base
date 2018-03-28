@@ -5,13 +5,14 @@
 /// @brief FileRegion のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
 #include "ym_config.h"
 #include "ym/FileInfo.h"
 #include "ym/FileLoc.h"
+#include "ym/FileLineColumn.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -37,10 +38,10 @@ public:
   /// @param[in] end_line 末尾の行番号
   /// @param[in] end_column 末尾のコラム番号
   FileRegion(FileInfo file_info,
-	     ymuint start_line,
-	     ymuint start_column,
-	     ymuint end_line,
-	     ymuint end_column);
+	     int start_line,
+	     int start_column,
+	     int end_line,
+	     int end_column);
 
   /// @brief 内容を指定したコンストラクタ
   /// @param[in] start_file_info 先頭のファイル情報
@@ -50,11 +51,11 @@ public:
   /// @param[in] end_line 末尾の行番号
   /// @param[in] end_column 末尾のコラム番号
   FileRegion(FileInfo start_file_info,
-	     ymuint start_line,
-	     ymuint start_column,
+	     int start_line,
+	     int start_column,
 	     FileInfo end_file_info,
-	     ymuint end_line,
-	     ymuint end_column);
+	     int end_line,
+	     int end_column);
 
   /// @brief 内容を指定したコンストラクタ
   /// @param[in] file_loc ファイル上の位置
@@ -98,12 +99,12 @@ public:
 
   /// @brief 先頭の行番号の取得
   /// @return 行番号
-  ymuint
+  int
   start_line() const;
 
   /// @brief 先頭のコラム位置の取得
   /// @return コラム位置
-  ymuint
+  int
   start_column() const;
 
   /// @brief 末尾のファイル位置の取得
@@ -117,12 +118,12 @@ public:
 
   /// @brief 末尾の行番号の取得
   /// @return 行番号
-  ymuint
+  int
   end_line() const;
 
   /// @brief 末尾のコラム位置の取得
   /// @return コラム位置
-  ymuint
+  int
   end_column() const;
 
 
@@ -138,10 +139,10 @@ private:
   FileInfo mEndFileInfo;
 
   // 先頭の行番号とコラム位置
-  ymuint32 mStartLineColumn;
+  FileLineColumn mStartLineColumn;
 
   // 末尾の行番号とコラム位置
-  ymuint32 mEndLineColumn;
+  FileLineColumn mEndLineColumn;
 
 };
 
@@ -170,9 +171,7 @@ operator<<(ostream& s,
 // @brief 空のデフォルトコンストラクタ
 // @note 結果は invalid な情報を持つオブジェクトとなる．
 inline
-FileRegion::FileRegion() :
-  mStartLineColumn(0U),
-  mEndLineColumn(0U)
+FileRegion::FileRegion()
 {
   // FileInfo のデフォルトコンストラクタは無効なIDで初期化する．
 }
@@ -185,14 +184,14 @@ FileRegion::FileRegion() :
 // @param[in] end_column 末尾のコラム番号
 inline
 FileRegion::FileRegion(FileInfo file_info,
-		       ymuint start_line,
-		       ymuint start_column,
-		       ymuint end_line,
-		       ymuint end_column) :
+		       int start_line,
+		       int start_column,
+		       int end_line,
+		       int end_column) :
   mStartFileInfo(file_info),
   mEndFileInfo(file_info),
-  mStartLineColumn((start_line << 12) | (start_column & 0xfff)),
-  mEndLineColumn((end_line << 12) | (end_column & 0xfff))
+  mStartLineColumn(start_line, start_column),
+  mEndLineColumn(end_line, end_column)
 {
 }
 
@@ -205,15 +204,15 @@ FileRegion::FileRegion(FileInfo file_info,
 // @param[in] end_column 末尾のコラム番号
 inline
 FileRegion::FileRegion(FileInfo start_file_info,
-		       ymuint start_line,
-		       ymuint start_column,
+		       int start_line,
+		       int start_column,
 		       FileInfo end_file_info,
-		       ymuint end_line,
-		       ymuint end_column) :
+		       int end_line,
+		       int end_column) :
   mStartFileInfo(start_file_info),
   mEndFileInfo(end_file_info),
-  mStartLineColumn((start_line << 12) | (start_column & 0xfff)),
-  mEndLineColumn((end_line << 12) | (end_column & 0xfff))
+  mStartLineColumn(start_line, start_column),
+  mEndLineColumn(end_line, end_column)
 {
 }
 
@@ -290,19 +289,19 @@ FileRegion::start_file_info() const
 // @brief 先頭の行番号の取得
 // @return 行番号
 inline
-ymuint
+int
 FileRegion::start_line() const
 {
-  return mStartLineColumn >> 12;
+  return mStartLineColumn.line();
 }
 
 // @brief 先頭のコラム位置の取得
 // @return コラム位置
 inline
-ymuint
+int
 FileRegion::start_column() const
 {
-  return mStartLineColumn & 0xfff;
+  return mStartLineColumn.column();
 }
 
 // @brief 末尾のファイル位置の取得
@@ -325,19 +324,19 @@ FileRegion::end_file_info() const
 // @brief 末尾の行番号の取得
 // @return 行番号
 inline
-ymuint
+int
 FileRegion::end_line() const
 {
-  return mEndLineColumn >> 12;
+  return mEndLineColumn.line();
 }
 
 // @brief 末尾のコラム位置の取得
 // @return コラム位置
 inline
-ymuint
+int
 FileRegion::end_column() const
 {
-  return mEndLineColumn & 0xfff;
+  return mEndLineColumn.column();
 }
 
 END_NAMESPACE_YM

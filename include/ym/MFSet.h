@@ -5,7 +5,7 @@
 /// @brief MFSet のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -17,7 +17,6 @@ BEGIN_NAMESPACE_YM
 // クラスの前方参照定義
 // ユーザは知る必要はない．
 class MFSetCell;
-
 
 //////////////////////////////////////////////////////////////////////
 /// @class MFSet MFSet.h "ym/MFSet.h"
@@ -36,13 +35,13 @@ public:
 
   /// @brief 範囲外を表す値
   static
-  const ymuint kBadID = static_cast<ymuint>(-1);
+  const int kBadID = -1;
 
 public:
 
   /// @brief コンストラクタ
   /// @param[in] n 確保したい要素の数．
-  MFSet(ymuint n);
+  MFSet(int n);
 
   /// @brief デストラクタ
   ~MFSet();
@@ -54,15 +53,15 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素数を返す．
-  ymuint
+  int
   num() const;
 
   /// @brief 代表元の検索 (Find)
   /// @param[in] x 要素番号 ( 0 <= x < num() )
   /// @retval 要素 x の属する集合の代表元
   /// @retval kBadID 要素 x が存在していない場合
-  ymuint
-  find(ymuint x);
+  int
+  find(int x);
 
   /// @brief 2つの集合の併合 (Merge)
   /// @param[in] x, y 代表元 ( 0 <= x, y < num() )
@@ -72,9 +71,9 @@ public:
   /// @note 実は x, y が代表元でない場合，
   /// 内部で find(x), find(y)を呼ぶので処理は行えるが，
   /// 代表元が分かっている場合にはそれを使ったほうが処理は速い．
-  ymuint
-  merge(ymuint x,
-	ymuint y);
+  int
+  merge(int x,
+	int y);
 
 
 private:
@@ -85,7 +84,7 @@ private:
   /// @brief 番号 x の要素セルを取ってくる．
   /// そのような要素がない場合にはnullptrを返す．
   MFSetCell*
-  get(ymuint x);
+  get(int x);
 
 
 private:
@@ -94,7 +93,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 配列の要素数
-  ymuint32 mNum;
+  int mNum;
 
   // 要素の配列
   MFSetCell* mCellArray;

@@ -3,7 +3,7 @@
 /// @brief MFSet の実装ファイル
 /// @author Yusuke Matsunaga
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -33,13 +33,13 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 一つの母集合の中でユニークなID番号
-  ymuint32 mId;
+  int mId;
 
   // 親を指すポインタ
   MFSetCell* mParent;
 
   // 根本までのレベル
-  ymint32 mRank;
+  int mRank;
 
 };
 
@@ -68,11 +68,11 @@ MFSetCell::find()
 }
 
 // n 個の要素を持つ集合を作るコンストラクタ．
-MFSet::MFSet(ymuint n) :
+MFSet::MFSet(int n) :
   mNum(n),
   mCellArray(new MFSetCell[mNum])
 {
-  for (ymuint i = 0; i < n; ++ i) {
+  for ( int i = 0; i < n; ++ i ) {
     mCellArray[i].mId = i;
   }
 }
@@ -84,7 +84,7 @@ MFSet::~MFSet()
 }
 
 // @brief 要素数を返す．
-ymuint
+int
 MFSet::num() const
 {
   return mNum;
@@ -92,8 +92,8 @@ MFSet::num() const
 
 // x を含む集合の代表元を返す．
 // x が存在しない時には 0 を返す．
-ymuint
-MFSet::find(ymuint id)
+int
+MFSet::find(int id)
 {
   MFSetCell* x = get(id);
   if ( x ) {
@@ -107,9 +107,9 @@ MFSet::find(ymuint id)
 
 // x_id を含む集合と y_id を含む集合を併合し，新しい集合の代表元を返す．
 // x_id や y_id が存在しない時には 0 を返す．
-ymuint
-MFSet::merge(ymuint x_id,
-	     ymuint y_id)
+int
+MFSet::merge(int x_id,
+	     int y_id)
 {
   MFSetCell* x = get(x_id);
   if ( !x ) return kBadID;
@@ -151,9 +151,9 @@ MFSet::merge(ymuint x_id,
 
 // x 番めのセルを取り出す．
 MFSetCell*
-MFSet::get(ymuint id)
+MFSet::get(int id)
 {
-  if ( id >= mNum ) {
+  if ( id < 0 || id >= mNum ) {
     // 範囲外の場合はnullptrを返す．
     return nullptr;
   }
