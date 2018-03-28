@@ -3,7 +3,7 @@
 /// @brief CombiGenTest の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2017 Yusuke Matsunaga
+/// Copyright (C) 2017, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -18,12 +18,11 @@ bool
 check_cg(CombiGen& cg,
 	 const int exp_list[])
 {
-  ymuint num = cg.num();
-  ymuint combi_num = cg.combi_num();
-  ymuint pos = 0;
+  int num = cg.num();
+  int combi_num = cg.combi_num();
+  int pos = 0;
   for ( ; !cg.is_end(); ++ cg) {
-    for (ymuint i = 0; i < combi_num; ++ i) {
-      ymuint val = cg(i);
+    for ( auto val: cg.elem_list() ) {
       int exp_val = exp_list[pos];
       if ( exp_val != val ) {
 	return false;
@@ -47,16 +46,16 @@ check_cg(CombiGen& cg,
 // GenBase のメンバ関数のチェック
 TEST(CombiGenTest, basic_test)
 {
-  const ymuint n = 10;
-  const ymuint k = 5;
+  const int n = 10;
+  const int k = 5;
 
   CombiGen cg(n, k);
 
   EXPECT_EQ( n, cg.num() );
   EXPECT_EQ( k, cg.combi_num() );
 
-  for (ymuint i = 0; i < k; ++ i) {
-    ymuint val = cg(i);
+  for ( int i = 0; i < k; ++ i ) {
+    int val = cg(i);
     EXPECT_EQ( i, val );
   }
 }
