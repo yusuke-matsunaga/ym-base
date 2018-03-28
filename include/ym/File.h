@@ -14,6 +14,17 @@
 
 BEGIN_NAMESPACE_YM
 
+/// @brief パスの型を表す列挙型
+enum class PathType {
+  /// @brief 絶対パス
+  Absolute,
+  /// @brief ホームからの相対パス．最初の文字列はユーザ名
+  Home,
+  // @brief カレントディレクトリからの相対パス
+  Relative
+};
+
+
 //////////////////////////////////////////////////////////////////////
 /// @class PathName File.h "ym/File.h"
 /// @ingroup YmUtils
@@ -24,22 +35,6 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 class PathName
 {
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 定数の定義
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief パスの型を表す列挙型
-  enum Type {
-    /// @brief 絶対パス
-    kAbsolute,
-    /// @brief ホームからの相対パス．最初の文字列はユーザ名
-    kHome,
-    /// @brief カレントディレクトリからの相対パス
-    kRelative
-  };
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // コンストラクタ/デストラクタ
@@ -76,7 +71,7 @@ public:
 
   /// @brief パスの型を返す．
   /// @return パスの型
-  Type
+  PathType
   type() const;
 
   /// @brief パス名の文字列表現を返す．
@@ -157,7 +152,7 @@ private:
   /// @param[in] path_list パスリスト
   /// @param[in] type パスタイプ
   PathName(const list<string>& path_list,
-	   Type type);
+	   PathType type);
 
   /// @brief 拡張子の直前のドットの位置を返す．
   /// @param[in] path 対象のパス文字列
@@ -175,7 +170,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // タイプ
-  Type mType;
+  PathType mType;
 
   // パス名を表す本体
   list<string> mPathList;

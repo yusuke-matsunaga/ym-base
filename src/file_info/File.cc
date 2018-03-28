@@ -33,27 +33,27 @@ BEGIN_NAMESPACE_YM
 
 // 空のコンストラクタ
 PathName::PathName() :
-  mType(kRelative)
+  mType(PathType::Relative)
 {
 }
 
 // 文字列からの変換コンストラクタ
 PathName::PathName(const string& path_str)
 {
-  mType = kRelative; // デフォルト
+  mType = PathType::Relative; // デフォルト
 
   if ( path_str.size() > 0 ) {
     string::size_type pos = 0;
     if ( path_str[0] == '/' ) {
-      mType = kAbsolute;
+      mType = PathType::Absolute;
       pos = 1;
     }
     else if ( path_str[0] == '~' ) {
-      mType = kHome;
+      mType = PathType::Home;
       pos = 1;
     }
     else {
-      mType = kRelative;
+      mType = PathType::Relative;
     }
     for ( ; ; ) {
       string::size_type pos2 = path_str.find('/', pos);
@@ -72,20 +72,20 @@ PathName::PathName(const string& path_str)
 // 文字列からの変換コンストラクタ
 PathName::PathName(const char* path_str)
 {
-  mType = kRelative; // デフォルト
+  mType = PathType::Relative; // デフォルト
 
   if ( path_str && strlen(path_str) > 0 ) {
     size_t pos = 0;
     if ( path_str[0] == '/' ) {
-      mType = kAbsolute;
+      mType = PathType::Absolute;
       pos = 1;
     }
     else if ( path_str[0] == '~' ) {
-      mType = kHome;
+      mType = PathType::Home;
       pos = 1;
     }
     else {
-      mType = kRelative;
+      mType = PathType::Relative;
     }
     for ( ; ; ) {
       char c;
@@ -108,7 +108,7 @@ PathName::PathName(const char* path_str)
 
 // 文字列のリストからの変換コンストラクタ
 PathName::PathName(const list<string>& path_list,
-		   Type type) :
+		   PathType type) :
   mType(type),
   mPathList(path_list)
 {
@@ -127,7 +127,7 @@ PathName::is_valid() const
 }
 
 // パスの型を返す．
-PathName::Type
+PathType
 PathName::type() const
 {
   return mType;
@@ -139,20 +139,19 @@ PathName::str() const
 {
   string ans;
   switch ( type() ) {
-  case kAbsolute:
+  case PathType::Absolute:
     ans += '/';
     break;
-  case kHome:
+  case PathType::Home:
     ans += '~';
     break;
-  case kRelative:
+  case PathType::Relative:
     break;
   }
   const char* sep = "";
-  for (list<string>::const_iterator p = mPathList.begin();
-       p != mPathList.end(); ++ p) {
+  for ( auto str: mPathList ) {
     ans += sep;
-    ans += *p;
+    ans += str;
     sep = "/";
   }
   return ans;
@@ -219,22 +218,22 @@ PathName::ext() const
   }
 }
 
-// パスタイプが kHome と kRelative の時にフルパス形式に展開する．
+// パスタイプが PathType::Home と PathType::Relative の時にフルパス形式に展開する．
 PathName
 PathName::expand() const
 {
   switch ( type() ) {
-  case kAbsolute:
+  case PathType::Absolute:
     return *this;
 
-  case kHome:
+  case PathType::Home:
     {
       list<string> new_list(mPathList);
       new_list.pop_front();
-      return user_home(mPathList.front()) + PathName(new_list, kRelative);
+      return user_home(mPathList.front()) + PathName(new_list, PathType::Relative);
     }
 
-  case kRelative:
+  case PathType::Relative:
     return cur_work_dir() + (*this);
   }
   // ダミー
@@ -290,7 +289,7 @@ const PathName&
 PathName::operator+=(const PathName& src)
 {
   if ( is_valid() ) {
-    if ( src.is_valid() && src.type() == kRelative ) {
+    if ( src.is_valid() && src.type() == PathType::Relative ) {
       if ( mPathList.back() == string() ) {
 	// 最後が空('/'で終わっている)の場合にはその空要素を取り除く
 	mPathList.pop_back();
@@ -386,8 +385,8 @@ SearchPathList::search(const PathName& filename) const
   PathName tmp;
 
   switch ( filename.type() ) {
-  case PathName::kAbsolute:
-  case PathName::kHome:
+  case PathType::Absolute:
+  case PathType::Home:
     // 絶対パスならそれを試すだけ
     // ホームディレクトリからの相対パスの場合も唯一のパスを試す．
     tmp = filename.expand();
@@ -396,7 +395,7 @@ SearchPathList::search(const PathName& filename) const
     }
     break;
 
-  case PathName::kRelative:
+  case PathType::Relative:
     if ( mList.empty() ) {
       // サーチパスが空の場合はカレントディレクトリからの相対パス
       // とみなす．
@@ -407,9 +406,7 @@ SearchPathList::search(const PathName& filename) const
     }
     else {
       // 相対パスの場合, 頭に search_path をつけて探す．
-      for (list<PathName>::const_iterator p = mList.begin();
-	   p != mList.end(); ++ p) {
-	const PathName& path = *p;
+      for ( auto path: mList ) {
 	PathName tmp = (path + filename).expand();
 	if ( tmp.stat() ) {
 	  return tmp;
@@ -428,10 +425,9 @@ SearchPathList::to_string(const string& separator) const
 {
   string ans;
   string sep = "";
-  for (list<PathName>::const_iterator p = mList.begin();
-       p != mList.end(); ++ p) {
+  for ( auto path: mList ) {
     ans += sep;
-    ans += p->str();
+    ans += path.str();
     sep = separator;
   }
   return ans;
