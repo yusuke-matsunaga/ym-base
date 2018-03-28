@@ -5,7 +5,7 @@
 /// @brief CodecType の定義ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2013, 2014 Yusuke Matsunaga
+/// Copyright (C) 2013, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -17,20 +17,23 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 /// @brief FileCoder/FileDecoder の種類
 //////////////////////////////////////////////////////////////////////
-enum CodecType {
+enum class CodecType {
   /// @brief 無変換
-  kCodecThrough,
+  Through,
   /// @brief compress (Z)
-  kCodecZ,
+  Z,
   /// @brief gzip
-  kCodecGzip,
+  Gzip,
   /// @brief bzip2
-  kCodecBzip2,
+  Bzip2,
   /// @brief lzma (xz)
-  kCodecLzma
+  Lzma
 };
 
+/// @relates CodecType
 /// @brief 実際に利用可能な codec type のリストを返す関数
+///
+/// Through, Z 以外は対象のライブラリが見つからなければ存在しない．
 extern
 vector<CodecType> get_codec_type_list();
 

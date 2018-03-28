@@ -3,7 +3,7 @@
 /// @brief CodecType の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2015 Yusuke Matsunaga
+/// Copyright (C) 2015, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -20,19 +20,19 @@ get_codec_type_list()
   vector<CodecType> tmp_list;
   tmp_list.reserve(5);
 
-  tmp_list.push_back(kCodecThrough);
-  tmp_list.push_back(kCodecZ);
+  tmp_list.push_back(CodecType::Through);
+  tmp_list.push_back(CodecType::Z);
 
 #if defined(ZLIB_FOUND)
-  tmp_list.push_back(kCodecGzip);
+  tmp_list.push_back(CodecType::Gzip);
 #endif
 
 #if defined(BZIP2_FOUND)
-  tmp_list.push_back(kCodecBzip2);
+  tmp_list.push_back(CodecType::Bzip2);
 #endif
 
 #if defined(LIBLZMA_FOUND)
-  tmp_list.push_back(kCodecLzma);
+  tmp_list.push_back(CodecType::Lzma);
 #endif
 
   return tmp_list;

@@ -34,7 +34,7 @@ public:
   /// @brief コンストラクタ
   /// @param[in] codec_type Coder の種類
   explicit
-  FileODO(CodecType codec_type = kCodecThrough);
+  FileODO(CodecType codec_type = CodecType::Through);
 
   /// @brief デストラクタ
   virtual

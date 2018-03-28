@@ -41,13 +41,13 @@ FileDecoder::new_decoder(CodecType type)
 {
   FileDecoder* decoder = nullptr;
 
-  if ( type == kCodecThrough ) {
+  if ( type == CodecType::Through ) {
     decoder = new ThruDecoder();
   }
-  else if ( type == kCodecZ ) {
+  else if ( type == CodecType::Z ) {
     decoder = new ZDecoder();
   }
-  else if ( type == kCodecGzip ) {
+  else if ( type == CodecType::Gzip ) {
 #if defined(ZLIB_FOUND)
     decoder = new GzDecoder();
 #else
@@ -57,7 +57,7 @@ FileDecoder::new_decoder(CodecType type)
 		    "gzip format is not supported on this system");
 #endif
   }
-  else if ( type == kCodecBzip2 ) {
+  else if ( type == CodecType::Bzip2 ) {
 #if defined(BZIP2_FOUND)
     decoder = new BzDecoder();
 #else
@@ -67,7 +67,7 @@ FileDecoder::new_decoder(CodecType type)
 		    "bzip2 format is not supported on this system");
 #endif
   }
-  else if ( type == kCodecLzma ) {
+  else if ( type == CodecType::Lzma ) {
 #if defined(LIBLZMA_FOUND)
     decoder = new LzmaDecoder();
 #else

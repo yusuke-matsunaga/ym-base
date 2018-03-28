@@ -32,7 +32,7 @@ public:
   /// @brief コンストラクタ
   /// @param[in] codec_type Decoder の種類
   explicit
-  FileIDO(CodecType codec_type = kCodecThrough);
+  FileIDO(CodecType codec_type = CodecType::Through);
 
   /// @brief デストラクタ
   virtual
