@@ -51,7 +51,7 @@ public:
 
   /// @brief 要素を返す．
   /// @param[in] pos 位置番号 ( 0 <= pos < num() )
-  Obj_Type
+  Obj_Type&
   operator[](SizeType pos) const;
 
   /// @breif 先頭の反復子を得る．
@@ -123,7 +123,7 @@ Array<Obj_Type>::num() const
 // @param[in] pos 位置番号 ( 0 <= pos < num() )
 template<typename Obj_Type>
 inline
-Obj_Type
+Obj_Type&
 Array<Obj_Type>::operator[](SizeType pos) const
 {
   ASSERT_COND( pos < num() );
