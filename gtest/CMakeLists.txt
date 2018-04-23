@@ -24,15 +24,15 @@ include_directories(
 
 ym_add_gtest ( CombiGenTest
   gen/CombiGenTest.cc
-  $<TARGET_OBJECTS:ym_base_d>
+  $<TARGET_OBJECTS:ym_base_ad>
   )
 
 ym_add_gtest ( ArrayTest
   misc/ArrayTest.cc
-  $<TARGET_OBJECTS:ym_base_d>
+  $<TARGET_OBJECTS:ym_base_ad>
   )
 
 ym_add_gtest ( RangeTest
   misc/RangeTest.cc
-  $<TARGET_OBJECTS:ym_base_d>
+  $<TARGET_OBJECTS:ym_base_ad>
   )
