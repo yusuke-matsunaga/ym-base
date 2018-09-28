@@ -26,7 +26,6 @@ ItvlMgr::ItvlMgr() :
 // デストラクタ
 ItvlMgr::~ItvlMgr()
 {
-  delete mImpl;
 }
 
 // 内容をクリアして全区間を使用可能とする．

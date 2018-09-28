@@ -129,7 +129,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 実装クラス
-  ItvlMgrImpl* mImpl;
+  unique_ptr<ItvlMgrImpl> mImpl;
 
 };
 
