@@ -38,7 +38,8 @@ public:
   MsgHandler(MsgBitMask mask = kMsgMaskAll);
 
   /// @brief デストラクタ
-  /// @note 登録されていたら削除する．
+  ///
+  /// 登録されていたら削除する．
   virtual
   ~MsgHandler();
 
