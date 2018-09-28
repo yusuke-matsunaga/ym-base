@@ -37,19 +37,20 @@ public:
   /// @param[in] handler 登録するハンドラ
   static
   void
-  reg_handler(MsgHandler* handler);
+  attach_handler(MsgHandler* handler);
 
   /// @brief ハンドラの登録を解除する．
   /// @param[in] handler 解除するハンドラ
-  /// @note ハンドラの登録が解除されてもハンドラその物の削除は行わない．
+  ///
+  /// ハンドラの登録が解除されてもハンドラその物の削除は行わない．
   static
   void
-  unreg_handler(MsgHandler* handler);
+  detach_handler(MsgHandler* handler);
 
   /// @brief すべてのハンドラの登録を解除する．
   static
   void
-  unreg_all_handlers();
+  detach_all_handlers();
 
 
 public:

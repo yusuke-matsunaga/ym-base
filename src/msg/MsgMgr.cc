@@ -45,7 +45,7 @@ operator<<(ostream& s,
 // @brief ハンドラを登録する．
 // @param[in] handler 登録するハンドラ
 void
-MsgMgr::reg_handler(MsgHandler* handler)
+MsgMgr::attach_handler(MsgHandler* handler)
 {
   gTheMgr.reg_handler(handler);
 }
@@ -54,14 +54,14 @@ MsgMgr::reg_handler(MsgHandler* handler)
 // @param[in] handler 解除するハンドラ
 // @note ハンドラの登録が解除されてもハンドラその物の削除は行わない．
 void
-MsgMgr::unreg_handler(MsgHandler* handler)
+MsgMgr::detach_handler(MsgHandler* handler)
 {
   gTheMgr.unreg_handler(handler);
 }
 
 // @brief すべてのハンドラの登録を解除する．
 void
-MsgMgr::unreg_all_handlers()
+MsgMgr::detach_all_handlers()
 {
   gTheMgr.unreg_all_handlers();
 }

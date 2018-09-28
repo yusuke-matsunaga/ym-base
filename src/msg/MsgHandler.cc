@@ -8,6 +8,7 @@
 
 
 #include "ym/MsgHandler.h"
+#include "ym/StreamMsgHandler.h"
 #include "ym/FileRegion.h"
 
 
