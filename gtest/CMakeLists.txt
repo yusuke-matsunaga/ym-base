@@ -36,3 +36,8 @@ ym_add_gtest ( RangeTest
   misc/RangeTest.cc
   $<TARGET_OBJECTS:ym_base_ad>
   )
+
+ym_add_gtest ( OptionParserTest
+  textproc/OptionParserTest.cc
+  $<TARGET_OBJECTS:ym_base_ad>
+  )

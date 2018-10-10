@@ -171,6 +171,7 @@ set ( random_SOURCES
   )
 
 set ( textproc_SOURCES
+  src/textproc/OptionParser.cc
   src/textproc/Scanner.cc
   src/textproc/StrBuff.cc
   src/textproc/StrPool.cc
