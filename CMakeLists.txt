@@ -53,7 +53,7 @@ endif ()
 # サブディレクトリの設定
 # ===================================================================
 
-add_subdirectory ( gtest )
+add_subdirectory ( c++-test )
 add_subdirectory ( tests )
 
 
@@ -71,114 +71,114 @@ configure_file(
 # ===================================================================
 
 set ( alloc_SOURCES
-  src/alloc/Alloc.cc
-  src/alloc/FragAlloc.cc
-  src/alloc/SimpleAlloc.cc
-  src/alloc/UnitAlloc.cc
+  c++-src/alloc/Alloc.cc
+  c++-src/alloc/FragAlloc.cc
+  c++-src/alloc/SimpleAlloc.cc
+  c++-src/alloc/UnitAlloc.cc
   )
 
 set ( binder_SOURCES
-  src/binder/Binder.cc
+  c++-src/binder/Binder.cc
   )
 
 set ( file_info_SOURCES
-  src/file_info/File.cc
-  src/file_info/FileInfo.cc
-  src/file_info/FileInfoMgr.cc
+  c++-src/file_info/File.cc
+  c++-src/file_info/FileInfo.cc
+  c++-src/file_info/FileInfoMgr.cc
   )
 
 set ( gen_SOURCES
-  src/gen/CombiGen.cc
-  src/gen/GenBase.cc
-  src/gen/MultiCombiGen.cc
-  src/gen/MultiGenBase.cc
-  src/gen/MultiPermGen.cc
-  src/gen/MultiSetCombiGen.cc
-  src/gen/MultiSetGenBase.cc
-  src/gen/MultiSetPermGen.cc
-  src/gen/PermGen.cc
+  c++-src/gen/CombiGen.cc
+  c++-src/gen/GenBase.cc
+  c++-src/gen/MultiCombiGen.cc
+  c++-src/gen/MultiGenBase.cc
+  c++-src/gen/MultiPermGen.cc
+  c++-src/gen/MultiSetCombiGen.cc
+  c++-src/gen/MultiSetGenBase.cc
+  c++-src/gen/MultiSetPermGen.cc
+  c++-src/gen/PermGen.cc
   )
 
 set ( io_SOURCES
-  src/io/CodecType.cc
-  src/io/FileBuff.cc
-  src/io/FileBuff.h
-  src/io/FileCoder.cc
-  src/io/FileDecoder.cc
-  src/io/FileIDO.cc
-  src/io/FileODO.cc
-  src/io/IDO.cc
-  src/io/ODO.cc
-  src/io/StreamIDO.cc
-  src/io/StringIDO.cc
-  src/io/StrListIDO.cc
-  src/io/ThruCoder.cc
-  src/io/ThruDecoder.cc
-  src/io/ZCoder.cc
-  src/io/ZDecoder.cc
+  c++-src/io/CodecType.cc
+  c++-src/io/FileBuff.cc
+  c++-src/io/FileBuff.h
+  c++-src/io/FileCoder.cc
+  c++-src/io/FileDecoder.cc
+  c++-src/io/FileIDO.cc
+  c++-src/io/FileODO.cc
+  c++-src/io/IDO.cc
+  c++-src/io/ODO.cc
+  c++-src/io/StreamIDO.cc
+  c++-src/io/StringIDO.cc
+  c++-src/io/StrListIDO.cc
+  c++-src/io/ThruCoder.cc
+  c++-src/io/ThruDecoder.cc
+  c++-src/io/ZCoder.cc
+  c++-src/io/ZDecoder.cc
   )
 
 if ( ZLIB_FOUND )
   set (io_SOURCES ${io_SOURCES}
-    src/io/GzCoder.cc
-    src/io/GzDecoder.cc
-    src/io/zstream.cc
+    c++-src/io/GzCoder.cc
+    c++-src/io/GzDecoder.cc
+    c++-src/io/zstream.cc
     )
 endif ( ZLIB_FOUND )
 
 if ( BZIP2_FOUND )
   set (io_SOURCES ${io_SOURCES}
-    src/io/BzCoder.cc
-    src/io/BzDecoder.cc
+    c++-src/io/BzCoder.cc
+    c++-src/io/BzDecoder.cc
     )
 endif ( BZIP2_FOUND )
 
 if ( LIBLZMA_FOUND )
   set (io_SOURCES ${io_SOURCES}
-    src/io/LzmaCoder.cc
-    src/io/LzmaDecoder.cc
+    c++-src/io/LzmaCoder.cc
+    c++-src/io/LzmaDecoder.cc
     )
 endif ( LIBLZMA_FOUND )
 
 set ( itvl_SOURCES
-  src/itvl/ItvlMgr.cc
-  src/itvl/ItvlMgrImpl.cc
-  src/itvl/NameMgr.cc
+  c++-src/itvl/ItvlMgr.cc
+  c++-src/itvl/ItvlMgrImpl.cc
+  c++-src/itvl/NameMgr.cc
   )
 
 set ( misc_SOURCES
-  src/misc/MFSet.cc
+  c++-src/misc/MFSet.cc
   )
 
 set ( msg_SOURCES
-  src/msg/MsgHandler.cc
-  src/msg/MsgMgr.cc
-  src/msg/MsgMgrImpl.cc
+  c++-src/msg/MsgHandler.cc
+  c++-src/msg/MsgMgr.cc
+  c++-src/msg/MsgMgrImpl.cc
   )
 
 if ( POPT_FOUND )
   set ( popt_SOURCES
-    src/popt/PoptMainApp.cc
+    c++-src/popt/PoptMainApp.cc
     )
 else ( )
   set ( popt_SOURCES )
 endif ( )
 
 set ( random_SOURCES
-  src/random/RandGen.cc
-  src/random/RandSampler.cc
-  src/random/RandSamplerSimple.cc
+  c++-src/random/RandGen.cc
+  c++-src/random/RandSampler.cc
+  c++-src/random/RandSamplerSimple.cc
   )
 
 set ( textproc_SOURCES
-  src/textproc/OptionParser.cc
-  src/textproc/Scanner.cc
-  src/textproc/StrBuff.cc
-  src/textproc/StrPool.cc
+  c++-src/textproc/OptionParser.cc
+  c++-src/textproc/Scanner.cc
+  c++-src/textproc/StrBuff.cc
+  c++-src/textproc/StrPool.cc
   )
 
 set ( time_SOURCES
-  src/time/StopWatch.cc
+  c++-src/time/StopWatch.cc
   )
 
 set ( ym_base_SOURCES

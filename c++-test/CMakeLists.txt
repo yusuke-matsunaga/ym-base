@@ -22,22 +22,22 @@ include_directories(
 #  テスト用のターゲットの設定
 # ===================================================================
 
-ym_add_gtest ( CombiGenTest
+ym_add_gtest ( base_CombiGen_test
   gen/CombiGenTest.cc
   $<TARGET_OBJECTS:ym_base_ad>
   )
 
-ym_add_gtest ( ArrayTest
+ym_add_gtest ( base_Array_test
   misc/ArrayTest.cc
   $<TARGET_OBJECTS:ym_base_ad>
   )
 
-ym_add_gtest ( RangeTest
+ym_add_gtest ( base_Range_test
   misc/RangeTest.cc
   $<TARGET_OBJECTS:ym_base_ad>
   )
 
-ym_add_gtest ( OptionParserTest
+ym_add_gtest ( base_OptionParser_test
   textproc/OptionParserTest.cc
   $<TARGET_OBJECTS:ym_base_ad>
   )
