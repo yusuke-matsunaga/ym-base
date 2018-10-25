@@ -490,7 +490,7 @@ PoptInt::arg()
 }
 
 // @brief オプション引数の値を返す．
-ymint
+int
 PoptInt::val() const
 {
   return mVal;
