@@ -27,6 +27,11 @@
 # インクルードパスの設定
 # ===================================================================
 
+include_directories (
+  ${PROJECT_SOURCE_DIR}/ym-common/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
+  )
+
 if ( ZLIB_FOUND )
   include_directories(${ZLIBINCLUDE_DIRS})
 endif ()
