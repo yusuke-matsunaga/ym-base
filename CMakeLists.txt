@@ -28,6 +28,7 @@
 # ===================================================================
 
 include_directories (
+  ${PROJECT_BINARY_DIR}/include
   ${PROJECT_SOURCE_DIR}/ym-common/include
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   )
@@ -67,7 +68,7 @@ add_subdirectory ( tests )
 # ===================================================================
 configure_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/etc/CodecTypeConf.h.in"
-  "${PROJECT_BINARY_DIR}/CodecTypeConf.h"
+  "${PROJECT_BINARY_DIR}/include/CodecTypeConf.h"
   )
 
 
