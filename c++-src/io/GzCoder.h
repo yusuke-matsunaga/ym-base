@@ -47,31 +47,27 @@ public:
   ///
   /// 失敗する理由は以下の通り
   ///  - ファイルに対する書き込み許可がない．
-  virtual
   bool
   open(const char* filename,
        mode_t mode = 0666,
-       ymuint level = 0);
+       int level = 0) override;
 
   /// @brief ファイルを閉じる．
-  virtual
   void
-  close();
+  close() override;
 
   /// @brief 書き込み可能の時に true を返す．
-  virtual
   bool
-  is_ready() const;
+  is_ready() const override;
 
   /// @brief 最大 num バイトのデータを圧縮してファイルに書き込む．
   /// @param[in] wbuff 圧縮するデータを格納するバッファ
   /// @param[in] num 書き込むデータ数(バイト)
   /// @return 実際に書き込んだバイト数を返す．
   /// @note エラーが起こったら -1 を返す．
-  virtual
   int
   write(const ymuint8* wbuff,
-	int num);
+	int num) override;
 
 
 private:
