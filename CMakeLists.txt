@@ -170,12 +170,6 @@ else ( )
   set ( popt_SOURCES )
 endif ( )
 
-set ( random_SOURCES
-  c++-src/random/RandGen.cc
-  c++-src/random/RandSampler.cc
-  c++-src/random/RandSamplerSimple.cc
-  )
-
 set ( textproc_SOURCES
   c++-src/textproc/OptionParser.cc
   c++-src/textproc/Scanner.cc
@@ -197,7 +191,6 @@ set ( ym_base_SOURCES
   ${misc_SOURCES}
   ${msg_SOURCES}
   ${popt_SOURCES}
-  ${random_SOURCES}
   ${textproc_SOURCES}
   ${time_SOURCES}
   )

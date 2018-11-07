@@ -17,23 +17,42 @@ include_directories(
 
 
 # ===================================================================
-#  RandSamplerSimpleTest
+#  RandSamplerTest
 # ===================================================================
 
-set ( RandSamplerSimpleTest_SOURCES
-  RandSamplerSimpleTest.cc
+set ( RandSamplerTest_SOURCES
+  RandSamplerTest.cc
   )
 
-add_executable ( RandSamplerSimpleTest
-  RandSamplerSimpleTest.cc
+add_executable ( RandSamplerTest
+  RandSamplerTest.cc
+  $<TARGET_OBJECTS:ym_base_a>
+  )
+
+target_compile_options ( RandSamplerTest
+  PRIVATE "-O3"
+  )
+
+target_compile_definitions ( RandSamplerTest
+  PRIVATE "-DNDEBUG"
+  )
+
+target_link_libraries ( RandSamplerTest
+  pthread
+  ${YM_LIB_DEPENDS}
+  ${GTEST_BOTH_LIBRARIES}
+  )
+
+add_executable ( RandSamplerTest_d
+  RandSamplerTest.cc
   $<TARGET_OBJECTS:ym_base_ad>
   )
 
-target_compile_options ( RandSamplerSimpleTest
+target_compile_options ( RandSamplerTest_d
   PRIVATE "-g"
   )
 
-target_link_libraries ( RandSamplerSimpleTest
+target_link_libraries ( RandSamplerTest_d
   pthread
   ${YM_LIB_DEPENDS}
   ${GTEST_BOTH_LIBRARIES}
