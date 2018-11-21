@@ -50,12 +50,12 @@ CombiGen::~CombiGen()
 void
 CombiGen::operator++()
 {
-  int n = num();
-  int k = combi_num();
-  for (int pos = k; pos -- > 0; ) {
+  int n = this->n();
+  int k = this->k();
+  for ( int pos = k; pos -- > 0; ) {
     if ( elem(pos) < n - k + pos ) {
       ++ elem(pos);
-      for (int pos1 = pos + 1; pos1 < k; ++ pos1) {
+      for ( int pos1 = pos + 1; pos1 < k; ++ pos1 ) {
 	elem(pos1) = elem(pos1 - 1) + 1;
       }
       break;

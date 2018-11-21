@@ -50,23 +50,24 @@ PermGen::~PermGen()
 void
 PermGen::operator++()
 {
-  int n = num();
-  int k = combi_num();
+  int n = this->n();
+  int k = this->k();
 
   // 各値の使用回数(0/1)を数える．
-  vector<int> bitmap(n, 0);
-  for (int pos = 0; pos < k; ++ pos) {
-    bitmap[elem(pos)] = 1;
+  vector<bool> used(n, false);
+  for ( int pos = 0; pos < k; ++ pos ) {
+    used[elem(pos)] = true;
   }
 
   // 最後の要素から次の値にしていく．
-  for (int pos = k; pos -- > 0; ) {
+  for ( int pos = k; pos -- > 0; ) {
     bool found = false;
-    for (int j = elem(pos); ++ j < n; ) {
-      if ( bitmap[j] == 0 ) {
-	bitmap[elem(pos)] = 0;
+    for ( int j = elem(pos); ++ j < n; ) {
+      if ( !used[j] ) {
+	// j と elem(pos) を入れ替える．
+	used[elem(pos)] = false;
 	elem(pos) = j;
-	bitmap[j] = 1;
+	used[j] = true;
 	found = true;
 	break;
       }
@@ -74,10 +75,10 @@ PermGen::operator++()
     if ( found ) {
       // pos + 1 以降の値をセットする．
       int val = 0;
-      for (int j = pos + 1; j < k; ++ j) {
+      for ( int j = pos + 1; j < k; ++ j ) {
 	// 使われていない値を探す．
-	for ( ; bitmap[val] == 1; ++ val) ;
-	bitmap[val] = 1;
+	for ( ; used[val]; ++ val ) ;
+	used[val] = true;
 	elem(j) = val;
 	++ val;
       }
@@ -85,7 +86,7 @@ PermGen::operator++()
     }
     if ( pos > 0 ) {
       // pos の値を未定にする．
-      bitmap[elem(pos)] = 0;
+      used[elem(pos)] = false;
     }
     else {
       // すべての順列を試した印を書き込む．

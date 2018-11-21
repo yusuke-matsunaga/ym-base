@@ -24,6 +24,7 @@
 
 
 #include "ym_config.h"
+#include "ym/Array.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -58,12 +59,12 @@ public:
   /// @brief 全要素数を得る．
   /// @return 全要素数
   int
-  num() const;
+  n() const;
 
   /// @brief 選択する要素数を得る．
   /// @return 選択する要素数
   int
-  combi_num() const;
+  k() const;
 
   /// @brief 最初の要素を指すように初期化する．
   void
@@ -75,8 +76,8 @@ public:
   int
   operator()(int pos) const;
 
-  /// @brief 要素のリストの取得
-  const vector<int>&
+  /// @brief 要素リストの取得
+  Array<int>
   elem_list() const;
 
   /// @brief 末尾のチェック
@@ -113,8 +114,9 @@ private:
   // 選択する要素数
   int mK;
 
-  // 現在の要素
-  vector<int> mElemList;
+  // 現在の要素を持つ配列
+  // サイズは mK;
+  int* mElemList;
 
 };
 
@@ -126,7 +128,7 @@ private:
 // 全要素数を得る．
 inline
 int
-GenBase::num() const
+GenBase::n() const
 {
   return mN;
 }
@@ -134,7 +136,7 @@ GenBase::num() const
 // 選択する要素数を得る．
 inline
 int
-GenBase::combi_num() const
+GenBase::k() const
 {
   return mK;
 }
@@ -159,12 +161,12 @@ GenBase::elem(int pos)
   return mElemList[pos];
 }
 
-// @brief 要素のリストの取得
+// @brief 要素リストの取得
 inline
-const vector<int>&
+Array<int>
 GenBase::elem_list() const
 {
-  return mElemList;
+  return Array<int>(mElemList, 0, mK);
 }
 
 // 末尾の時に true を返す．
@@ -172,8 +174,8 @@ inline
 bool
 GenBase::is_end() const
 {
-  // 末尾の時には範囲外の値(= num())を持っている．
-  return operator()(0) == num();
+  // 末尾の時には範囲外の値(= n())を持っている．
+  return operator()(0) == n();
 }
 
 END_NAMESPACE_YM
