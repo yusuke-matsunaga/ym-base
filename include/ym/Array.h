@@ -17,12 +17,12 @@ BEGIN_NAMESPACE_YM
 /// @class Array Array.h "Array.h"
 /// @brief シンプルな配列クラス
 //////////////////////////////////////////////////////////////////////
-template<typename Obj_Type>
+template<typename ObjType>
 class Array
 {
 public:
 
-  using iterator = Obj_Type*;
+  using iterator = ObjType*;
 
 public:
 
@@ -32,7 +32,7 @@ public:
   /// @param[in] end 終了位置
   ///
   /// body[begin] 〜 body[end - 1] までの範囲を表す配列となる．
-  Array(Obj_Type* body,
+  Array(ObjType* body,
 	SizeType begin,
 	SizeType end);
 
@@ -51,7 +51,7 @@ public:
 
   /// @brief 要素を返す．
   /// @param[in] pos 位置番号 ( 0 <= pos < num() )
-  Obj_Type&
+  ObjType&
   operator[](SizeType pos) const;
 
   /// @breif 先頭の反復子を得る．
@@ -78,7 +78,7 @@ private:
   SizeType mNum;
 
   // 本体
-  Obj_Type* mBody;
+  ObjType* mBody;
 
 };
 
@@ -93,38 +93,38 @@ private:
 // @param[in] end 終了位置
 //
 // body[begin] 〜 body[end - 1] までの範囲を表す配列となる．
-template<typename Obj_Type>
+template<typename ObjType>
 inline
-Array<Obj_Type>::Array(Obj_Type* body,
-		       SizeType begin,
-		       SizeType end)
+Array<ObjType>::Array(ObjType* body,
+		      SizeType begin,
+		      SizeType end)
 {
   mNum = end - begin;
   mBody = body + begin;
 }
 
 // @brief デストラクタ
-template<typename Obj_Type>
+template<typename ObjType>
 inline
-Array<Obj_Type>::~Array()
+Array<ObjType>::~Array()
 {
 }
 
 // @brief 要素数を返す．
-template<typename Obj_Type>
+template<typename ObjType>
 inline
 SizeType
-Array<Obj_Type>::num() const
+Array<ObjType>::num() const
 {
   return mNum;
 }
 
 // @brief 要素を返す．
 // @param[in] pos 位置番号 ( 0 <= pos < num() )
-template<typename Obj_Type>
+template<typename ObjType>
 inline
-Obj_Type&
-Array<Obj_Type>::operator[](SizeType pos) const
+ObjType&
+Array<ObjType>::operator[](SizeType pos) const
 {
   ASSERT_COND( pos < num() );
 
@@ -132,19 +132,19 @@ Array<Obj_Type>::operator[](SizeType pos) const
 }
 
 // @breif 先頭の反復子を得る．
-template<typename Obj_Type>
+template<typename ObjType>
 inline
-Obj_Type*
-Array<Obj_Type>::begin() const
+ObjType*
+Array<ObjType>::begin() const
 {
   return mBody;
 }
 
 // @brief 末尾の反復子を得る．
-template<typename Obj_Type>
+template<typename ObjType>
 inline
-Obj_Type*
-Array<Obj_Type>::end() const
+ObjType*
+Array<ObjType>::end() const
 {
   return mBody + num();
 }

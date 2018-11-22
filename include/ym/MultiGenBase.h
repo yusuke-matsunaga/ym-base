@@ -1,5 +1,5 @@
-﻿#ifndef YMUTILS_MULTIGENBASE_H
-#define YMUTILS_MULTIGENBASE_H
+﻿#ifndef YM_MULTIGENBASE_H
+#define YM_MULTIGENBASE_H
 
 /// @file ym/MultiGenBase.h
 /// @brief 組み合わせ生成器と順列生成器のヘッダファイル
@@ -10,6 +10,7 @@
 
 
 #include "ym_config.h"
+#include "ym/Array.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -27,7 +28,11 @@ public:
 
   /// @brief コンストラクタ
   /// @param[in] nk_array 全要素数 n と選択する要素数 k のベクタ
-  MultiGenBase(const vector<pair<int, int> >& nk_array);
+  MultiGenBase(const vector<pair<int, int>>& nk_array);
+
+  /// @brief コンストラクタ
+  /// @param[in] nk_array 全要素数 n と選択する要素数 k のベクタ
+  MultiGenBase(std::initializer_list<pair<int, int>>& nk_array);
 
   /// @brief コピーコンストラクタ
   /// @param[in] src コピー元のオブジェクト
@@ -96,7 +101,7 @@ protected:
   /// @brief 要素配列の取得
   /// @param[in] grp グループ番号
   /// @return grp 番目のグループの要素配列
-  vector<int>&
+  Array<int>
   elem(int grp);
 
   /// @brief grp 番目のグループが終了状態の時 true を返す．
@@ -109,11 +114,25 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 各グループごとの全要素数を選択する要素数を入れる配列
-  vector<pair<int, int> > mNkArray;
+  // グループ数
+  int mGroupNum;
 
-  // 現在の要素(二重の配列なので少しめんどくさい)
-  vector<vector<int> > mElemArray;
+  // 各グループごとの要素数の配列
+  // サイズは mGroupNum
+  int* mNArray;
+
+  // 各グループごとの選択数の配列
+  // サイズは mGroupNum
+  int* mKArray;
+
+  // 各グループごとのmElemArray上のオフセットの配列
+  // = mOffsetArray[i] = sum_j^{i - 1} mKArray[j]
+  // サイズは mGroupNum
+  int* mOffsetArray;
+
+  // 現在の要素(二重の配列を一次元の配列で表すので少しめんどくさい)
+  // サイズは sum_i mKArray[i]
+  int* mElemArray;
 
 };
 
@@ -127,7 +146,7 @@ inline
 int
 MultiGenBase::group_num() const
 {
-  return static_cast<int>(mNkArray.size());
+  return mGroupNum;
 }
 
 // grp 番目のグループの全要素数を得る．
@@ -135,7 +154,9 @@ inline
 int
 MultiGenBase::n(int grp) const
 {
-  return mNkArray[grp].first;
+  ASSERT_COND( grp >= 0 && grp < mGroupNum );
+
+  return mNArray[grp];
 }
 
 // grp 番目のグループの選択する要素数を得る．
@@ -143,7 +164,9 @@ inline
 int
 MultiGenBase::k(int grp) const
 {
-  return mNkArray[grp].second;
+  ASSERT_COND( grp >= 0 && grp < mGroupNum );
+
+  return mKArray[grp];
 }
 
 // grp 番目のグループの pos 番目の要素を取り出す．
@@ -152,7 +175,10 @@ int
 MultiGenBase::operator()(int grp,
 			 int pos) const
 {
-  return mElemArray[grp][pos];
+  ASSERT_COND( grp >= 0 && grp < mGroupNum );
+  ASSERT_COND( pos >= 0 && pos < k(grp) );
+
+  return mElemArray[mOffsetArray[grp] + pos];
 }
 
 // 末尾の時に true を返す．
@@ -165,10 +191,11 @@ MultiGenBase::is_end() const
 
 // grp 番目のグループの要素配列を得る．
 inline
-vector<int>&
+Array<int>
 MultiGenBase::elem(int g)
 {
-  return mElemArray[g];
+  int offset = mOffsetArray[g];
+  return Array<int>(mElemArray, offset, offset + mKArray[g]);
 }
 
 // grp 番目のグループが終了状態の時 true を返す．
@@ -176,9 +203,9 @@ inline
 bool
 MultiGenBase::is_end_sub(int grp) const
 {
-  return mElemArray[grp][0] == n(grp);
+  return operator()(grp, 0) == n(grp);
 }
 
 END_NAMESPACE_YM
 
-#endif // YMUTILS_MULTIGENBASE_H
+#endif // YM_MULTIGENBASE_H

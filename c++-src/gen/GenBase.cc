@@ -20,24 +20,28 @@ BEGIN_NAMESPACE_YM
 // 全要素数 n と選択する要素数 k を必ず指定する．
 GenBase::GenBase(int n,
 		 int k) :
-  mN(n),
-  mK(k),
-  mElemList(k)
+  mN{n},
+  mK{k},
+  mElemList{new int[mK]}
 {
   init();
 }
 
 // @brief コピーコンストラクタ
 GenBase::GenBase(const GenBase& src) :
-  mN(src.mN),
-  mK(src.mK),
-  mElemList(src.mElemList)
+  mN{src.mN},
+  mK{src.mK},
+  mElemList{new int[mK]}
 {
+  for ( int i = 0; i < mK; ++ i ) {
+    mElemList[i] = src.mElemList[i];
+  }
 }
 
 // デストラクタ
 GenBase::~GenBase()
 {
+  delete [] mElemList;
 }
 
 // @brief 最初の要素を指すように初期化する．
@@ -53,11 +57,12 @@ GenBase::init()
 void
 GenBase::copy(const GenBase& src)
 {
+  if ( mK != src.mK ) {
+    delete [] mElemList;
+    mElemList = new int[src.mK];
+  }
   mN = src.mN;
   mK = src.mK;
-  if ( mElemList.size() != mK ) {
-    mElemList.resize(mK);
-  }
   for ( int i = 0; i < mK; ++ i ) {
     mElemList[i] = src.mElemList[i];
   }
