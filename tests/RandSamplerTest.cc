@@ -33,14 +33,14 @@ RandSamplerTest(RandSampler& rs,
   int sample_num = accum * 100000;
 
   vector<int> count(num_data, 0);
-  for ( int i: Range(sample_num) ) {
+  for ( int i: Range<>(sample_num) ) {
     int pos = rs(rg);
     ASSERT_COND( pos >= 0 && pos < num_data );
     ++ count[pos];
   }
 
   double err_accum = 0.0;
-  for ( int i: Range(num_data) ) {
+  for ( int i: Range<>(num_data) ) {
     cout << "Data#" << i << ": " << count[i] << endl;
     double diff = count[i] - w_array[i] * 100000;
     err_accum += diff * diff;
@@ -66,7 +66,7 @@ main(int argc,
   cout << endl;
 
   vector<int> w_array2(100);
-  for ( int i: Range(100) ) {
+  for ( int i: Range<>(100) ) {
     w_array2[i] = i + 1;
   }
 

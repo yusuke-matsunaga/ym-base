@@ -18,15 +18,14 @@ BEGIN_NAMESPACE_YM
 /// @class RangeIterator Range.h "Range.h"
 /// @brief Range 用の反復子
 //////////////////////////////////////////////////////////////////////
+template<int step = 1>
 class RangeIterator
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] pos 現在の値
-  /// @param[in] step 刻み幅
-  RangeIterator(int pos,
-		int step);
+  RangeIterator(int pos);
 
   /// @brief デストラクタ
   ~RangeIterator();
@@ -68,9 +67,6 @@ private:
   // 現在の位置
   int mCurPos;
 
-  // 刻み幅
-  int mStep;
-
 };
 
 
@@ -80,18 +76,18 @@ private:
 ///
 /// Python の range() とほぼおなじ機能
 //////////////////////////////////////////////////////////////////////
+template<int step = 1>
 class Range
 {
 public:
-  typedef RangeIterator iterator;
+  typedef RangeIterator<step> iterator;
 
   /// @brief コンストラクタ
   /// @param[in] start 開始位置
   /// @param[in] end 終了位置
-  /// @param[in] step 刻み幅
   ///
   /// @code
-  /// for ( int i: Range(start, end, step) ) {
+  /// for ( int i: Range<step>(start, end) ) {
   ///   ...
   /// }
   /// @endcoe
@@ -106,13 +102,12 @@ public:
   ///
   /// start < end かつ step < 0 の場合などは無限ループになる．
   Range(int start,
-	int end,
-	int step = 1);
+	int end);
 
   /// @brief 開始位置と刻み幅を省略したコンストラクタ
   /// @param[in] end 終了位置
   ///
-  /// start = 0, step = 1 とする．
+  /// start = 0 とする．
   explicit
   Range(int end);
 
@@ -151,9 +146,6 @@ private:
   // 終了位置
   int mEnd;
 
-  // 刻み幅
-  int mStep;
-
 };
 
 
@@ -164,52 +156,54 @@ private:
 // @brief コンストラクタ
 // @param[in] pos 現在の値
 // @param[in] step 刻み幅
+template<int step>
 inline
-RangeIterator::RangeIterator(int pos,
-			     int step) :
-  mCurPos(pos),
-  mStep(step)
+RangeIterator<step>::RangeIterator(int pos) :
+  mCurPos(pos)
 {
 }
 
 // @brief デストラクタ
+template<int step>
 inline
-RangeIterator::~RangeIterator()
+RangeIterator<step>::~RangeIterator()
 {
 }
 
 // @brief dereference 演算子
+template<int step>
 inline
 int
-RangeIterator::operator*() const
+RangeIterator<step>::operator*() const
 {
   return mCurPos;
 }
 
 // @brief increment 演算子
+template<int step>
 inline
-const RangeIterator&
-RangeIterator::operator++()
+const RangeIterator<step>&
+RangeIterator<step>::operator++()
 {
-  mCurPos += mStep;
+  mCurPos += step;
 
   return *this;
 }
 
 // @brief 等価比較演算子
+template<int step>
 inline
 bool
-RangeIterator::operator==(const RangeIterator& right) const
+RangeIterator<step>::operator==(const RangeIterator<step>& right) const
 {
-  ASSERT_COND( mStep == right.mStep );
-
   return mCurPos == right.mCurPos;
 }
 
 // @brief 非等価比較演算子
+template<int step>
 inline
 bool
-RangeIterator::operator!=(const RangeIterator& right) const
+RangeIterator<step>::operator!=(const RangeIterator<step>& right) const
 {
   return !operator==(right);
 }
@@ -223,60 +217,62 @@ RangeIterator::operator!=(const RangeIterator& right) const
 /// @param[in] start 開始位置
 /// @param[in] end 終了位置
 /// @param[in] step 刻み幅
+template<int step>
 inline
-Range::Range(int start,
-	     int end,
-	     int step) :
+Range<step>::Range(int start,
+		   int end) :
   mStart(start),
-  mEnd(end),
-  mStep(step)
+  mEnd(end)
 {
   // sanity check
   if ( mStart < mEnd ) {
-    ASSERT_COND( mStep > 0 );
+    ASSERT_COND( step > 0 );
   }
   else if ( mStart > mEnd ) {
-    ASSERT_COND( mStep < 0 );
+    ASSERT_COND( step < 0 );
   }
 
   // 終了位置の補正を行う．
-  if ( ((mEnd - mStart) % mStep) != 0 ) {
-    mEnd = (((mEnd - mStart) / mStep) + 1) * mStep + mStart;
+  if ( ((mEnd - mStart) % step) != 0 ) {
+    mEnd = (((mEnd - mStart) / step) + 1) * step + mStart;
   }
 }
 
 // @brief 開始位置と刻み幅を省略したコンストラクタ
 // @param[in] end 終了位置
 //
-// start = 0, step = 1 とする．
+// start = 0 とする．
+template<int step>
 inline
-Range::Range(int end) :
+Range<step>::Range(int end) :
   mStart(0),
-  mEnd(end),
-  mStep(1)
+  mEnd(end)
 {
 }
 
 // @brief デストラクタ
+template<int step>
 inline
-Range::~Range()
+Range<step>::~Range()
 {
 }
 
 // @brief 開始位置の反復子を返す．
+template<int step>
 inline
-Range::iterator
-Range::begin() const
+RangeIterator<step>
+Range<step>::begin() const
 {
-  return iterator(mStart, mStep);
+  return iterator(mStart);
 }
 
 // @brief 終了位置の反復子を返す．
+template<int step>
 inline
-Range::iterator
-Range::end() const
+RangeIterator<step>
+Range<step>::end() const
 {
-  return iterator(mEnd, mStep);
+  return iterator(mEnd);
 }
 
 END_NAMESPACE_YM
