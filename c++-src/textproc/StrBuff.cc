@@ -63,8 +63,9 @@ StrBuff::substr(SizeType first,
   StrBuff ans(len + 1);
   const char* src = mBuffer + first;
   char* dst = ans.mBuffer;
-  for ( SizeType i = 0; i < len; ++ i ) {
-    *dst ++ = *src ++;
+  char* dst_end = dst + len;
+  for ( ; dst != dst_end; ++ dst, ++ src ) {
+    *dst = *src;
   }
   *dst = '\0';
   ans.mEnd = len;
