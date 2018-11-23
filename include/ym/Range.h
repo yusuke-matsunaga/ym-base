@@ -77,7 +77,7 @@ private:
 /// Python の range() とほぼおなじ機能
 //////////////////////////////////////////////////////////////////////
 template<int step = 1>
-class Range
+class Range_
 {
 public:
   typedef RangeIterator<step> iterator;
@@ -101,18 +101,18 @@ public:
   /// ただし step が負の時には i > end が継続条件になる．
   ///
   /// start < end かつ step < 0 の場合などは無限ループになる．
-  Range(int start,
-	int end);
+  Range_(int start,
+	 int end);
 
   /// @brief 開始位置と刻み幅を省略したコンストラクタ
   /// @param[in] end 終了位置
   ///
   /// start = 0 とする．
   explicit
-  Range(int end);
+  Range_(int end);
 
   /// @brief デストラクタ
-  ~Range();
+  ~Range_();
 
 
 public:
@@ -147,6 +147,9 @@ private:
   int mEnd;
 
 };
+
+/// @brief Range_<1> の別名
+using Range = Range_<1>;
 
 
 //////////////////////////////////////////////////////////////////////
@@ -210,7 +213,7 @@ RangeIterator<step>::operator!=(const RangeIterator<step>& right) const
 
 
 //////////////////////////////////////////////////////////////////////
-// Range のインライン関数の定義
+// Range_ のインライン関数の定義
 //////////////////////////////////////////////////////////////////////
 
 /// @brief コンストラクタ
@@ -219,8 +222,8 @@ RangeIterator<step>::operator!=(const RangeIterator<step>& right) const
 /// @param[in] step 刻み幅
 template<int step>
 inline
-Range<step>::Range(int start,
-		   int end) :
+Range_<step>::Range_(int start,
+		     int end) :
   mStart(start),
   mEnd(end)
 {
@@ -244,7 +247,7 @@ Range<step>::Range(int start,
 // start = 0 とする．
 template<int step>
 inline
-Range<step>::Range(int end) :
+Range_<step>::Range_(int end) :
   mStart(0),
   mEnd(end)
 {
@@ -253,7 +256,7 @@ Range<step>::Range(int end) :
 // @brief デストラクタ
 template<int step>
 inline
-Range<step>::~Range()
+Range_<step>::~Range_()
 {
 }
 
@@ -261,7 +264,7 @@ Range<step>::~Range()
 template<int step>
 inline
 RangeIterator<step>
-Range<step>::begin() const
+Range_<step>::begin() const
 {
   return iterator(mStart);
 }
@@ -270,7 +273,7 @@ Range<step>::begin() const
 template<int step>
 inline
 RangeIterator<step>
-Range<step>::end() const
+Range_<step>::end() const
 {
   return iterator(mEnd);
 }

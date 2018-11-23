@@ -18,7 +18,7 @@ TEST(RangeTest, simple_1)
   vector<int> val_list;
 
   const int n = 10;
-  for ( auto i: Range<1>(0, n) ) {
+  for ( auto i: Range_<1>(0, n) ) {
     val_list.push_back(i);
   }
 
@@ -33,7 +33,7 @@ TEST(RangeTest, simple_2)
   vector<int> val_list;
 
   const int n = 10;
-  for ( auto i: Range<>(n) ) {
+  for ( auto i: Range(n) ) {
     val_list.push_back(i);
   }
 
@@ -46,7 +46,7 @@ TEST(RangeTest, simple_2)
 TEST(RangeTest, step3_1)
 {
   vector<int> val_list;
-  for ( auto i: Range<3>(0, 10) ) {
+  for ( auto i: Range_<3>(0, 10) ) {
     val_list.push_back(i);
   }
 
@@ -61,7 +61,7 @@ TEST(RangeTest, step3_1)
 TEST(RangeTest, step3_2)
 {
   vector<int> val_list;
-  for ( auto i: Range<3>(1, 11) ) {
+  for ( auto i: Range_<3>(1, 11) ) {
     val_list.push_back(i);
   }
 
@@ -76,7 +76,7 @@ TEST(RangeTest, step3_2)
 TEST(RangeTest, negative_1)
 {
   vector<int> val_list;
-  for ( auto i: Range<-1>(5, 0) ) {
+  for ( auto i: Range_<-1>(5, 0) ) {
     val_list.push_back(i);
   }
 
@@ -92,7 +92,7 @@ TEST(RangeTest, negative_1)
 TEST(RangeTest, negative_2)
 {
   vector<int> val_list;
-  for ( auto i: Range<-2>(5, 0) ) {
+  for ( auto i: Range_<-2>(5, 0) ) {
     val_list.push_back(i);
   }
 
@@ -106,7 +106,7 @@ TEST(RangeTest, negative_2)
 TEST(RangeTest, negative_3)
 {
   vector<int> val_list;
-  for ( auto i: Range<-2>(5, -1) ) {
+  for ( auto i: Range_<-2>(5, -1) ) {
     val_list.push_back(i);
   }
 
@@ -120,7 +120,7 @@ TEST(RangeTest, negative_3)
 TEST(RangeTest, negative_4)
 {
   vector<int> val_list;
-  for ( auto i: Range<-2>(5, -2) ) {
+  for ( auto i: Range_<-2>(5, -2) ) {
     val_list.push_back(i);
   }
 

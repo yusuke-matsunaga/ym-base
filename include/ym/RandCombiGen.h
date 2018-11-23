@@ -123,15 +123,15 @@ void
 RandCombiGen::generate(URNG& randgen)
 {
   vector<int> src_array(mNum);
-  for ( int i: Range<>(mNum) ) {
+  for ( int i: Range(mNum) ) {
     src_array[i] = i;
   }
   int n = mNum - 1;
-  for ( int i: Range<>(mCombiNum) ) {
+  for ( int i: Range(mCombiNum) ) {
     std::uniform_int_distribution<int> rd(0, n);
     int r = rd(randgen);
     mArray[i] = src_array[r];
-    for ( int j: Range<>(r, n) ) {
+    for ( int j: Range(r, n) ) {
       src_array[j] = src_array[j + 1];
     }
     -- n;
