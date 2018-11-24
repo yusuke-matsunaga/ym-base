@@ -72,6 +72,16 @@ public:
   find(const Key_Type& key,
        Value_Type& value) const;
 
+  /// @brief キーで検索して要素を得る．
+  /// @param[in] key キー
+  /// @param[in] fallback 見つからなかった時の返り値
+  /// @return key に対応する値を返す．
+  ///
+  /// 見つからなかった場合には fallback を返す．
+  Value_Type
+  get(const Key_Type& key,
+      Value_Type fallback = Value_Type{}) const;
+
   /// @brief キーで検索して要素の左辺値を得る．
   Value_Type&
   operator[](const Key_Type& key);
@@ -227,6 +237,28 @@ HashMap<Key_Type, Value_Type>::find(const Key_Type& key,
   }
   else {
     return false;
+  }
+}
+
+// @brief キーで検索して要素を得る．
+// @param[in] key キー
+// @param[in] fallback 見つからなかった時の返り値
+// @return key に対応する値を返す．
+//
+// 見つからなかった場合には fallback を返す．
+template<typename Key_Type,
+	 typename Value_Type>
+inline
+Value_Type
+HashMap<Key_Type, Value_Type>::get(const Key_Type& key,
+				   Value_Type fallback) const
+{
+  Cell* cell = reinterpret_cast<Cell*>(HashBase<Key_Type>::find_cell(key));
+  if ( cell != nullptr ) {
+    return cell->mValue;
+  }
+  else {
+    return fallback;
   }
 }
 
