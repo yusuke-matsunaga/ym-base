@@ -32,6 +32,12 @@ public:
   NameMgr(const char* prefix,
 	  const char* suffix);
 
+  /// @brief コンストラクタ
+  /// @param[in] prefix 接頭語
+  /// @param[in] suffix 接尾語
+  NameMgr(const string& prefix,
+	  const string& suffix);
+
   /// @brief デストラクタ
   ~NameMgr();
 
@@ -45,6 +51,14 @@ public:
   void
   change(const char* prefix,
 	 const char* suffix);
+
+  /// @brief 接頭語と接尾語を変更する．
+  /// @param[in] prefix 接頭語
+  /// @param[in] suffix 接尾語
+  /// @note 既に登録されている名前はクリアされる．
+  void
+  change(const string& prefix,
+	 const string& suffix);
 
   /// @brief 登録している名前を全てクリアする．
   void

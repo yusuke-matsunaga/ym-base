@@ -19,8 +19,16 @@ BEGIN_NAMESPACE_YM
 // コンストラクタ
 NameMgr::NameMgr(const char* prefix,
 		 const char* suffix) :
-  mPrefix(prefix),
-  mSuffix(suffix)
+  mPrefix{prefix},
+  mSuffix{suffix}
+{
+}
+
+// コンストラクタ
+NameMgr::NameMgr(const string& prefix,
+		 const string& suffix) :
+  mPrefix{prefix},
+  mSuffix{suffix}
 {
 }
 
@@ -36,6 +44,19 @@ NameMgr::~NameMgr()
 void
 NameMgr::change(const char* prefix,
 		const char* suffix)
+{
+  clear();
+  mPrefix = prefix;
+  mSuffix = suffix;
+}
+
+// @brief 接頭語と接尾語を変更する．
+// @param[in] prefix 接頭語
+// @param[in] suffix 接尾語
+// @note 既に登録されている名前はクリアされる．
+void
+NameMgr::change(const string& prefix,
+		const string& suffix)
 {
   clear();
   mPrefix = prefix;
