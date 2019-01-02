@@ -83,11 +83,23 @@ public:
   void
   add(const char* name);
 
+  /// @brief 名前を登録する．
+  /// @param[in] name 登録する名前
+  /// @note 名前が \<prefix\>ddd\<suffix\> の形でない場合には何もしない．
+  void
+  add(const string& name);
+
   /// @brief 名前を削除する(使用可能にする)．
   /// @param[in] name 削除する名前
   /// @note 名前が \<prefix\>ddd\<suffix\> の形でない場合には何もしない．
   void
   erase(const char* name);
+
+  /// @brief 名前を削除する(使用可能にする)．
+  /// @param[in] name 削除する名前
+  /// @note 名前が \<prefix\>ddd\<suffix\> の形でない場合には何もしない．
+  void
+  erase(const string& name);
 
   /// @brief 内容を表示する．
   /// @param[in] s 出力先のストリーム
@@ -151,6 +163,24 @@ string
 NameMgr::suffix() const
 {
   return mSuffix;
+}
+
+// 名前を登録する．
+// name が <prefix>ddd<suffix> の形でない場合にはなにもしない．
+inline
+void
+NameMgr::add(const string& name)
+{
+  add(name.c_str());
+}
+
+// 名前を削除する(使用可能にする)．
+// name が <prefix>ddd<suffix> の形でない場合にはなにもしない．
+inline
+void
+NameMgr::erase(const string& name)
+{
+  erase(name.c_str());
 }
 
 END_NAMESPACE_YM
