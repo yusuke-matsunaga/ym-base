@@ -26,7 +26,7 @@ set ( RandSamplerTest_SOURCES
 
 add_executable ( RandSamplerTest
   RandSamplerTest.cc
-  $<TARGET_OBJECTS:ym_base_a>
+  $<TARGET_OBJECTS:ym_base_obj_a>
   )
 
 target_compile_options ( RandSamplerTest
@@ -45,7 +45,7 @@ target_link_libraries ( RandSamplerTest
 
 add_executable ( RandSamplerTest_d
   RandSamplerTest.cc
-  $<TARGET_OBJECTS:ym_base_ad>
+  $<TARGET_OBJECTS:ym_base_obj_ad>
   )
 
 target_compile_options ( RandSamplerTest_d
