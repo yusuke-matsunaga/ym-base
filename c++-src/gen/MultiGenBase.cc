@@ -39,7 +39,7 @@ MultiGenBase::MultiGenBase(const vector<pair<int, int>>& nk_array) :
 
 // @brief コンストラクタ
 // @param[in] nk_array 全要素数 n と選択する要素数 k のベクタ
-MultiGenBase::MultiGenBase(std::initializer_list<pair<int, int>>& nk_array) :
+MultiGenBase::MultiGenBase(initializer_list<pair<int, int>>& nk_array) :
   mGroupNum{static_cast<int>(nk_array.size())},
   mNArray{new int[mGroupNum]},
   mKArray{new int[mGroupNum]},

@@ -51,7 +51,7 @@ public:
 
   /// @brief コンストラクタ
   /// @param[in] nk_array 全要素数 n と選択する要素数 k のベクタ
-  MultiCombiGen(std::initializer_list<pair<int, int>>& nk_array);
+  MultiCombiGen(initializer_list<pair<int, int>>& nk_array);
 
   /// @brief コピーコンストラクタ
   /// @param[in] src コピー元のオブジェクト
