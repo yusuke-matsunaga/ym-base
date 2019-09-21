@@ -10,7 +10,6 @@
 
 
 #include "ym_config.h"
-#include "ym/HashFunc.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -28,11 +27,11 @@ class StrBuff
 public:
   /// @brief サイズを表す型の定義
   /// @note std::basic_string のまね
-  typedef size_t size_type;
+  using SizeType = size_t;
 
   /// @brief 末尾を表す定数
   /// @note std::basic_string のまね
-  static const size_type npos = static_cast<size_type>(-1);
+  static const SizeType npos = static_cast<SizeType>(-1);
 
 
 public:
@@ -436,12 +435,17 @@ operator<<(ostream& s, const StrBuff& strbuf)
   return s << strbuf.c_str();
 }
 
+END_NAMESPACE_YM
+
+
+BEGIN_NAMESPACE_STD
+
 // StrBuff をキーとしたハッシュを使うために必要なクラス定義
 
 template <>
-struct HashFunc<StrBuff> {
+struct hash<YM_NAMESPACE::StrBuff> {
   SizeType
-  operator()(const StrBuff& __x) const {
+  operator()(const YM_NAMESPACE::StrBuff& __x) const {
     SizeType __h = 0;
     for ( const char* __s = __x.c_str(); *__s; ++ __s )
       __h = 37*__h + *__s;
@@ -449,17 +453,6 @@ struct HashFunc<StrBuff> {
   }
 };
 
-template <>
-struct HashFunc<const StrBuff> {
-  SizeType
-  operator()(const StrBuff& __x) const {
-    SizeType __h = 0;
-    for ( const char* __s = __x.c_str(); *__s; ++ __s )
-      __h = 37*__h + *__s;
-    return static_cast<SizeType>(__h);
-  }
-};
-
-END_NAMESPACE_YM
+END_NAMESPACE_STD
 
 #endif // YM_STRBUFF_H

@@ -10,7 +10,6 @@
 
 
 #include "ym_config.h"
-#include "ym/HashMap.h"
 
 
 BEGIN_NAMESPACE_YM

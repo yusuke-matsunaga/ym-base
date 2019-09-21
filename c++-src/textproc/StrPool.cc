@@ -13,6 +13,9 @@
 
 BEGIN_NAMESPACE_YM
 
+BEGIN_NONAMESPACE
+
+inline
 SizeType
 calc_maxprime(SizeType num)
 {
@@ -62,6 +65,22 @@ calc_maxprime(SizeType num)
 }
 
 
+// C文字列のハッシュ関数
+inline
+SizeType
+hash_func(const char* key)
+{
+  SizeType h = 0;
+  char c;
+  while ( (c = *key ++) ) {
+    h = h * 33 + static_cast<SizeType>(c);
+  }
+  return h;
+}
+
+END_NONAMESPACE
+
+
 //////////////////////////////////////////////////////////////////////
 // 文字列を共有するためのプール
 //////////////////////////////////////////////////////////////////////
@@ -86,8 +105,6 @@ StrPool::~StrPool()
 const char*
 StrPool::reg(const char* str)
 {
-  HashFunc<const char*> hash_func;
-
   // まず str と同一の文字列が登録されていないか調べる．
   SizeType hash_value = hash_func(str);
   SizeType pos = hash_value % mHashSize;
@@ -144,7 +161,6 @@ StrPool::alloc_table(SizeType new_size)
     mTable[i] = nullptr;
   }
 
-  HashFunc<const char*> hash_func;
   for ( SizeType i = 0; i < old_size; ++ i ) {
     for ( Cell* cell = old_table[i]; cell != nullptr; ) {
       Cell* tmp = cell;

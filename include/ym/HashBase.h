@@ -12,6 +12,7 @@
 #include "ym_config.h"
 #include "ym/HashFunc.h"
 
+#error "deprecated"
 
 BEGIN_NAMESPACE_YM
 

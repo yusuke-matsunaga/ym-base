@@ -10,7 +10,6 @@
 
 
 #include "ym_config.h"
-#include "ym/HashFunc.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -196,17 +195,6 @@ operator<<(ostream& s,
 /// @}
 
 
-// ShString をキーにしたハッシュ関数クラスの定義
-template <>
-struct HashFunc<ShString>
-{
-  SizeType
-  operator()(const ShString& str) const
-  {
-    return str.hash();
-  }
-};
-
 
 //////////////////////////////////////////////////////////////////////
 // ShString のインライン関数
@@ -380,5 +368,20 @@ operator!=(const char* a,
 }
 
 END_NAMESPACE_YM
+
+BEGIN_NAMESPACE_STD
+
+// ShString をキーにしたハッシュ関数クラスの定義
+template <>
+struct hash<YM_NAMESPACE::ShString>
+{
+  SizeType
+  operator()(const YM_NAMESPACE::ShString& str) const
+  {
+    return str.hash();
+  }
+};
+
+END_NAMESPACE_STD
 
 #endif // YM_SHSTRING_H
