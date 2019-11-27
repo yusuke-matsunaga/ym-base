@@ -76,13 +76,6 @@ configure_file(
 #  ソースの設定
 # ===================================================================
 
-set ( alloc_SOURCES
-  c++-src/alloc/Alloc.cc
-  c++-src/alloc/FragAlloc.cc
-  c++-src/alloc/SimpleAlloc.cc
-  c++-src/alloc/UnitAlloc.cc
-  )
-
 set ( binder_SOURCES
   c++-src/binder/Binder.cc
   )
@@ -182,7 +175,6 @@ set ( time_SOURCES
   )
 
 set ( ym_base_SOURCES
-  ${alloc_SOURCES}
   ${binder_SOURCES}
   ${file_info_SOURCES}
   ${gen_SOURCES}
