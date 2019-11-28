@@ -63,10 +63,10 @@ private:
   ymint8 mBalance;
 
   // 左の子供
-  ItvlCell* mLchd;
+  ItvlCell* mLchd{nullptr};
 
   // 右の子供
-  ItvlCell* mRchd;
+  ItvlCell* mRchd{nullptr};
 
 };
 
@@ -81,10 +81,8 @@ private:
 inline
 ItvlCell::ItvlCell(int start,
 		   int end) :
-  mStart(start),
-  mEnd(end),
-  mLchd(nullptr),
-  mRchd(nullptr)
+  mStart{start},
+  mEnd{end}
 {
 }
 

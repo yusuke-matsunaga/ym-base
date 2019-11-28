@@ -19,13 +19,15 @@ BEGIN_NAMESPACE_YM
 
 // コンストラクタ
 ItvlMgr::ItvlMgr() :
-  mImpl(new ItvlMgrImpl)
+  mImpl{new ItvlMgrImpl}
 {
 }
 
-// デストラクタ
+// @brief デストラクタ
 ItvlMgr::~ItvlMgr()
 {
+  // ItvlMgrImpl.h をここのローカルにしておくために
+  // この関数は inline 化できない．
 }
 
 // 内容をクリアして全区間を使用可能とする．
@@ -125,14 +127,14 @@ ItvlMgr::print_tree(ostream& s) const
 
 // @brief バイナリファイルに書き出す．
 void
-ItvlMgr::dump(ODO& s) const
+ItvlMgr::dump(ostream& s) const
 {
   mImpl->dump(s);
 }
 
 // @brief バイナリファイルを読み込む．
 void
-ItvlMgr::restore(IDO& s)
+ItvlMgr::restore(istream& s)
 {
   mImpl->restore(s);
 }

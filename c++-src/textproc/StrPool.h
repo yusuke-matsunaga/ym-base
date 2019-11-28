@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "ym/SimpleAlloc.h"
+#include "ym_config.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -123,9 +123,6 @@ private:
 
   // 次に拡張する基準
   SizeType mExpandLimit;
-
-  // Cell を確保するためのアロケータ
-  SimpleAlloc mCellAlloc;
 
 };
 

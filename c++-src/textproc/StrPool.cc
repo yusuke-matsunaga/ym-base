@@ -87,10 +87,9 @@ END_NONAMESPACE
 
 // コンストラクタ
 StrPool::StrPool() :
-  mTable(nullptr),
-  mTableSize(0),
-  mNum(0),
-  mCellAlloc(4096)
+  mTable{nullptr},
+  mTableSize{0},
+  mNum{0}
 {
   alloc_table(1024);
 }
@@ -108,7 +107,7 @@ StrPool::reg(const char* str)
   // まず str と同一の文字列が登録されていないか調べる．
   SizeType hash_value = hash_func(str);
   SizeType pos = hash_value % mHashSize;
-  for ( Cell* cell = mTable[pos]; cell != nullptr; cell = cell->mLink ) {
+  for ( auto cell = mTable[pos]; cell != nullptr; cell = cell->mLink ) {
     if ( memcmp(str, cell->mStr, cell->mSize) == 0 ) {
       return cell->mStr;
     }
@@ -162,8 +161,8 @@ StrPool::alloc_table(SizeType new_size)
   }
 
   for ( SizeType i = 0; i < old_size; ++ i ) {
-    for ( Cell* cell = old_table[i]; cell != nullptr; ) {
-      Cell* tmp = cell;
+    for ( auto cell = old_table[i]; cell != nullptr; ) {
+      auto tmp = cell;
       cell = cell->mLink;
       SizeType pos = hash_func(tmp->mStr) % mHashSize;
       add_cell(pos, tmp);

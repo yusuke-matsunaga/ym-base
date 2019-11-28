@@ -10,8 +10,6 @@
 
 
 #include "ym_config.h"
-#include "ym/IDO.h"
-#include "ym/ODO.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -24,8 +22,8 @@ class ItvlMgrImpl;
 /// @ingroup YmUtils
 /// @brief インターバルを管理するクラス
 ///
-/// 最初は 0 から INT_MAX までの区間が利用可能で，数字を使用するとその
-/// 部分を利用可能な区間から取り除いてゆく．
+/// 最初は 0 から numeric_limits<int>::max() までの区間が利用可能で，
+/// 数字を使用するとその部分を利用可能な区間から取り除いてゆく．
 /// あとで，使用していた数字や区間を利用可能に戻すことも可能である．
 ///
 /// 内部的には効率化のために AVL 木を用いて実装している．
@@ -35,7 +33,7 @@ class ItvlMgr
 public:
 
   /// @brief コンストラクタ
-  /// @note 初期値として [0〜INT_MAX) の区間を持つ
+  /// @note 初期値として [0〜numeric_limits<int>::max()) の区間を持つ
   ItvlMgr();
 
   /// @brief デストラクタ
@@ -43,6 +41,9 @@ public:
 
 
 public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
 
   /// @brief クリアして全ての区間を使用可能にする．
   void
@@ -116,11 +117,11 @@ public:
 
   /// @brief バイナリファイルに書き出す．
   void
-  dump(ODO& s) const;
+  dump(ostream& s) const;
 
   /// @brief バイナリファイルを読み込む．
   void
-  restore(IDO& s);
+  restore(istream& s);
 
 
 private:
@@ -132,35 +133,6 @@ private:
   unique_ptr<ItvlMgrImpl> mImpl;
 
 };
-
-
-/// @relates ItvlMgr
-/// @brief バイナリファイルに書き出す．
-/// @param[in] s 出力先のストリーム
-/// @param[in] itvlmgr 対象のオブジェクト
-/// @return s を返す．
-inline
-ODO&
-operator<<(ODO& s,
-	   const ItvlMgr& itvlmgr)
-{
-  itvlmgr.dump(s);
-  return s;
-}
-
-/// @relates ItvlMgr
-/// @brief バイナリファイルを読み込む．
-/// @param[in] s 入力元のストリーム
-/// @param[in] itvlmgr 読み込む先のオブジェクト
-/// @return s を返す．
-inline
-IDO&
-operator>>(IDO& s,
-	   ItvlMgr& itvlmgr)
-{
-  itvlmgr.restore(s);
-  return s;
-}
 
 END_NAMESPACE_YM
 

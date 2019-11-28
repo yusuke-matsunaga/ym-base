@@ -9,9 +9,7 @@
 /// All rights reserved.
 
 
-#include "ym/UnitAlloc.h"
-#include "ym/IDO.h"
-#include "ym/ODO.h"
+#include "ym_config.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -99,11 +97,11 @@ public:
 
   /// @brief バイナリファイルに書き出す．
   void
-  dump(ODO& s) const;
+  dump(ostream& s) const;
 
   /// @brief バイナリファイルを読み込む．
   void
-  restore(IDO& s);
+  restore(istream& s);
 
 
 private:
@@ -113,18 +111,28 @@ private:
 
   /// @brief d を含む区間を求める．
   ItvlCell*
-  find(int d,
-       ItvlCell* ptr);
+  find(int d);
 
   /// @brief d よりも小さくもっとも右側にある区間を求める．
   ItvlCell*
-  find_left(int d,
-	    ItvlCell* ptr);
+  find_left(int d);
 
   /// @brief d よりも大きくもっとも左側にある区間を求める．
   ItvlCell*
-  find_right(int d,
-	     ItvlCell* ptr);
+  find_right(int d);
+
+  /// @brief 最左端にあるセルを求める．
+  ItvlCell*
+  leftmost_cell();
+
+  /// @brief 最右端にあるセルを求める．
+  ItvlCell*
+  rightmost_cell();
+
+  /// @brief 区間を追加する．
+  void
+  add_itvl(int start,
+	   int end);
 
   /// @brief セルを追加するためのサブルーティン．
   bool
@@ -191,23 +199,20 @@ private:
   /// @param[in] s 出力先のストリーム
   /// @param[in] cell 対象のセル
   void
-  dump_cell(ODO& s,
+  dump_cell(ostream& s,
 	    ItvlCell* cell) const;
 
   /// @brief restore() の下請け関数
   /// @param[in] s 入力元のストリーム
   /// @return 作成したセルを返す．
   ItvlCell*
-  restore_cell(IDO& s);
+  restore_cell(istream& s);
 
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // メモリアロケータ
-  UnitAlloc mCellAlloc;
 
   // 根のポインタ
   ItvlCell* mRoot;
