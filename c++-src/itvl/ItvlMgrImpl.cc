@@ -8,7 +8,6 @@
 
 
 #include "ItvlMgrImpl.h"
-#include "ItvlCell.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -26,6 +25,12 @@ ItvlMgrImpl::ItvlMgrImpl()
 // @brief デストラクタ
 ItvlMgrImpl::~ItvlMgrImpl()
 {
+  // フリーセルリストを開放する．
+  auto next = mFreeTop;
+  for ( auto cell = next; cell; cell = next ) {
+    next = cell->mLchd;
+    delete cell;
+  }
 }
 
 // @brief クリアする．
@@ -50,7 +55,7 @@ ItvlMgrImpl::avail_num()
   while ( cell->mLchd ) {
     cell = cell->mLchd;
   }
-  return cell->start();
+  return cell->mStart;
 }
 
 // [d1, d2]という区間が使用可能などうか調べる．
@@ -72,7 +77,7 @@ ItvlMgrImpl::check(int d1,
     return false;
   }
   // この区間が d2 を含んでいるか調べる．
-  if ( cell->end() >= d2 ) {
+  if ( cell->mEnd >= d2 ) {
     return true;
   }
   return false;
@@ -84,11 +89,11 @@ int
 ItvlMgrImpl::min_id()
 {
   auto cell = leftmost_cell();
-  if ( cell->start() > 0 ) {
+  if ( cell->mStart > 0 ) {
     return 0;
   }
-  else if ( cell->end() < numeric_limits<int>::max() ) {
-    return cell->end() + 1;
+  else if ( cell->mEnd < numeric_limits<int>::max() ) {
+    return cell->mEnd + 1;
   }
   else {
     return -1;
@@ -101,12 +106,12 @@ int
 ItvlMgrImpl::max_id()
 {
   auto cell = rightmost_cell();
-  if ( cell->end() < numeric_limits<int>::max() ) {
+  if ( cell->mEnd < numeric_limits<int>::max() ) {
     // これはあり得ないと思うけど
     return numeric_limits<int>::max();
   }
-  else if ( cell->start() > 0 ) {
-    return cell->start() - 1;
+  else if ( cell->mStart > 0 ) {
+    return cell->mStart - 1;
   }
   else {
     return -1;
@@ -114,15 +119,15 @@ ItvlMgrImpl::max_id()
 }
 
 // d を含む区間を求める．
-ItvlCell*
+ItvlMgrImpl::Cell*
 ItvlMgrImpl::find(int d)
 {
   auto ptr = mRoot;
   while ( ptr ) {
-    if ( ptr->start() > d ) {
+    if ( ptr->mStart > d ) {
       ptr = ptr->mLchd;
     }
-    else if ( ptr->end() < d ) {
+    else if ( ptr->mEnd < d ) {
       ptr = ptr->mRchd;
     }
     else {
@@ -133,18 +138,18 @@ ItvlMgrImpl::find(int d)
 }
 
 // d よりも小さくもっとも右側にある区間を求める．
-ItvlCell*
+ItvlMgrImpl::Cell*
 ItvlMgrImpl::find_left(int d)
 {
   auto ptr = mRoot;
-  while ( ptr && ptr->start() > d ) {
+  while ( ptr && ptr->mStart > d ) {
     ptr = ptr->mLchd;
   }
   if ( !ptr ) {
     return nullptr;
   }
-  if ( ptr->end() < d ) {
-    while ( ptr->mRchd && ptr->mRchd->end() < d ) {
+  if ( ptr->mEnd < d ) {
+    while ( ptr->mRchd && ptr->mRchd->mEnd < d ) {
       ptr = ptr->mRchd;
     }
   }
@@ -152,18 +157,18 @@ ItvlMgrImpl::find_left(int d)
 }
 
 // d よりも大きくもっとも左側にある区間を求める．
-ItvlCell*
+ItvlMgrImpl::Cell*
 ItvlMgrImpl::find_right(int d)
 {
   auto ptr = mRoot;
-  while ( ptr && ptr->end() < d ) {
+  while ( ptr && ptr->mEnd < d ) {
     ptr = ptr->mRchd;
   }
   if ( !ptr ) {
     return nullptr;
   }
-  if ( ptr->start() > d ) {
-    while ( ptr->mLchd && ptr->mLchd->start() > d ) {
+  if ( ptr->mStart > d ) {
+    while ( ptr->mLchd && ptr->mLchd->mStart > d ) {
       ptr = ptr->mLchd;
     }
   }
@@ -171,7 +176,7 @@ ItvlMgrImpl::find_right(int d)
 }
 
 // @brief 最左端にあるセルを求める．
-ItvlCell*
+ItvlMgrImpl::Cell*
 ItvlMgrImpl::leftmost_cell()
 {
   auto cell = mRoot;
@@ -180,7 +185,7 @@ ItvlMgrImpl::leftmost_cell()
 }
 
 // @brief 最右端にあるセルを求める．
-ItvlCell*
+ItvlMgrImpl::Cell*
 ItvlMgrImpl::rightmost_cell()
 {
   auto cell = mRoot;
@@ -199,15 +204,15 @@ ItvlMgrImpl::add_itvl(int start,
 
 // セルを追加するためのサブルーティン．
 bool
-ItvlMgrImpl::add_cell(ItvlCell* cell,
-		      ItvlCell*& ptr)
+ItvlMgrImpl::add_cell(Cell* cell,
+		      Cell*& ptr)
 {
   if ( ptr == nullptr ) {
     ptr = cell;
     ptr->mBalance = 0;
     return true;
   }
-  if ( ptr->start() > cell->end() ) {
+  if ( ptr->mStart > cell->mEnd ) {
     bool chg = add_cell(cell, ptr->mLchd);
     if ( chg ) {
       // 左の部分木が高くなった．
@@ -257,7 +262,7 @@ ItvlMgrImpl::add_cell(ItvlCell* cell,
       }
     }
   }
-  else if ( ptr->end() < cell->start() ) {
+  else if ( ptr->mEnd < cell->mStart ) {
     bool chg = add_cell(cell, ptr->mRchd);
     if ( chg ) {
       // 右の部分木が高くなった．
@@ -317,7 +322,7 @@ ItvlMgrImpl::add_cell(ItvlCell* cell,
 // 左の部分木の高さが減少したときの処理
 // 自分自身の高さも減少する時に true を返す．
 bool
-ItvlMgrImpl::balance_left(ItvlCell*& ptr)
+ItvlMgrImpl::balance_left(Cell*& ptr)
 {
   bool chg = true;
 
@@ -384,7 +389,7 @@ ItvlMgrImpl::balance_left(ItvlCell*& ptr)
 // 右の部分木の高さが減少したときの処理
 // 自分自身の高さも減少する時に true を返す．
 bool
-ItvlMgrImpl::balance_right(ItvlCell*& ptr)
+ItvlMgrImpl::balance_right(Cell*& ptr)
 {
   bool chg = true;
 
@@ -450,8 +455,8 @@ ItvlMgrImpl::balance_right(ItvlCell*& ptr)
 // もっとも右にある節点の内容を cell にコピーして削除する．
 // 木の高さが変化した時には true を返す．
 bool
-ItvlMgrImpl::remove_right(ItvlCell* cell,
-			  ItvlCell*& ptr)
+ItvlMgrImpl::remove_right(Cell* cell,
+			  Cell*& ptr)
 {
   if ( ptr->mRchd ) {
     // まだ右に子供がいる
@@ -478,8 +483,8 @@ ItvlMgrImpl::remove_right(ItvlCell* cell,
 // ptr を根とする部分木から cell を削除する．
 // この部分木の高さが変わった時には true を返す．
 bool
-ItvlMgrImpl::remove_cell(ItvlCell* cell,
-			 ItvlCell*& ptr)
+ItvlMgrImpl::remove_cell(Cell* cell,
+			 Cell*& ptr)
 {
   if ( ptr == nullptr ) {
     // セルが存在しない?
@@ -487,14 +492,14 @@ ItvlMgrImpl::remove_cell(ItvlCell* cell,
     return false;
   }
 
-  if ( ptr->start() > cell->end() ) {
+  if ( ptr->mStart > cell->mEnd ) {
     bool chg = remove_cell(cell, ptr->mLchd);
     if ( chg ) {
       chg = balance_left(ptr);
     }
     return chg;
   }
-  if ( ptr->end() < cell->start() ) {
+  if ( ptr->mEnd < cell->mStart ) {
     bool chg = remove_cell(cell, ptr->mRchd);
     if ( chg ) {
       chg = balance_right(ptr);
@@ -544,20 +549,20 @@ ItvlMgrImpl::erase(int d)
     return;
   }
 
-  if ( cell->start() == cell->end() ) {
+  if ( cell->mStart == cell->mEnd ) {
     // この場合はこの要素を削除すれば良い．
     remove_cell(cell, mRoot);
   }
   else {
-    if ( cell->start() == d ) {
+    if ( cell->mStart == d ) {
       ++ cell->mStart;
     }
-    else if ( cell->end() == d ) {
+    else if ( cell->mEnd == d ) {
       -- cell->mEnd;
     }
     else {
       // 2つの区間に分割
-      add_itvl(d + 1, cell->end());
+      add_itvl(d + 1, cell->mEnd);
       cell->mEnd = d - 1;
     }
   }
@@ -577,26 +582,26 @@ ItvlMgrImpl::erase(int d1,
 
   // d1 を含む区間を探す．
   auto cell = find(d1);
-  if ( !cell || cell->end() < d2 ) {
+  if ( !cell || cell->mEnd < d2 ) {
     // もともと入っていない？
     // ほんとはおかしいけど，無視しておこう．
     return;
   }
 
-  if ( cell->start() == d1 && cell->end() == d2 ) {
+  if ( cell->mStart == d1 && cell->mEnd == d2 ) {
     // この場合はこの要素を削除すれば良い．
     remove_cell(cell, mRoot);
   }
   else {
-    if ( cell->start() == d1 ) {
+    if ( cell->mStart == d1 ) {
       ++ cell->mStart;
     }
-    else if ( cell->end() == d2 ) {
+    else if ( cell->mEnd == d2 ) {
       -- cell->mEnd;
     }
     else {
       // 2つの区間に分割
-      add_itvl(d2 + 1, cell->end());
+      add_itvl(d2 + 1, cell->mEnd);
       cell->mEnd = d1 - 1;
     }
   }
@@ -614,10 +619,10 @@ ItvlMgrImpl::add(int d)
   int start = d + 2;
   int end = d - 2;
   if ( left ) {
-    end = left->end();
+    end = left->mEnd;
   }
   if ( right ) {
-    start = right->start();
+    start = right->mStart;
   }
 
   ASSERT_COND( end < d );
@@ -625,7 +630,7 @@ ItvlMgrImpl::add(int d)
 
   if ( end + 2 == start ) {
     // 2つの区間が d で一つにつながる．
-    int end2 = right->end();
+    int end2 = right->mEnd;
     remove_cell(right, mRoot);
     // left の節点は置き換わっている可能性があるのでもう一度取り出す．
     left = find_left(d);
@@ -663,7 +668,7 @@ ItvlMgrImpl::add(int d1,
   int start = d2 + 2;
   int end = d1 - 2;
   if ( left ) {
-    end = left->end();
+    end = left->mEnd;
   }
   if ( right ) {
     start = right->mStart;
@@ -674,7 +679,7 @@ ItvlMgrImpl::add(int d1,
 
   if ( end + 1 == d1 && start - 1 == d2 ) {
     // 2つの区間が [d1, d2] で一つにつながる．
-    int end2 = right->end();
+    int end2 = right->mEnd;
     remove_cell(right, mRoot);
     // left の節点は置き換わっている可能性があるのでもう一度取り出す．
     left = find_left(d1);
@@ -705,7 +710,7 @@ ItvlMgrImpl::sanity_check() const
 
 // 正しい構造かチェックする．
 int
-ItvlMgrImpl::check_cell(ItvlCell* cell,
+ItvlMgrImpl::check_cell(Cell* cell,
 			int& l,
 			int& r) const
 {
@@ -717,7 +722,7 @@ ItvlMgrImpl::check_cell(ItvlCell* cell,
   int l2, r2;
   int hr = check_cell(cell->mRchd, l2, r2);
 
-  switch ( cell->balance() ) {
+  switch ( cell->mBalance ) {
   case 1: // 右が高いはず
     ASSERT_COND( hl < hr );
     break;
@@ -735,18 +740,18 @@ ItvlMgrImpl::check_cell(ItvlCell* cell,
     break;
   }
   if ( cell->mLchd ) {
-    ASSERT_COND( r1 < cell->start() );
+    ASSERT_COND( r1 < cell->mStart );
     l = l1;
   }
   else {
-    l = cell->start();
+    l = cell->mStart;
   }
   if ( cell->mRchd ) {
-    ASSERT_COND( l2 > cell->end() );
+    ASSERT_COND( l2 > cell->mEnd );
     r = r2;
   }
   else {
-    r = cell->end();
+    r = cell->mEnd;
   }
   int h = hl;
   if ( h < hr ) {
@@ -768,12 +773,12 @@ ItvlMgrImpl::print(ostream& s) const
 // @param[in] cell 対象のセル
 void
 ItvlMgrImpl::print_cell(ostream& s,
-			ItvlCell* cell) const
+			Cell* cell) const
 {
   if ( cell ) {
     print_cell(s, cell->mLchd);
-    s << " " << cell->start()
-      << " - " << cell->end()
+    s << " " << cell->mStart
+      << " - " << cell->mEnd
       << endl;
     print_cell(s, cell->mRchd);
   }
@@ -793,7 +798,7 @@ ItvlMgrImpl::print_tree(ostream& s) const
 // @param[in] level レベル
 void
 ItvlMgrImpl::print_tree_cell(ostream& s,
-			     ItvlCell* cell,
+			     Cell* cell,
 			     int level) const
 {
   if ( cell ) {
@@ -802,10 +807,10 @@ ItvlMgrImpl::print_tree_cell(ostream& s,
     for (int i = 0; i < level; i ++) {
       s << "    ";
     }
-    s << " [" << cell->start()
-      << " - " << cell->end()
+    s << " [" << cell->mStart
+      << " - " << cell->mEnd
       << "]";
-    switch ( cell->balance() ) {
+    switch ( cell->mBalance ) {
     case -1: s << ">"; break;
     case 0:  s << "="; break;
     case 1:  s << "<"; break;
@@ -828,7 +833,7 @@ ItvlMgrImpl::dump(ostream& s) const
 // @param[in] cell 対象のセル
 void
 ItvlMgrImpl::dump_cell(ostream& s,
-		       ItvlCell* cell) const
+		       Cell* cell) const
 {
   if ( cell ) {
     s << cell->mBalance
@@ -853,7 +858,7 @@ ItvlMgrImpl::restore(istream& s)
 // @brief restore() の下請け関数
 // @param[in] s 入力元のストリーム
 // @return 作成したセルを返す．
-ItvlCell*
+ItvlMgrImpl::Cell*
 ItvlMgrImpl::restore_cell(istream& s)
 {
   ymint8 balance;
@@ -876,30 +881,32 @@ ItvlMgrImpl::restore_cell(istream& s)
 // @brief 新しいセルを確保する．
 // @param[in] start 開始位置
 // @param[in] end 終了位置
-ItvlCell*
+ItvlMgrImpl::Cell*
 ItvlMgrImpl::new_cell(int start,
 		      int end)
 {
-#if 0
-  void* p = mCellAlloc.get_memory(sizeof(ItvlCell));
-  return new (p) ItvlCell(start, end);
-#else
-  return new ItvlCell(start, end);
-#endif
+  if ( mFreeTop != nullptr ) {
+    auto cell = mFreeTop;
+    mFreeTop = cell->mLchd;
+    cell->mStart = start;
+    cell->mEnd = end;
+    cell->mLchd = nullptr;
+    cell->mRchd = nullptr;
+    return cell;
+  }
+  return new Cell{start, end};
 }
 
 // @brief セルを削除する．
 void
-ItvlMgrImpl::delete_cell(ItvlCell* cell)
+ItvlMgrImpl::delete_cell(Cell* cell)
 {
   if ( cell ) {
     delete_cell(cell->mLchd);
     delete_cell(cell->mRchd);
-#if 0
-    mCellAlloc.put_memory(sizeof(ItvlCell), cell);
-#else
-    delete cell;
-#endif
+    // 実際には削除せずフリーセルリストに入れる．
+    cell->mLchd = mFreeTop;
+    mFreeTop = cell;
   }
 }
 

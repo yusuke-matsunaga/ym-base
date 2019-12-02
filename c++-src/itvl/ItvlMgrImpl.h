@@ -14,8 +14,6 @@
 
 BEGIN_NAMESPACE_YM
 
-class ItvlCell;
-
 //////////////////////////////////////////////////////////////////////
 /// @class ItvlMgrImpl ItvlMgrImpl.h "ItvlMgrImpl.h"
 /// @brief ItvlMgr の実際の処理を行うクラス
@@ -36,10 +34,6 @@ public:
   /// @brief クリアする．
   void
   clear();
-
-  /// @brief 全区間を表すセルを追加する．
-  void
-  add_allcell(ItvlCell*& root_ptr);
 
   /// @brief 使用可能な数字を得る．
   /// @note 内容は変化しない．
@@ -106,27 +100,53 @@ public:
 
 private:
   //////////////////////////////////////////////////////////////////////
+  // 内部で用いられるデータ型
+  //////////////////////////////////////////////////////////////////////
+
+  struct Cell
+  {
+
+    // 開始点
+    int mStart;
+
+    // 終了点
+    int mEnd;
+
+    // 平衡度
+    ymint8 mBalance{0};
+
+    // 左の子供
+    Cell* mLchd{nullptr};
+
+    // 右の子供
+    Cell* mRchd{nullptr};
+
+  };
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
   // 内部で使われる関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief d を含む区間を求める．
-  ItvlCell*
+  Cell*
   find(int d);
 
   /// @brief d よりも小さくもっとも右側にある区間を求める．
-  ItvlCell*
+  Cell*
   find_left(int d);
 
   /// @brief d よりも大きくもっとも左側にある区間を求める．
-  ItvlCell*
+  Cell*
   find_right(int d);
 
   /// @brief 最左端にあるセルを求める．
-  ItvlCell*
+  Cell*
   leftmost_cell();
 
   /// @brief 最右端にあるセルを求める．
-  ItvlCell*
+  Cell*
   rightmost_cell();
 
   /// @brief 区間を追加する．
@@ -136,46 +156,46 @@ private:
 
   /// @brief セルを追加するためのサブルーティン．
   bool
-  add_cell(ItvlCell* cell,
-	   ItvlCell*& ptr);
+  add_cell(Cell* cell,
+	   Cell*& ptr);
 
   /// @brief 左の部分木の高さが減少したときの処理
   /// @return 自分自身の高さも減少する時に true を返す．
   bool
-  balance_left(ItvlCell*& ptr);
+  balance_left(Cell*& ptr);
 
   /// @brief 右の部分木の高さが減少したときの処理
   /// @return 自分自身の高さも減少する時に true を返す．
   bool
-  balance_right(ItvlCell*& ptr);
+  balance_right(Cell*& ptr);
 
   /// @brief もっとも右にある節点の内容を cell にコピーして削除する．
   /// @return 木の高さが変化した時には true を返す．
   bool
-  remove_right(ItvlCell* cell,
-	       ItvlCell*& ptr);
+  remove_right(Cell* cell,
+	       Cell*& ptr);
 
   /// @brief delete のためのサブルーティン
   /// @note ptr を根とする部分木から cell を削除する．
   /// @return この部分木の高さが変わった時には true を返す．
   bool
-  remove_cell(ItvlCell* cell,
-	      ItvlCell*& ptr);
+  remove_cell(Cell* cell,
+	      Cell*& ptr);
 
   /// @brief 新しいセルを確保する．
   /// @param[in] start 開始位置
   /// @param[in] end 終了位置
-  ItvlCell*
+  Cell*
   new_cell(int start,
 	   int end);
 
   /// @brief セルを削除する．
   void
-  delete_cell(ItvlCell* cell);
+  delete_cell(Cell* cell);
 
   /// @brief sanity_check() の下請け関数
   int
-  check_cell(ItvlCell* cell,
+  check_cell(Cell* cell,
 	     int& l,
 	     int& r) const;
 
@@ -184,7 +204,7 @@ private:
   /// @param[in] cell 対象のセル
   void
   print_cell(ostream& s,
-	     ItvlCell* cell) const;
+	     Cell* cell) const;
 
   /// @brief print_tree() の下請け関数
   /// @param[in] s 出力先のストリーム
@@ -192,7 +212,7 @@ private:
   /// @param[in] level レベル
   void
   print_tree_cell(ostream& s,
-		  ItvlCell* cell,
+		  Cell* cell,
 		  int level) const;
 
   /// @brief dump() の下請け関数
@@ -200,12 +220,12 @@ private:
   /// @param[in] cell 対象のセル
   void
   dump_cell(ostream& s,
-	    ItvlCell* cell) const;
+	    Cell* cell) const;
 
   /// @brief restore() の下請け関数
   /// @param[in] s 入力元のストリーム
   /// @return 作成したセルを返す．
-  ItvlCell*
+  Cell*
   restore_cell(istream& s);
 
 
@@ -215,7 +235,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 根のポインタ
-  ItvlCell* mRoot;
+  Cell* mRoot{nullptr};
+
+  // フリーセルリストの先頭
+  Cell* mFreeTop{nullptr};
 
 };
 
