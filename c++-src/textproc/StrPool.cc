@@ -89,7 +89,8 @@ END_NONAMESPACE
 StrPool::StrPool() :
   mTable{nullptr},
   mTableSize{0},
-  mNum{0}
+  mNum{0},
+  mTotalAllocSize{0}
 {
   alloc_table(1024);
 }
@@ -97,7 +98,7 @@ StrPool::StrPool() :
 // デストラクタ
 StrPool::~StrPool()
 {
-  delete [] mTable;
+  destroy();
 }
 
 // 文字列を登録する．
@@ -121,7 +122,7 @@ StrPool::reg(const char* str)
     pos = hash_value % mHashSize;
   }
 
-  Cell* new_cell = alloc_cell(str);
+  auto new_cell = alloc_cell(str);
   add_cell(pos, new_cell);
   ++ mNum;
 
@@ -132,7 +133,7 @@ StrPool::reg(const char* str)
 SizeType
 StrPool::accum_alloc_size() const
 {
-  return mCellAlloc.allocated_size();
+  return mTotalAllocSize;
 }
 
 // @brief メモリを全部開放する．
@@ -140,18 +141,22 @@ StrPool::accum_alloc_size() const
 void
 StrPool::destroy()
 {
+  for ( auto p: mBlockList ) {
+    delete [] p;
+  }
   delete [] mTable;
-  mCellAlloc.destroy();
   mTableSize = 0;
   mTable = nullptr;
+  mTotalAllocSize = 0;
+  mBlockList.clear();
 }
 
 // テーブルを確保して初期化する．
 void
 StrPool::alloc_table(SizeType new_size)
 {
-  Cell** old_table = mTable;
-  SizeType old_size = mTableSize;
+  auto old_table = mTable;
+  auto old_size = mTableSize;
   mTableSize = new_size;
   mHashSize = calc_maxprime(mTableSize);
   mExpandLimit = static_cast<SizeType>(mTableSize * 1.8);
@@ -178,10 +183,14 @@ StrPool::alloc_cell(const char* str)
 {
   SizeType len = strlen(str) + 1;
   SizeType cell_size = sizeof(Cell) + sizeof(char) * (len - 1);
-  void* p = mCellAlloc.get_memory(cell_size);
-  Cell* new_cell = new (p) Cell;
+  auto p = new char[cell_size];
+  mBlockList.push_back(p);
+
+  auto new_cell = new (static_cast<void*>(p)) Cell;
   memcpy(new_cell->mStr, str, len);
   new_cell->mSize = len;
+
+  mTotalAllocSize += cell_size;
 
   return new_cell;
 }

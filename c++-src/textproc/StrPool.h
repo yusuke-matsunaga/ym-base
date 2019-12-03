@@ -124,6 +124,13 @@ private:
   // 次に拡張する基準
   SizeType mExpandLimit;
 
+  unordered_set<Cell*> mCellDict;
+
+  // Cell用に確保されたメモリサイズの総和
+  SizeType mTotalAllocSize;
+
+  vector<char*> mBlockList;
+
 };
 
 

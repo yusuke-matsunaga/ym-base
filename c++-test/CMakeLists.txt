@@ -56,3 +56,8 @@ ym_add_gtest ( base_OptionParser_test
   textproc/OptionParserTest.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
   )
+
+ym_add_gtest ( base_ShString_test
+  textproc/ShStringTest.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
