@@ -166,8 +166,8 @@ endif ( )
 set ( textproc_SOURCES
   c++-src/textproc/OptionParser.cc
   c++-src/textproc/Scanner.cc
+  c++-src/textproc/ShString.cc
   c++-src/textproc/StrBuff.cc
-  c++-src/textproc/StrPool.cc
   )
 
 set ( time_SOURCES

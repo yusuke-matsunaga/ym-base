@@ -67,19 +67,28 @@ private:
   // 内部で用いられるデータ構造
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief ハッシュ表の中で使われる要素
-  struct
-  Cell
+  // ハッシュ関数
+  struct Hash
   {
-    // 次のセルを指すリンクポインタ
-    Cell* mLink;
+    Hash() = default;
 
-    // 文字数 (末尾の \0 を含む)
-    SizeType mSize;
+    ~Hash() = default;
 
-    // 文字列領域の先頭を指すダミー
-    // 実際には必要なサイズの領域を確保する．
-    char mStr[1];
+    SizeType
+    operator()(const char* s) const;
+
+  };
+
+  // 等価比較関数
+  struct Eq
+  {
+    Eq() = default;
+
+    ~Eq() = default;
+
+    bool
+    operator()(const char* s1,
+	       const char* s2) const;
   };
 
 
@@ -88,48 +97,20 @@ private:
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief テーブルを確保して初期化する．
-  /// @param[in] new_size 新しいテーブルサイズ
-  void
-  alloc_table(SizeType new_size);
-
-  /// @brief 新しい文字列を表す Cell を確保する．
-  /// @param[in] str 文字列
-  Cell*
-  alloc_cell(const char* str);
-
-  /// @brief セルをリンクに追加する．
-  void
-  add_cell(SizeType pos,
-	   Cell* cell);
-
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // すべての文字列を蓄えておくハッシュ表
-  Cell** mTable;
+  // 文字列のハッシュ表
+  unordered_set<const char*, Hash, Eq> mStrHash;
 
-  // ハッシュ表のサイズ
-  SizeType mTableSize;
-
-  // ハッシュ表の実効サイズ
-  SizeType mHashSize;
-
-  // 登録されている要素数
-  SizeType mNum;
-
-  // 次に拡張する基準
-  SizeType mExpandLimit;
-
-  unordered_set<Cell*> mCellDict;
-
-  // Cell用に確保されたメモリサイズの総和
+  // 文字列用に確保されたメモリサイズの総和
   SizeType mTotalAllocSize;
 
-  vector<char*> mBlockList;
+  // 文字列のリスト
+  vector<const char*> mBlockList;
 
 };
 
@@ -138,14 +119,84 @@ private:
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
 
-// @brief セルをリンクに追加する．
+// ハッシュ関数
+inline
+SizeType
+StrPool::Hash::operator()(const char* s) const
+{
+  SizeType h = 0;
+  char c;
+  while ( (c = *s ++) ) {
+    h = h * 33 + static_cast<SizeType>(c);
+  }
+  return h;
+}
+
+// 等価比較関数
+inline
+bool
+StrPool::Eq::operator()(const char* s1,
+			const char* s2) const
+{
+  return strcmp(s1, s2) == 0;
+}
+
+// コンストラクタ
+inline
+StrPool::StrPool() :
+  mTotalAllocSize{0}
+{
+}
+
+// デストラクタ
+inline
+StrPool::~StrPool()
+{
+  destroy();
+}
+
+// 文字列を登録する．
+inline
+const char*
+StrPool::reg(const char* str)
+{
+  // まず str と同一の文字列が登録されていないか調べる．
+  auto p = mStrHash.find(str);
+  if ( p != mStrHash.end() ) {
+    return *p;
+  }
+
+  // なければ新しい文字列を登録する．
+  SizeType l = strlen(str) + 1;
+  char* s = new char[l];
+  memcpy(s, str, l);
+  mStrHash.emplace(s);
+  mTotalAllocSize += l;
+  mBlockList.push_back(s);
+
+  return s;
+}
+
+// 確保した文字列領域の総量を得る．
+inline
+SizeType
+StrPool::accum_alloc_size() const
+{
+  return mTotalAllocSize;
+}
+
+// @brief メモリを全部開放する．
+//
+// 非常に破壊的なのでメモリリーク検査時の終了直前などの場合のみに使う．
 inline
 void
-StrPool::add_cell(SizeType pos,
-		  Cell* cell)
+StrPool::destroy()
 {
-  cell->mLink = mTable[pos];
-  mTable[pos] = cell;
+  for ( auto p: mBlockList ) {
+    delete [] p;
+  }
+  mBlockList.clear();
+  mStrHash.clear();
 }
 
 END_NAMESPACE_YM
