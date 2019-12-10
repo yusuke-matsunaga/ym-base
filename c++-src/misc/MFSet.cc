@@ -3,7 +3,7 @@
 /// @brief MFSet の実装ファイル
 /// @author Yusuke Matsunaga
 ///
-/// Copyright (C) 2005-2010, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2018, 2019 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -55,10 +55,10 @@ MFSetCell::MFSetCell()
 MFSetCell*
 MFSetCell::find()
 {
-  MFSetCell* tmp = this;
+  auto tmp = this;
 
   // 検索の途中で道の圧縮を行なう．
-  MFSetCell* parent = tmp->mParent;
+  auto parent = tmp->mParent;
   while ( parent->mParent != parent ) {
     tmp = tmp->mParent = parent->mParent;
     parent = tmp->mParent;
@@ -69,8 +69,8 @@ MFSetCell::find()
 
 // n 個の要素を持つ集合を作るコンストラクタ．
 MFSet::MFSet(int n) :
-  mNum(n),
-  mCellArray(new MFSetCell[mNum])
+  mNum{n},
+  mCellArray{new MFSetCell[mNum]}
 {
   for ( int i = 0; i < n; ++ i ) {
     mCellArray[i].mId = i;
@@ -95,7 +95,7 @@ MFSet::num() const
 int
 MFSet::find(int id)
 {
-  MFSetCell* x = get(id);
+  auto x = get(id);
   if ( x ) {
     x = x->find();
     return x->mId;
@@ -111,10 +111,10 @@ int
 MFSet::merge(int x_id,
 	     int y_id)
 {
-  MFSetCell* x = get(x_id);
+  auto x = get(x_id);
   if ( !x ) return kBadID;
 
-  MFSetCell* y = get(y_id);
+  auto y = get(y_id);
   if ( !y ) return kBadID;
 
   if ( x->mParent != x ) {

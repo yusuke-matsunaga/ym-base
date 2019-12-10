@@ -3,7 +3,7 @@
 /// @brief ItvlMgrImpl の実装ファイル
 /// @author Yusuke Matsunaga
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2019 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -17,9 +17,9 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-ItvlMgrImpl::ItvlMgrImpl()
+ItvlMgrImpl::ItvlMgrImpl() :
+  mRoot{new_cell(0, numeric_limits<int>::max())}
 {
-  mRoot = new_cell(0, numeric_limits<int>::max());
 }
 
 // @brief デストラクタ

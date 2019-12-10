@@ -5,7 +5,7 @@
 /// @brief ItvlMgrImpl のヘッダファイル
 /// @author Yusuke Matsunaga
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2019 Yusuke Matsunaga
 /// All rights reserved.
 
 
