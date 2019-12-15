@@ -5,12 +5,11 @@
 /// @brief Scanner のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2013, 2018 Yusuke Matsunaga
+/// Copyright (C) 2013, 2018, 2019 Yusuke Matsunaga
 /// All rights reserved.
 
 
 #include "ym_config.h"
-#include "ym/IDO.h"
 #include "ym/FileInfo.h"
 #include "ym/FileLoc.h"
 #include "ym/FileRegion.h"
@@ -36,8 +35,10 @@ class Scanner
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] ido 入力データ
-  Scanner(IDO& ido);
+  /// @param[in] s 入力ストリーム
+  /// @param[in] file_info ファイル情報
+  Scanner(istream& s,
+	  const FileInfo& file_info);
 
   /// @brief デストラクタ
   ~Scanner();
@@ -110,11 +111,14 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 入力データ
-  IDO& mIDO;
+  // 入力ストリーム
+  istream& mS;
 
-  // バッファ
-  ymuint8 mBuff[4096];
+  // ファイル情報
+  FileInfo mFileInfo;
+
+  // 行バッファ
+  string mLineBuff;
 
   // バッファ中の読み出し位置
   int mReadPos;
@@ -122,14 +126,14 @@ private:
   // バッファの末尾
   int mEndPos;
 
-  // 直前の文字が \r の時に true となるフラグ
-  bool mCR;
-
   // 現在の行番号
   int mCurLine;
 
   // 現在のコラム位置
   int mCurColumn;
+
+  // 最後に読み込んだ文字が \r で有ることを示すフラグ
+  bool mCR;
 
   // トークンの最初の行番号
   int mFirstLine;
@@ -161,7 +165,7 @@ inline
 const FileInfo&
 Scanner::file_info() const
 {
-  return mIDO.file_info();
+  return mFileInfo;
 }
 
 // @brief 現在のファイル情報を書き換える．
@@ -172,7 +176,7 @@ inline
 void
 Scanner::set_file_info(const FileInfo& file_info)
 {
-  mIDO.set_file_info(file_info);
+  mFileInfo = file_info;
 }
 
 // @brief 次の文字を読み出す．

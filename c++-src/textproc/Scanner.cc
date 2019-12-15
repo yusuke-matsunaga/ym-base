@@ -3,7 +3,7 @@
 /// @brief Scanner の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2013-2014, 2019 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -13,13 +13,15 @@
 BEGIN_NAMESPACE_YM
 
 // @brief コンストラクタ
-// @param[in] ido 入力データ
-Scanner::Scanner(IDO& ido) :
-  mIDO(ido)
+// @param[in] s 入力ストリーム
+// @param[in] file_info ファイル情報
+Scanner::Scanner(istream& s,
+		 const FileInfo& file_info) :
+  mS{s},
+  mFileInfo{file_info}
 {
   mReadPos = 0;
   mEndPos = 0;
-  mCR = false;
   mCurLine = 1;
   mCurColumn = 1;
   mFirstLine = 1;
@@ -42,19 +44,14 @@ Scanner::update()
   for ( ; ; ) {
     if ( mReadPos >= mEndPos ) {
       mReadPos = 0;
-      int n = mIDO.read(mBuff, 4096);
-      if ( n < 0 ) {
-	// ファイル読み込みエラー
-	c = -1;
-	break;
-      }
-      mEndPos = n;
+      getline(mS, mLineBuff);
+      mEndPos = mLineBuff.size();
     }
     if ( mEndPos == 0 ) {
       c = EOF;
       break;
     }
-    c = mBuff[mReadPos];
+    c = mLineBuff[mReadPos];
     ++ mReadPos;
 
     // Windows(DOS)/Mac/UNIX の間で改行コードの扱いが異なるのでここで
