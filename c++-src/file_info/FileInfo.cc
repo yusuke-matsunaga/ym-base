@@ -28,13 +28,6 @@ END_NONAMESPACE
 // クラス FileInfo
 //////////////////////////////////////////////////////////////////////
 
-// @brief 空のコンストラクタ
-// @note 無効な ID で初期化される．
-FileInfo::FileInfo() :
-  mId(0xFFFFU)
-{
-}
-
 // @brief ファイル名を指定したコンストラクタ
 // @param[in] filename ファイル名
 FileInfo::FileInfo(const char* filename)
@@ -65,11 +58,6 @@ FileInfo::FileInfo(const string& filename,
 		   const FileLoc& parent_loc)
 {
   mId = gTheMgr.new_file_info(filename.c_str(), parent_loc);
-}
-
-// @brief デストラクタ
-FileInfo::~FileInfo()
-{
 }
 
 // @brief ファイル名を返す．
@@ -114,7 +102,7 @@ FileInfo::parent_loc_list(vector<FileLoc>& loc_list) const
 // @return s をそのまま返す
 ostream&
 operator<<(ostream& s,
-	   FileInfo file_info)
+	   const FileInfo& file_info)
 {
   vector<FileLoc> loc_list;
   file_info.parent_loc_list(loc_list);

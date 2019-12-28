@@ -35,8 +35,9 @@ class FileLoc
 public:
 
   /// @brief 空のコンストラクタ
-  /// @note 無効なデータを持つ
-  FileLoc();
+  ///
+  /// 無効なデータを持つ
+  FileLoc() = default;
 
   /// @brief 内容を指定するコンストラクタ
   /// @param[in] file_info ファイル情報
@@ -47,7 +48,7 @@ public:
 	  int column);
 
   /// @brief デストラクタ
-  ~FileLoc();
+  ~FileLoc() = default;
 
 
 public:
@@ -107,8 +108,26 @@ private:
 
 
 //////////////////////////////////////////////////////////////////////
-/// @name FileLoc の出力関数
+/// @name FileLoc に関連する非メンバ関数
 /// @{
+
+/// @relates FileLoc
+/// @brief 等価比較演算子
+/// @param[in] left, right 比較するオブジェクト
+/// @retval true 等しい
+/// @retval false 等しくない
+bool
+operator==(const FileLoc& left,
+	   const FileLoc& right);
+
+/// @relates FileLoc
+/// @brief 非等価比較演算子
+/// @param[in] left, right 比較するオブジェクト
+/// @retval true 等しくない．
+/// @retval false 等しい．
+bool
+operator!=(const FileLoc& left,
+	   const FileLoc& right);
 
 /// @relates FileLoc
 /// @brief FileLoc を表示するための関数
@@ -127,14 +146,6 @@ operator<<(ostream& s,
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
 
-// 空のコンストラクタ
-// 無効なデータを持つ
-inline
-FileLoc::FileLoc()
-{
-  // FileInfo のデフォルトコンストラクタは無効なデータで初期化する．
-}
-
 // @brief 内容を指定するコンストラクタ
 // @param[in] file_info ファイル情報
 // @param[in] line 行番号
@@ -143,14 +154,8 @@ inline
 FileLoc::FileLoc(FileInfo file_info,
 		 int line,
 		 int column) :
-  mFileInfo(file_info),
-  mLineColumn(line, column)
-{
-}
-
-// @brief デストラクタ
-inline
-FileLoc::~FileLoc()
+  mFileInfo{file_info},
+  mLineColumn{line, column}
 {
 }
 
@@ -216,6 +221,33 @@ int
 FileLoc::column() const
 {
   return mLineColumn.column();
+}
+
+// @relates FileLoc
+// @brief 等価比較演算子
+// @param[in] left, right 比較するオブジェクト
+// @retval true 等しい
+// @retval false 等しくない
+inline
+bool
+operator==(const FileLoc& left,
+	   const FileLoc& right)
+{
+  return left.file_info() == right.file_info() &&
+    left.line() == right.line() && left.column() == right.column();
+}
+
+// @relates FileLoc
+// @brief 非等価比較演算子
+// @param[in] left, right 比較するオブジェクト
+// @retval true 等しくない．
+// @retval false 等しい．
+inline
+bool
+operator!=(const FileLoc& left,
+	   const FileLoc& right)
+{
+  return !operator==(left, right);
 }
 
 END_NAMESPACE_YM

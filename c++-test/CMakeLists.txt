@@ -61,3 +61,10 @@ ym_add_gtest ( base_ShString_test
   textproc/ShStringTest.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
   )
+
+ym_add_gtest ( base_InputFileObj_test
+  file/InputFileObjTest.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  DEFINITIONS
+  "-DDATAPATH=\"${CMAKE_CURRENT_SOURCE_DIR}/testdata/\""
+  )

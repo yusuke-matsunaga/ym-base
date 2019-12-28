@@ -33,7 +33,7 @@ public:
 
   /// @brief 空のコンストラクタ
   /// @note 無効な ID で初期化される．
-  FileInfo();
+  FileInfo() = default;
 
   /// @brief ファイル名を指定したコンストラクタ
   /// @param[in] filename ファイル名
@@ -56,7 +56,7 @@ public:
 	   const FileLoc& parent_loc);
 
   /// @brief デストラクタ
-  ~FileInfo();
+  ~FileInfo() = default;
 
 
 public:
@@ -95,7 +95,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ID番号
-  ymuint16 mId;
+  ymuint16 mId{0xFFFFU};
 
 };
 
@@ -108,15 +108,15 @@ private:
 /// @brief 等価比較演算子
 /// @param[in] left, right オペランド
 bool
-operator==(FileInfo left,
-	   FileInfo right);
+operator==(const FileInfo& left,
+	   const FileInfo& right);
 
 /// @relates FileInfo
 /// @brief 非等価比較演算子
 /// @param[in] left, right オペランド
 bool
-operator!=(FileInfo left,
-	   FileInfo right);
+operator!=(const FileInfo& left,
+	   const FileInfo& right);
 
 /// @relates FileInfo
 /// @brief FileInfo 用のストリーム出力演算子
@@ -125,7 +125,7 @@ operator!=(FileInfo left,
 /// @return s をそのまま返す
 ostream&
 operator<<(ostream& s,
-	   FileInfo file_info);
+	   const FileInfo& file_info);
 
 /// @}
 //////////////////////////////////////////////////////////////////////
@@ -156,8 +156,8 @@ FileInfo::id() const
 // @param[in] left, right オペランド
 inline
 bool
-operator==(FileInfo left,
-	   FileInfo right)
+operator==(const FileInfo& left,
+	   const FileInfo& right)
 {
   return left.id() == right.id();
 }
@@ -167,8 +167,8 @@ operator==(FileInfo left,
 // @param[in] left, right オペランド
 inline
 bool
-operator!=(FileInfo left,
-	   FileInfo right)
+operator!=(const FileInfo& left,
+	   const FileInfo& right)
 {
   return !operator==(left, right);
 }
