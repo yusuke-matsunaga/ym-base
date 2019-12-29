@@ -131,6 +131,10 @@ public:
   void
   accept();
 
+  /// @brief ファイルの末尾の時にtrue を返す．
+  bool
+  is_eof() const;
+
   /// @brief 現在の位置を返す．
   FileLoc
   cur_loc() const;
@@ -239,6 +243,14 @@ InputFileObj::get()
   int c = peek();
   accept();
   return c;
+}
+
+// @brief ファイルの末尾の時にtrue を返す．
+inline
+bool
+InputFileObj::is_eof() const
+{
+  return mNextChar == EOF;
 }
 
 // @brief 直前の set_first_loc() から現在の位置までを返す．

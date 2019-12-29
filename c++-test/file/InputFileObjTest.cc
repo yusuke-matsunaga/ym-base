@@ -80,9 +80,11 @@ TEST_P(InputFileObjTest, get_test1)
 
   int r3 = ifo.get();
   EXPECT_EQ( '\n', r3 );
+  EXPECT_FALSE( ifo.is_eof() );
 
   int eof = ifo.get();
   EXPECT_EQ( EOF, eof );
+  EXPECT_TRUE( ifo.is_eof() );
 }
 
 TEST_P(InputFileObjTest, peek_test1)
