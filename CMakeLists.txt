@@ -105,13 +105,13 @@ set ( io_SOURCES
   c++-src/io/FileBuff.h
   c++-src/io/FileCoder.cc
   c++-src/io/FileDecoder.cc
-  c++-src/io/FileIDO.cc
-  c++-src/io/FileODO.cc
-  c++-src/io/IDO.cc
-  c++-src/io/ODO.cc
-  c++-src/io/StreamIDO.cc
-  c++-src/io/StringIDO.cc
-  c++-src/io/StrListIDO.cc
+#  c++-src/io/FileIDO.cc
+#  c++-src/io/FileODO.cc
+#  c++-src/io/IDO.cc
+#  c++-src/io/ODO.cc
+#  c++-src/io/StreamIDO.cc
+#  c++-src/io/StringIDO.cc
+#  c++-src/io/StrListIDO.cc
   c++-src/io/ThruCoder.cc
   c++-src/io/ThruDecoder.cc
   c++-src/io/ZCoder.cc
