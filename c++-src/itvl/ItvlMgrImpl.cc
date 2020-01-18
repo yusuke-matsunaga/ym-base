@@ -19,7 +19,7 @@ BEGIN_NAMESPACE_YM
 // @brief コンストラクタ
 ItvlMgrImpl::ItvlMgrImpl()
 {
-  mRoot = new_cell(0, numeric_limits<int>::max());
+  clear();
 }
 
 // @brief デストラクタ
