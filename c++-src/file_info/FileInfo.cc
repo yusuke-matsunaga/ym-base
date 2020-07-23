@@ -95,6 +95,13 @@ FileInfo::parent_loc_list(vector<FileLoc>& loc_list) const
   }
 }
 
+// @brief 内部の静的なデータをクリアする．
+void
+FileInfo::clear()
+{
+  gTheMgr.clear();
+}
+
 // @relates FileInfo
 // @brief FileInfo 用のストリーム出力演算子
 // @param[in] s 出力ストリーム

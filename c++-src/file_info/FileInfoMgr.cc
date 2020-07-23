@@ -52,6 +52,13 @@ FileInfoMgr::parent_loc(int id)
   return fi.mParentLoc;
 }
 
+// @brief クリアする
+void
+FileInfoMgr::clear()
+{
+  mFiArray.clear();
+}
+
 // @brief 新しい _FileInfo を生成する．
 // @param[in] filename ファイル名
 // @return 生成された _FileInfo の ID 番号

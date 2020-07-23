@@ -38,6 +38,10 @@ public:
 
 public:
 
+  /// @brief クリアする
+  void
+  clear();
+
   /// @brief 新しい _FileInfo を生成する．
   /// @param[in] filename ファイル名
   /// @return 生成された _FileInfo の ID 番号

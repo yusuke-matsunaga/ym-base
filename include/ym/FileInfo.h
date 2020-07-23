@@ -25,6 +25,8 @@ class FileLoc;
 /// - インクルード元のファイル位置
 /// の情報を持つ．
 /// 実際には 16 ビットの整数のみを持つというトリッキーな実装
+///
+/// 本当のデータは FileInfoMgr という静的オブジェクトが持つ．
 /// @sa FileInfoMgr
 //////////////////////////////////////////////////////////////////////
 class FileInfo
@@ -87,6 +89,11 @@ public:
   /// @note トップレベルのファイルが先頭になる．
   void
   parent_loc_list(vector<FileLoc>& loc_list) const;
+
+  /// @brief 内部の静的なデータをクリアする．
+  static
+  void
+  clear();
 
 
 private:
