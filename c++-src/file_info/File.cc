@@ -382,16 +382,16 @@ SearchPathList::add_end(const string& path)
 PathName
 SearchPathList::search(const PathName& filename) const
 {
-  PathName tmp;
-
   switch ( filename.type() ) {
   case PathType::Absolute:
   case PathType::Home:
-    // 絶対パスならそれを試すだけ
-    // ホームディレクトリからの相対パスの場合も唯一のパスを試す．
-    tmp = filename.expand();
-    if ( tmp.stat() ) {
-      return tmp;
+    {
+      // 絶対パスならそれを試すだけ
+      // ホームディレクトリからの相対パスの場合も唯一のパスを試す．
+      auto tmp = filename.expand();
+      if ( tmp.stat() ) {
+	return tmp;
+      }
     }
     break;
 
@@ -399,7 +399,7 @@ SearchPathList::search(const PathName& filename) const
     if ( mList.empty() ) {
       // サーチパスが空の場合はカレントディレクトリからの相対パス
       // とみなす．
-      tmp = filename.expand();
+      auto tmp = filename.expand();
       if ( tmp.stat() ) {
 	return tmp;
       }
@@ -407,7 +407,7 @@ SearchPathList::search(const PathName& filename) const
     else {
       // 相対パスの場合, 頭に search_path をつけて探す．
       for ( auto path: mList ) {
-	PathName tmp = (path + filename).expand();
+	auto tmp = (path + filename).expand();
 	if ( tmp.stat() ) {
 	  return tmp;
 	}
@@ -441,7 +441,7 @@ SearchPathList::to_list(const string& str,
   string::size_type pos1 = 0;
   string::size_type pos2;
   for ( ; (pos2 = str.find(':', pos1)) != string::npos; pos1 = pos2 + 1) {
-    pathname_list.push_back(PathName(str.substr(pos1, pos2 - 1)));
+    pathname_list.push_back(PathName(str.substr(pos1, pos2)));
   }
   pathname_list.push_back(PathName(str.substr(pos1, string::npos)));
 }
