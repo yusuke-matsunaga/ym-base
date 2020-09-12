@@ -5,7 +5,7 @@
 /// @brief Array のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym_config.h"
@@ -16,6 +16,19 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 /// @class Array Array.h "Array.h"
 /// @brief シンプルな配列クラス
+///
+/// このクラスではメモリアロケーションは行わない．
+/// ただ単に古典的な C配列に対して反復子を提供するのがこのクラスの目的
+///
+/// @code
+/// SizeType n{100};
+/// int* chunk{new int[n]};
+/// Array<int> int_array{chunk, 0, n};
+/// for ( int i: int_array ) {
+///   ...
+/// }
+/// @endcode
+/// のように用いることができる．
 //////////////////////////////////////////////////////////////////////
 template<typename ObjType>
 class Array
@@ -97,10 +110,10 @@ template<typename ObjType>
 inline
 Array<ObjType>::Array(ObjType* body,
 		      SizeType begin,
-		      SizeType end)
+		      SizeType end) :
+  mNum{end - begin},
+  mBody{body + begin}
 {
-  mNum = end - begin;
-  mBody = body + begin;
 }
 
 // @brief デストラクタ
