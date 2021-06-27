@@ -106,6 +106,29 @@ public:
 	  const char* body);
 
 
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // 継承クラスで用いられる便利関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief メッセージを文字列にまとめる．
+  string
+  msg_to_string(const char* src_file,
+		int src_line,
+		const FileRegion& loc,
+		MsgType type,
+		const char* label,
+		const char* body);
+
+  /// @brief メッセージを文字列にまとめる．
+  string
+  msg_to_string(const char* src_file,
+		int src_line,
+		MsgType type,
+		const char* label,
+		const char* body);
+
+
 private:
   //////////////////////////////////////////////////////////////////////
   // 内部で用いられるメンバ関数
