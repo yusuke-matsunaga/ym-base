@@ -5,9 +5,8 @@
 /// @brief RandPermGen のヘッダファイル
 /// @author Yusuke Matsunaga
 ///
-/// Copyright (C) 2005-2011 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym_config.h"
 #include "ym/Range.h"
@@ -25,11 +24,17 @@ class RandPermGen
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] n 要素数
-  RandPermGen(int n);
+  RandPermGen(int n) ///< [in] 要素数
+    : mNum{n},
+      mArray{new int[n]}
+  {
+  }
 
   /// @brief デストラクタ
-  ~RandPermGen();
+  ~RandPermGen()
+  {
+    delete [] mArray;
+  }
 
 
 public:
@@ -39,18 +44,37 @@ public:
 
   /// @brief 要素数を返す．
   int
-  num() const;
+  num() const { return mNum; }
 
   /// @brief ランダムな順列を生成する．
-  /// @param[in] randgen 乱数発生器
   template<class URNG>
   void
-  generate(URNG& randgen);
+  generate(URNG& randgen) ///< [in] 乱数発生器
+  {
+    vector<int> src_array(mNum);
+    for ( int i: Range(mNum) ) {
+      src_array[i] = i;
+    }
+    int n = mNum - 1;
+    for ( int i: Range(mNum) ) {
+      std::uniform_int_distribution<int> rd(0, n);
+      int r = rd(randgen);
+      mArray[i] = src_array[r];
+      for ( int j: Range(r, n) ) {
+	src_array[j] = src_array[j + 1];
+      }
+      -- n;
+    }
+  }
 
   /// @brief 順列の要素を取り出す．
-  /// @param[in] pos 要素の位置番号 ( 0 <= pos < num() )
   int
-  elem(int pos) const;
+  elem(int pos) const ///< [in] 要素の位置番号 ( 0 <= pos < num() )
+  {
+    ASSERT_COND( 0 <= pos && pos < num() );
+
+    return mArray[pos];
+  }
 
 
 private:
@@ -65,67 +89,6 @@ private:
   int* mArray;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-// @param[in] n 要素数
-inline
-RandPermGen::RandPermGen(int n) :
-  mNum{n},
-  mArray{new int[n]}
-{
-}
-
-// @brief デストラクタ
-inline
-RandPermGen::~RandPermGen()
-{
-  delete [] mArray;
-}
-
-// @brief 要素数を返す．
-inline
-int
-RandPermGen::num() const
-{
-  return mNum;
-}
-
-// @brief ランダムな順列を生成する．
-template<class URNG>
-inline
-void
-RandPermGen::generate(URNG& randgen)
-{
-  vector<int> src_array(mNum);
-  for ( int i: Range(mNum) ) {
-    src_array[i] = i;
-  }
-  int n = mNum - 1;
-  for ( int i: Range(mNum) ) {
-    std::uniform_int_distribution<int> rd(0, n);
-    int r = rd(randgen);
-    mArray[i] = src_array[r];
-    for ( int j: Range(r, n) ) {
-      src_array[j] = src_array[j + 1];
-    }
-    -- n;
-  }
-}
-
-// @brief 順列の要素を取り出す．
-// @param[in] pos 要素の位置番号 ( 0 <= pos < num() )
-inline
-int
-RandPermGen::elem(int pos) const
-{
-  return mArray[pos];
-}
-
 
 END_NAMESPACE_YM
 

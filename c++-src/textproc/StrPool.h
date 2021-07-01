@@ -5,9 +5,8 @@
 /// @brief StrPool のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym_config.h"
 
@@ -30,11 +29,18 @@ class StrPool
 public:
 
   /// @brief コンストラクタ
-  StrPool();
+  StrPool()
+    : mTotalAllocSize{0}
+  {
+  }
 
   /// @brief デストラクタ
-  /// @note このオブジェクトが管理しているすべてのページが解放される．
-  ~StrPool();
+  ///
+  /// このオブジェクトが管理しているすべてのページが解放される．
+  ~StrPool()
+  {
+    destroy();
+  }
 
 
 public:
@@ -43,23 +49,46 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 文字列を登録する．
-  /// @param[in] str 入力となる文字列
   /// @return カノニカライズされた文字列を返す．
   const char*
-  reg(const char* str);
+  reg(const char* str) ///< [in] 入力となる文字列
+  {
+    // まず str と同一の文字列が登録されていないか調べる．
+    auto p = mStrHash.find(str);
+    if ( p != mStrHash.end() ) {
+      return *p;
+    }
+
+    // なければ新しい文字列を登録する．
+    SizeType l = strlen(str) + 1;
+    char* s = new char[l];
+    memcpy(s, str, l);
+    mStrHash.emplace(s);
+    mTotalAllocSize += l;
+    mBlockList.push_back(s);
+
+    return s;
+  }
 
   /// @brief 確保した文字列領域の総量を得る．
   /// @return 確保した文字列領域の総量を得る．
   ///
   /// デバッグ/解析用 -- 通常は使わない．
   SizeType
-  accum_alloc_size() const;
+  accum_alloc_size() const { return mTotalAllocSize; }
 
   /// @brief メモリを全部開放する．
   ///
   /// 非常に破壊的なのでメモリリーク検査時の終了直前などの場合のみに使う．
   void
-  destroy();
+  destroy()
+  {
+    for ( auto p: mBlockList ) {
+      delete [] p;
+    }
+    mBlockList.clear();
+    mStrHash.clear();
+  }
 
 
 private:
@@ -75,7 +104,15 @@ private:
     ~Hash() = default;
 
     SizeType
-    operator()(const char* s) const;
+    operator()(const char* s) const
+    {
+      SizeType h = 0;
+      char c;
+      while ( (c = *s ++) ) {
+	h = h * 33 + static_cast<SizeType>(c);
+      }
+      return h;
+    }
 
   };
 
@@ -88,7 +125,11 @@ private:
 
     bool
     operator()(const char* s1,
-	       const char* s2) const;
+	       const char* s2) const
+    {
+      return strcmp(s1, s2) == 0;
+    }
+
   };
 
 
@@ -113,91 +154,6 @@ private:
   vector<const char*> mBlockList;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// ハッシュ関数
-inline
-SizeType
-StrPool::Hash::operator()(const char* s) const
-{
-  SizeType h = 0;
-  char c;
-  while ( (c = *s ++) ) {
-    h = h * 33 + static_cast<SizeType>(c);
-  }
-  return h;
-}
-
-// 等価比較関数
-inline
-bool
-StrPool::Eq::operator()(const char* s1,
-			const char* s2) const
-{
-  return strcmp(s1, s2) == 0;
-}
-
-// コンストラクタ
-inline
-StrPool::StrPool() :
-  mTotalAllocSize{0}
-{
-}
-
-// デストラクタ
-inline
-StrPool::~StrPool()
-{
-  destroy();
-}
-
-// 文字列を登録する．
-inline
-const char*
-StrPool::reg(const char* str)
-{
-  // まず str と同一の文字列が登録されていないか調べる．
-  auto p = mStrHash.find(str);
-  if ( p != mStrHash.end() ) {
-    return *p;
-  }
-
-  // なければ新しい文字列を登録する．
-  SizeType l = strlen(str) + 1;
-  char* s = new char[l];
-  memcpy(s, str, l);
-  mStrHash.emplace(s);
-  mTotalAllocSize += l;
-  mBlockList.push_back(s);
-
-  return s;
-}
-
-// 確保した文字列領域の総量を得る．
-inline
-SizeType
-StrPool::accum_alloc_size() const
-{
-  return mTotalAllocSize;
-}
-
-// @brief メモリを全部開放する．
-//
-// 非常に破壊的なのでメモリリーク検査時の終了直前などの場合のみに使う．
-inline
-void
-StrPool::destroy()
-{
-  for ( auto p: mBlockList ) {
-    delete [] p;
-  }
-  mBlockList.clear();
-  mStrHash.clear();
-}
 
 END_NAMESPACE_YM
 

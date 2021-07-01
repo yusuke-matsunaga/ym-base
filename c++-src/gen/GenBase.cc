@@ -3,9 +3,8 @@
 /// @brief GenBase の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2013-2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/GenBase.h"
 
@@ -19,19 +18,19 @@ BEGIN_NAMESPACE_YM
 // コンストラクタ
 // 全要素数 n と選択する要素数 k を必ず指定する．
 GenBase::GenBase(int n,
-		 int k) :
-  mN{n},
-  mK{k},
-  mElemList{new int[mK]}
+		 int k)
+  : mN{n},
+    mK{k},
+    mElemList{new int[mK]}
 {
   init();
 }
 
 // @brief コピーコンストラクタ
-GenBase::GenBase(const GenBase& src) :
-  mN{src.mN},
-  mK{src.mK},
-  mElemList{new int[mK]}
+GenBase::GenBase(const GenBase& src)
+  : mN{src.mN},
+    mK{src.mK},
+    mElemList{new int[mK]}
 {
   for ( int i = 0; i < mK; ++ i ) {
     mElemList[i] = src.mElemList[i];

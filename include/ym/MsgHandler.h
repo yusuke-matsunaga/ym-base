@@ -5,9 +5,8 @@
 /// @brief MsgHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym_config.h"
 #include "ym/MsgType.h"
@@ -34,14 +33,16 @@ class MsgHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] mask メッセージマスク
-  MsgHandler(MsgBitMask mask = kMsgMaskAll);
+  MsgHandler(MsgBitMask mask = kMsgMaskAll) ///< [in] メッセージマスク
+    : mMask{mask}
+  {
+  }
 
   /// @brief デストラクタ
   ///
   /// 登録されていたら削除する．
   virtual
-  ~MsgHandler();
+  ~MsgHandler() = default;
 
 
 public:
@@ -51,23 +52,32 @@ public:
 
   /// @brief メッセージマスクの設定
   void
-  set_mask(MsgBitMask mask);
+  set_mask(MsgBitMask mask) ///< [in] メッセージマスク
+  {
+    mMask = mask;
+  }
 
   /// @brief メッセージマスクの取得
   MsgBitMask
-  mask() const;
+  mask() const { return mMask; }
 
   /// @brief マスクの付加
-  /// @param[in] type 付加するメッセージタイプ
-  /// @note type はビットマスクではない．
+  ///
+  /// type はビットマスクではない．
   void
-  add_mask(MsgType type);
+  add_mask(MsgType type) ///< [in] 付加するメッセージタイプ
+  {
+    mMask |= conv2bitmask(type);
+  }
 
   /// @brief マスクの削除
-  /// @param[in] type 削除するメッセージタイプ
-  /// @note type はビットマスクではない．
+  ///
+  /// type はビットマスクではない．
   void
-  delete_mask(MsgType type);
+  delete_mask(MsgType type) ///< [in] 削除するメッセージタイプ
+  {
+    mMask &= ~(conv2bitmask(type));
+  }
 
 
 public:
@@ -76,34 +86,23 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief メッセージが登録されるたびに呼ばれる仮想関数
-  /// @param[in] src_file この関数を読んでいるソースファイル名
-  /// @param[in] src_line この関数を読んでいるソースの行番号
-  /// @param[in] loc ファイル位置
-  /// @param[in] type メッセージの種類
-  /// @param[in] label メッセージラベル
-  /// @param[in] body メッセージ本文
   virtual
   void
-  put_msg(const char* src_file,
-	  int src_line,
-	  const FileRegion& loc,
-	  MsgType type,
-	  const char* label,
-	  const char* body) = 0;
+  put_msg(const char* src_file,  ///< [in] この関数を呼んでいるソースファイル名
+	  int src_line,          ///< [in] この関数を呼んでいるソースの行番号
+	  const FileRegion& loc, ///< [in] ファイル位置
+	  MsgType type,          ///< [in] メッセージの種類
+	  const char* label,     ///< [in] メッセージラベル
+	  const char* body) = 0; ///< [in] メッセージ本文
 
   /// @brief メッセージが登録されるたびに呼ばれる仮想関数
-  /// @param[in] src_file この関数を読んでいるソースファイル名
-  /// @param[in] src_line この関数を読んでいるソースの行番号
-  /// @param[in] type メッセージの種類
-  /// @param[in] label メッセージラベル
-  /// @param[in] body メッセージ本文
   virtual
   void
-  put_msg(const char* src_file,
-	  int src_line,
-	  MsgType type,
-	  const char* label,
-	  const char* body);
+  put_msg(const char* src_file, ///< [in] この関数を呼んでいるソースファイル名
+	  int src_line,		///< [in] この関数を呼んでいるソースの行番号
+	  MsgType type,         ///< [in] メッセージの種類
+	  const char* label,    ///< [in] メッセージラベル
+	  const char* body);    ///< [in] メッセージ本文
 
 
 protected:
@@ -113,20 +112,20 @@ protected:
 
   /// @brief メッセージを文字列にまとめる．
   string
-  msg_to_string(const char* src_file,
-		int src_line,
-		const FileRegion& loc,
-		MsgType type,
-		const char* label,
-		const char* body);
+  msg_to_string(const char* src_file,  ///< [in] この関数を呼んでいるソースファイル名
+		int src_line,	       ///< [in] この関数を呼んでいるソースの行番号
+		const FileRegion& loc, ///< [in] ファイル位置
+		MsgType type,	       ///< [in] メッセージの種類
+		const char* label,     ///< [in] メッセージラベル
+		const char* body);     ///< [in] メッセージ本文
 
   /// @brief メッセージを文字列にまとめる．
   string
-  msg_to_string(const char* src_file,
-		int src_line,
-		MsgType type,
-		const char* label,
-		const char* body);
+  msg_to_string(const char* src_file, ///< [in] この関数を呼んでいるソースファイル名
+		int src_line,	      ///< [in] この関数を呼んでいるソースの行番号
+		MsgType type,	      ///< [in] メッセージの種類
+		const char* label,    ///< [in] メッセージラベル
+		const char* body);    ///< [in] メッセージ本文
 
 
 private:
@@ -135,20 +134,14 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief メッセージが登録されるたびに呼ばれる仮想関数
-  /// @param[in] src_file この関数を読んでいるソースファイル名
-  /// @param[in] src_line この関数を読んでいるソースの行番号
-  /// @param[in] loc ファイル位置
-  /// @param[in] type メッセージの種類
-  /// @param[in] label メッセージラベル
-  /// @param[in] body メッセージ本文
   virtual
   void
-  event_proc(const char* src_file,
-	     int src_line,
-	     const FileRegion& loc,
-	     MsgType type,
-	     const char* label,
-	     const char* body);
+  event_proc(const char* src_file,  ///< [in] この関数を呼んでいるソースファイル名
+	     int src_line,	    ///< [in] この関数を呼んでいるソースの行番号
+	     const FileRegion& loc, ///< [in] ファイル位置
+	     MsgType type,	    ///< [in] メッセージの種類
+	     const char* label,	    ///< [in] メッセージラベル
+	     const char* body);	    ///< [in] メッセージ本文
 
 
 private:

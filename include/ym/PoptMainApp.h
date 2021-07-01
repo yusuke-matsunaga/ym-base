@@ -5,9 +5,8 @@
 /// @brief PoptMainApp のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2013-2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2013-2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym_config.h"
 
@@ -19,12 +18,9 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 enum class PoptStat
 {
-  /// @brief 通常の処理された
-  Ok,
-  /// @brief エラーだが処理を続行する．
-  Error,
-  /// @brief 処理を中断する．
-  Abort
+  Ok,    ///< 通常の処理
+  Error, ///< エラーだが処理を続行．
+  Abort  ///< 処理を中断．
 };
 
 
@@ -39,13 +35,11 @@ class Popt
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] opt_str このオプションを表す文字列
-  /// @param[in] opt_char このオプションを表す文字
-  /// @param[in] opt_desc このオプションの説明文
-  /// @note opt_str が空文字列だったり opt_char が \0 だったりする場合もある．
-  Popt(const char* opt_str,
-       char opt_char,
-       const char* opt_desc);
+  ///
+  /// opt_str が空文字列だったり opt_char が \0 だったりする場合もある．
+  Popt(const char* opt_str,   ///< [in] このオプションを表す文字列
+       char opt_char,         ///< [in] このオプションを表す文字
+       const char* opt_desc); ///< [in] このオプションの説明文
 
   /// @brief デストラクタ
   virtual
@@ -80,7 +74,8 @@ public:
   opt_desc() const;
 
   /// @brief オプションの引数の記述を返す．
-  /// @note デフォルトの実装では nullptr を返す．
+  ///
+  /// デフォルトの実装では nullptr を返す．
   virtual
   const char*
   arg_desc() const;
@@ -96,7 +91,8 @@ public:
   /// @brief オプションが指定されたときに呼び出される関数
   /// @retval true 正常に処理が行なわれた．
   /// @retval false 続行不可能なエラーが起こった．
-  /// @note デフォルトではなにもしないで true を返す．
+  ///
+  /// デフォルトではなにもしないで true を返す．
   virtual
   bool
   action();
@@ -132,15 +128,11 @@ class PoptNone :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] opt_str オプション文字列
-  /// @param[in] opt_char オプション文字
-  /// @param[in] opt_desc オプションの説明文
-  PoptNone(const char* opt_str,
-	   char opt_char,
-	   const char* opt_desc);
+  PoptNone(const char* opt_str,   ///< [in] オプション文字列
+	   char opt_char,         ///< [in] オプション文字
+	   const char* opt_desc); ///< [in] オプションの説明文
 
   /// @brief デストラクタ
-  virtual
   ~PoptNone();
 
 
@@ -150,14 +142,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief argInfo の値を返す．
-  virtual
   int
-  arg_info();
+  arg_info() override;
 
   /// @brief arg の値を返す．
-  virtual
   void*
-  arg();
+  arg() override;
 
 };
 
@@ -172,17 +162,12 @@ class PoptArg :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] opt_str オプション文字列
-  /// @param[in] opt_char オプション文字
-  /// @param[in] opt_desc オプションの説明文
-  /// @param[in] arg_desc 引数の説明文
-  PoptArg(const char* opt_str,
-	  char opt_char,
-	  const char* opt_desc,
-	  const char* arg_desc);
+  PoptArg(const char* opt_str,   ///< [in] オプション文字列
+	  char opt_char,         ///< [in] オプション文字
+	  const char* opt_desc,  ///< [in] オプションの説明文
+	  const char* arg_desc); ///< [in] 引数の説明文
 
   /// @brief デストラクタ
-  virtual
   ~PoptArg();
 
 
@@ -192,9 +177,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief オプションの引数の記述を返す．
-  virtual
   const char*
-  arg_desc() const;
+  arg_desc() const override;
 
 
 private:
@@ -218,17 +202,12 @@ class PoptStr :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] opt_str オプション文字列
-  /// @param[in] opt_char オプション文字
-  /// @param[in] opt_desc オプションの説明文
-  /// @param[in] arg_desc 引数の説明文
-  PoptStr(const char* opt_str,
-	  char opt_char,
-	  const char* opt_desc,
-	  const char* arg_desc);
+  PoptStr(const char* opt_str,   ///< [in] オプション文字列
+	  char opt_char,	 ///< [in] オプション文字
+	  const char* opt_desc,	 ///< [in] オプションの説明文
+	  const char* arg_desc); ///< [in] 引数の説明文
 
   /// @brief デストラクタ
-  virtual
   ~PoptStr();
 
 
@@ -238,14 +217,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief arg_info の値を返す．
-  virtual
   int
-  arg_info();
+  arg_info() override;
 
   /// @brief arg の値を返す．
-  virtual
   void*
-  arg();
+  arg() override;
 
 
 public:
@@ -279,17 +256,12 @@ class PoptInt :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] opt_str オプション文字列
-  /// @param[in] opt_char オプション文字
-  /// @param[in] opt_desc オプションの説明文
-  /// @param[in] arg_desc 引数の説明文
-  PoptInt(const char* opt_str,
-	  char opt_char,
-	  const char* opt_desc,
-	  const char* arg_desc);
+  PoptInt(const char* opt_str,   ///< [in] オプション文字列
+	  char opt_char,	 ///< [in] オプション文字
+	  const char* opt_desc,	 ///< [in] オプションの説明文
+	  const char* arg_desc); ///< [in] 引数の説明文
 
   /// @brief デストラクタ
-  virtual
   ~PoptInt();
 
 
@@ -299,14 +271,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief argInfo の値を返す．
-  virtual
   int
-  arg_info();
+  arg_info() override;
 
   /// @brief arg の値を返す．
-  virtual
   void*
-  arg();
+  arg() override;
 
 
 public:
@@ -340,17 +310,12 @@ class PoptBool :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] opt_str オプション文字列
-  /// @param[in] opt_char オプション文字
-  /// @param[in] opt_desc オプションの説明文
-  /// @param[in] arg_desc 引数の説明文
-  PoptBool(const char* opt_str,
-	   char opt_char,
-	   const char* opt_desc,
-	   const char* arg_desc);
+  PoptBool(const char* opt_str,   ///< [in] オプション文字列
+	   char opt_char,	  ///< [in] オプション文字
+	   const char* opt_desc,  ///< [in] オプションの説明文
+	   const char* arg_desc); ///< [in] 引数の説明文
 
   /// @brief デストラクタ
-  virtual
   ~PoptBool();
 
 
@@ -376,17 +341,12 @@ class PoptUint :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] opt_str オプション文字列
-  /// @param[in] opt_char オプション文字
-  /// @param[in] opt_desc オプションの説明文
-  /// @param[in] arg_desc 引数の説明文
-  PoptUint(const char* opt_str,
-	   char opt_char,
-	   const char* opt_desc,
-	   const char* arg_desc);
+  PoptUint(const char* opt_str,   ///< [in] オプション文字列
+	   char opt_char,	  ///< [in] オプション文字
+	   const char* opt_desc,  ///< [in] オプションの説明文
+	   const char* arg_desc); ///< [in] 引数の説明文
 
   /// @brief デストラクタ
-  virtual
   ~PoptUint();
 
 
@@ -412,17 +372,12 @@ class PoptFloat :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] opt_str オプション文字列
-  /// @param[in] opt_char オプション文字
-  /// @param[in] opt_desc オプションの説明文
-  /// @param[in] arg_desc 引数の説明文
-  PoptFloat(const char* opt_str,
-	    char opt_char,
-	    const char* opt_desc,
-	    const char* arg_desc);
+  PoptFloat(const char* opt_str,    ///< [in] オプション文字列
+	    char opt_char,	    ///< [in] オプション文字
+	    const char* opt_desc,   ///< [in] オプションの説明文
+	    const char* arg_desc);  ///< [in] 引数の説明文
 
   /// @brief デストラクタ
-  virtual
   ~PoptFloat();
 
 
@@ -432,14 +387,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief argInfo の値を返す．
-  virtual
   int
-  arg_info();
+  arg_info() override;
 
   /// @brief arg の値を返す．
-  virtual
   void*
-  arg();
+  arg() override;
 
 
 public:
@@ -473,17 +426,12 @@ class PoptDouble :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] opt_str オプション文字列
-  /// @param[in] opt_char オプション文字
-  /// @param[in] opt_desc オプションの説明文
-  /// @param[in] arg_desc 引数の説明文
-  PoptDouble(const char* opt_str,
-	     char opt_char,
-	     const char* opt_desc,
-	     const char* arg_desc);
+  PoptDouble(const char* opt_str,   ///< [in] オプション文字列
+	     char opt_char,	    ///< [in] オプション文字
+	     const char* opt_desc,  ///< [in] オプションの説明文
+	     const char* arg_desc); ///< [in] 引数の説明文
 
   /// @brief デストラクタ
-  virtual
   ~PoptDouble();
 
 
@@ -493,14 +441,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief argInfo の値を返す．
-  virtual
   int
-  arg_info();
+  arg_info() override;
 
   /// @brief arg の値を返す．
-  virtual
   void*
-  arg();
+  arg() override;
 
 
 public:
@@ -533,10 +479,8 @@ class PoptMainApp
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] name 名前 (alias 用)
-  /// @param[in] auto_help --help オプションを有効にするフラグ
-  PoptMainApp(const char* name = nullptr,
-	      bool auto_help = true);
+  PoptMainApp(const char* name = nullptr, ///< [in] 名前 (alias 用)
+	      bool auto_help = true);     ///< [in] --help オプションを有効にするフラグ
 
   /// @brief デストラクタ
   ~PoptMainApp();
@@ -548,47 +492,37 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief オプションを追加する．
-  /// @param[in] option 追加するオプション
   void
-  add_option(Popt* option);
+  add_option(Popt* option); ///< [in] 追加するオプション
 
   /// @brief ヘルプ文字列を指定する．
-  /// @param[in] text ヘルプ文字列
   void
-  set_other_option_help(const char* text);
+  set_other_option_help(const char* text); ///< [in] ヘルプ文字列
 
   /// @brief poptContext をリセットする．
   void
   reset();
 
   /// @brief オプション解析を行なう．
-  /// @param[in] argc コマンド行の引数の数
-  /// @param[in] argv コマンド行の引数配列
-  /// @param[in] flags フラグ
   PoptStat
-  parse_options(int argc,
-		const char** argv,
-		int flags);
+  parse_options(int argc,          ///< [in] コマンド行の引数の数
+		const char** argv, ///< [in] コマンド行の引数配列
+		int flags);        ///< [in] フラグ
 
   /// @brief 残った引数を得る．
-  /// @param[in] args 引数を格納するベクタ
   /// @return 引数の数を返す．
   int
-  get_args(vector<string>& args);
+  get_args(vector<string>& args); ///< [in] 引数を格納するベクタ
 
   /// @brief ヘルプメッセージを出力する．
-  /// @param[in] fp FILE 構造体へのポインタ(古！)
-  /// @param[in] flags フラグ(現時点では未使用)
   void
-  print_help(FILE* fp,
-	     int flags);
+  print_help(FILE* fp,   ///< [in] FILE 構造体へのポインタ(古！)
+	     int flags); ///< [in] フラグ(現時点では未使用)
 
   /// @brief ユーセージ(ショートヘルプ)メッセージを出力する．
-  /// @param[in] fp FILE 構造体へのポインタ(古！)
-  /// @param[in] flags フラグ(現時点では未使用)
   void
-  print_usage(FILE* fp,
-	      int flags);
+  print_usage(FILE* fp,   ///< [in] FILE 構造体へのポインタ(古！)
+	      int flags); ///< [in] フラグ(現時点では未使用)
 
   /// @brief usage を出力して終了する．
   void
@@ -597,42 +531,34 @@ public:
 	const char* addl = nullptr);
 
   /// @brief PoptMainApp 用の strerror() 関数
-  /// @param[in] error エラーコード
   static
   const char*
-  popt_strerror(const int error);
+  popt_strerror(const int error); ///< [in] エラーコード
 
   /// @brief エラーが起きた場合にそのもととなったオプション文字列を返す．
-  /// @param[in] flags フラグ
-  /// @note フラグに使用可能な値は以下のとおり
+  ///
+  /// フラグに使用可能な値は以下のとおり
   ///  - 0 なにもしない．
   ///  - POPT_BADOPTION_NOALIAS もっとも外側(outermost)のオプションを返す．
   const char*
-  bad_option(int flags);
+  bad_option(int flags); ///< [in] フラグ
 
   /// @brief alias 用のデフォルト設定を読み込む．
-  /// @param[in] flags フラグ(現時点では未使用)
   /// @return 返り値に関しては man popt に記載なし．
   int
-  read_default_config(int flags);
+  read_default_config(int flags); ///< [in] フラグ(現時点では未使用)
 
   /// @brief alias 用の設定ファイルを読み込む．
-  /// @param[in] filename ファイル名
   int
-  read_config_file(const char* filename);
+  read_config_file(const char* filename); ///< [in] ファイル名
 
   /// @brief alias を追加する．
-  /// @param[in] long_name 長い名前 (--xxxx)
-  /// @param[in] short_name 短い名前 (-x)
-  /// @param[in] argc 本体の引数の数
-  /// @param[in] argv 本体の文字列の配列()
-  /// @param[in] flags フラグ(現時点では未使用)
   int
-  add_alias(const char* long_name,
-	    char short_name,
-	    int argc,
-	    const char** argv,
-	    int flags);
+  add_alias(const char* long_name, ///< [in] 長い名前 (--xxxx)
+	    char short_name,       ///< [in] 短い名前 (-x)
+	    int argc,              ///< [in] 本体の引数の数
+	    const char** argv,     ///< [in] 本体の文字列の配列()
+	    int flags);            ///< [in] フラグ(現時点では未使用)
 
 
 private:

@@ -5,7 +5,7 @@
 /// @brief ArrayIterator のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym_config.h"
@@ -23,16 +23,13 @@ class ArrayIterator
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] obj_ptr 要素へのポインタ
-  ArrayIterator(T* obj_ptr) :
-    mObjPtr(obj_ptr)
+  ArrayIterator(T* obj_ptr) ///< [in] 要素へのポインタ
+    : mObjPtr(obj_ptr)
   {
   }
 
   /// @brief デストラクタ
-  ~ArrayIterator()
-  {
-  }
+  ~ArrayIterator() = default;
 
 
 public:
@@ -42,17 +39,13 @@ public:
 
   /// @brief dereference 演算子
   const T&
-  operator*() const
-  {
-    return *mObjPtr;
-  }
+  operator*() const { return *mObjPtr; }
 
   /// @brief increment 演算子
   const ArrayIterator&
   operator++()
   {
     ++ mObjPtr;
-
     return *this;
   }
 
@@ -69,12 +62,6 @@ public:
   {
     return !operator==(right);
   }
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
 
 
 private:

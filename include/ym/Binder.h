@@ -5,7 +5,7 @@
 /// @brief Binder 関連クラスのヘッダファイル
 /// @author Yusuke Matsunaga
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 /// @defgroup BinderGroup 汎用バインダ
@@ -82,31 +82,34 @@ class T6BindMgr;
 class Binder
 {
   friend class BindMgr;
+
 public:
 
   /// @brief コンストラクタ
-  /// @note この時点では特定の BindMgr には結び付いていない．
-  Binder();
+  ///
+  /// この時点では特定の BindMgr には結び付いていない．
+  Binder()
+    : mMgr{nullptr}
+  {
+  }
 
   /// @brief デストラクタ
-  /// @note BindMgr にバインドしていたらバインドを解除する．
+  ///
+  /// BindMgr にバインドしていたらバインドを解除する．
   virtual
   ~Binder();
 
   /// @brief BindMgr の取得
-  /// @retval バインドしている BindMgr　バインドしている場合
-  /// @retval nullptr バインドしていない場合
+  /// @retval バインドしている BindMgr : バインドしている場合
+  /// @retval nullptr : バインドしていない場合
   BindMgr*
-  mgr() const;
+  mgr() const { return mMgr; }
 
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // リストの削除に用いる反復子
-  list<Binder*>::iterator mItForList;
 
   // このオブジェクトを持っているクラス
   BindMgr* mMgr;
@@ -127,12 +130,12 @@ class BindMgr
 public:
 
   /// @brief コンストラクタ
-  BindMgr();
+  BindMgr() = default;
 
   /// @brief デストラクタ
-  /// @note バインド中のすべての Binder オブジェクトとのバインドを
-  /// 解除する．
-  /// @note Binder オブジェクトそのものは削除しない．
+  ///
+  /// - バインド中のすべての Binder オブジェクトとのバインドを解除する．
+  /// - Binder オブジェクトそのものは削除しない．
   virtual
   ~BindMgr();
 
@@ -140,14 +143,12 @@ public:
 protected:
 
   /// @brief binder の登録
-  /// @param[in] binder 登録する Binder
   void
-  _reg_binder(Binder* binder);
+  _reg_binder(Binder* binder); ///< [in] 登録する Binder
 
   /// @brief binder の登録の解除
-  /// @param[in] binder 登録を解除する Binder
   void
-  _unreg_binder(Binder* binder);
+  _unreg_binder(Binder* binder); ///< [in] 登録を解除する Binder
 
   /// @brief 全ての binder の登録の解除
   void
@@ -160,7 +161,7 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief バインドされた binder のリスト
-  list<Binder*> mList;
+  vector<Binder*> mList;
 
 };
 
@@ -183,7 +184,8 @@ class EventBinder :
 private:
 
   /// @brief イベント処理関数
-  /// @note 継承クラスが実装しなければならない．
+  ///
+  /// 継承クラスが実装しなければならない．
   virtual
   void
   event_proc() = 0;
@@ -208,19 +210,17 @@ public:
   EventBindMgr();
 
   /// @brief デストラクタ
-  virtual
   ~EventBindMgr();
 
   /// @brief EventBinder を登録する．
-  /// @param[in] binder 登録する EventBinder
   void
-  reg_binder(EventBinder* binder);
+  reg_binder(EventBinder* binder); ///< [in] 登録する EventBinder
 
   /// @brief EventBinder の登録を削除する．
-  /// @param[in] binder 登録を削除する EventBinder
-  /// @note binder が登録されていない場合には何もしない．
+  ///
+  /// binder が登録されていない場合には何もしない．
   void
-  unreg_binder(EventBinder* binder);
+  unreg_binder(EventBinder* binder); ///< [in] 登録を削除する EventBinder
 
   /// @brief 全ての binder の登録の解除
   void
@@ -247,10 +247,10 @@ class T1Binder :
 private:
 
   /// @brief イベント処理関数
-  /// @param[in] obj ブロードキャストする情報を表すオブジェクト
   virtual
   void
-  event_proc(T1 obj) = 0;
+  event_proc(T1 obj) ///< [in] ブロードキャストする情報を表すオブジェクト
+  = 0;
 
 };
 
@@ -267,40 +267,40 @@ class T1BindMgr :
 {
 public:
 
-  typedef T1Binder<T1> TBinder;
+  using TBinder = T1Binder<T1>;
 
 public:
 
   /// @brief コンストラクタ
-  T1BindMgr() { }
+  T1BindMgr() = default;
 
   /// @brief デストラクタ
-  ~T1BindMgr() { }
+  ~T1BindMgr() = default;
 
   /// @brief TBinder を登録する．
-  /// @param[in] binder 登録する対象
   void
-  reg_binder(TBinder* binder) { _reg_binder(binder); }
+  reg_binder(TBinder* binder) ///< [in] 登録する対象
+  { _reg_binder(binder); }
 
   /// @brief TBinder の登録を削除する．
-  /// @param[in] binder 登録を削除する対象
-  /// @note binder が登録されていない場合には何もしない．
+  ///
+  /// binder が登録されていない場合には何もしない．
   void
-  unreg_binder(TBinder* binder) { _unreg_binder(binder); }
+  unreg_binder(TBinder* binder) ///< [in] 登録を削除する対象
+  { _unreg_binder(binder); }
 
   /// @brief 全ての binder の登録の解除
   void
   unreg_all_binders() { _unreg_all_binders(); }
 
   /// @brief ここに登録されたすべての binder に T1 のオブジェクトを伝える．
-  /// @param[in] data ブロードキャストする内容
   void
-  prop_event(T1 data)
+  prop_event(T1 data) ///< [in] ブロードキャストする内容
   {
-    for (list<Binder*>::iterator p = mList.begin(); p != mList.end(); ++ p) {
+    for ( auto p: mList ) {
       // 本当はよくない static_cast だが reg_binder() で登録できるのは
       // TBinder だけなので大丈夫なはず
-      TBinder* binder = static_cast<TBinder*>(*p);
+      TBinder* binder = static_cast<TBinder*>(p);
       binder->event_proc(data);
     }
   }
@@ -325,8 +325,9 @@ private:
   /// @param[in] obj1, obj2 ブロードキャストする情報を表すオブジェクト
   virtual
   void
-  event_proc(T1 obj1,
-	     T2 obj2) = 0;
+  event_proc(T1 obj1, ///< [in] ブロードキャストするデータ1
+	     T2 obj2) ///< [in] ブロードキャストするデータ2
+  = 0;
 
 };
 
@@ -344,42 +345,41 @@ class T2BindMgr :
 {
 public:
 
-  typedef T2Binder<T1, T2> TBinder;
+  using TBinder = T2Binder<T1, T2>;
 
 public:
 
   /// @brief コンストラクタ
-  T2BindMgr() { }
+  T2BindMgr() = default;
 
   /// @brief デストラクタ
-  ~T2BindMgr() { }
+  ~T2BindMgr() = default;
 
   /// @brief TBinder を登録する．
-  /// @param[in] binder 登録する対象
   void
-  reg_binder(TBinder* binder) { _reg_binder(binder); }
+  reg_binder(TBinder* binder) ///< [in] 登録する対象
+  { _reg_binder(binder); }
 
   /// @brief TBinder の登録を削除する．
-  /// @param[in] binder 登録を削除する対象
-  /// @note binder が登録されていない場合には何もしない．
+  ///
+  /// binder が登録されていない場合には何もしない．
   void
-  unreg_binder(TBinder* binder) { _unreg_binder(binder); }
+  unreg_binder(TBinder* binder) ///< [in] 登録を削除する対象
+  { _unreg_binder(binder); }
 
   /// @brief 全ての binder の登録の解除
   void
   unreg_all_binders() { _unreg_all_binders(); }
 
-  /// @brief ここに登録されたすべての binder に (T1, T2)
-  /// @brief のオブジェクトを伝える．
-  /// @param[in] data1, data2 ブロードキャストする内容
+  /// @brief ここに登録されたすべての binder に (T1, T2) を伝える．
   void
-  prop_event(T1 data1,
-	     T2 data2)
+  prop_event(T1 data1,  ///< [in] ブロードキャストするデータ1
+	     T2 data2)  ///< [in] ブロードキャストするデータ2
   {
-    for (list<Binder*>::iterator p = mList.begin(); p != mList.end(); ++ p) {
+    for ( auto tmp: mList ) {
       // 本当はよくない static_cast だが reg_binder() で登録できるのは
       // TBinder だけなので大丈夫なはず
-      TBinder* binder = static_cast<TBinder*>(*p);
+      TBinder* binder = static_cast<TBinder*>(tmp);
       binder->event_proc(data1, data2);
     }
   }
@@ -402,12 +402,12 @@ class T3Binder :
 private:
 
   /// @brief イベント処理関数
-  /// @param[in] obj1, obj2, obj3 ブロードキャストする情報を表すオブジェクト
   virtual
   void
-  event_proc(T1 obj1,
-	     T2 obj2,
-	     T3 obj3) = 0;
+  event_proc(T1 obj1, ///< [in] ブロードキャストするデータ1
+	     T2 obj2, ///< [in] ブロードキャストするデータ2
+	     T3 obj3) ///< [in] ブロードキャストするデータ3
+  = 0;
 
 };
 
@@ -426,44 +426,42 @@ class T3BindMgr :
 {
 public:
 
-  typedef T3Binder<T1, T2, T3> TBinder;
+  using TBinder = T3Binder<T1, T2, T3>;
 
 public:
 
   /// @brief コンストラクタ
-  T3BindMgr() { }
+  T3BindMgr() = default;
 
   /// @brief デストラクタ
-  ~T3BindMgr() { }
+  ~T3BindMgr() = default;
 
   /// @brief TBinder を登録する．
-  /// @param[in] binder 登録する対象
   void
-  reg_binder(TBinder* binder) { _reg_binder(binder); }
+  reg_binder(TBinder* binder) ///< [in] 登録する対象
+  { _reg_binder(binder); }
 
   /// @brief TBinderの登録を削除する．
-  /// @param[in] binder 登録を削除する対象
-  /// @note binder が登録されていない場合には何もしない．
+  ///
+  /// binder が登録されていない場合には何もしない．
   void
-  unreg_binder(TBinder* binder) { _unreg_binder(binder); }
+  unreg_binder(TBinder* binder) ///< [in] 登録を削除する対象
+  { _unreg_binder(binder); }
 
   /// @brief 全ての binder の登録の解除
   void
   unreg_all_binders() { _unreg_all_binders(); }
 
-  /// @brief ここに登録されたすべての binder に (T1, T2, T3)
-  /// @brief のオブジェクトを伝える．
-  /// @param[in] data1, data2, data3 ブロードキャストする内容
+  /// @brief ここに登録されたすべての binder に (T1, T2, T3) を伝える．
   void
-  prop_event(T1 data1,
-	     T2 data2,
-	     T3 data3)
+  prop_event(T1 data1, ///< [in] ブロードキャストするデータ1
+	     T2 data2, ///< [in] ブロードキャストするデータ2
+	     T3 data3) ///< [in] ブロードキャストするデータ3
   {
-    for (list<Binder*>::iterator p = mList.begin();
-	 p != mList.end(); ++ p) {
+    for ( auto tmp: mList ) {
       // 本当はよくない static_cast だが reg_binder() で登録できるのは
       // TBinder だけなので大丈夫なはず
-      TBinder* binder = static_cast<TBinder*>(*p);
+      TBinder* binder = static_cast<TBinder*>(tmp);
       binder->event_proc(data1, data2, data3);
     }
   }
@@ -487,14 +485,13 @@ class T4Binder :
 private:
 
   /// @brief イベント処理関数
-  /// @param[in] obj1, obj2, obj3, obj4 ブロードキャストする情報
-  /// を表すオブジェクト
   virtual
   void
-  event_proc(T1 obj1,
-	     T2 obj2,
-	     T3 obj3,
-	     T4 obj4) = 0;
+  event_proc(T1 obj1, ///< [in] ブロードキャストするデータ1
+	     T2 obj2, ///< [in] ブロードキャストするデータ2
+	     T3 obj3, ///< [in] ブロードキャストするデータ3
+	     T4 obj4) ///< [in] ブロードキャストするデータ4
+  = 0;
 
 };
 
@@ -514,45 +511,43 @@ class T4BindMgr :
 {
 public:
 
-  typedef T4Binder<T1, T2, T3, T4> TBinder;
+  using TBinder = T4Binder<T1, T2, T3, T4>;
 
 public:
 
   /// @brief コンストラクタ
-  T4BindMgr() { }
+  T4BindMgr() = default;
 
   /// @brief デストラクタ
-  ~T4BindMgr() { }
+  ~T4BindMgr() = default;
 
   /// @brief TBinder を登録する．
-  /// @param[in] binder 登録する対象
   void
-  reg_binder(TBinder* binder) { _reg_binder(binder); }
+  reg_binder(TBinder* binder) ///< [in] 登録する対象
+  { _reg_binder(binder); }
 
   /// @brief TBinder の登録を削除する．
-  /// @param[in] binder 登録を削除する対象
-  /// @note binder が登録されていない場合には何もしない．
+  ///
+  /// binder が登録されていない場合には何もしない．
   void
-  unreg_binder(TBinder* binder) { _unreg_binder(binder); }
+  unreg_binder(TBinder* binder) ///< [in] 登録を削除する対象
+  { _unreg_binder(binder); }
 
   /// @brief 全ての binder の登録の解除
   void
   unreg_all_binders() { _unreg_all_binders(); }
 
-  /// @brief ここに登録されたすべての binder に (T1, T2, T3, T4)
-  /// @brief のオブジェクトを伝える．
-  /// @param[in] data1, data2, data3, data4 ブロードキャストする内容
+  /// @brief ここに登録されたすべての binder に (T1, T2, T3, T4) を伝える．
   void
-  prop_event(T1 data1,
-	     T2 data2,
-	     T3 data3,
-	     T4 data4)
+  prop_event(T1 data1, ///< [in] ブロードキャストするデータ1
+	     T2 data2, ///< [in] ブロードキャストするデータ2
+	     T3 data3, ///< [in] ブロードキャストするデータ3
+	     T4 data4) ///< [in] ブロードキャストするデータ4
   {
-    for (list<Binder*>::iterator p = mList.begin();
-	 p != mList.end(); ++ p) {
+    for ( auto tmp: mList ) {
       // 本当はよくない static_cast だが reg_binder() で登録できるのは
       // TBinder だけなので大丈夫なはず
-      TBinder* binder = static_cast<TBinder*>(*p);
+      TBinder* binder = static_cast<TBinder*>(tmp);
       binder->event_proc(data1, data2, data3, data4);
     }
   }
@@ -577,15 +572,14 @@ class T5Binder :
 private:
 
   /// @brief イベント処理関数
-  /// @param[in] obj1, obj2, obj3, obj4, obj5 ブロードキャストする
-  /// 情報を表すオブジェクト
   virtual
   void
-  event_proc(T1 obj1,
-	     T2 obj2,
-	     T3 obj3,
-	     T4 obj4,
-	     T5 obj5) = 0;
+  event_proc(T1 obj1, ///< [in] ブロードキャストするデータ1
+	     T2 obj2, ///< [in] ブロードキャストするデータ2
+	     T3 obj3, ///< [in] ブロードキャストするデータ3
+	     T4 obj4, ///< [in] ブロードキャストするデータ4
+	     T5 obj5) ///< [in] ブロードキャストするデータ5
+  = 0;
 
 };
 
@@ -606,46 +600,44 @@ class T5BindMgr :
 {
 public:
 
-  typedef T5Binder<T1, T2, T3, T4, T5> TBinder;
+  using TBinder = T5Binder<T1, T2, T3, T4, T5>;
 
 public:
 
   /// @brief コンストラクタ
-  T5BindMgr() { }
+  T5BindMgr() = default;
 
   /// @brief デストラクタ
-  ~T5BindMgr() { }
+  ~T5BindMgr() = default;
 
   /// @brief TBinder を登録する．
-  /// @param[in] binder 登録する対象
   void
-  reg_binder(TBinder* binder) { _reg_binder(binder); }
+  reg_binder(TBinder* binder) ///< [in] 登録する対象
+  { _reg_binder(binder); }
 
   /// @brief TBinder の登録を削除する．
-  /// @param[in] binder 登録を削除する対象
-  /// @note binder が登録されていない場合には何もしない．
+  ///
+  /// binder が登録されていない場合には何もしない．
   void
-  unreg_binder(TBinder* binder) { _unreg_binder(binder); }
+  unreg_binder(TBinder* binder) ///< [in] 登録を削除する対象
+  { _unreg_binder(binder); }
 
   /// @brief 全ての binder の登録の解除
   void
   unreg_all_binders() { _unreg_all_binders(); }
 
-  /// @brief ここに登録されたすべての binder に (T1, T2, T3, T4, T5)
-  /// @brief のオブジェクトを伝える．
-  /// @param[in] data1, data2, data3, data4, data5 ブロードキャストする内容
+  /// @brief ここに登録されたすべての binder に (T1, T2, T3, T4, T5) を伝える．
   void
-  prop_event(T1 data1,
-	     T2 data2,
-	     T3 data3,
-	     T4 data4,
-	     T5 data5)
+  prop_event(T1 data1, ///< [in] ブロードキャストするデータ1
+	     T2 data2, ///< [in] ブロードキャストするデータ2
+	     T3 data3, ///< [in] ブロードキャストするデータ3
+	     T4 data4, ///< [in] ブロードキャストするデータ4
+	     T5 data5) ///< [in] ブロードキャストするデータ5
   {
-    for (list<Binder*>::iterator p = mList.begin();
-	 p != mList.end(); ++ p) {
+    for ( auto tmp: mList ) {
       // 本当はよくない static_cast だが reg_binder() で登録できるのは
       // TBinder だけなので大丈夫なはず
-      TBinder* binder = static_cast<TBinder*>(*p);
+      TBinder* binder = static_cast<TBinder*>(tmp);
       binder->event_proc(data1, data2, data3, data4, data5);
     }
   }
@@ -671,16 +663,15 @@ class T6Binder :
 private:
 
   /// @brief イベント処理関数
-  /// @param[in] obj1, obj2, obj3, obj4, obj5, obj6 ブロードキャスト
-  /// する情報を表すオブジェクト
   virtual
   void
-  event_proc(T1 obj1,
-	     T2 obj2,
-	     T3 obj3,
-	     T4 obj4,
-	     T5 obj5,
-	     T6 obj6) = 0;
+  event_proc(T1 obj1, ///< [in] ブロードキャストするデータ1
+	     T2 obj2, ///< [in] ブロードキャストするデータ2
+	     T3 obj3, ///< [in] ブロードキャストするデータ3
+	     T4 obj4, ///< [in] ブロードキャストするデータ4
+	     T5 obj5, ///< [in] ブロードキャストするデータ5
+	     T6 obj6) ///< [in] ブロードキャストするデータ6
+  = 0;
 
 };
 
@@ -702,48 +693,45 @@ class T6BindMgr :
 {
 public:
 
-  typedef T6Binder<T1, T2, T3, T4, T5, T6> TBinder;
+  using TBinder = T6Binder<T1, T2, T3, T4, T5, T6>;
 
 public:
 
   /// @brief コンストラクタ
-  T6BindMgr() { }
+  T6BindMgr() = default;
 
   /// @brief デストラクタ
-  ~T6BindMgr() { }
+  ~T6BindMgr() = default;
 
   /// @brief TBinder を登録する．
-  /// @param[in] binder 登録する対象
   void
-  reg_binder(TBinder* binder) { _reg_binder(binder); }
+  reg_binder(TBinder* binder) ///< [in] 登録する対象
+  { _reg_binder(binder); }
 
   /// @brief TBinder の登録を削除する．
-  /// @param[in] binder 登録を削除する対象
-  /// @note binder が登録されていない場合には何もしない．
+  ///
+  /// binder が登録されていない場合には何もしない．
   void
-  unreg_binder(TBinder* binder) { _unreg_binder(binder); }
+  unreg_binder(TBinder* binder) ///< [in] 登録を削除する対象
+  { _unreg_binder(binder); }
 
   /// @brief 全ての binder の登録の解除
   void
   unreg_all_binders() { _unreg_all_binders(); }
 
-  /// @brief ここに登録されたすべての binder に (T1, T2, T3, T4, T5, T6)
-  /// @brief のオブジェクトを伝える．
-  /// @param[in] data1, data2, data3, data4, data5, data6
-  /// ブロードキャストする内容
+  /// @brief ここに登録されたすべての binder に (T1, T2, T3, T4, T5, T6) を伝える．
   void
-  prop_event(T1 data1,
-	     T2 data2,
-	     T3 data3,
-	     T4 data4,
-	     T5 data5,
-	     T6 data6)
+  prop_event(T1 data1, ///< [in] ブロードキャストするデータ1
+	     T2 data2, ///< [in] ブロードキャストするデータ2
+	     T3 data3, ///< [in] ブロードキャストするデータ3
+	     T4 data4, ///< [in] ブロードキャストするデータ4
+	     T5 data5, ///< [in] ブロードキャストするデータ5
+	     T6 data6) ///< [in] ブロードキャストするデータ6
   {
-    for (list<Binder*>::iterator p = mList.begin();
-	 p != mList.end(); ++ p) {
+    for ( auto tmp: mList ) {
       // 本当はよくない static_cast だが reg_binder() で登録できるのは
       // TBinder だけなので大丈夫なはず
-      TBinder* binder = static_cast<TBinder*>(*p);
+      TBinder* binder = static_cast<TBinder*>(tmp);
       binder->event_proc(data1, data2, data3, data4, data5, data6);
     }
   }

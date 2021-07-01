@@ -6,7 +6,6 @@
 /// Copyright (C) 2013-2014, 2019 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/InputFileObj.h"
 
 

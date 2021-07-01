@@ -5,9 +5,8 @@
 /// @brief ItvlMgr のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym_config.h"
 
@@ -56,37 +55,29 @@ public:
   avail_num() const;
 
   /// @brief d を使用可能な区間から削除する．
-  /// @param[in] d 使用不可能となった要素
   void
-  erase(int d);
+  erase(int d); ///< [in] 使用不可能となった要素
 
   /// @brief [d1, d2] を使用可能な区間から削除する．
-  /// @param[in] d1 区間の開始点
-  /// @param[in] d2 区間の終了点
   void
-  erase(int d1,
-	int d2);
+  erase(int d1,  ///< [in] 区間の開始点
+	int d2); ///< [in] 区間の終了点
 
   /// @brief d を使用可能な区間に追加する．
-  /// @param[in] d 使用可能となった要素
   void
-  add(int d);
+  add(int d); ///< [in] 使用可能となった要素
 
   /// @brief [d1, d2] を使用可能な区間に追加する．
-  /// @param[in] d1 区間の開始点
-  /// @param[in] d2 区間の終了点
   void
-  add(int d1,
-      int d2);
+  add(int d1,  ///< [in] 区間の開始点
+      int d2); ///< [in] 区間の終了点
 
   /// @brief [d1, d2] が使用可能な区間かどうか調べる．
-  /// @param[in] d1 区間の開始点
-  /// @param[in] d2 区間の終了点
   /// @retval true 使用可能
   /// @retval false 使用可能でない
   bool
-  check(int d1,
-	int d2) const;
+  check(int d1,        ///< [in] 区間の開始点
+	int d2) const; ///< [in] 区間の終了点
 
   /// @brief 使用されている区間の最小値を求める．
   /// @retval 使用されている区間の最小値
@@ -106,22 +97,20 @@ public:
   sanity_check() const;
 
   /// @brief 内容を表示する
-  /// @param[in] s 出力ストリーム
   void
-  print(ostream& s) const;
+  print(ostream& s) const; ///< [in] 出力ストリーム
 
   /// @brief 木構造を表示する
-  /// @param[in] s 出力ストリーム
   void
-  print_tree(ostream& s) const;
+  print_tree(ostream& s) const; ///< [in] 出力ストリーム
 
   /// @brief バイナリファイルに書き出す．
   void
-  dump(ostream& s) const;
+  dump(ostream& s) const; ///< [in] 出力ストリーム
 
   /// @brief バイナリファイルを読み込む．
   void
-  restore(istream& s);
+  restore(istream& s); ///< [in] 入力ストリーム
 
 
 private:

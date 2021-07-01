@@ -5,9 +5,8 @@
 /// @brief PermGen のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2013-2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/GenBase.h"
 
@@ -38,23 +37,29 @@ class PermGen :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] n 全要素数
-  /// @param[in] k 選択する要素数
-  PermGen(int n,
-	  int k);
+  PermGen(int n, ///< [in] 全要素数
+	  int k) ///< [in] 選択する要素数
+    : GenBase(n, k)
+  {
+  }
 
   /// @brief コピーコンストラクタ
-  /// @param[in] src コピー元のオブジェクト
-  PermGen(const PermGen& src);
+  PermGen(const PermGen& src) ///< [in] コピー元のオブジェクト
+    : GenBase(src)
+  {
+  }
 
   /// @brief 代入演算子
-  /// @param[in] src コピー元のオブジェクト
   /// @return 自分自身
   const PermGen&
-  operator=(const PermGen& src);
+  operator=(const PermGen& src) ///< [in] コピー元のオブジェクト
+  {
+    copy(src);
+    return *this;
+  }
 
   /// @brief デストラクタ
-  ~PermGen();
+  ~PermGen() = default;
 
 
 public:

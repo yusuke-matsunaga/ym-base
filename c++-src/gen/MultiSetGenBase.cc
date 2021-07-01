@@ -3,9 +3,8 @@
 /// @brief MultiSetGenBase の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2013-2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/MultiSetGenBase.h"
 
@@ -15,23 +14,6 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 // クラス MultiSetGenBase
 //////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-// @param[in] num_array 各要素の重複度を納めた配列
-// @param[in] k 選び出す要素数
-MultiSetGenBase::MultiSetGenBase(const vector<int>& num_array,
-				 int k) :
-  mNumArray(num_array),
-  mK(k),
-  mElem(k)
-{
-  init();
-}
-
-// @brief デストラクタ
-MultiSetGenBase::~MultiSetGenBase()
-{
-}
 
 // @brief 初期化する．
 void

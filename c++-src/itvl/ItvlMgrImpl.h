@@ -5,9 +5,8 @@
 /// @brief ItvlMgrImpl のヘッダファイル
 /// @author Yusuke Matsunaga
 ///
-/// Copyright (C) 2005-2011, 2014, 2019 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2019, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym_config.h"
 
@@ -36,8 +35,9 @@ public:
   clear();
 
   /// @brief 使用可能な数字を得る．
-  /// @note 内容は変化しない．
-  /// @note 使用可能な区間がない場合(!!!)，-1を返す．
+  ///
+  /// 内容は変化しない．
+  /// 使用可能な区間がない場合(!!!)，-1を返す．
   int
   avail_num();
 
@@ -47,12 +47,14 @@ public:
 	int d2);
 
   /// @brief 使用されている区間の最小値を求める．
-  /// @note 全区間が未使用の場合は -1 を返す．
+  ///
+  /// 全区間が未使用の場合は -1 を返す．
   int
   min_id();
 
   /// @brief 使用されている区間の最大値を求める．
-  /// @note 全区間が未使用の場合は -1 を返す．
+  ///
+  /// 全区間が未使用の場合は -1 を返す．
   int
   max_id();
 
@@ -75,27 +77,26 @@ public:
       int d2);
 
   /// @brief 内部構造が正しいかチェックする．
-  /// @note おかしい時は例外を投げる．
+  ///
+  /// おかしい時は例外を投げる．
   void
   sanity_check() const;
 
   /// @brief 内容を表示する
-  /// @param[in] s 出力ストリーム
   void
-  print(ostream& s) const;
+  print(ostream& s) const; ///< [in] 出力ストリーム
 
   /// @brief 木構造を表示する
-  /// @param[in] s 出力ストリーム
   void
-  print_tree(ostream& s) const;
+  print_tree(ostream& s) const; ///< [in] 出力ストリーム
 
   /// @brief バイナリファイルに書き出す．
   void
-  dump(ostream& s) const;
+  dump(ostream& s) const; ///< [in] [in] 出力ストリーム
 
   /// @brief バイナリファイルを読み込む．
   void
-  restore(istream& s);
+  restore(istream& s); ///< [in] 入力ストリーム
 
 
 private:
@@ -176,8 +177,9 @@ private:
 	       Cell*& ptr);
 
   /// @brief delete のためのサブルーティン
-  /// @note ptr を根とする部分木から cell を削除する．
   /// @return この部分木の高さが変わった時には true を返す．
+  ///
+  /// ptr を根とする部分木から cell を削除する．
   bool
   remove_cell(Cell* cell,
 	      Cell*& ptr);

@@ -5,9 +5,8 @@
 /// @brief FileInfoMgr のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym_config.h"
 #include "ym/FileLoc.h"
@@ -29,32 +28,33 @@ class FileInfoMgr
 public:
 
   /// @brief コンストラクタ
-  FileInfoMgr();
+  FileInfoMgr() = default;
 
   /// @brief デストラクタ
-  /// @note このクラスで生成したデータはすべて削除される．
-  ~FileInfoMgr();
+  ///
+  /// このクラスで生成したデータはすべて削除される．
+  ~FileInfoMgr() = default;
 
 
 public:
 
   /// @brief クリアする
   void
-  clear();
+  clear()
+  {
+    mFiArray.clear();
+  }
 
   /// @brief 新しい _FileInfo を生成する．
-  /// @param[in] filename ファイル名
   /// @return 生成された _FileInfo の ID 番号
   int
-  new_file_info(const char* filename);
+  new_file_info(const char* filename); ///< [in] ファイル名
 
   /// @brief 新しい _FileInfo を生成する．
-  /// @param[in] filename ファイル名
-  /// @param[in] parent_loc インクルード元の親ファイルの情報
   /// @return 生成された _FileInfo の ID 番号
   int
-  new_file_info(const char* filename,
-		const FileLoc& parent_loc);
+  new_file_info(const char* filename,       ///< [in] ファイル名
+		const FileLoc& parent_loc); ///< [in] インクルード元の親ファイルの情報
 
 
 public:
@@ -63,15 +63,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル名を返す．
-  /// @param[in] id _FileInfo の ID 番号
   string
-  filename(int id);
+  filename(int id); ///< [in] _FileInfo の ID 番号
 
   /// @brief インクルード元のファイル位置を返す．
-  /// @param[in] id _FileInfo の ID 番号
   /// @note インクルードされていないファイルの場合には無効なデータが返される．
   FileLoc
-  parent_loc(int id);
+  parent_loc(int id); ///< [in] _FileInfo の ID 番号
 
 
 private:
@@ -83,17 +81,21 @@ private:
   struct _FileInfo
   {
     /// @brief 空のコンストラクタ
-    _FileInfo();
+    _FileInfo() = default;
 
     /// @brief 親のない場合のコンストラクタ
-    /// @param[in] filename ファイル名
-    _FileInfo(const char* filename);
+    _FileInfo(const char* filename) ///< [in] ファイル名
+      : mFileName{filename}
+    {
+    }
 
     /// @brief 親のある場合(インクルードされている場合)のコンストラクタ
-    /// @param[in] filename ファイル名
-    /// @param[in] file_loc インクルード元のファイル位置
-    _FileInfo(const char* filename,
-	      const FileLoc& file_loc);
+    _FileInfo(const char* filename,    ///< [in] ファイル名
+	      const FileLoc& file_loc) ///< [in] インクルード元のファイル位置
+      : mFileName{filename},
+	mParentLoc{file_loc}
+    {
+    }
 
     /// @brief ファイル名
     StrBuff mFileName;

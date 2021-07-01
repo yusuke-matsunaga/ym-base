@@ -16,13 +16,6 @@ BEGIN_NAMESPACE_YM
 // 他のオブジェクトの動作に関連づけるための基底クラス
 //////////////////////////////////////////////////////////////////////
 
-// コンストラクタ
-// この時点では特定の BindMgr には結び付いていない．
-Binder::Binder()
-{
-  mMgr = nullptr;
-}
-
 // デストラクタ
 // 同時にバインドも削除される．
 Binder::~Binder()
@@ -32,25 +25,10 @@ Binder::~Binder()
   }
 }
 
-// バインドしている BindMgr の取得
-//
-// バインドしている BindMgrを返す．
-// バインドしていない場合には nullptr を返す．
-BindMgr*
-Binder::mgr() const
-{
-  return mMgr;
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // Binder を起動するクラス
 //////////////////////////////////////////////////////////////////////
-
-// コンストラクタ
-BindMgr::BindMgr()
-{
-}
 
 // デストラクタ
 // ここに登録されているすべての binder のバインドは削除される．
@@ -72,7 +50,6 @@ BindMgr::_reg_binder(Binder* binder)
   }
   binder->mMgr = this;
   mList.push_back(binder);
-  binder->mItForList = -- mList.end();
 }
 
 // @brief binder の登録を削除する．
@@ -82,7 +59,15 @@ void
 BindMgr::_unreg_binder(Binder* binder)
 {
   if ( binder->mgr() == this ) {
-    mList.erase(binder->mItForList);
+    // ちょっとダサいコード
+    // mList をコピーする最中に binder だけ取り除く
+    auto tmp_list{mList};
+    mList.clear();
+    for ( auto binder1: tmp_list ) {
+      if ( binder1 != binder ) {
+	mList.push_back(binder1);
+      }
+    }
     binder->mMgr = nullptr;
   }
 }
@@ -91,9 +76,7 @@ BindMgr::_unreg_binder(Binder* binder)
 void
 BindMgr::_unreg_all_binders()
 {
-  for (list<Binder*>::iterator p = mList.begin();
-       p != mList.end(); ++ p) {
-    Binder* binder = *p;
+  for ( auto binder: mList ) {
     binder->mMgr = nullptr;
   }
   mList.clear();
@@ -145,10 +128,10 @@ EventBindMgr::unreg_all_binders()
 void
 EventBindMgr::prop_event()
 {
-  for (list<Binder*>::iterator p = mList.begin(); p != mList.end(); ++ p) {
+  for ( auto tmp: mList ) {
     // 本当はよくない static_cast だが reg_binder() で登録できるのは
     // EventBinder だけなので大丈夫なはず
-    EventBinder* binder = static_cast<EventBinder*>(*p);
+    EventBinder* binder = static_cast<EventBinder*>(tmp);
     binder->event_proc();
   }
 }

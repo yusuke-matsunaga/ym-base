@@ -5,9 +5,8 @@
 /// @brief OptionParser のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym_config.h"
 
@@ -31,13 +30,15 @@ class OptionParser
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] delim 区切り文字
-  /// @param[in] opt_delim オプション用区切り文字
-  OptionParser(char delim = ',',
-	       char opt_delim = ':');
+  OptionParser(char delim = ',',     ///< [in] 区切り文字
+	       char opt_delim = ':') ///< [in] オプション用区切り文字
+    : mDelim(delim),
+      mOptDelim(opt_delim)
+  {
+  }
 
   /// @brief デストラクタ
-  ~OptionParser();
+  ~OptionParser() = default;
 
 
 public:
@@ -46,23 +47,14 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @grief デリミタを設定する．
-  /// @param[in] delim 区切り文字
-  /// @param[in] opt_delim オプション用区切り文字
   void
-  set_delim(char delim,
-	    char opt_delim);
+  set_delim(char delim,      ///< [in] 区切り文字
+	    char opt_delim); ///< [in] オプション用区切り文字
 
   /// @brief パースする．
-  /// @param[in] input 入力文字列
-  /// @return パース結果のハッシュ表への参照
-  const vector<pair<string, string>>&
-  parse(const string& input);
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
+  /// @return パース結果の<キー，値>のペアのリストを返す．
+  vector<pair<string, string>>
+  parse(const string& input); ///< [in] 入力文字列
 
 
 private:
@@ -76,15 +68,7 @@ private:
   // オプション区切り文字
   char mOptDelim;
 
-  // パース結果を保持しておくリスト
-  vector<pair<string, string>> mOptList;
-
 };
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
 
 END_NAMESPACE_YM
 

@@ -5,9 +5,8 @@
 /// @brief MultiSetCombiGen のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2013-2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/MultiSetGenBase.h"
 
@@ -24,23 +23,36 @@ class MultiSetCombiGen :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] num_array 各要素の重複度を納めた配列
-  /// @param[in] k 選び出す要素数
-  MultiSetCombiGen(const vector<int>& num_array,
-		   int k);
+  MultiSetCombiGen(const vector<int>& num_array, ///< [in] 各要素の重複度を納めた配列
+		   int k)                        ///< [in] 選び出す要素数
+    : MultiSetGenBase(num_array, k)
+  {
+  }
+
+  /// @brief コンストラクタ
+  MultiSetCombiGen(initializer_list<int>& num_array, ///< [in] 各要素の重複度を納めた初期化リスト
+		   int k)                            ///< [in] 選び出す要素数
+    : MultiSetGenBase(num_array, k)
+  {
+  }
 
   /// @brief コピーコンストラクタ
-  /// @param[in] src コピー元のオブジェクト
-  MultiSetCombiGen(const MultiSetCombiGen& src);
+  MultiSetCombiGen(const MultiSetCombiGen& src) ///< [in] コピー元のオブジェクト
+    : MultiSetGenBase(src)
+  {
+  }
 
   /// @brief 代入演算子
-  /// @param[in] src コピー元のオブジェクト
   /// @return 自分自身
   const MultiSetCombiGen&
-  operator=(const MultiSetCombiGen& src);
+  operator=(const MultiSetCombiGen& src) ///< [in] コピー元のオブジェクト
+  {
+    copy(src);
+    return *this;
+  }
 
   /// @brief デストラクタ
-  ~MultiSetCombiGen();
+  ~MultiSetCombiGen() = default;
 
 
 public:

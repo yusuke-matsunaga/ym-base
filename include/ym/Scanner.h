@@ -5,9 +5,8 @@
 /// @brief Scanner のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2013, 2018, 2019 Yusuke Matsunaga
+/// Copyright (C) 2013, 2018, 2019, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym_config.h"
 #include "ym/FileInfo.h"
@@ -35,13 +34,11 @@ class Scanner
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] s 入力ストリーム
-  /// @param[in] file_info ファイル情報
-  Scanner(istream& s,
-	  const FileInfo& file_info);
+  Scanner(istream& s,                 ///< [in] 入力ストリーム
+	  const FileInfo& file_info); ///< [in] ファイル情報
 
   /// @brief デストラクタ
-  ~Scanner();
+  ~Scanner() = default;
 
 
 public:
@@ -51,14 +48,17 @@ public:
 
   /// @brief オープン中のファイル情報を得る．
   const FileInfo&
-  file_info() const;
+  file_info() const { return mFileInfo; }
 
   /// @brief 現在のファイル情報を書き換える．
-  /// @param[in] file_info 新しいファイル情報
-  /// @note プリプロセッサのプラグマなどで用いることを想定している．
-  /// @note 通常は使わないこと．
+  ///
+  /// プリプロセッサのプラグマなどで用いることを想定している．
+  /// 通常は使わないこと．
   void
-  set_file_info(const FileInfo& file_info);
+  set_file_info(const FileInfo& file_info) ///< [in] 新しいファイル情報
+  {
+    mFileInfo = file_info;
+  }
 
 
 protected:
@@ -66,19 +66,32 @@ protected:
   // 継承クラスから用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 一文字読み出す．
-  /// @note 実際には peek(); acept() と等価
-  int
-  get();
-
   /// @brief 次の文字を読み出す．
-  /// @note ファイル位置の情報等は変わらない
+  ///
+  /// ファイル位置の情報等は変わらない
   int
-  peek();
+  peek()
+  {
+    if ( mNeedUpdate ) {
+      update();
+    }
+    return mNextChar;
+  }
 
   /// @brief 直前の peek() を確定させる．
   void
   accept();
+
+  /// @brief 一文字読み出す．
+  ///
+  /// 実際には peek(); acept() と等価
+  int
+  get()
+  {
+    (void) peek();
+    accept();
+    return mNextChar;
+  }
 
   /// @brief 現在の位置をトークンの最初の位置にセットする．
   void
@@ -86,14 +99,17 @@ protected:
 
   /// @brief 直前の set_first_loc() から現在の位置までを返す．
   FileRegion
-  cur_loc() const;
+  cur_loc() const
+  {
+    return FileRegion(file_info(), mFirstLine, mFirstColumn, mCurLine, mCurColumn);
+  }
 
   /// @brief 改行を読み込んだ時に起動する関数
-  /// @param[in] line 行番号
-  /// @note デフォルトではなにもしない．
+  ///
+  /// デフォルトではなにもしない．
   virtual
   void
-  check_line(int line);
+  check_line(int line); ///< [in] 行番号
 
 
 private:
@@ -154,60 +170,6 @@ private:
   bool mNeedUpdate;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief オープン中のファイル情報を得る．
-inline
-const FileInfo&
-Scanner::file_info() const
-{
-  return mFileInfo;
-}
-
-// @brief 現在のファイル情報を書き換える．
-// @param[in] new_info 新しいファイル情報
-// @note プリプロセッサのプラグマなどで用いることを想定している．
-// @note 通常は使わないこと．
-inline
-void
-Scanner::set_file_info(const FileInfo& file_info)
-{
-  mFileInfo = file_info;
-}
-
-// @brief 次の文字を読み出す．
-// @note ファイル位置の情報等は変わらない
-inline
-int
-Scanner::peek()
-{
-  if ( mNeedUpdate ) {
-    update();
-  }
-  return mNextChar;
-}
-
-// 一文字読み出す．
-inline
-int
-Scanner::get()
-{
-  (void) peek();
-  accept();
-  return mNextChar;
-}
-
-// @brief 直前の set_first_loc() から現在の位置までを返す．
-inline
-FileRegion
-Scanner::cur_loc() const
-{
-  return FileRegion(file_info(), mFirstLine, mFirstColumn, mCurLine, mCurColumn);
-}
 
 END_NAMESPACE_YM
 

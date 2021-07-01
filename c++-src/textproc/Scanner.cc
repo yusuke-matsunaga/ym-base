@@ -3,9 +3,8 @@
 /// @brief Scanner の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2013-2014, 2019 Yusuke Matsunaga
+/// Copyright (C) 2013-2014, 2019, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/Scanner.h"
 
@@ -13,12 +12,10 @@
 BEGIN_NAMESPACE_YM
 
 // @brief コンストラクタ
-// @param[in] s 入力ストリーム
-// @param[in] file_info ファイル情報
 Scanner::Scanner(istream& s,
-		 const FileInfo& file_info) :
-  mS{s},
-  mFileInfo{file_info}
+		 const FileInfo& file_info)
+  : mS{s},
+    mFileInfo{file_info}
 {
   mReadPos = 0;
   mEndPos = 0;
@@ -29,11 +26,6 @@ Scanner::Scanner(istream& s,
   mNextLine = 1;
   mNextColumn = 1;
   mNeedUpdate = true;
-}
-
-// @brief デストラクタ
-Scanner::~Scanner()
-{
 }
 
 // @brief peek() の下請け関数

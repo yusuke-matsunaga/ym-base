@@ -40,17 +40,18 @@ public:
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] body 配列本体
-  /// @param[in] begin 開始位置
-  /// @param[in] end 終了位置
   ///
   /// body[begin] 〜 body[end - 1] までの範囲を表す配列となる．
-  Array(ObjType* body,
-	SizeType begin,
-	SizeType end);
+  Array(ObjType* body,  ///< [in] 配列本体
+	SizeType begin, ///< [in] 開始位置
+	SizeType end)   ///< [in] 終了位置
+    : mNum{end - begin},
+      mBody{body + begin}
+  {
+  }
 
   /// @brief デストラクタ
-  ~Array();
+  ~Array() = default;
 
 
 public:
@@ -60,20 +61,27 @@ public:
 
   /// @brief 要素数を返す．
   SizeType
-  num() const;
+  num() const
+  {
+    return mNum;
+  }
 
   /// @brief 要素を返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < num() )
   ObjType&
-  operator[](SizeType pos) const;
+  operator[](SizeType pos) const ///< [in] 位置番号 ( 0 <= pos < num() )
+  {
+    ASSERT_COND( pos < num() );
+
+    return mBody[pos];
+  }
 
   /// @breif 先頭の反復子を得る．
   iterator
-  begin() const;
+  begin() const { return mBody; }
 
   /// @brief 末尾の反復子を得る．
   iterator
-  end() const;
+  end() const { return mBody + num(); }
 
 
 private:
@@ -94,73 +102,6 @@ private:
   ObjType* mBody;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-// @param[in] body 配列本体
-// @param[in] begin 開始位置
-// @param[in] end 終了位置
-//
-// body[begin] 〜 body[end - 1] までの範囲を表す配列となる．
-template<typename ObjType>
-inline
-Array<ObjType>::Array(ObjType* body,
-		      SizeType begin,
-		      SizeType end) :
-  mNum{end - begin},
-  mBody{body + begin}
-{
-}
-
-// @brief デストラクタ
-template<typename ObjType>
-inline
-Array<ObjType>::~Array()
-{
-}
-
-// @brief 要素数を返す．
-template<typename ObjType>
-inline
-SizeType
-Array<ObjType>::num() const
-{
-  return mNum;
-}
-
-// @brief 要素を返す．
-// @param[in] pos 位置番号 ( 0 <= pos < num() )
-template<typename ObjType>
-inline
-ObjType&
-Array<ObjType>::operator[](SizeType pos) const
-{
-  ASSERT_COND( pos < num() );
-
-  return mBody[pos];
-}
-
-// @breif 先頭の反復子を得る．
-template<typename ObjType>
-inline
-ObjType*
-Array<ObjType>::begin() const
-{
-  return mBody;
-}
-
-// @brief 末尾の反復子を得る．
-template<typename ObjType>
-inline
-ObjType*
-Array<ObjType>::end() const
-{
-  return mBody + num();
-}
 
 END_NAMESPACE_YM
 

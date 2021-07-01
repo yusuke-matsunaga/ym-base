@@ -16,12 +16,9 @@ BEGIN_NAMESPACE_YM
 
 /// @brief パスの型を表す列挙型
 enum class PathType {
-  /// @brief 絶対パス
-  Absolute,
-  /// @brief ホームからの相対パス．最初の文字列はユーザ名
-  Home,
-  // @brief カレントディレクトリからの相対パス
-  Relative
+  Absolute, ///< 絶対パス
+  Home,     ///< ホームからの相対パス．最初の文字列はユーザ名
+  Relative  ///< カレントディレクトリからの相対パス
 };
 
 
@@ -41,16 +38,15 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 空のコンストラクタ
-  /// @note 結果は相対パスのカレントディレクトリを表すオブジェクトとなる
+  ///
+  /// 結果は相対パスのカレントディレクトリを表すオブジェクトとなる
   PathName();
 
   /// @brief 文字列からの変換コンストラクタ
-  /// @param[in] path_str パスを表す文字列
-  PathName(const string& path_str);
+  PathName(const string& path_str); ///< [in] パスを表す文字列
 
   /// @brief 文字列からの変換コンストラクタ
-  /// @param[in] path_str パスを表す文字列
-  PathName(const char* path_str);
+  PathName(const char* path_str); ///< [in] パスを表す文字列
 
   /// @brief デストラクタ
   ~PathName();
@@ -63,7 +59,8 @@ public:
 
   /// @brief パス名の妥当性チェック
   /// @return 意味のある値を持っているとき true を返す．
-  /// @note ここでは形式のみチェックする．
+  ///
+  /// ここでは形式のみチェックする．
   /// そのパスが存在するか等は関係ない．
   /// 空の場合は valid ではない．
   bool
@@ -81,13 +78,15 @@ public:
 
   /// @brief パス名のヘッダを返す．
   /// @return パス名のヘッダ (最後の名前を含まないもの)
-  /// @note 元々が階層を含まない場合には空になる．
+  ///
+  /// 元々が階層を含まない場合には空になる．
   PathName
   head() const;
 
   /// @brief パス名のテイルを返す．
   /// @return パス名のテイル (ヘッダを含まないもの)
-  /// @note パス名が '/' で終わっていたらテイルは空となる．
+  ///
+  /// パス名が '/' で終わっていたらテイルは空となる．
   string
   tail() const;
 
@@ -98,14 +97,16 @@ public:
 
   /// @brief パス名の拡張子を返す．
   /// @return パス名の拡張子
-  /// @note "." を含まない場合には空になる．
+  ///
+  /// "." を含まない場合には空になる．
   string
   ext() const;
 
   /// @brief パス名の展開
   /// @return 展開したパス
-  /// @note パスタイプが kHome と kRelative の時にフルパス形式に展開する．
-  /// 結果は必ず kAbsolute になる．
+  ///
+  /// パスタイプが kHome と kRelative の時にフルパス形式に展開する．
+  /// 結果は必ず PathType::Absolute になる．
   PathName
   expand() const;
 
@@ -133,14 +134,13 @@ public:
 #endif
 
   /// @brief 末尾にパスをつなげる．
-  /// @param[in] src 追加するパス
   /// @return 結合したパス
-  /// @note
+  ///
   /// - src のタイプが kRelative でないときは無視する．
   /// - src が空の場合も無視する．
   /// - 自分自身が空の場合には src を代入する．
   const PathName&
-  operator+=(const PathName& src);
+  operator+=(const PathName& src); ///< [in] 追加するパス
 
 
 private:
@@ -149,19 +149,17 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 文字列のリストからの変換コンストラクタ
-  /// @param[in] path_list パスリスト
-  /// @param[in] type パスタイプ
-  PathName(const list<string>& path_list,
-	   PathType type);
+  PathName(const list<string>& path_list, ///< [in] パスリスト
+	   PathType type);                ///< [in] パスタイプ
 
   /// @brief 拡張子の直前のドットの位置を返す．
-  /// @param[in] path 対象のパス文字列
   /// @return 拡張子の直前のドットの位置
+  ///
   /// ただし，"." や ".." の場合や先頭がドットで始まっていて，
   /// それが唯一のドットの場合には拡張子はなしと見なす．
   static
   string::size_type
-  dot_pos(const string& path);
+  dot_pos(const string& path); ///< [in] 対象のパス文字列
 
 
 private:
@@ -183,11 +181,10 @@ private:
 /// @relates PathName
 /// @ingroup YmUtils
 /// @brief 2つのパス名を連結する．
-/// @param[in] opr1, opr2 パス名
 /// @return 連結したパス名
 PathName
-operator+(const PathName& opr1,
-	  const PathName& opr2);
+operator+(const PathName& opr1,  ///< [in] 先頭のパス名
+	  const PathName& opr2); ///< [in] 末尾のパス名
 
 /// @relates PathName
 /// @ingroup YmUtils
@@ -199,10 +196,9 @@ cur_work_dir();
 /// @relates PathName
 /// @ingroup YmUtils
 /// @brief ユーザのホームディレクトリの取得
-/// @param[in] login ユーザーアカウント名
 /// @return login のホームディレクトリ
 PathName
-user_home(const string& login);
+user_home(const string& login); ///< [in] ユーザーアカウント名
 
 /// @}
 
@@ -218,25 +214,24 @@ class SearchPathList
 public:
 
   /// @brief コンストラクタ
-  /// @note 空のリストを作る．
+  ///
+  /// 空のリストを作る．
   SearchPathList();
 
   /// @brief 文字列からの変換コンストラクタ
-  /// @param[in] str サーチパスを表す文字列
-  /// @note サーチパス文字列は ':' で区切られた文字列で '.'
+  ///
+  /// サーチパス文字列は ':' で区切られた文字列で '.'
   /// はカレントディレクトリを表す．
   /// また，末尾が '/' で終わっている場合にはそのサブディレクトリ
   /// も探索する．
-  SearchPathList(const string& str);
+  SearchPathList(const string& str); ///< [in] サーチパスを表す文字列
 
   /// @brief コピーコンストラクタ
-  /// @param[in] src 代入元のオブジェクト
-  SearchPathList(const SearchPathList& src);
+  SearchPathList(const SearchPathList& src); ///< [in] 代入元のオブジェクト
 
   /// @brief 代入演算子
-  /// @param[in] src 代入元のオブジェクト
   const SearchPathList&
-  operator=(const SearchPathList& src);
+  operator=(const SearchPathList& src); ///< [in] 代入元のオブジェクト
 
   /// @brief デストラクタ
   ~SearchPathList();
@@ -248,39 +243,38 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 以前の内容をクリアして文字列をセットする．
-  /// @param[in] str セットするサーチパスを表す文字列
-  /// @note サーチパス文字列は ':' で区切られた文字列で '.'
+  ///
+  /// サーチパス文字列は ':' で区切られた文字列で '.'
   /// はカレントディレクトリを表す．
   /// また，末尾が '/' で終わっている場合にはそのサブディレクトリ
   /// も探索する．
   void
-  set(const string& str);
+  set(const string& str); ///< [in] セットするサーチパスを表す文字列
 
   /// @brief サーチパスの先頭に path を追加する．
-  /// @param[in] path 追加するパス
-  /// @note path は ':' を含んでいても良い
+  ///
+  /// path は ':' を含んでいても良い
   void
-  add_top(const string& path);
+  add_top(const string& path); ///< [in] 追加するパス
 
   /// @brief サーチパスの末尾に path を追加する．
-  /// @param[in] path 追加するパス
-  /// @note path は ':' を含んでいても良い
+  ///
+  /// path は ':' を含んでいても良い
   void
-  add_end(const string& path);
+  add_end(const string& path); ///< [in] 追加するパス
 
   /// @brief サーチパスを考慮して filename を探す
-  /// @param[in] filename ファイル名
   /// @retval 最初に見つかったファイルの full-path
   /// @retval 空のパス名 見つからない場合
-  /// @note サーチパスが空ならカレントディレクトリで filename を探す．
+  ///
+  /// サーチパスが空ならカレントディレクトリで filename を探す．
   PathName
-  search(const PathName& filename) const;
+  search(const PathName& filename) const; ///< [in] ファイル名
 
   /// @brief 現在のサーチパスを取り出す．
-  /// @param[in] separator 区切り文字
   /// @return サーチパスを文字列に変換したもの
   string
-  to_string(const string& separator = ":") const;
+  to_string(const string& separator = ":") const; ///< [in] 区切り文字
 
 
 private:
@@ -292,7 +286,7 @@ private:
   static
   void
   to_list(const string& str,
-	  list<PathName>& pathname_list);
+	  vector<PathName>& pathname_list);
 
 
 private:
@@ -301,7 +295,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 実際のサーチパスのリスト
-  list<PathName> mList;
+  vector<PathName> mList;
 
 };
 

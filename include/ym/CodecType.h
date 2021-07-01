@@ -5,7 +5,7 @@
 /// @brief CodecType の定義ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2013, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2013, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -18,16 +18,11 @@ BEGIN_NAMESPACE_YM
 /// @brief FileCoder/FileDecoder の種類
 //////////////////////////////////////////////////////////////////////
 enum class CodecType {
-  /// @brief 無変換
-  Through,
-  /// @brief compress (Z)
-  Z,
-  /// @brief gzip
-  Gzip,
-  /// @brief bzip2
-  Bzip2,
-  /// @brief lzma (xz)
-  Lzma
+  Through, ///< 無変換
+  Z,       ///< compress (Z)
+  Gzip,    ///< gzip
+  Bzip2,   ///< bzip2
+  Lzma     ///< lzma (xz)
 };
 
 /// @relates CodecType

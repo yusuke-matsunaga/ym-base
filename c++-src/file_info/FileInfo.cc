@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/FileInfo.h"
 #include "ym/FileLoc.h"
 #include "ym/FileRegion.h"
@@ -76,10 +75,8 @@ FileInfo::parent_loc() const
 }
 
 // @brief インクルード元のファイル位置の情報をすべてリストに積む．
-// @param[out] loc_list ファイルの位置情報のリスト
-// @note トップレベルのファイルが先頭になる．
-void
-FileInfo::parent_loc_list(vector<FileLoc>& loc_list) const
+vector<FileLoc>
+FileInfo::parent_loc_list() const
 {
   // 逆順にするために一旦 tmp_list に入れる．
   vector<FileLoc> tmp_list;
@@ -87,12 +84,8 @@ FileInfo::parent_loc_list(vector<FileLoc>& loc_list) const
     tmp_list.push_back(loc);
   }
 
-  SizeType n = tmp_list.size();
-  loc_list.clear();
-  loc_list.resize(n);
-  for ( SizeType i = 0; i < n; ++ i ) {
-    loc_list[i] = tmp_list[n - i - 1];
-  }
+  std::reverse(tmp_list.begin(), tmp_list.end());
+  return tmp_list;
 }
 
 // @brief 内部の静的なデータをクリアする．
@@ -111,8 +104,7 @@ ostream&
 operator<<(ostream& s,
 	   const FileInfo& file_info)
 {
-  vector<FileLoc> loc_list;
-  file_info.parent_loc_list(loc_list);
+  auto loc_list{file_info.parent_loc_list()};
   for ( auto loc: loc_list ) {
     s << "In file included from " << loc.filename()
       << ": line " << loc.line() << ":" << endl;

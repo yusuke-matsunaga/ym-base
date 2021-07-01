@@ -38,23 +38,29 @@ class CombiGen :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] n 全要素数
-  /// @param[in] k 選び出す要素数
-  CombiGen(int n,
-	   int k);
+  CombiGen(int n, ///< [in] 全要素数
+	   int k) ///< [in] 選び出す要素数
+    : GenBase(n, k)
+  {
+  }
 
   /// @brief コピーコンストラクタ
-  /// @param[in] src コピー元のオブジェクト
-  CombiGen(const CombiGen& src);
+  CombiGen(const CombiGen& src) ///< [in] コピー元のオブジェクト
+    : GenBase{src}
+  {
+  }
 
   /// @brief 代入演算子
-  /// @param[in] src コピー元のオブジェクト
-  /// @return 自分自身
+  /// @return 自分自身を返す．
   const CombiGen&
-  operator=(const CombiGen& src);
+  operator=(const CombiGen& src) ///< [in] コピー元のオブジェクト
+  {
+    copy(src);
+    return *this;
+  }
 
   /// @brief デストラクタ
-  ~CombiGen();
+  ~CombiGen() = default;
 
 
 public:

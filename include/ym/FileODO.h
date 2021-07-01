@@ -5,9 +5,8 @@
 /// @brief FileODO のヘッダファイル
 /// @author Yusuke Matsunaga
 ///
-/// Copyright (C) 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2013-2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/ODO.h"
 #include "ym/CodecType.h"
@@ -32,9 +31,8 @@ class FileODO :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] codec_type Coder の種類
   explicit
-  FileODO(CodecType codec_type = CodecType::Through);
+  FileODO(CodecType codec_type = CodecType::Through); ///< [in] Coder の種類
 
   /// @brief デストラクタ
   virtual
@@ -50,25 +48,20 @@ public:
   operator bool() const;
 
   /// @brief ファイルを開く
-  /// @param[in] filename ファイル名
-  /// @param[in] mode ファイル作成用のモード
-  /// @param[in] opt 圧縮用のオプション
   bool
-  open(const char* filename,
-       mode_t mode = 0666,
-       int opt = 0);
+  open(const char* filename, ///< [in] ファイル名
+       mode_t mode = 0666,   ///< [in] ファイル作成用のモード
+       int opt = 0);         ///< [in] 圧縮用のオプション
 
   /// @brief ファイルを開く
-  /// @param[in] filename ファイル名
-  /// @param[in] mode ファイル作成用のモード
-  /// @param[in] opt 圧縮用のオプション
   bool
-  open(const string& filename,
-       mode_t mode = 0666,
-       int opt = 0);
+  open(const string& filename, ///< [in] ファイル名
+       mode_t mode = 0666,     ///< [in] ファイル作成用のモード
+       int opt = 0);           ///< [in] 圧縮用のオプション
 
   /// @brief ファイルを閉じる．
-  /// @note 以降の書き込みは行われない．
+  ///
+  /// 以降の書き込みは行われない．
   void
   close();
 
@@ -79,13 +72,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief データを書き出す．
-  /// @param[in] buff データを収めた領域のアドレス
-  /// @param[in] n データサイズ
   /// @return 実際に書き出した量を返す．
   virtual
   int
-  write(const ymuint8* buff,
-	int n);
+  write(const ymuint8* buff, ///< [in] データを収めた領域のアドレス
+	int n);              ///< [in] データサイズ
 
 
 private:

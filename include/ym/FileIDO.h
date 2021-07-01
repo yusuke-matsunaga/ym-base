@@ -5,9 +5,8 @@
 /// @brief FileIDO のヘッダファイル
 /// @author Yusuke Matsunaga
 ///
-/// Copyright (C) 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2013-2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/IDO.h"
 #include "ym/FileLoc.h"
@@ -30,12 +29,10 @@ class FileIDO :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] codec_type Decoder の種類
   explicit
-  FileIDO(CodecType codec_type = CodecType::Through);
+  FileIDO(CodecType codec_type = CodecType::Through); ///< [in] Decoder の種類
 
   /// @brief デストラクタ
-  virtual
   ~FileIDO();
 
 
@@ -45,32 +42,28 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 読み出し可能なら true を返す．
-  virtual
   bool
-  is_ready() const;
+  is_ready() const override;
 
   /// @brief オープン中のファイル情報を得る．
-  virtual
   const FileInfo&
-  file_info() const;
+  file_info() const override;
 
   /// @brief 現在のファイル情報を書き換える．
-  /// @param[in] file_info 新しいファイル情報
-  /// @note プリプロセッサのプラグマなどで用いることを想定している．
-  /// @note 通常は使わないこと．
-  virtual
+  ///
+  /// プリプロセッサのプラグマなどで用いることを想定している．
+  /// 通常は使わないこと．
   void
-  set_file_info(const FileInfo& file_info);
+  set_file_info(const FileInfo& file_info) override; ///< [in] 新しいファイル情報
 
   /// @brief データを読み込む．
-  /// @param[in] buff 読み込んだデータを格納する領域の先頭アドレス．
-  /// @param[in] n 読み込むデータサイズ
   /// @return 実際に読み込んだ量を返す．
-  /// @note エラーが起こったら負の数を返す．
+  ///
+  /// エラーが起こったら負の数を返す．
   virtual
   int
-  read(ymuint8* buff,
-       int n);
+  read(ymuint8* buff, ///< [in] 読み込んだデータを格納する領域の先頭アドレス．
+       int n);        ///< [in] 読み込むデータサイズ
 
 
 public:
@@ -79,23 +72,22 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイルを開く
-  /// @param[in] filename ファイル名
-  /// @param[in] parent_loc インクルード元の親ファイルの情報
-  /// @note 他のファイルを開いていたら強制的に close する．
+  ///
+  /// 他のファイルを開いていたら強制的に close する．
   bool
-  open(const char* filename,
-       const FileLoc& parent_loc = FileLoc());
+  open(const char* filename,                   ///< [in] ファイル名
+       const FileLoc& parent_loc = FileLoc()); ///< [in] インクルード元の親ファイルの情報
 
   /// @brief ファイルを開く
-  /// @param[in] filename ファイル名
-  /// @param[in] parent_loc インクルード元の親ファイルの情報
-  /// @note 他のファイルを開いていたら強制的に close する．
+  ///
+  /// 他のファイルを開いていたら強制的に close する．
   bool
-  open(const string& filename,
-       const FileLoc& parent_loc = FileLoc());
+  open(const string& filename,                 ///< [in] ファイル名
+       const FileLoc& parent_loc = FileLoc()); ///< [in] インクルード元の親ファイルの情報
 
   /// @brief ファイルを閉じる．
-  /// @note 以降の読み出しは行われない．
+  ///
+  /// 以降の読み出しは行われない．
   void
   close();
 

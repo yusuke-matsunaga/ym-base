@@ -3,9 +3,8 @@
 /// @brief OptionParser の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/OptionParser.h"
 
@@ -15,21 +14,6 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 // クラス OptionParser
 //////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-// @param[in] delim 区切り文字
-// @param[in] opt_delim オプション用区切り文字
-OptionParser::OptionParser(char delim,
-			   char opt_delim) :
-  mDelim(delim),
-  mOptDelim(opt_delim)
-{
-}
-
-// @brief デストラクタ
-OptionParser::~OptionParser()
-{
-}
 
 // @grief デリミタを設定する．
 // @param[in] delim 区切り文字
@@ -92,14 +76,12 @@ strip_wspace(const string& input)
 END_NONAMESPACE
 
 // @brief パースする．
-// @param[in] input 入力文字列
-// @return パース結果のリストへの参照
-const vector<pair<string, string>>&
+vector<pair<string, string>>
 OptionParser::parse(const string& input)
 {
+  vector<pair<string, string>> ans_list;
   // mDelim で区切る
   string tmp_str(input);
-  mOptList.clear();
   for ( ; ; ) {
     string::size_type p = find_first_of(tmp_str, mDelim);
     string tmp = strip_wspace(tmp_str.substr(0, p));
@@ -107,12 +89,12 @@ OptionParser::parse(const string& input)
     string::size_type q = find_first_of(tmp, mOptDelim);
     if ( q == string::npos ) {
       // mOptDelim がなかった
-      mOptList.push_back(make_pair(tmp, string()));
+      ans_list.push_back(make_pair(tmp, string()));
     }
     else {
       string l_str = strip_wspace(tmp.substr(0, q));
       string r_str = strip_wspace(tmp.substr(q + 1, string::npos));
-      mOptList.push_back(make_pair(l_str, r_str));
+      ans_list.push_back(make_pair(l_str, r_str));
     }
     if ( p == string::npos ) {
       // 末尾だったので終わる．
@@ -122,7 +104,7 @@ OptionParser::parse(const string& input)
     tmp_str = tmp_str.substr(p + 1, string::npos);
   }
 
-  return mOptList;
+  return ans_list;
 }
 
 END_NAMESPACE_YM

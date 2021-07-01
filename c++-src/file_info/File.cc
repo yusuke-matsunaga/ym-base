@@ -366,9 +366,9 @@ SearchPathList::set(const string& str)
 void
 SearchPathList::add_top(const string& path)
 {
-  list<PathName> tmp_list;
+  vector<PathName> tmp_list;
   to_list(path, tmp_list);
-  mList.splice(mList.begin(), tmp_list);
+  mList.insert(mList.begin(), tmp_list.begin(), tmp_list.end());
 }
 
 // サーチパスの末尾に path を追加する．
@@ -436,7 +436,7 @@ SearchPathList::to_string(const string& separator) const
 // 文字列を PathName のリストに変換する
 void
 SearchPathList::to_list(const string& str,
-			list<PathName>& pathname_list)
+			vector<PathName>& pathname_list)
 {
   string::size_type pos1 = 0;
   string::size_type pos2;

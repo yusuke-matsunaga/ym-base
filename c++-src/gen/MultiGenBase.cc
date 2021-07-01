@@ -18,11 +18,11 @@ BEGIN_NAMESPACE_YM
 
 // コンストラクタ
 // 全要素数 n と選択する要素数 k のベクタを指定する．
-MultiGenBase::MultiGenBase(const vector<pair<int, int>>& nk_array) :
-  mGroupNum{static_cast<int>(nk_array.size())},
-  mNArray{new int[mGroupNum]},
-  mKArray{new int[mGroupNum]},
-  mOffsetArray{new int[mGroupNum]}
+MultiGenBase::MultiGenBase(const vector<pair<int, int>>& nk_array)
+  : mGroupNum{static_cast<int>(nk_array.size())},
+    mNArray{new int[mGroupNum]},
+    mKArray{new int[mGroupNum]},
+    mOffsetArray{new int[mGroupNum]}
 {
   int g = 0;
   int offset = 0;
@@ -39,11 +39,11 @@ MultiGenBase::MultiGenBase(const vector<pair<int, int>>& nk_array) :
 
 // @brief コンストラクタ
 // @param[in] nk_array 全要素数 n と選択する要素数 k のベクタ
-MultiGenBase::MultiGenBase(initializer_list<pair<int, int>>& nk_array) :
-  mGroupNum{static_cast<int>(nk_array.size())},
-  mNArray{new int[mGroupNum]},
-  mKArray{new int[mGroupNum]},
-  mOffsetArray{new int[mGroupNum]}
+MultiGenBase::MultiGenBase(initializer_list<pair<int, int>>& nk_array)
+  : mGroupNum{static_cast<int>(nk_array.size())},
+    mNArray{new int[mGroupNum]},
+    mKArray{new int[mGroupNum]},
+    mOffsetArray{new int[mGroupNum]}
 {
   int g = 0;
   int offset = 0;
@@ -60,11 +60,11 @@ MultiGenBase::MultiGenBase(initializer_list<pair<int, int>>& nk_array) :
 
 // @brief コピーコンストラクタ
 // @param[in] src コピー元のオブジェクト
-MultiGenBase::MultiGenBase(const MultiGenBase& src) :
-  mGroupNum{src.mGroupNum},
-  mNArray{new int[mGroupNum]},
-  mKArray{new int[mGroupNum]},
-  mOffsetArray{new int[mGroupNum]}
+MultiGenBase::MultiGenBase(const MultiGenBase& src)
+  : mGroupNum{src.mGroupNum},
+    mNArray{new int[mGroupNum]},
+    mKArray{new int[mGroupNum]},
+    mOffsetArray{new int[mGroupNum]}
 {
   int offset = 0;
   for ( int g = 0; g < mGroupNum; ++ g ) {

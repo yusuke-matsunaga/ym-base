@@ -3,9 +3,8 @@
 /// @brief StrPool と ShString の実装ファイル
 /// @author Yusuke Matsunaga
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/ShString.h"
 #include "StrPool.h"
@@ -38,7 +37,6 @@ ShString::allocated_size()
 }
 
 // @brief ShString 関連でアロケートされたメモリをすべて開放する．
-// @note 非常に破壊的なのでメモリリーク検査時の終了直前などの場合のみに使う．
 void
 ShString::free_all_memory()
 {

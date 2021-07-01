@@ -5,7 +5,7 @@
 /// @brief FileLineColumn のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym_config.h"
@@ -26,14 +26,21 @@ public:
   /// @brief コンストラクタ
   ///
   /// 内容は未定
-  FileLineColumn();
+  FileLineColumn() : mLineColumn{0U} { }
 
   /// @brief 行番号とコラム番号をしていしたコンストラクタ
-  FileLineColumn(int line,
-		 int column);
+  FileLineColumn(int line,   ///< [in] 行番号
+		 int column) ///< [in] コラム番号
+  {
+    ASSERT_COND( line >= 0 && line < 0x100000 );
+    ASSERT_COND( column >= 0 && column < 0x1000 );
+
+    mLineColumn = (static_cast<ymuint32>(line) << 12) |
+      (static_cast<ymuint32>(column) & 0xFFFU);
+  }
 
   /// @brief デストラクタ
-  ~FileLineColumn();
+  ~FileLineColumn() = default;
 
 
 public:
@@ -44,18 +51,12 @@ public:
   /// @brief 行番号の取得
   /// @return 行番号
   int
-  line() const;
+  line() const { return static_cast<int>(mLineColumn >> 12); }
 
   /// @brief コラム位置の取得
   /// @return コラム位置
   int
-  column() const;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
+  column() const { return static_cast<int>(mLineColumn & 0xFFFU); }
 
 
 private:
@@ -69,56 +70,6 @@ private:
   ymuint32 mLineColumn;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-//
-// 内容は未定
-inline
-FileLineColumn::FileLineColumn() :
-  mLineColumn(0U)
-{
-}
-
-// @brief 行番号とコラム番号をしていしたコンストラクタ
-inline
-FileLineColumn::FileLineColumn(int line,
-			       int column)
-{
-  ASSERT_COND( line >= 0 && line < 0x100000 );
-  ASSERT_COND( column >= 0 && column < 0x1000 );
-
-  mLineColumn = (static_cast<ymuint32>(line) << 12) |
-    (static_cast<ymuint32>(column) & 0xFFFU);
-}
-
-// @brief デストラクタ
-inline
-FileLineColumn::~FileLineColumn()
-{
-}
-
-// @brief 行番号の取得
-// @return 行番号
-inline
-int
-FileLineColumn::line() const
-{
-  return static_cast<int>(mLineColumn >> 12);
-}
-
-// @brief コラム位置の取得
-// @return コラム位置
-inline
-int
-FileLineColumn::column() const
-{
-  return static_cast<int>(mLineColumn & 0xFFFU);
-}
 
 END_NAMESPACE_YM
 

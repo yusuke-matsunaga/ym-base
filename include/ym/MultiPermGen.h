@@ -5,9 +5,8 @@
 /// @brief MultiPermGen のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2013-2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/MultiGenBase.h"
 
@@ -46,25 +45,34 @@ class MultiPermGen :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] nk_array 全要素数 n と選択する要素数 k のベクタ
-  MultiPermGen(const vector<pair<int, int>>& nk_array);
+  MultiPermGen(const vector<pair<int, int>>& nk_array) ///< [in] 要素数 n と選択する要素数 k のベクタ
+    : MultiGenBase{nk_array}
+  {
+  }
 
   /// @brief コンストラクタ
-  /// @param[in] nk_array 全要素数 n と選択する要素数 k のベクタ
-  MultiPermGen(initializer_list<pair<int, int>>& nk_array);
+  MultiPermGen(initializer_list<pair<int, int>>& nk_array) ///< [in] 要素数 n と選択する要素数 k の初期化リスト
+    : MultiGenBase{nk_array}
+  {
+  }
 
   /// @brief コピーコンストラクタ
-  /// @param[in] src コピー元のオブジェクト
-  MultiPermGen(const MultiPermGen& src);
+  MultiPermGen(const MultiPermGen& src) ///< [in] コピー元のオブジェクト
+    : MultiGenBase{src}
+  {
+  }
 
   /// @brief 代入演算子
-  /// @param[in] src コピー元のオブジェクト
   /// @return 自分自身
   const MultiPermGen&
-  operator=(const MultiPermGen& src);
+  operator=(const MultiPermGen& src) ///< [in] コピー元のオブジェクト
+  {
+    copy(src);
+    return *this;
+  }
 
   /// @brief デストラクタ
-  ~MultiPermGen();
+  ~MultiPermGen() = default;
 
 
 public:

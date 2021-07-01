@@ -5,9 +5,8 @@
 /// @brief InputFileObj のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2013, 2018, 2019 Yusuke Matsunaga
+/// Copyright (C) 2013, 2018, 2019, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym_config.h"
 #include "ym/FileInfo.h"
@@ -28,7 +27,7 @@ public:
 
   /// @brief デストラクタ
   virtual
-  ~NewlineHandler() {};
+  ~NewlineHandler() = default;
 
 
 public:
@@ -37,23 +36,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 改行コードが読み込まれるときに呼ばれるコールバック関数
-  /// @param[in] lineno 行番号
   virtual
   void
-  newline(int lineno) = 0;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
+  newline(int lineno) ///< [in] 行番号
+  = 0;
 
 };
 
@@ -76,10 +62,8 @@ class InputFileObj
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] s 入力ストリーム
-  /// @param[in] file_info ファイル情報
-  InputFileObj(istream& s,
-	       const FileInfo& file_info);
+  InputFileObj(istream& s,                 ///< [in] 入力ストリーム
+	       const FileInfo& file_info); ///< [in] ファイル情報
 
   /// @brief デストラクタ
   ~InputFileObj() = default;
@@ -92,22 +76,26 @@ public:
 
   /// @brief オープン中のファイル情報を得る．
   const FileInfo&
-  file_info() const;
+  file_info() const { return mFileInfo; }
 
   /// @brief 現在のファイル情報を書き換える．
-  /// @param[in] file_info 新しいファイル情報
   ///
   /// プリプロセッサのプラグマなどで用いることを想定している．
   /// 通常は使わないこと．
   void
-  set_file_info(const FileInfo& file_info);
+  set_file_info(const FileInfo& file_info) ///< [in] 新しいファイル情報
+  {
+    mFileInfo = file_info;
+  }
 
   /// @brief 改行ハンドラを登録する．
-  /// @param[in] handler 登録するハンドラ
   ///
   /// ハンドラの所有権は InputFileObj に移る．
   void
-  reg_handler(unique_ptr<NewlineHandler>&& handler);
+  reg_handler(unique_ptr<NewlineHandler>&& handler) ///< [in] 登録するハンドラ
+  {
+    mHandlerList.push_back(move(handler));
+  }
 
 
 public:
@@ -115,29 +103,40 @@ public:
   // データの入力関係の関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 一文字読み出す．
-  ///
-  /// 実際には peek(); acept() と等価
-  int
-  get();
-
   /// @brief 次の文字を読み出す．
   ///
   /// ファイル位置の情報等は変わらない
   int
-  peek();
+  peek()
+  {
+    if ( mNeedUpdate ) {
+      update();
+    }
+    return mNextChar;
+  }
 
   /// @brief 直前の peek() を確定させる．
   void
   accept();
 
+  /// @brief 一文字読み出す．
+  ///
+  /// 実際には peek(); acept() と等価
+  int
+  get()
+  {
+    int c = peek();
+    accept();
+    return c;
+  }
+
   /// @brief ファイルの末尾の時にtrue を返す．
   bool
-  is_eof() const;
+  is_eof() const { return mNextChar == EOF; }
 
   /// @brief 現在の位置を返す．
   FileLoc
-  cur_loc() const;
+  cur_loc() const { return FileLoc(file_info(), mCurLine, mCurColumn); }
 
 
 private:
@@ -187,79 +186,6 @@ private:
   vector<unique_ptr<NewlineHandler>> mHandlerList;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief オープン中のファイル情報を得る．
-inline
-const FileInfo&
-InputFileObj::file_info() const
-{
-  return mFileInfo;
-}
-
-// @brief 現在のファイル情報を書き換える．
-// @param[in] new_info 新しいファイル情報
-// @note プリプロセッサのプラグマなどで用いることを想定している．
-// @note 通常は使わないこと．
-inline
-void
-InputFileObj::set_file_info(const FileInfo& file_info)
-{
-  mFileInfo = file_info;
-}
-
-// @brief 改行ハンドラを登録する．
-// @param[in] handler 登録するハンドラ
-//
-// ハンドラの所有権は InputFileObj に移る．
-inline
-void
-InputFileObj::reg_handler(unique_ptr<NewlineHandler>&& handler)
-{
-  mHandlerList.push_back(move(handler));
-}
-
-// @brief 次の文字を読み出す．
-// @note ファイル位置の情報等は変わらない
-inline
-int
-InputFileObj::peek()
-{
-  if ( mNeedUpdate ) {
-    update();
-  }
-  return mNextChar;
-}
-
-// 一文字読み出す．
-inline
-int
-InputFileObj::get()
-{
-  int c = peek();
-  accept();
-  return c;
-}
-
-// @brief ファイルの末尾の時にtrue を返す．
-inline
-bool
-InputFileObj::is_eof() const
-{
-  return mNextChar == EOF;
-}
-
-// @brief 直前の set_first_loc() から現在の位置までを返す．
-inline
-FileLoc
-InputFileObj::cur_loc() const
-{
-  return FileLoc(file_info(), mCurLine, mCurColumn);
-}
 
 END_NAMESPACE_YM
 

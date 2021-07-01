@@ -3,9 +3,8 @@
 /// @brief MultiCombiGen の実装ファイル
 /// @author Yusuke Matsunaga
 ///
-/// Copyright (C) 2005-2011, 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2013-2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/MultiCombiGen.h"
 
@@ -15,35 +14,6 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 // クラス MultiCombiGen
 //////////////////////////////////////////////////////////////////////
-
-// コンストラクタ
-// 全要素数 n と選択する要素数 k のベクタを指定する．
-MultiCombiGen::MultiCombiGen(const vector<pair<int, int> >& nk_array) :
-  MultiGenBase(nk_array)
-{
-}
-
-// @brief コピーコンストラクタ
-// @param[in] src コピー元のオブジェクト
-MultiCombiGen::MultiCombiGen(const MultiCombiGen& src) :
-  MultiGenBase(src)
-{
-}
-
-// @brief 代入演算子
-// @param[in] src コピー元のオブジェクト
-// @return 自分自身
-const MultiCombiGen&
-MultiCombiGen::operator=(const MultiCombiGen& src)
-{
-  copy(src);
-  return *this;
-}
-
-// デストラクタ
-MultiCombiGen::~MultiCombiGen()
-{
-}
 
 // 次の要素を求める．
 void

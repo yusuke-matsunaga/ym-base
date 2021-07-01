@@ -5,9 +5,8 @@
 /// @brief NameMgr のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym_config.h"
 #include "ym/ItvlMgr.h"
@@ -27,16 +26,12 @@ class NameMgr
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] prefix 接頭語
-  /// @param[in] suffix 接尾語
-  NameMgr(const char* prefix,
-	  const char* suffix);
+  NameMgr(const char* prefix,  ///< [in] 接頭語
+	  const char* suffix); ///< [in] 接尾語
 
   /// @brief コンストラクタ
-  /// @param[in] prefix 接頭語
-  /// @param[in] suffix 接尾語
-  NameMgr(const string& prefix,
-	  const string& suffix);
+  NameMgr(const string& prefix,  ///< [in] 接頭語
+	  const string& suffix); ///< [in] 接尾語
 
   /// @brief デストラクタ
   ~NameMgr();
@@ -45,20 +40,16 @@ public:
 public:
 
   /// @brief 接頭語と接尾語を変更する．
-  /// @param[in] prefix 接頭語
-  /// @param[in] suffix 接尾語
   /// @note 既に登録されている名前はクリアされる．
   void
-  change(const char* prefix,
-	 const char* suffix);
+  change(const char* prefix,  ///< [in] 接頭語
+	 const char* suffix); ///< [in] 接尾語
 
   /// @brief 接頭語と接尾語を変更する．
-  /// @param[in] prefix 接頭語
-  /// @param[in] suffix 接尾語
   /// @note 既に登録されている名前はクリアされる．
   void
-  change(const string& prefix,
-	 const string& suffix);
+  change(const string& prefix,  ///< [in] 接頭語
+	 const string& suffix); ///< [in] 接尾語
 
   /// @brief 登録している名前を全てクリアする．
   void
@@ -66,46 +57,51 @@ public:
 
   /// @brief 接頭語を返す．
   string
-  prefix() const;
+  prefix() const { return mPrefix; }
 
   /// @brief 接尾語を返す．
   string
-  suffix() const;
+  suffix() const { return mSuffix; }
 
   /// @brief 次に使用可能な名前を接頭語，接尾語を連結して返す．
-  /// @param[in] add_name true の時，名前の登録も行う．
   const StrBuff&
-  new_name(bool add_name);
+  new_name(bool add_name); ///< [in] true の時，名前の登録も行う．
 
   /// @brief 名前を登録する．
-  /// @param[in] name 登録する名前
-  /// @note 名前が \<prefix\>ddd\<suffix\> の形でない場合には何もしない．
+  ///
+  /// 名前が \<prefix\>ddd\<suffix\> の形でない場合には何もしない．
   void
-  add(const char* name);
+  add(const char* name); ///< [in] 登録する名前
 
   /// @brief 名前を登録する．
-  /// @param[in] name 登録する名前
-  /// @note 名前が \<prefix\>ddd\<suffix\> の形でない場合には何もしない．
+  ///
+  /// 名前が \<prefix\>ddd\<suffix\> の形でない場合には何もしない．
   void
-  add(const string& name);
+  add(const string& name) ///< [in] 登録する名前
+  {
+    add(name.c_str());
+  }
 
   /// @brief 名前を削除する(使用可能にする)．
-  /// @param[in] name 削除する名前
-  /// @note 名前が \<prefix\>ddd\<suffix\> の形でない場合には何もしない．
+  ///
+  /// 名前が \<prefix\>ddd\<suffix\> の形でない場合には何もしない．
   void
-  erase(const char* name);
+  erase(const char* name); ///< [in] 削除する名前
 
   /// @brief 名前を削除する(使用可能にする)．
-  /// @param[in] name 削除する名前
-  /// @note 名前が \<prefix\>ddd\<suffix\> の形でない場合には何もしない．
+  ///
+  /// 名前が \<prefix\>ddd\<suffix\> の形でない場合には何もしない．
   void
-  erase(const string& name);
+  erase(const string& name) ///< [in] 削除する名前
+  {
+    erase(name.c_str());
+  }
 
   /// @brief 内容を表示する．
-  /// @param[in] s 出力先のストリーム
-  /// @note 主にデバッグ用
+  ///
+  /// 主にデバッグ用
   void
-  print(ostream& s) const;
+  print(ostream& s) const; ///< [in] 出力先のストリーム
 
 
 private:
@@ -143,45 +139,6 @@ private:
   int mLastNum;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// 接頭語を返す．
-inline
-string
-NameMgr::prefix() const
-{
-  return mPrefix;
-}
-
-// 接尾語を返す．
-inline
-string
-NameMgr::suffix() const
-{
-  return mSuffix;
-}
-
-// 名前を登録する．
-// name が <prefix>ddd<suffix> の形でない場合にはなにもしない．
-inline
-void
-NameMgr::add(const string& name)
-{
-  add(name.c_str());
-}
-
-// 名前を削除する(使用可能にする)．
-// name が <prefix>ddd<suffix> の形でない場合にはなにもしない．
-inline
-void
-NameMgr::erase(const string& name)
-{
-  erase(name.c_str());
-}
 
 END_NAMESPACE_YM
 
