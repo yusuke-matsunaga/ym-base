@@ -24,9 +24,10 @@ class RandCombiGen
 public:
 
   /// @brief コンストラクタ
-  RandCombiGen(int n, ///< [in] 全要素数
-	       int k) ///< [in] 組み合わせの要素数
-    : mNum{n},
+  RandCombiGen(
+    int n, ///< [in] 全要素数
+    int k  ///< [in] 組み合わせの要素数
+  ) : mNum{n},
       mCombiNum{k},
       mArray{new int[n]}
   {
@@ -55,7 +56,9 @@ public:
   /// @brief ランダムな組み合わせを生成する．
   template <class URNG>
   void
-  generate(URNG& randgen) ///< [in] 乱数発生器
+  generate(
+    URNG& randgen ///< [in] 乱数発生器
+  )
   {
     vector<int> src_array(mNum);
     for ( int i: Range(mNum) ) {
@@ -75,7 +78,9 @@ public:
 
   /// @brief 組み合わせの要素を取り出す．
   int
-  elem(int pos) const ///< [in] 要素の位置番号 ( 0 <= pos < combi_num() )
+  elem(
+    int pos ///< [in] 要素の位置番号 ( 0 <= pos < combi_num() )
+  ) const
   {
     ASSERT_COND( 0 <= pos && pos < combi_num() );
 

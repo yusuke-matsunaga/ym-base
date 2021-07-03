@@ -28,14 +28,20 @@ BEGIN_NAMESPACE_YM
 /// - 先読みした文字の確定 (accept)
 /// これ以外にトークンの開始位置を set_first_loc() で記録して
 /// cur_loc() で現在の位置までの領域を求める．
+///
+/// istream の代りにこのクラスを使う利点は以下の通り
+/// - エラー出力を行なう際に問題となった箇所の位置を示すことができる．
+/// - UNIX/MacOS/Windows による改行コードの違いを自動的に吸収する．
 //////////////////////////////////////////////////////////////////////
 class Scanner
 {
 public:
 
   /// @brief コンストラクタ
-  Scanner(istream& s,                 ///< [in] 入力ストリーム
-	  const FileInfo& file_info); ///< [in] ファイル情報
+  Scanner(
+    istream& s,               ///< [in] 入力ストリーム
+    const FileInfo& file_info ///< [in] ファイル情報
+  );
 
   /// @brief デストラクタ
   ~Scanner() = default;
@@ -55,7 +61,9 @@ public:
   /// プリプロセッサのプラグマなどで用いることを想定している．
   /// 通常は使わないこと．
   void
-  set_file_info(const FileInfo& file_info) ///< [in] 新しいファイル情報
+  set_file_info(
+    const FileInfo& file_info ///< [in] 新しいファイル情報
+  )
   {
     mFileInfo = file_info;
   }
@@ -109,7 +117,9 @@ protected:
   /// デフォルトではなにもしない．
   virtual
   void
-  check_line(int line); ///< [in] 行番号
+  check_line(
+    int line ///< [in] 行番号
+  );
 
 
 private:

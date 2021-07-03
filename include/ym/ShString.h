@@ -29,35 +29,39 @@ public:
   /// @brief 空のコンストラクタ
   ///
   /// nullptr がセットされる．
-  ShString()
-    : mPtr(nullptr)
-  {
-  }
+  ShString() = default;
 
   /// @brief C文字列を指定したコンストラクタ
   explicit
-  ShString(const char* str) ///< [in] C文字列
+  ShString(
+    const char* str ///< [in] C文字列
+  )
   {
     set(str);
   }
 
   /// @brief string を指定したコンストラクタ
   explicit
-  ShString(const string& str) ///< [in] 文字列 (string)
+  ShString(
+    const string& str ///< [in] 文字列 (string)
+  )
   {
     set(str.c_str());
   }
 
   /// @brief コピーコンストラクタ
-  ShString(const ShString& src) ///< [in] コピー元のオブジェクト
-    : mPtr(src.mPtr)
+  ShString(
+    const ShString& src ///< [in] コピー元のオブジェクト
+  ) : mPtr(src.mPtr)
   {
   }
 
   /// @brief 代入演算子
   /// @return 自分自身を返す．
   const ShString&
-  operator=(const ShString& src) ///< [in] コピー元のオブジェクト
+  operator=(
+    const ShString& src ///< [in] コピー元のオブジェクト
+  )
   {
     mPtr = src.mPtr;
     return *this;
@@ -66,7 +70,9 @@ public:
   /// @brief C文字列からのからの代入演算子
   /// @return 自分自身を返す．
   const ShString&
-  operator=(const char* src) ///< [in] コピー元のC文字列
+  operator=(
+    const char* src ///< [in] コピー元のC文字列
+  )
   {
     set(src);
     return *this;
@@ -75,7 +81,9 @@ public:
   /// @brief string からのからの代入演算子
   /// @return 自分自身を返す．
   const ShString&
-  operator=(const string& src) ///< [in] コピー元の string
+  operator=(
+    const string& src ///< [in] コピー元の string
+  )
   {
     set(src.c_str());
     return *this;
@@ -136,7 +144,9 @@ private:
 
   /// @brief 共有文字列を作ってセットする．
   void
-  set(const char* str); ///< [in] 入力の文字列
+  set(
+    const char* str ///< [in] 入力の文字列
+  );
 
 
 private:
@@ -146,7 +156,7 @@ private:
 
   // 文字列へのポインタ
   // ただし StrPool 上で共有化されている．
-  const char* mPtr;
+  const char* mPtr{nullptr};
 
 };
 
@@ -159,8 +169,10 @@ private:
 /// @return a と b が同じ文字列の時 true を返す．
 inline
 bool
-operator==(const ShString& a, ///< [in] 左のオペランド
-	   const ShString& b) ///< [in] 右のオペランド
+operator==(
+  const ShString& a, ///< [in] 左のオペランド
+  const ShString& b  ///< [in] 右のオペランド
+)
 {
   return a.id() == b.id();
 }
@@ -171,8 +183,10 @@ operator==(const ShString& a, ///< [in] 左のオペランド
 /// @return a と b が異なる文字列の時 true を返す．
 inline
 bool
-operator!=(const ShString& a, ///< [in] 左のオペランド
-	   const ShString& b) ///< [in] 右のオペランド
+operator!=(
+  const ShString& a, ///< [in] 左のオペランド
+  const ShString& b  ///< [in] 右のオペランド
+)
 {
   return !(a == b);
 }
@@ -185,8 +199,10 @@ operator!=(const ShString& a, ///< [in] 左のオペランド
 /// b を ShString() に変換するよりも strcmp() を使ったほうがよい．
 inline
 bool
-operator==(const ShString& a,  ///< [in] 左のオペランド
-	   const char* b)      ///< [in] 右のオペランド
+operator==(
+  const ShString& a, ///< [in] 左のオペランド
+  const char* b      ///< [in] 右のオペランド
+)
 {
   if ( b == nullptr ) {
     // 境界条件のチェック
@@ -203,8 +219,10 @@ operator==(const ShString& a,  ///< [in] 左のオペランド
 /// a を ShString() に変換するよりも strcmp() を使ったほうがよい．
 inline
 bool
-operator==(const char* a,     ///< [in] 左のオペランド
-	   const ShString& b) ///< [in] 右のオペランド
+operator==(
+  const char* a,    ///< [in] 左のオペランド
+  const ShString& b ///< [in] 右のオペランド
+)
 {
   return operator==(b, a);
 }
@@ -217,8 +235,10 @@ operator==(const char* a,     ///< [in] 左のオペランド
 /// b を ShString() に変換するよりも strcmp() を使ったほうがよい．
 inline
 bool
-operator!=(const ShString& a,  ///< [in] 左のオペランド
-	   const char* b)      ///< [in] 右のオペランド
+operator!=(
+  const ShString& a, ///< [in] 左のオペランド
+  const char* b      ///< [in] 右のオペランド
+)
 {
   return !operator==(a, b);
 }
@@ -231,8 +251,9 @@ operator!=(const ShString& a,  ///< [in] 左のオペランド
 /// a を ShString() に変換するよりも strcmp() を使ったほうがよい．
 inline
 bool
-operator!=(const char* a,     ///< [in] 左のオペランド
-	   const ShString& b) ///< [in] 右のオペランド
+operator!=(
+  const char* a,     ///< [in] 左のオペランド
+  const ShString& b) ///< [in] 右のオペランド
 {
   return !operator==(a, b);
 }
@@ -242,8 +263,10 @@ operator!=(const char* a,     ///< [in] 左のオペランド
 /// @brief ShString 用のストリーム出力演算子
 /// @return s をそのまま返す．
 ostream&
-operator<<(ostream& s,           ///< [in] 出力ストリーム
-	   const ShString& str); ///< [in] 出力対象の文字列
+operator<<(
+  ostream& s,         ///< [in] 出力ストリーム
+  const ShString& str ///< [in] 出力対象の文字列
+);
 
 /// @}
 

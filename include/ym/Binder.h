@@ -25,7 +25,6 @@
 /// ここではイベントのみを伝える EventBinder とn個(nは 1 ... 6)の
 /// データを伝えるテンプレートクラス T<n>Binder を用意している．
 
-
 #include "ym_config.h"
 
 
@@ -88,10 +87,7 @@ public:
   /// @brief コンストラクタ
   ///
   /// この時点では特定の BindMgr には結び付いていない．
-  Binder()
-    : mMgr{nullptr}
-  {
-  }
+  Binder() = default;
 
   /// @brief デストラクタ
   ///
@@ -112,7 +108,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // このオブジェクトを持っているクラス
-  BindMgr* mMgr;
+  BindMgr* mMgr{nullptr};
 
 };
 
@@ -141,14 +137,21 @@ public:
 
 
 protected:
+  //////////////////////////////////////////////////////////////////////
+  // 継承クラスから用いられる関数
+  //////////////////////////////////////////////////////////////////////
 
   /// @brief binder の登録
   void
-  _reg_binder(Binder* binder); ///< [in] 登録する Binder
+  _reg_binder(
+    Binder* binder ///< [in] 登録する Binder
+  );
 
   /// @brief binder の登録の解除
   void
-  _unreg_binder(Binder* binder); ///< [in] 登録を解除する Binder
+  _unreg_binder(
+    Binder* binder ///< [in] 登録を解除する Binder
+  );
 
   /// @brief 全ての binder の登録の解除
   void
@@ -170,7 +173,8 @@ protected:
 /// @class EventBinder Binder.h "ym/Binder.h"
 /// @ingroup BinderGroup
 /// @brief 引数なしのイベントを伝播するためのクラス
-/// @note 引数がある場合には下の TBinder を使うこと.
+///
+/// 引数がある場合には下の TBinder を使うこと.<br>
 /// 実際に使うには event_proc() を上書きした継承クラスを用意する
 /// 必要がある.
 /// @sa EventBindMgr
@@ -197,7 +201,8 @@ private:
 /// @class EventBindMgr Binder.h "ym/Binder.h"
 /// @ingroup BinderGroup
 /// @brief EventBinder の継承クラスを起動するクラス
-/// @note reg_binder() でバインダーオブジェクトを登録して
+///
+/// reg_binder() でバインダーオブジェクトを登録して
 /// prop_event() でイベントを伝播する．
 /// @sa EventBinder
 //////////////////////////////////////////////////////////////////////
@@ -212,15 +217,22 @@ public:
   /// @brief デストラクタ
   ~EventBindMgr();
 
+
+public:
+
   /// @brief EventBinder を登録する．
   void
-  reg_binder(EventBinder* binder); ///< [in] 登録する EventBinder
+  reg_binder(
+    EventBinder* binder ///< [in] 登録する EventBinder
+  );
 
   /// @brief EventBinder の登録を削除する．
   ///
   /// binder が登録されていない場合には何もしない．
   void
-  unreg_binder(EventBinder* binder); ///< [in] 登録を削除する EventBinder
+  unreg_binder(
+    EventBinder* binder ///< [in] 登録を削除する EventBinder
+  );
 
   /// @brief 全ての binder の登録の解除
   void
@@ -249,8 +261,9 @@ private:
   /// @brief イベント処理関数
   virtual
   void
-  event_proc(T1 obj) ///< [in] ブロードキャストする情報を表すオブジェクト
-  = 0;
+  event_proc(
+    T1 obj ///< [in] ブロードキャストする情報を表すオブジェクト
+  ) = 0;
 
 };
 
@@ -277,17 +290,28 @@ public:
   /// @brief デストラクタ
   ~T1BindMgr() = default;
 
+
+public:
+
   /// @brief TBinder を登録する．
   void
-  reg_binder(TBinder* binder) ///< [in] 登録する対象
-  { _reg_binder(binder); }
+  reg_binder(
+    TBinder* binder ///< [in] 登録する対象
+  )
+  {
+    _reg_binder(binder);
+  }
 
   /// @brief TBinder の登録を削除する．
   ///
   /// binder が登録されていない場合には何もしない．
   void
-  unreg_binder(TBinder* binder) ///< [in] 登録を削除する対象
-  { _unreg_binder(binder); }
+  unreg_binder(
+    TBinder* binder ///< [in] 登録を削除する対象
+  )
+  {
+    _unreg_binder(binder);
+  }
 
   /// @brief 全ての binder の登録の解除
   void
@@ -295,12 +319,14 @@ public:
 
   /// @brief ここに登録されたすべての binder に T1 のオブジェクトを伝える．
   void
-  prop_event(T1 data) ///< [in] ブロードキャストする内容
+  prop_event(
+    T1 data ///< [in] ブロードキャストする内容
+  )
   {
     for ( auto p: mList ) {
       // 本当はよくない static_cast だが reg_binder() で登録できるのは
       // TBinder だけなので大丈夫なはず
-      TBinder* binder = static_cast<TBinder*>(p);
+      auto binder = static_cast<TBinder*>(p);
       binder->event_proc(data);
     }
   }
@@ -325,9 +351,10 @@ private:
   /// @param[in] obj1, obj2 ブロードキャストする情報を表すオブジェクト
   virtual
   void
-  event_proc(T1 obj1, ///< [in] ブロードキャストするデータ1
-	     T2 obj2) ///< [in] ブロードキャストするデータ2
-  = 0;
+  event_proc(
+    T1 obj1, ///< [in] ブロードキャストするデータ1
+    T2 obj2 ///< [in] ブロードキャストするデータ2
+  ) = 0;
 
 };
 
@@ -355,17 +382,28 @@ public:
   /// @brief デストラクタ
   ~T2BindMgr() = default;
 
+
+public:
+
   /// @brief TBinder を登録する．
   void
-  reg_binder(TBinder* binder) ///< [in] 登録する対象
-  { _reg_binder(binder); }
+  reg_binder(
+    TBinder* binder ///< [in] 登録する対象
+  )
+  {
+    _reg_binder(binder);
+  }
 
   /// @brief TBinder の登録を削除する．
   ///
   /// binder が登録されていない場合には何もしない．
   void
-  unreg_binder(TBinder* binder) ///< [in] 登録を削除する対象
-  { _unreg_binder(binder); }
+  unreg_binder(
+    TBinder* binder ///< [in] 登録を削除する対象
+  )
+  {
+    _unreg_binder(binder);
+  }
 
   /// @brief 全ての binder の登録の解除
   void
@@ -373,13 +411,15 @@ public:
 
   /// @brief ここに登録されたすべての binder に (T1, T2) を伝える．
   void
-  prop_event(T1 data1,  ///< [in] ブロードキャストするデータ1
-	     T2 data2)  ///< [in] ブロードキャストするデータ2
+  prop_event(
+    T1 data1, ///< [in] ブロードキャストするデータ1
+    T2 data2  ///< [in] ブロードキャストするデータ2
+  )
   {
     for ( auto tmp: mList ) {
       // 本当はよくない static_cast だが reg_binder() で登録できるのは
       // TBinder だけなので大丈夫なはず
-      TBinder* binder = static_cast<TBinder*>(tmp);
+      auto binder = static_cast<TBinder*>(tmp);
       binder->event_proc(data1, data2);
     }
   }
@@ -404,10 +444,11 @@ private:
   /// @brief イベント処理関数
   virtual
   void
-  event_proc(T1 obj1, ///< [in] ブロードキャストするデータ1
-	     T2 obj2, ///< [in] ブロードキャストするデータ2
-	     T3 obj3) ///< [in] ブロードキャストするデータ3
-  = 0;
+  event_proc(
+    T1 obj1, ///< [in] ブロードキャストするデータ1
+    T2 obj2, ///< [in] ブロードキャストするデータ2
+    T3 obj3  ///< [in] ブロードキャストするデータ3
+  ) = 0;
 
 };
 
@@ -436,17 +477,28 @@ public:
   /// @brief デストラクタ
   ~T3BindMgr() = default;
 
+
+public:
+
   /// @brief TBinder を登録する．
   void
-  reg_binder(TBinder* binder) ///< [in] 登録する対象
-  { _reg_binder(binder); }
+  reg_binder(
+    TBinder* binder ///< [in] 登録する対象
+  )
+  {
+    _reg_binder(binder);
+  }
 
   /// @brief TBinderの登録を削除する．
   ///
   /// binder が登録されていない場合には何もしない．
   void
-  unreg_binder(TBinder* binder) ///< [in] 登録を削除する対象
-  { _unreg_binder(binder); }
+  unreg_binder(
+    TBinder* binder ///< [in] 登録を削除する対象
+  )
+  {
+    _unreg_binder(binder);
+  }
 
   /// @brief 全ての binder の登録の解除
   void
@@ -454,14 +506,16 @@ public:
 
   /// @brief ここに登録されたすべての binder に (T1, T2, T3) を伝える．
   void
-  prop_event(T1 data1, ///< [in] ブロードキャストするデータ1
-	     T2 data2, ///< [in] ブロードキャストするデータ2
-	     T3 data3) ///< [in] ブロードキャストするデータ3
+  prop_event(
+    T1 data1, ///< [in] ブロードキャストするデータ1
+    T2 data2, ///< [in] ブロードキャストするデータ2
+    T3 data3  ///< [in] ブロードキャストするデータ3
+  )
   {
     for ( auto tmp: mList ) {
       // 本当はよくない static_cast だが reg_binder() で登録できるのは
       // TBinder だけなので大丈夫なはず
-      TBinder* binder = static_cast<TBinder*>(tmp);
+      auto binder = static_cast<TBinder*>(tmp);
       binder->event_proc(data1, data2, data3);
     }
   }
@@ -487,11 +541,12 @@ private:
   /// @brief イベント処理関数
   virtual
   void
-  event_proc(T1 obj1, ///< [in] ブロードキャストするデータ1
-	     T2 obj2, ///< [in] ブロードキャストするデータ2
-	     T3 obj3, ///< [in] ブロードキャストするデータ3
-	     T4 obj4) ///< [in] ブロードキャストするデータ4
-  = 0;
+  event_proc(
+    T1 obj1, ///< [in] ブロードキャストするデータ1
+    T2 obj2, ///< [in] ブロードキャストするデータ2
+    T3 obj3, ///< [in] ブロードキャストするデータ3
+    T4 obj4  ///< [in] ブロードキャストするデータ4
+  ) = 0;
 
 };
 
@@ -521,17 +576,28 @@ public:
   /// @brief デストラクタ
   ~T4BindMgr() = default;
 
+
+public:
+
   /// @brief TBinder を登録する．
   void
-  reg_binder(TBinder* binder) ///< [in] 登録する対象
-  { _reg_binder(binder); }
+  reg_binder(
+    TBinder* binder ///< [in] 登録する対象
+  )
+  {
+    _reg_binder(binder);
+  }
 
   /// @brief TBinder の登録を削除する．
   ///
   /// binder が登録されていない場合には何もしない．
   void
-  unreg_binder(TBinder* binder) ///< [in] 登録を削除する対象
-  { _unreg_binder(binder); }
+  unreg_binder(
+    TBinder* binder ///< [in] 登録を削除する対象
+  )
+  {
+    _unreg_binder(binder);
+  }
 
   /// @brief 全ての binder の登録の解除
   void
@@ -539,15 +605,17 @@ public:
 
   /// @brief ここに登録されたすべての binder に (T1, T2, T3, T4) を伝える．
   void
-  prop_event(T1 data1, ///< [in] ブロードキャストするデータ1
-	     T2 data2, ///< [in] ブロードキャストするデータ2
-	     T3 data3, ///< [in] ブロードキャストするデータ3
-	     T4 data4) ///< [in] ブロードキャストするデータ4
+  prop_event(
+    T1 data1, ///< [in] ブロードキャストするデータ1
+    T2 data2, ///< [in] ブロードキャストするデータ2
+    T3 data3, ///< [in] ブロードキャストするデータ3
+    T4 data4  ///< [in] ブロードキャストするデータ4
+  )
   {
     for ( auto tmp: mList ) {
       // 本当はよくない static_cast だが reg_binder() で登録できるのは
       // TBinder だけなので大丈夫なはず
-      TBinder* binder = static_cast<TBinder*>(tmp);
+      auto binder = static_cast<TBinder*>(tmp);
       binder->event_proc(data1, data2, data3, data4);
     }
   }
@@ -574,12 +642,13 @@ private:
   /// @brief イベント処理関数
   virtual
   void
-  event_proc(T1 obj1, ///< [in] ブロードキャストするデータ1
-	     T2 obj2, ///< [in] ブロードキャストするデータ2
-	     T3 obj3, ///< [in] ブロードキャストするデータ3
-	     T4 obj4, ///< [in] ブロードキャストするデータ4
-	     T5 obj5) ///< [in] ブロードキャストするデータ5
-  = 0;
+  event_proc(
+    T1 obj1, ///< [in] ブロードキャストするデータ1
+    T2 obj2, ///< [in] ブロードキャストするデータ2
+    T3 obj3, ///< [in] ブロードキャストするデータ3
+    T4 obj4, ///< [in] ブロードキャストするデータ4
+    T5 obj5  ///< [in] ブロードキャストするデータ5
+  ) = 0;
 
 };
 
@@ -610,17 +679,28 @@ public:
   /// @brief デストラクタ
   ~T5BindMgr() = default;
 
+
+public:
+
   /// @brief TBinder を登録する．
   void
-  reg_binder(TBinder* binder) ///< [in] 登録する対象
-  { _reg_binder(binder); }
+  reg_binder(
+    TBinder* binder ///< [in] 登録する対象
+  )
+  {
+    _reg_binder(binder);
+  }
 
   /// @brief TBinder の登録を削除する．
   ///
   /// binder が登録されていない場合には何もしない．
   void
-  unreg_binder(TBinder* binder) ///< [in] 登録を削除する対象
-  { _unreg_binder(binder); }
+  unreg_binder(
+    TBinder* binder ///< [in] 登録を削除する対象
+  )
+  {
+    _unreg_binder(binder);
+  }
 
   /// @brief 全ての binder の登録の解除
   void
@@ -628,16 +708,18 @@ public:
 
   /// @brief ここに登録されたすべての binder に (T1, T2, T3, T4, T5) を伝える．
   void
-  prop_event(T1 data1, ///< [in] ブロードキャストするデータ1
-	     T2 data2, ///< [in] ブロードキャストするデータ2
-	     T3 data3, ///< [in] ブロードキャストするデータ3
-	     T4 data4, ///< [in] ブロードキャストするデータ4
-	     T5 data5) ///< [in] ブロードキャストするデータ5
+  prop_event(
+    T1 data1, ///< [in] ブロードキャストするデータ1
+    T2 data2, ///< [in] ブロードキャストするデータ2
+    T3 data3, ///< [in] ブロードキャストするデータ3
+    T4 data4, ///< [in] ブロードキャストするデータ4
+    T5 data5  ///< [in] ブロードキャストするデータ5
+  )
   {
     for ( auto tmp: mList ) {
       // 本当はよくない static_cast だが reg_binder() で登録できるのは
       // TBinder だけなので大丈夫なはず
-      TBinder* binder = static_cast<TBinder*>(tmp);
+      auto binder = static_cast<TBinder*>(tmp);
       binder->event_proc(data1, data2, data3, data4, data5);
     }
   }
@@ -665,13 +747,14 @@ private:
   /// @brief イベント処理関数
   virtual
   void
-  event_proc(T1 obj1, ///< [in] ブロードキャストするデータ1
-	     T2 obj2, ///< [in] ブロードキャストするデータ2
-	     T3 obj3, ///< [in] ブロードキャストするデータ3
-	     T4 obj4, ///< [in] ブロードキャストするデータ4
-	     T5 obj5, ///< [in] ブロードキャストするデータ5
-	     T6 obj6) ///< [in] ブロードキャストするデータ6
-  = 0;
+  event_proc(
+    T1 obj1, ///< [in] ブロードキャストするデータ1
+    T2 obj2, ///< [in] ブロードキャストするデータ2
+    T3 obj3, ///< [in] ブロードキャストするデータ3
+    T4 obj4, ///< [in] ブロードキャストするデータ4
+    T5 obj5, ///< [in] ブロードキャストするデータ5
+    T6 obj6  ///< [in] ブロードキャストするデータ6
+  ) = 0;
 
 };
 
@@ -703,17 +786,28 @@ public:
   /// @brief デストラクタ
   ~T6BindMgr() = default;
 
+
+public:
+
   /// @brief TBinder を登録する．
   void
-  reg_binder(TBinder* binder) ///< [in] 登録する対象
-  { _reg_binder(binder); }
+  reg_binder(
+    TBinder* binder ///< [in] 登録する対象
+  )
+  {
+    _reg_binder(binder);
+  }
 
   /// @brief TBinder の登録を削除する．
   ///
   /// binder が登録されていない場合には何もしない．
   void
-  unreg_binder(TBinder* binder) ///< [in] 登録を削除する対象
-  { _unreg_binder(binder); }
+  unreg_binder(
+    TBinder* binder ///< [in] 登録を削除する対象
+  )
+  {
+    _unreg_binder(binder);
+  }
 
   /// @brief 全ての binder の登録の解除
   void
@@ -721,17 +815,19 @@ public:
 
   /// @brief ここに登録されたすべての binder に (T1, T2, T3, T4, T5, T6) を伝える．
   void
-  prop_event(T1 data1, ///< [in] ブロードキャストするデータ1
-	     T2 data2, ///< [in] ブロードキャストするデータ2
-	     T3 data3, ///< [in] ブロードキャストするデータ3
-	     T4 data4, ///< [in] ブロードキャストするデータ4
-	     T5 data5, ///< [in] ブロードキャストするデータ5
-	     T6 data6) ///< [in] ブロードキャストするデータ6
+  prop_event(
+    T1 data1, ///< [in] ブロードキャストするデータ1
+    T2 data2, ///< [in] ブロードキャストするデータ2
+    T3 data3, ///< [in] ブロードキャストするデータ3
+    T4 data4, ///< [in] ブロードキャストするデータ4
+    T5 data5, ///< [in] ブロードキャストするデータ5
+    T6 data6  ///< [in] ブロードキャストするデータ6
+  )
   {
     for ( auto tmp: mList ) {
       // 本当はよくない static_cast だが reg_binder() で登録できるのは
       // TBinder だけなので大丈夫なはず
-      TBinder* binder = static_cast<TBinder*>(tmp);
+      auto binder = static_cast<TBinder*>(tmp);
       binder->event_proc(data1, data2, data3, data4, data5, data6);
     }
   }

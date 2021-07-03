@@ -37,9 +37,11 @@ public:
   /// @brief コンストラクタ
   ///
   /// opt_str が空文字列だったり opt_char が \0 だったりする場合もある．
-  Popt(const char* opt_str,   ///< [in] このオプションを表す文字列
-       char opt_char,         ///< [in] このオプションを表す文字
-       const char* opt_desc); ///< [in] このオプションの説明文
+  Popt(
+    const char* opt_str, ///< [in] このオプションを表す文字列
+    char opt_char,       ///< [in] このオプションを表す文字
+    const char* opt_desc ///< [in] このオプションの説明文
+  );
 
   /// @brief デストラクタ
   virtual
@@ -128,9 +130,11 @@ class PoptNone :
 public:
 
   /// @brief コンストラクタ
-  PoptNone(const char* opt_str,   ///< [in] オプション文字列
-	   char opt_char,         ///< [in] オプション文字
-	   const char* opt_desc); ///< [in] オプションの説明文
+  PoptNone(
+    const char* opt_str, ///< [in] オプション文字列
+    char opt_char,       ///< [in] オプション文字
+    const char* opt_desc ///< [in] オプションの説明文
+  );
 
   /// @brief デストラクタ
   ~PoptNone();
@@ -162,10 +166,12 @@ class PoptArg :
 public:
 
   /// @brief コンストラクタ
-  PoptArg(const char* opt_str,   ///< [in] オプション文字列
-	  char opt_char,         ///< [in] オプション文字
-	  const char* opt_desc,  ///< [in] オプションの説明文
-	  const char* arg_desc); ///< [in] 引数の説明文
+  PoptArg(
+    const char* opt_str,  ///< [in] オプション文字列
+    char opt_char,        ///< [in] オプション文字
+    const char* opt_desc, ///< [in] オプションの説明文
+    const char* arg_desc  ///< [in] 引数の説明文
+  );
 
   /// @brief デストラクタ
   ~PoptArg();
@@ -202,10 +208,12 @@ class PoptStr :
 public:
 
   /// @brief コンストラクタ
-  PoptStr(const char* opt_str,   ///< [in] オプション文字列
-	  char opt_char,	 ///< [in] オプション文字
-	  const char* opt_desc,	 ///< [in] オプションの説明文
-	  const char* arg_desc); ///< [in] 引数の説明文
+  PoptStr(
+    const char* opt_str,  ///< [in] オプション文字列
+    char opt_char,	  ///< [in] オプション文字
+    const char* opt_desc, ///< [in] オプションの説明文
+    const char* arg_desc  ///< [in] 引数の説明文
+  );
 
   /// @brief デストラクタ
   ~PoptStr();
@@ -256,10 +264,12 @@ class PoptInt :
 public:
 
   /// @brief コンストラクタ
-  PoptInt(const char* opt_str,   ///< [in] オプション文字列
-	  char opt_char,	 ///< [in] オプション文字
-	  const char* opt_desc,	 ///< [in] オプションの説明文
-	  const char* arg_desc); ///< [in] 引数の説明文
+  PoptInt(
+    const char* opt_str,  ///< [in] オプション文字列
+    char opt_char,	  ///< [in] オプション文字
+    const char* opt_desc, ///< [in] オプションの説明文
+    const char* arg_desc  ///< [in] 引数の説明文
+  );
 
   /// @brief デストラクタ
   ~PoptInt();
@@ -310,10 +320,12 @@ class PoptBool :
 public:
 
   /// @brief コンストラクタ
-  PoptBool(const char* opt_str,   ///< [in] オプション文字列
-	   char opt_char,	  ///< [in] オプション文字
-	   const char* opt_desc,  ///< [in] オプションの説明文
-	   const char* arg_desc); ///< [in] 引数の説明文
+  PoptBool(
+    const char* opt_str,  ///< [in] オプション文字列
+    char opt_char,	  ///< [in] オプション文字
+    const char* opt_desc, ///< [in] オプションの説明文
+    const char* arg_desc  ///< [in] 引数の説明文
+  );
 
   /// @brief デストラクタ
   ~PoptBool();
@@ -341,10 +353,12 @@ class PoptUint :
 public:
 
   /// @brief コンストラクタ
-  PoptUint(const char* opt_str,   ///< [in] オプション文字列
-	   char opt_char,	  ///< [in] オプション文字
-	   const char* opt_desc,  ///< [in] オプションの説明文
-	   const char* arg_desc); ///< [in] 引数の説明文
+  PoptUint(
+    const char* opt_str,  ///< [in] オプション文字列
+    char opt_char,	  ///< [in] オプション文字
+    const char* opt_desc, ///< [in] オプションの説明文
+    const char* arg_desc  ///< [in] 引数の説明文
+  );
 
   /// @brief デストラクタ
   ~PoptUint();
@@ -372,10 +386,12 @@ class PoptFloat :
 public:
 
   /// @brief コンストラクタ
-  PoptFloat(const char* opt_str,    ///< [in] オプション文字列
-	    char opt_char,	    ///< [in] オプション文字
-	    const char* opt_desc,   ///< [in] オプションの説明文
-	    const char* arg_desc);  ///< [in] 引数の説明文
+  PoptFloat(
+    const char* opt_str,  ///< [in] オプション文字列
+    char opt_char,	  ///< [in] オプション文字
+    const char* opt_desc, ///< [in] オプションの説明文
+    const char* arg_desc  ///< [in] 引数の説明文
+  );
 
   /// @brief デストラクタ
   ~PoptFloat();
@@ -426,10 +442,12 @@ class PoptDouble :
 public:
 
   /// @brief コンストラクタ
-  PoptDouble(const char* opt_str,   ///< [in] オプション文字列
-	     char opt_char,	    ///< [in] オプション文字
-	     const char* opt_desc,  ///< [in] オプションの説明文
-	     const char* arg_desc); ///< [in] 引数の説明文
+  PoptDouble(
+    const char* opt_str,  ///< [in] オプション文字列
+    char opt_char,	  ///< [in] オプション文字
+    const char* opt_desc, ///< [in] オプションの説明文
+    const char* arg_desc  ///< [in] 引数の説明文
+  );
 
   /// @brief デストラクタ
   ~PoptDouble();
@@ -479,8 +497,10 @@ class PoptMainApp
 public:
 
   /// @brief コンストラクタ
-  PoptMainApp(const char* name = nullptr, ///< [in] 名前 (alias 用)
-	      bool auto_help = true);     ///< [in] --help オプションを有効にするフラグ
+  PoptMainApp(
+    const char* name = nullptr, ///< [in] 名前 (alias 用)
+    bool auto_help = true       ///< [in] --help オプションを有効にするフラグ
+  );
 
   /// @brief デストラクタ
   ~PoptMainApp();
@@ -493,11 +513,15 @@ public:
 
   /// @brief オプションを追加する．
   void
-  add_option(Popt* option); ///< [in] 追加するオプション
+  add_option(
+    Popt* option ///< [in] 追加するオプション
+  );
 
   /// @brief ヘルプ文字列を指定する．
   void
-  set_other_option_help(const char* text); ///< [in] ヘルプ文字列
+  set_other_option_help(
+    const char* text ///< [in] ヘルプ文字列
+  );
 
   /// @brief poptContext をリセットする．
   void
@@ -505,60 +529,86 @@ public:
 
   /// @brief オプション解析を行なう．
   PoptStat
-  parse_options(int argc,          ///< [in] コマンド行の引数の数
-		const char** argv, ///< [in] コマンド行の引数配列
-		int flags);        ///< [in] フラグ
+  parse_options(
+    int argc,          ///< [in] コマンド行の引数の数
+    const char** argv, ///< [in] コマンド行の引数配列
+    int flags          ///< [in] フラグ
+  );
 
   /// @brief 残った引数を得る．
   /// @return 引数の数を返す．
   int
-  get_args(vector<string>& args); ///< [in] 引数を格納するベクタ
+  get_args(
+    vector<string>& args ///< [in] 引数を格納するベクタ
+  );
 
   /// @brief ヘルプメッセージを出力する．
+  ///
+  /// <popt.h> が前世紀の遺物である FILE* を使っているので
+  /// しかたなくこのようなインターフェイスになっている．
   void
-  print_help(FILE* fp,   ///< [in] FILE 構造体へのポインタ(古！)
-	     int flags); ///< [in] フラグ(現時点では未使用)
+  print_help(
+    FILE* fp, ///< [in] FILE 構造体へのポインタ(古！)
+    int flags ///< [in] フラグ(現時点では未使用)
+  );
 
   /// @brief ユーセージ(ショートヘルプ)メッセージを出力する．
+  ///
+  /// <popt.h> が前世紀の遺物である FILE* を使っているので
+  /// しかたなくこのようなインターフェイスになっている．
   void
-  print_usage(FILE* fp,   ///< [in] FILE 構造体へのポインタ(古！)
-	      int flags); ///< [in] フラグ(現時点では未使用)
+  print_usage(
+    FILE* fp, ///< [in] FILE 構造体へのポインタ(古！)
+    int flags ///< [in] フラグ(現時点では未使用)
+  );
 
   /// @brief usage を出力して終了する．
   void
-  usage(int exitcode,
-	const char* error = nullptr,
-	const char* addl = nullptr);
+  usage(
+    int exitcode,                ///< [in] 終了コード
+    const char* error = nullptr, ///< 不明
+    const char* addl = nullptr   ///< 不明
+  );
 
   /// @brief PoptMainApp 用の strerror() 関数
   static
   const char*
-  popt_strerror(const int error); ///< [in] エラーコード
+  popt_strerror(
+    const int error ///< [in] エラーコード
+  );
 
   /// @brief エラーが起きた場合にそのもととなったオプション文字列を返す．
-  ///
-  /// フラグに使用可能な値は以下のとおり
-  ///  - 0 なにもしない．
-  ///  - POPT_BADOPTION_NOALIAS もっとも外側(outermost)のオプションを返す．
   const char*
-  bad_option(int flags); ///< [in] フラグ
+  bad_option(
+    int flags ///< [in] フラグ
+              ///<
+              ///< フラグに使用可能な値は以下のとおり
+	      ///<  - 0 なにもしない．
+	      ///<  - POPT_BADOPTION_NOALIAS もっとも外側(outermost)のオプションを返す．
+  );
 
   /// @brief alias 用のデフォルト設定を読み込む．
   /// @return 返り値に関しては man popt に記載なし．
   int
-  read_default_config(int flags); ///< [in] フラグ(現時点では未使用)
+  read_default_config(
+    int flags ///< [in] フラグ(現時点では未使用)
+  );
 
   /// @brief alias 用の設定ファイルを読み込む．
   int
-  read_config_file(const char* filename); ///< [in] ファイル名
+  read_config_file(
+    const char* filename ///< [in] ファイル名
+  );
 
   /// @brief alias を追加する．
   int
-  add_alias(const char* long_name, ///< [in] 長い名前 (--xxxx)
-	    char short_name,       ///< [in] 短い名前 (-x)
-	    int argc,              ///< [in] 本体の引数の数
-	    const char** argv,     ///< [in] 本体の文字列の配列()
-	    int flags);            ///< [in] フラグ(現時点では未使用)
+  add_alias(
+    const char* long_name, ///< [in] 長い名前 (--xxxx)
+    char short_name,       ///< [in] 短い名前 (-x)
+    int argc,              ///< [in] 本体の引数の数
+    const char** argv,     ///< [in] 本体の文字列の配列()
+    int flags              ///< [in] フラグ(現時点では未使用)
+  );
 
 
 private:

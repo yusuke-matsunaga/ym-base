@@ -5,7 +5,7 @@
 /// @brief Array のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018, 2020 Yusuke Matsunaga
+/// Copyright (C) 2018, 2020, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym_config.h"
@@ -42,10 +42,11 @@ public:
   /// @brief コンストラクタ
   ///
   /// body[begin] 〜 body[end - 1] までの範囲を表す配列となる．
-  Array(ObjType* body,  ///< [in] 配列本体
-	SizeType begin, ///< [in] 開始位置
-	SizeType end)   ///< [in] 終了位置
-    : mNum{end - begin},
+  Array(
+    ObjType* body,  ///< [in] 配列本体
+    SizeType begin, ///< [in] 開始位置
+    SizeType end    ///< [in] 終了位置
+  ) : mNum{end - begin},
       mBody{body + begin}
   {
   }
@@ -61,14 +62,13 @@ public:
 
   /// @brief 要素数を返す．
   SizeType
-  num() const
-  {
-    return mNum;
-  }
+  num() const { return mNum; }
 
   /// @brief 要素を返す．
   ObjType&
-  operator[](SizeType pos) const ///< [in] 位置番号 ( 0 <= pos < num() )
+  operator[](
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < num() )
+  ) const
   {
     ASSERT_COND( pos < num() );
 
@@ -82,12 +82,6 @@ public:
   /// @brief 末尾の反復子を得る．
   iterator
   end() const { return mBody + num(); }
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
 
 
 private:

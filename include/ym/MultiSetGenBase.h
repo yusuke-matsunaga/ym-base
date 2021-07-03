@@ -22,18 +22,20 @@ class MultiSetGenBase
 public:
 
   /// @brief コンストラクタ
-  MultiSetGenBase(const vector<int>& num_array, ///< [in] 各要素の重複度を納めた配列
-		  int k)                        ///< [in] 選び出す要素数
-    : mNumArray{num_array},
+  MultiSetGenBase(
+    const vector<int>& num_array, ///< [in] 各要素の重複度を納めた配列
+    int k                         ///< [in] 選び出す要素数
+  ) : mNumArray{num_array},
       mK{k},
       mElem(mK)
   {
   }
 
   /// @brief コンストラクタ
-  MultiSetGenBase(initializer_list<int>& num_array, ///< [in] 各要素の重複度を納めた初期化リスト
-		  int k)                            ///< [in] 選び出す要素数
-    : mNumArray{num_array},
+  MultiSetGenBase(
+    initializer_list<int>& num_array, ///< [in] 各要素の重複度を納めた初期化リスト
+    int k                             ///< [in] 選び出す要素数
+  ) : mNumArray{num_array},
       mK{k},
       mElem(mK)
   {
@@ -54,10 +56,11 @@ public:
 
   /// @brief 各要素の重複度を得る．
   int
-  n(int grp) const ///< [in] グループ番号 ( 0 <= grp < group_num() )
+  n(
+    int grp ///< [in] グループ番号 ( 0 <= grp < group_num() )
+  ) const
   {
     ASSERT_COND( grp < group_num() );
-
     return mNumArray[grp];
   }
 
@@ -74,7 +77,9 @@ public:
 
   /// @brief 要素の取得
   int
-  operator()(int pos) const ///< [in] 取り出す要素の位置 ( 0 <= pos <, k() )
+  operator()(
+    int pos ///< [in] 取り出す要素の位置 ( 0 <= pos <, k() )
+  ) const
   {
     return mElem[pos];
   }
@@ -95,12 +100,16 @@ protected:
 
   /// @brief 内容をコピーする関数
   void
-  copy(const MultiSetGenBase& src); ///< [in] コピー元のオブジェクト
+  copy(
+    const MultiSetGenBase& src ///< [in] コピー元のオブジェクト
+  );
 
   /// @brief 要素の参照の取得
   /// @return pos 番目の要素への参照
   int&
-  elem(int pos) ///< [in] 取り出す要素の位置 ( 0 <= pos < k() )
+  elem(
+    int pos ///< [in] 取り出す要素の位置 ( 0 <= pos < k() )
+  )
   {
     return mElem[pos];
   }

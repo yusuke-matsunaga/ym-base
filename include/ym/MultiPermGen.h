@@ -45,27 +45,32 @@ class MultiPermGen :
 public:
 
   /// @brief コンストラクタ
-  MultiPermGen(const vector<pair<int, int>>& nk_array) ///< [in] 要素数 n と選択する要素数 k のベクタ
-    : MultiGenBase{nk_array}
+  MultiPermGen(
+    const vector<pair<int, int>>& nk_array ///< [in] 要素数 n と選択する要素数 k のベクタ
+  ) : MultiGenBase{nk_array}
   {
   }
 
   /// @brief コンストラクタ
-  MultiPermGen(initializer_list<pair<int, int>>& nk_array) ///< [in] 要素数 n と選択する要素数 k の初期化リスト
-    : MultiGenBase{nk_array}
+  MultiPermGen(
+    initializer_list<pair<int, int>>& nk_array ///< [in] 要素数 n と選択する要素数 k の初期化リスト
+  ) : MultiGenBase{nk_array}
   {
   }
 
   /// @brief コピーコンストラクタ
-  MultiPermGen(const MultiPermGen& src) ///< [in] コピー元のオブジェクト
-    : MultiGenBase{src}
+  MultiPermGen(
+    const MultiPermGen& src ///< [in] コピー元のオブジェクト
+  ) : MultiGenBase{src}
   {
   }
 
   /// @brief 代入演算子
   /// @return 自分自身
   const MultiPermGen&
-  operator=(const MultiPermGen& src) ///< [in] コピー元のオブジェクト
+  operator=(
+    const MultiPermGen& src ///< [in] コピー元のオブジェクト
+  )
   {
     copy(src);
     return *this;

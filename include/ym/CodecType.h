@@ -8,7 +8,6 @@
 /// Copyright (C) 2013, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym_config.h"
 
 

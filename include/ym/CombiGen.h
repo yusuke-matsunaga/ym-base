@@ -5,9 +5,8 @@
 /// @brief CombiGen のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2013, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2013, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/GenBase.h"
 
@@ -38,22 +37,26 @@ class CombiGen :
 public:
 
   /// @brief コンストラクタ
-  CombiGen(int n, ///< [in] 全要素数
-	   int k) ///< [in] 選び出す要素数
-    : GenBase(n, k)
+  CombiGen(
+    int n, ///< [in] 全要素数
+    int k  ///< [in] 選び出す要素数
+  ) : GenBase(n, k)
   {
   }
 
   /// @brief コピーコンストラクタ
-  CombiGen(const CombiGen& src) ///< [in] コピー元のオブジェクト
-    : GenBase{src}
+  CombiGen(
+    const CombiGen& src ///< [in] コピー元のオブジェクト
+  ) : GenBase{src}
   {
   }
 
   /// @brief 代入演算子
   /// @return 自分自身を返す．
   const CombiGen&
-  operator=(const CombiGen& src) ///< [in] コピー元のオブジェクト
+  operator=(
+    const CombiGen& src ///< [in] コピー元のオブジェクト
+  )
   {
     copy(src);
     return *this;

@@ -5,9 +5,8 @@
 /// @brief MFSet のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym_config.h"
 
@@ -40,8 +39,9 @@ public:
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] n 確保したい要素の数．
-  MFSet(int n);
+  MFSet(
+    int n ///< [in] 確保したい要素の数．
+  );
 
   /// @brief デストラクタ
   ~MFSet();
@@ -57,23 +57,26 @@ public:
   num() const;
 
   /// @brief 代表元の検索 (Find)
-  /// @param[in] x 要素番号 ( 0 <= x < num() )
   /// @retval 要素 x の属する集合の代表元
   /// @retval kBadID 要素 x が存在していない場合
   int
-  find(int x);
+  find(
+    int x ///< [in] 要素番号 ( 0 <= x < num() )
+  );
 
   /// @brief 2つの集合の併合 (Merge)
-  /// @param[in] x, y 代表元 ( 0 <= x, y < num() )
   /// @retval 新たな代表元を返す．
   /// @retval kBadID x か y が存在していなかった
-  /// @note 2つの代表元 x, y の表す集合を併合する．
-  /// @note 実は x, y が代表元でない場合，
+  ///
+  /// 2つの代表元 x, y の表す集合を併合する．
+  /// 実は x, y が代表元でない場合，
   /// 内部で find(x), find(y)を呼ぶので処理は行えるが，
   /// 代表元が分かっている場合にはそれを使ったほうが処理は速い．
   int
-  merge(int x,
-	int y);
+  merge(
+    int x, ///< [in] マージ対象の要素番号1 ( 0 <= x < num() )
+    int y  ///< [in] マージ対象の要素番号2 ( 0 <= y < num() )
+  );
 
 
 private:

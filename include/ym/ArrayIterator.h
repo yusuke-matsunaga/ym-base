@@ -23,8 +23,9 @@ class ArrayIterator
 public:
 
   /// @brief コンストラクタ
-  ArrayIterator(T* obj_ptr) ///< [in] 要素へのポインタ
-    : mObjPtr(obj_ptr)
+  ArrayIterator(
+    T* obj_ptr ///< [in] 要素へのポインタ
+  ) : mObjPtr(obj_ptr)
   {
   }
 

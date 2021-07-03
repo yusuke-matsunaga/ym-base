@@ -68,7 +68,8 @@ MsgHandler::event_proc(const char* src_file,
 		       const char* body)
 {
   MsgBitMask bit = conv2bitmask(type);
-  if ( mMask & bit ) {
+  auto tmp = mMask & bit;
+  if ( tmp == bit ) {
     if ( loc.is_valid() ) {
       put_msg(src_file, src_line, loc, type, label, body);
     }

@@ -30,9 +30,10 @@ class OptionParser
 public:
 
   /// @brief コンストラクタ
-  OptionParser(char delim = ',',     ///< [in] 区切り文字
-	       char opt_delim = ':') ///< [in] オプション用区切り文字
-    : mDelim(delim),
+  OptionParser(
+    char delim = ',',    ///< [in] 区切り文字
+    char opt_delim = ':' ///< [in] オプション用区切り文字
+  ) : mDelim(delim),
       mOptDelim(opt_delim)
   {
   }
@@ -48,13 +49,17 @@ public:
 
   /// @grief デリミタを設定する．
   void
-  set_delim(char delim,      ///< [in] 区切り文字
-	    char opt_delim); ///< [in] オプション用区切り文字
+  set_delim(
+    char delim,    ///< [in] 区切り文字
+    char opt_delim ///< [in] オプション用区切り文字
+  );
 
   /// @brief パースする．
   /// @return パース結果の<キー，値>のペアのリストを返す．
   vector<pair<string, string>>
-  parse(const string& input); ///< [in] 入力文字列
+  parse(
+    const string& input ///< [in] 入力文字列
+  );
 
 
 private:

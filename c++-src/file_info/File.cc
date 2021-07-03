@@ -106,33 +106,6 @@ PathName::PathName(const char* path_str)
   }
 }
 
-// 文字列のリストからの変換コンストラクタ
-PathName::PathName(const list<string>& path_list,
-		   PathType type) :
-  mType(type),
-  mPathList(path_list)
-{
-}
-
-// デストラクタ
-PathName::~PathName()
-{
-}
-
-// パス名の妥当性チェック
-bool
-PathName::is_valid() const
-{
-  return !mPathList.empty();
-}
-
-// パスの型を返す．
-PathType
-PathName::type() const
-{
-  return mType;
-}
-
 // パス名の文字列表現を返す．
 string
 PathName::str() const
@@ -161,11 +134,11 @@ PathName::str() const
 PathName
 PathName::head() const
 {
-  list<string> new_list(mPathList);
+  vector<string> new_list{mPathList};
   if ( !new_list.empty() ) {
     new_list.pop_back();
   }
-  return PathName(new_list, mType);
+  return PathName(mType, new_list);
 }
 
 // パス名のテイル(ヘッダを含まないもの)を返す．
@@ -228,9 +201,10 @@ PathName::expand() const
 
   case PathType::Home:
     {
-      list<string> new_list(mPathList);
-      new_list.pop_front();
-      return user_home(mPathList.front()) + PathName(new_list, PathType::Relative);
+      auto p1 = mPathList.begin();
+      ++ p1;
+      vector<string> new_list{p1, mPathList.end()};
+      return user_home(mPathList.front()) + PathName( PathType::Relative, new_list);
     }
 
   case PathType::Relative:

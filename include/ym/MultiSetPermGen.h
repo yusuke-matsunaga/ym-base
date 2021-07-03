@@ -5,9 +5,8 @@
 /// @brief MultiSetPermGen のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2013-2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/MultiSetGenBase.h"
 
@@ -24,29 +23,34 @@ class MultiSetPermGen :
 public:
 
   /// @brief コンストラクタ
-  MultiSetPermGen(const vector<int>& num_array, ///< [in] 各要素の重複度を納めた配列
-		  int k)                        ///< [in] 選び出す要素数
-    : MultiSetGenBase(num_array, k)
+  MultiSetPermGen(
+    const vector<int>& num_array, ///< [in] 各要素の重複度を納めた配列
+    int k                         ///< [in] 選び出す要素数
+  ) : MultiSetGenBase(num_array, k)
   {
   }
 
   /// @brief コンストラクタ
-  MultiSetPermGen(initializer_list<int>& num_array, ///< [in] 各要素の重複度を納めた初期化配列
-		  int k)                            ///< [in] 選び出す要素数
-    : MultiSetGenBase(num_array, k)
+  MultiSetPermGen(
+    initializer_list<int>& num_array, ///< [in] 各要素の重複度を納めた初期化配列
+    int k                             ///< [in] 選び出す要素数
+  ) : MultiSetGenBase(num_array, k)
   {
   }
 
   /// @brief コピーコンストラクタ
-  MultiSetPermGen(const MultiSetPermGen& src) ///< [in] コピー元のオブジェクト
-    : MultiSetGenBase(src)
+  MultiSetPermGen(
+    const MultiSetPermGen& src ///< [in] コピー元のオブジェクト
+  ) : MultiSetGenBase(src)
   {
   }
 
   /// @brief 代入演算子
   /// @return 自分自身
   const MultiSetPermGen&
-  operator=(const MultiSetPermGen& src) ///< [in] コピー元のオブジェクト
+  operator=(
+    const MultiSetPermGen& src ///< [in] コピー元のオブジェクト
+  )
   {
     copy(src);
     return *this;

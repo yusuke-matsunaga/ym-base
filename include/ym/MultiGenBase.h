@@ -24,13 +24,19 @@ class MultiGenBase
 public:
 
   /// @brief コンストラクタ
-  MultiGenBase(const vector<pair<int, int>>& nk_array); ///< [in] 要素数 n と選択する要素数 k のベクタ
+  MultiGenBase(
+    const vector<pair<int, int>>& nk_array ///< [in] 要素数 n と選択する要素数 k のベクタ
+  );
 
   /// @brief コンストラクタ
-  MultiGenBase(initializer_list<pair<int, int>>& nk_array); ///< [in] 要素数 n と選択する要素数 k の初期化リスト
+  MultiGenBase(
+    initializer_list<pair<int, int>>& nk_array ///< [in] 要素数 n と選択する要素数 k の初期化リスト
+  );
 
   /// @brief コピーコンストラクタ
-  MultiGenBase(const MultiGenBase& src); ///< [in] コピー元のオブジェクト
+  MultiGenBase(
+    const MultiGenBase& src ///< [in] コピー元のオブジェクト
+  );
 
   /// @brief デストラクタ
   ~MultiGenBase();
@@ -49,20 +55,22 @@ public:
   /// @brief 全要素数の取得
   /// @return grp 番目のグループの全要素数
   int
-  n(int grp) const ///< [in] グループ番号 ( 0 <= grp < group_num() )
+  n(
+    int grp ///< [in] グループ番号 ( 0 <= grp < group_num() )
+  ) const
   {
     ASSERT_COND( grp >= 0 && grp < mGroupNum );
-
     return mNArray[grp];
   }
 
   /// @brief 選択する要素数の取得
   /// @return grp 番目のグループの選択する要素数
   int
-  k(int grp) const ///< [in] グループ番号 ( 0 <= grp < group_num() )
+  k(
+    int grp ///< [in] グループ番号 ( 0 <= grp < group_num() )
+  ) const
   {
     ASSERT_COND( grp >= 0 && grp < mGroupNum );
-
     return mKArray[grp];
   }
 
@@ -73,22 +81,20 @@ public:
   /// @brief 要素の取得
   /// @return grp 番目のグループの pos 番目の要素を取り出す．
   int
-  operator()(int grp,       ///< [in] グループ番号 ( 0 <= grp < group_num() )
-	     int pos) const ///< [in] 要素の位置 ( 0 <= pos < k(grp) )
+  operator()(
+    int grp,       ///< [in] グループ番号 ( 0 <= grp < group_num() )
+    int pos        ///< [in] 要素の位置 ( 0 <= pos < k(grp) )
+  ) const
   {
     ASSERT_COND( grp >= 0 && grp < mGroupNum );
     ASSERT_COND( pos >= 0 && pos < k(grp) );
-
     return mElemArray[mOffsetArray[grp] + pos];
   }
 
   /// @brief 末尾のチェック
   /// @return 末尾の時に true を返す．
   bool
-  is_end() const
-  {
-    return is_end_sub(0);
-  }
+  is_end() const { return is_end_sub(0); }
 
 
 protected:
@@ -98,17 +104,24 @@ protected:
 
   /// @brief コピーする．
   void
-  copy(const MultiGenBase& src); ///< [in] コピー元のオブジェクト
+  copy(
+    const MultiGenBase& src ///< [in] コピー元のオブジェクト
+  );
 
   /// @brief 要素配列の初期化
-  /// @note grp 番目のグループの要素配列を初期化する．
+  ///
+  /// grp 番目のグループの要素配列を初期化する．
   void
-  init_group(int grp); ///< [in] グループ番号
+  init_group(
+    int grp ///< [in] グループ番号
+  );
 
   /// @brief 要素配列の取得
   /// @return grp 番目のグループの要素配列
   Array<int>
-  elem(int grp) ///< [in] グループ番号
+  elem(
+    int grp ///< [in] グループ番号
+  )
   {
     int offset = mOffsetArray[grp];
     return Array<int>(mElemArray, offset, offset + mKArray[grp]);
@@ -116,7 +129,9 @@ protected:
 
   /// @brief grp 番目のグループが終了状態の時 true を返す．
   bool
-  is_end_sub(int grp) const ///< [in] グループ番号
+  is_end_sub(
+    int grp ///< [in] グループ番号
+  ) const
   {
     return operator()(grp, 0) == n(grp);
   }

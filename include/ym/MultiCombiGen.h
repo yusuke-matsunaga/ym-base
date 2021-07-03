@@ -45,28 +45,33 @@ class MultiCombiGen :
 public:
 
   /// @brief コンストラクタ
-  MultiCombiGen(const vector<pair<int, int>>& nk_array) ///< [in] 要素数 n と選択する要素数 k のベクタ
-    : MultiGenBase{nk_array}
+  MultiCombiGen(
+    const vector<pair<int, int>>& nk_array ///< [in] 要素数 n と選択する要素数 k のベクタ
+  ) : MultiGenBase{nk_array}
   {
   }
 
   /// @brief コンストラクタ
   /// @param[in] nk_array
-  MultiCombiGen(initializer_list<pair<int, int>>& nk_array) ///< [in] 要素数 n と選択する要素数 k の初期化リスト
-    : MultiGenBase{nk_array}
+  MultiCombiGen(
+    initializer_list<pair<int, int>>& nk_array ///< [in] 要素数 n と選択する要素数 k の初期化リスト
+  ) : MultiGenBase{nk_array}
   {
   }
 
   /// @brief コピーコンストラクタ
-  MultiCombiGen(const MultiCombiGen& src) ///< [in] コピー元のオブジェクト
-    : MultiGenBase{src}
+  MultiCombiGen(
+    const MultiCombiGen& src ///< [in] コピー元のオブジェクト
+  ) : MultiGenBase{src}
   {
   }
 
   /// @brief 代入演算子
   /// @return 自分自身
   const MultiCombiGen&
-  operator=(const MultiCombiGen& src) ///< [in] コピー元のオブジェクト
+  operator=(
+    const MultiCombiGen& src ///< [in] コピー元のオブジェクト
+  )
   {
     copy(src);
     return *this;

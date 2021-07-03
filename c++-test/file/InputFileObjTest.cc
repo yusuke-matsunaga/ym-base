@@ -3,13 +3,12 @@
 /// @brief InputFileObjTest の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2019 Yusuke Matsunaga
+/// Copyright (C) 2019, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include <gtest/gtest.h>
-#include "ym/InputFileObj.h"
 #include <sstream>
+#include "ym/InputFileObj.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -304,8 +303,8 @@ TEST_P(InputFileObjTest, handler_test1)
 
 }
 
-INSTANTIATE_TEST_CASE_P(InputFileObj_test,
-			InputFileObjTest,
-			::testing::Values("text_unix.txt", "text_mac.txt", "text_win.txt"));
+INSTANTIATE_TEST_SUITE_P(InputFileObj_test,
+			 InputFileObjTest,
+			 ::testing::Values("text_unix.txt", "text_mac.txt", "text_win.txt"));
 
 END_NAMESPACE_YM

@@ -38,8 +38,9 @@ public:
   /// @brief 改行コードが読み込まれるときに呼ばれるコールバック関数
   virtual
   void
-  newline(int lineno) ///< [in] 行番号
-  = 0;
+  newline(
+    int lineno ///< [in] 行番号
+  ) = 0;
 
 };
 
@@ -62,8 +63,10 @@ class InputFileObj
 public:
 
   /// @brief コンストラクタ
-  InputFileObj(istream& s,                 ///< [in] 入力ストリーム
-	       const FileInfo& file_info); ///< [in] ファイル情報
+  InputFileObj(
+    istream& s,               ///< [in] 入力ストリーム
+    const FileInfo& file_info ///< [in] ファイル情報
+  );
 
   /// @brief デストラクタ
   ~InputFileObj() = default;
@@ -83,7 +86,9 @@ public:
   /// プリプロセッサのプラグマなどで用いることを想定している．
   /// 通常は使わないこと．
   void
-  set_file_info(const FileInfo& file_info) ///< [in] 新しいファイル情報
+  set_file_info(
+    const FileInfo& file_info ///< [in] 新しいファイル情報
+  )
   {
     mFileInfo = file_info;
   }
@@ -92,7 +97,9 @@ public:
   ///
   /// ハンドラの所有権は InputFileObj に移る．
   void
-  reg_handler(unique_ptr<NewlineHandler>&& handler) ///< [in] 登録するハンドラ
+  reg_handler(
+    unique_ptr<NewlineHandler>&& handler ///< [in] 登録するハンドラ
+  )
   {
     mHandlerList.push_back(move(handler));
   }

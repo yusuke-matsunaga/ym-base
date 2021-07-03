@@ -35,14 +35,18 @@ public:
   /// @brief ハンドラを登録する．
   static
   void
-  attach_handler(MsgHandler* handler); ///< [in] 登録するハンドラ
+  attach_handler(
+    MsgHandler* handler ///< [in] 登録するハンドラ
+  );
 
   /// @brief ハンドラの登録を解除する．
   ///
   /// ハンドラの登録が解除されてもハンドラその物の削除は行わない．
   static
   void
-  detach_handler(MsgHandler* handler); ///< [in] 解除するハンドラ
+  detach_handler(
+    MsgHandler* handler ///< [in] 解除するハンドラ
+  );
 
   /// @brief すべてのハンドラの登録を解除する．
   static
@@ -58,22 +62,26 @@ public:
   /// @brief メッセージを出力する(パーサー用)．
   static
   void
-  put_msg(const char* src_file,       ///< [in] この関数を呼んでいるソースファイル名
-	  int src_line,               ///< [in] この関数を呼んでいるソースの行番号
-	  const FileRegion& file_loc, ///< [in] ファイル位置
-	  MsgType type,               ///< [in] メッセージの種類
-	  const char* label,          ///< [in] メッセージラベル
-	  const char* msg);           ///< [in] メッセージ本文
+  put_msg(
+    const char* src_file,       ///< [in] この関数を呼んでいるソースファイル名
+    int src_line,               ///< [in] この関数を呼んでいるソースの行番号
+    const FileRegion& file_loc, ///< [in] ファイル位置
+    MsgType type,               ///< [in] メッセージの種類
+    const char* label,          ///< [in] メッセージラベル
+    const char* msg             ///< [in] メッセージ本文
+  );
 
   /// @brief メッセージを出力する(パーサー用)．
   static
   void
-  put_msg(const char* src_file,       ///< [in] この関数を呼んでいるソースファイル名
-	  int src_line,		      ///< [in] この関数を呼んでいるソースの行番号
-	  const FileRegion& file_loc, ///< [in] ファイル位置
-	  MsgType type,		      ///< [in] メッセージの種類
-	  const char* label,	      ///< [in] メッセージラベル
-	  const string& msg)	      ///< [in] メッセージ本文
+  put_msg(
+    const char* src_file,       ///< [in] この関数を呼んでいるソースファイル名
+    int src_line,		///< [in] この関数を呼んでいるソースの行番号
+    const FileRegion& file_loc, ///< [in] ファイル位置
+    MsgType type,		///< [in] メッセージの種類
+    const char* label,	        ///< [in] メッセージラベル
+    const string& msg 	        ///< [in] メッセージ本文
+  )
   {
     put_msg(src_file, src_line, file_loc, type, label, msg.c_str());
   }
@@ -81,20 +89,24 @@ public:
   /// @brief メッセージを出力する(一般用)．
   static
   void
-  put_msg(const char* src_file, ///< [in] この関数を呼んでいるソースファイル名
-	  int src_line,	        ///< [in] この関数を呼んでいるソースの行番号
-	  MsgType type,         ///< [in] メッセージの種類
-	  const char* label,    ///< [in] メッセージラベル
-	  const char* msg);     ///< [in] メッセージ本文
+  put_msg(
+    const char* src_file, ///< [in] この関数を呼んでいるソースファイル名
+    int src_line,	  ///< [in] この関数を呼んでいるソースの行番号
+    MsgType type,         ///< [in] メッセージの種類
+    const char* label,    ///< [in] メッセージラベル
+    const char* msg       ///< [in] メッセージ本文
+  );
 
   /// @brief メッセージを出力する(一般用)．
   static
   void
-  put_msg(const char* src_file, ///< [in] この関数を呼んでいるソースファイル名
-	  int src_line,	        ///< [in] この関数を呼んでいるソースの行番号
-	  MsgType type,	        ///< [in] メッセージの種類
-	  const char* label,    ///< [in] メッセージラベル
-	  const string& msg)    ///< [in] メッセージ本文
+  put_msg(
+    const char* src_file, ///< [in] この関数を呼んでいるソースファイル名
+    int src_line,	  ///< [in] この関数を呼んでいるソースの行番号
+    MsgType type,	  ///< [in] メッセージの種類
+    const char* label,    ///< [in] メッセージラベル
+    const string& msg     ///< [in] メッセージ本文
+  )
   {
     put_msg(src_file, src_line, type, label, msg.c_str());
   }

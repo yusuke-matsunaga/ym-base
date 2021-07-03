@@ -48,8 +48,9 @@ public:
   }
 
   /// @brief C文字列からの変換用コンストラクタ
-  StrBuff(const char* str) ///< [in] 文字列
-    : mSize{strlen(str) + 1},
+  StrBuff(
+    const char* str ///< [in] 文字列
+  ) : mSize{strlen(str) + 1},
       mEnd{mSize - 1},
       mBuffer{new char[mSize]}
   {
@@ -57,17 +58,19 @@ public:
   }
 
   /// @brief コピーコンストラクタ (StrBuff)
-  StrBuff(const StrBuff& src) ///< [in] コピー元のオブジェクト (StrBuff)
-    : mSize(src.mSize),
+  StrBuff(
+    const StrBuff& src ///< [in] コピー元のオブジェクト (StrBuff)
+  ) : mSize(src.mSize),
       mEnd(src.mEnd),
       mBuffer(new char[mSize])
   {
     copy(src.mBuffer, mBuffer);
   }
 
-  /// @brief コピーコンストラクタ (string)
-  StrBuff(const string& src) ///< [in] コピー元のオブジェクト (string)
-    : mSize(src.size() + 1),
+  /// @brief コピーコンストラクタもどき (string)
+  StrBuff(
+    const string& src ///< [in] コピー元のオブジェクト (string)
+  ) : mSize(src.size() + 1),
       mEnd(mSize - 1),
       mBuffer(new char[mSize])
   {
@@ -77,7 +80,9 @@ public:
   /// @brief 代入演算子 (StrBuff)
   /// @return 自分自身
   const StrBuff&
-  operator=(const StrBuff& src) ///< [in] コピー元の文字列 (StrBuff)
+  operator=(
+    const StrBuff& src ///< [in] コピー元の文字列 (StrBuff)
+  )
   {
     clear();
     put_str(src);
@@ -87,7 +92,9 @@ public:
   /// @brief 代入演算子 (C文字列)
   /// @return 自分自身
   const StrBuff&
-  operator=(const char* src) ///< [in] コピー元の文字列 (C文字列)
+  operator=(
+    const char* src ///< [in] コピー元の文字列 (C文字列)
+  )
   {
     clear();
     put_str(src);
@@ -97,7 +104,9 @@ public:
   /// @brief 代入演算子 (string)
   /// @return 自分自身
   const StrBuff&
-  operator=(const string& src) ///< [in] コピー元の文字列 (string)
+  operator=(
+    const string& src ///< [in] コピー元の文字列 (string)
+  )
   {
     clear();
     put_str(src);
@@ -120,6 +129,7 @@ public:
   void
   clear()
   {
+    // バッファサイズは縮小しない．
     mBuffer[0] = '\0';
     mEnd = 0;
   }
@@ -144,7 +154,9 @@ public:
 
   /// @brief 一文字追加
   void
-  put_char(int c) ///< [in] 追加する文字
+  put_char(
+    int c ///< [in] 追加する文字
+  )
   {
     if ( mEnd >= mSize - 1 ) {
       // バッファの大きさを2倍にする．
@@ -157,25 +169,33 @@ public:
 
   /// @brief 文字列の追加 (StrBuff)
   void
-  put_str(const StrBuff& str) ///< [in] 追加する文字列 (StrBuff)
+  put_str(
+    const StrBuff& str ///< [in] 追加する文字列 (StrBuff)
+  )
   {
     put_str(str.c_str());
   }
 
   /// @brief 文字列の追加 (C文字列)
   void
-  put_str(const char* str); ///< [in] 追加する文字列 (C文字列)
+  put_str(
+    const char* str ///< [in] 追加する文字列 (C文字列)
+  );
 
   /// @brief 文字列の追加 (string)
   void
-  put_str(const string& str) ///< [in] 追加する文字列 (string)
+  put_str(
+    const string& str ///< [in] 追加する文字列 (string)
+  )
   {
     put_str(str.c_str());
   }
 
   /// @brief 整数を文字列に変換して追加
   void
-  put_digit(int d); ///< [in] 数値
+  put_digit(
+    int d ///< [in] 数値
+  );
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -196,7 +216,9 @@ public:
   ///
   /// 範囲外の場合は '\\0' を返す．
   char
-  operator[](SizeType pos) const ///< [in] 取得する文字の位置
+  operator[](
+    SizeType pos ///< [in] 取得する文字の位置
+  ) const
   {
     if ( pos < mEnd ) {
       return mBuffer[pos];
@@ -211,27 +233,25 @@ public:
   /// @retval c が最初に現れる位置
   /// @retval npos 見つからない場合
   SizeType
-  find_first_of(char c) const; ///< [in] 検索対象の文字
+  find_first_of(
+    char c ///< [in] 検索対象の文字
+  ) const;
 
   /// @brief 部分文字列の取得
   /// @return first から last までの部分文字列を切り出す．
   StrBuff
-  substr(SizeType first,       ///< [in] 部分文字列の開始位置
-	 SizeType last) const; ///< [in] 部分文字列の終了位置
+  substr(
+    SizeType first, ///< [in] 部分文字列の開始位置
+    SizeType last   ///< [in] 部分文字列の終了位置
+  ) const;
 
   /// @brief Cスタイルの文字列への変換
   /// @return Cスタイルに変換した文字列を返す．
   const char*
-  c_str() const
-  {
-    return mBuffer;
-  }
+  c_str() const { return mBuffer; }
 
   /// @brief string への変換
-  operator string() const
-  {
-    return string(c_str());
-  }
+  operator string() const { return string(c_str()); }
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -243,8 +263,9 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内部で用いられるコンストラクタ
-  StrBuff(SizeType size) ///< [in] サイズ
-    : mSize(size),
+  StrBuff(
+    SizeType size ///< [in] サイズ
+  ) : mSize(size),
       mEnd(0),
       mBuffer(new char[mSize])
   {
@@ -253,13 +274,17 @@ private:
 
   /// @brief src から dst にコピーする．
   void
-  copy(const char* src, ///< [in] ソース文字列
-       char* dst)       ///< [in] ディスティネーション文字列
+  copy(
+    const char* src, ///< [in] ソース文字列
+    char* dst        ///< [in] ディスティネーション文字列
+  )
   { while ( (*dst ++ = *src ++) ) ; }
 
   /// @brief バッファサイズを拡張する．
   void
-  expand(SizeType new_size); ///< [in] サイズ
+  expand(
+    SizeType new_size ///< [in] サイズ
+  );
 
 
 private:
@@ -284,8 +309,10 @@ private:
 /// @return 2つの文字列が等しいときに true を返す．
 inline
 bool
-operator==(const StrBuff& src1, ///< [in] 第1オペランド
-	   const StrBuff& src2) ///< [in] 第2オペランド
+operator==(
+  const StrBuff& src1, ///< [in] 第1オペランド
+  const StrBuff& src2  ///< [in] 第2オペランド
+)
 {
   return strcmp(src1.c_str(), src2.c_str()) == 0;
 }
@@ -295,8 +322,10 @@ operator==(const StrBuff& src1, ///< [in] 第1オペランド
 /// @return 2つの文字列が等しくないときに true を返す．
 inline
 bool
-operator!=(const StrBuff& src1, ///< [in] 第1オペランド
-	   const StrBuff& src2) ///< [in] 第2オペランド
+operator!=(
+  const StrBuff& src1, ///< [in] 第1オペランド
+  const StrBuff& src2  ///< [in] 第2オペランド
+)
 {
   return !operator==(src1, src2);
 }
@@ -306,8 +335,10 @@ operator!=(const StrBuff& src1, ///< [in] 第1オペランド
 /// @return 出力ストリームを返す．
 inline
 ostream&
-operator<<(ostream& s,            ///< [in] 出力ストリーム
-	   const StrBuff& strbuf) ///< [in] 出力対象のオブジェクト
+operator<<(
+  ostream& s,           ///< [in] 出力ストリーム
+  const StrBuff& strbuf ///< [in] 出力対象のオブジェクト
+)
 {
   return s << strbuf.c_str();
 }

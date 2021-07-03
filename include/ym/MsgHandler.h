@@ -33,8 +33,9 @@ class MsgHandler :
 public:
 
   /// @brief コンストラクタ
-  MsgHandler(MsgBitMask mask = kMsgMaskAll) ///< [in] メッセージマスク
-    : mMask{mask}
+  MsgHandler(
+    MsgBitMask mask = kMsgMaskAll ///< [in] メッセージマスク
+  ) : mMask{mask}
   {
   }
 
@@ -52,7 +53,9 @@ public:
 
   /// @brief メッセージマスクの設定
   void
-  set_mask(MsgBitMask mask) ///< [in] メッセージマスク
+  set_mask(
+    MsgBitMask mask ///< [in] メッセージマスク
+  )
   {
     mMask = mask;
   }
@@ -65,7 +68,9 @@ public:
   ///
   /// type はビットマスクではない．
   void
-  add_mask(MsgType type) ///< [in] 付加するメッセージタイプ
+  add_mask(
+    MsgType type ///< [in] 付加するメッセージタイプ
+  )
   {
     mMask |= conv2bitmask(type);
   }
@@ -74,7 +79,9 @@ public:
   ///
   /// type はビットマスクではない．
   void
-  delete_mask(MsgType type) ///< [in] 削除するメッセージタイプ
+  delete_mask(
+    MsgType type ///< [in] 削除するメッセージタイプ
+  )
   {
     mMask &= ~(conv2bitmask(type));
   }
@@ -88,21 +95,25 @@ public:
   /// @brief メッセージが登録されるたびに呼ばれる仮想関数
   virtual
   void
-  put_msg(const char* src_file,  ///< [in] この関数を呼んでいるソースファイル名
-	  int src_line,          ///< [in] この関数を呼んでいるソースの行番号
-	  const FileRegion& loc, ///< [in] ファイル位置
-	  MsgType type,          ///< [in] メッセージの種類
-	  const char* label,     ///< [in] メッセージラベル
-	  const char* body) = 0; ///< [in] メッセージ本文
+  put_msg(
+    const char* src_file,  ///< [in] この関数を呼んでいるソースファイル名
+    int src_line,          ///< [in] この関数を呼んでいるソースの行番号
+    const FileRegion& loc, ///< [in] ファイル位置
+    MsgType type,          ///< [in] メッセージの種類
+    const char* label,     ///< [in] メッセージラベル
+    const char* body       ///< [in] メッセージ本文
+  ) = 0;
 
   /// @brief メッセージが登録されるたびに呼ばれる仮想関数
   virtual
   void
-  put_msg(const char* src_file, ///< [in] この関数を呼んでいるソースファイル名
-	  int src_line,		///< [in] この関数を呼んでいるソースの行番号
-	  MsgType type,         ///< [in] メッセージの種類
-	  const char* label,    ///< [in] メッセージラベル
-	  const char* body);    ///< [in] メッセージ本文
+  put_msg(
+    const char* src_file, ///< [in] この関数を呼んでいるソースファイル名
+    int src_line,	  ///< [in] この関数を呼んでいるソースの行番号
+    MsgType type,         ///< [in] メッセージの種類
+    const char* label,    ///< [in] メッセージラベル
+    const char* body      ///< [in] メッセージ本文
+  );
 
 
 protected:
@@ -112,20 +123,24 @@ protected:
 
   /// @brief メッセージを文字列にまとめる．
   string
-  msg_to_string(const char* src_file,  ///< [in] この関数を呼んでいるソースファイル名
-		int src_line,	       ///< [in] この関数を呼んでいるソースの行番号
-		const FileRegion& loc, ///< [in] ファイル位置
-		MsgType type,	       ///< [in] メッセージの種類
-		const char* label,     ///< [in] メッセージラベル
-		const char* body);     ///< [in] メッセージ本文
+  msg_to_string(
+    const char* src_file,  ///< [in] この関数を呼んでいるソースファイル名
+    int src_line,	   ///< [in] この関数を呼んでいるソースの行番号
+    const FileRegion& loc, ///< [in] ファイル位置
+    MsgType type,	   ///< [in] メッセージの種類
+    const char* label,     ///< [in] メッセージラベル
+    const char* body       ///< [in] メッセージ本文
+  );
 
   /// @brief メッセージを文字列にまとめる．
   string
-  msg_to_string(const char* src_file, ///< [in] この関数を呼んでいるソースファイル名
-		int src_line,	      ///< [in] この関数を呼んでいるソースの行番号
-		MsgType type,	      ///< [in] メッセージの種類
-		const char* label,    ///< [in] メッセージラベル
-		const char* body);    ///< [in] メッセージ本文
+  msg_to_string(
+    const char* src_file, ///< [in] この関数を呼んでいるソースファイル名
+    int src_line,         ///< [in] この関数を呼んでいるソースの行番号
+    MsgType type,         ///< [in] メッセージの種類
+    const char* label,    ///< [in] メッセージラベル
+    const char* body      ///< [in] メッセージ本文
+  );
 
 
 private:
@@ -136,12 +151,14 @@ private:
   /// @brief メッセージが登録されるたびに呼ばれる仮想関数
   virtual
   void
-  event_proc(const char* src_file,  ///< [in] この関数を呼んでいるソースファイル名
-	     int src_line,	    ///< [in] この関数を呼んでいるソースの行番号
-	     const FileRegion& loc, ///< [in] ファイル位置
-	     MsgType type,	    ///< [in] メッセージの種類
-	     const char* label,	    ///< [in] メッセージラベル
-	     const char* body);	    ///< [in] メッセージ本文
+  event_proc(
+    const char* src_file,  ///< [in] この関数を呼んでいるソースファイル名
+    int src_line,	   ///< [in] この関数を呼んでいるソースの行番号
+    const FileRegion& loc, ///< [in] ファイル位置
+    MsgType type,	   ///< [in] メッセージの種類
+    const char* label,	   ///< [in] メッセージラベル
+    const char* body  	   ///< [in] メッセージ本文
+  );
 
 
 private:

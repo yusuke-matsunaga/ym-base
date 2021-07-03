@@ -37,20 +37,24 @@ public:
 
   /// @brief メッセージが登録されるたびに呼ばれる仮想関数
   void
-  put_msg(const char* src_file,        ///< [in] この関数を呼んでいるソースファイル名
-	  int src_line,		       ///< [in] この関数を呼んでいるソースの行番号
-	  const FileRegion& loc,       ///< [in] ファイル位置
-	  MsgType type,		       ///< [in] メッセージの種類
-	  const char* label,	       ///< [in] メッセージラベル
-	  const char* body) override;  ///< [in] メッセージ本文
+  put_msg(
+    const char* src_file,  ///< [in] この関数を呼んでいるソースファイル名
+    int src_line,          ///< [in] この関数を呼んでいるソースの行番号
+    const FileRegion& loc, ///< [in] ファイル位置
+    MsgType type,	   ///< [in] メッセージの種類
+    const char* label,	   ///< [in] メッセージラベル
+    const char* body       ///< [in] メッセージ本文
+  ) override;
 
   /// @brief メッセージが登録されるたびに呼ばれる仮想関数
   void
-  put_msg(const char* src_file,        ///< [in] この関数を呼んでいるソースファイル名
-	  int src_line,		       ///< [in] この関数を呼んでいるソースの行番号
-	  MsgType type,		       ///< [in] メッセージの種類
-	  const char* label,	       ///< [in] メッセージラベル
-	  const char* body) override;  ///< [in] メッセージ本文
+  put_msg(
+    const char* src_file,  ///< [in] この関数を呼んでいるソースファイル名
+    int src_line,	   ///< [in] この関数を呼んでいるソースの行番号
+    MsgType type,	   ///< [in] メッセージの種類
+    const char* label,	   ///< [in] メッセージラベル
+    const char* body       ///< [in] メッセージ本文
+  ) override;
 
 
 public:

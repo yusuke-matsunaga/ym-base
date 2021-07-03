@@ -24,8 +24,9 @@ class RandPermGen
 public:
 
   /// @brief コンストラクタ
-  RandPermGen(int n) ///< [in] 要素数
-    : mNum{n},
+  RandPermGen(
+    int n ///< [in] 要素数
+  ) : mNum{n},
       mArray{new int[n]}
   {
   }
@@ -49,7 +50,9 @@ public:
   /// @brief ランダムな順列を生成する．
   template<class URNG>
   void
-  generate(URNG& randgen) ///< [in] 乱数発生器
+  generate(
+    URNG& randgen ///< [in] 乱数発生器
+  )
   {
     vector<int> src_array(mNum);
     for ( int i: Range(mNum) ) {
@@ -69,7 +72,9 @@ public:
 
   /// @brief 順列の要素を取り出す．
   int
-  elem(int pos) const ///< [in] 要素の位置番号 ( 0 <= pos < num() )
+  elem(
+    int pos ///< [in] 要素の位置番号 ( 0 <= pos < num() )
+  ) const
   {
     ASSERT_COND( 0 <= pos && pos < num() );
 

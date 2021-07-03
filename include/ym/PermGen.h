@@ -37,22 +37,26 @@ class PermGen :
 public:
 
   /// @brief コンストラクタ
-  PermGen(int n, ///< [in] 全要素数
-	  int k) ///< [in] 選択する要素数
-    : GenBase(n, k)
+  PermGen(
+    int n, ///< [in] 全要素数
+    int k  ///< [in] 選択する要素数
+  ) : GenBase(n, k)
   {
   }
 
   /// @brief コピーコンストラクタ
-  PermGen(const PermGen& src) ///< [in] コピー元のオブジェクト
-    : GenBase(src)
+  PermGen(
+    const PermGen& src ///< [in] コピー元のオブジェクト
+  ) : GenBase(src)
   {
   }
 
   /// @brief 代入演算子
   /// @return 自分自身
   const PermGen&
-  operator=(const PermGen& src) ///< [in] コピー元のオブジェクト
+  operator=(
+    const PermGen& src ///< [in] コピー元のオブジェクト
+  )
   {
     copy(src);
     return *this;

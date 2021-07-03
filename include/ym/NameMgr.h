@@ -26,12 +26,16 @@ class NameMgr
 public:
 
   /// @brief コンストラクタ
-  NameMgr(const char* prefix,  ///< [in] 接頭語
-	  const char* suffix); ///< [in] 接尾語
+  NameMgr(
+    const char* prefix, ///< [in] 接頭語
+    const char* suffix  ///< [in] 接尾語
+  );
 
   /// @brief コンストラクタ
-  NameMgr(const string& prefix,  ///< [in] 接頭語
-	  const string& suffix); ///< [in] 接尾語
+  NameMgr(
+    const string& prefix, ///< [in] 接頭語
+    const string& suffix  ///< [in] 接尾語
+  );
 
   /// @brief デストラクタ
   ~NameMgr();
@@ -40,16 +44,22 @@ public:
 public:
 
   /// @brief 接頭語と接尾語を変更する．
-  /// @note 既に登録されている名前はクリアされる．
+  ///
+  /// 既に登録されている名前はクリアされる．
   void
-  change(const char* prefix,  ///< [in] 接頭語
-	 const char* suffix); ///< [in] 接尾語
+  change(
+    const char* prefix, ///< [in] 接頭語
+    const char* suffix  ///< [in] 接尾語
+  );
 
   /// @brief 接頭語と接尾語を変更する．
-  /// @note 既に登録されている名前はクリアされる．
+  ///
+  /// 既に登録されている名前はクリアされる．
   void
-  change(const string& prefix,  ///< [in] 接頭語
-	 const string& suffix); ///< [in] 接尾語
+  change(
+    const string& prefix, ///< [in] 接頭語
+    const string& suffix  ///< [in] 接尾語
+  );
 
   /// @brief 登録している名前を全てクリアする．
   void
@@ -65,19 +75,25 @@ public:
 
   /// @brief 次に使用可能な名前を接頭語，接尾語を連結して返す．
   const StrBuff&
-  new_name(bool add_name); ///< [in] true の時，名前の登録も行う．
+  new_name(
+    bool add_name ///< [in] true の時，名前の登録も行う．
+  );
 
   /// @brief 名前を登録する．
   ///
   /// 名前が \<prefix\>ddd\<suffix\> の形でない場合には何もしない．
   void
-  add(const char* name); ///< [in] 登録する名前
+  add(
+    const char* name ///< [in] 登録する名前
+  );
 
   /// @brief 名前を登録する．
   ///
   /// 名前が \<prefix\>ddd\<suffix\> の形でない場合には何もしない．
   void
-  add(const string& name) ///< [in] 登録する名前
+  add(
+    const string& name ///< [in] 登録する名前
+  )
   {
     add(name.c_str());
   }
@@ -86,13 +102,17 @@ public:
   ///
   /// 名前が \<prefix\>ddd\<suffix\> の形でない場合には何もしない．
   void
-  erase(const char* name); ///< [in] 削除する名前
+  erase(
+    const char* name ///< [in] 削除する名前
+  );
 
   /// @brief 名前を削除する(使用可能にする)．
   ///
   /// 名前が \<prefix\>ddd\<suffix\> の形でない場合には何もしない．
   void
-  erase(const string& name) ///< [in] 削除する名前
+  erase(
+    const string& name ///< [in] 削除する名前
+  )
   {
     erase(name.c_str());
   }
@@ -101,7 +121,9 @@ public:
   ///
   /// 主にデバッグ用
   void
-  print(ostream& s) const; ///< [in] 出力先のストリーム
+  print(
+    ostream& s ///< [in] 出力先のストリーム
+  ) const;
 
 
 private:
