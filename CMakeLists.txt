@@ -84,7 +84,7 @@ set ( file_info_SOURCES
   c++-src/file_info/File.cc
   c++-src/file_info/FileInfo.cc
   c++-src/file_info/FileInfoMgr.cc
-  c++-src/file_info/InputFileObj.cc
+#  c++-src/file_info/InputFileObj.cc
   )
 
 set ( gen_SOURCES
@@ -166,6 +166,7 @@ endif ( )
 
 set ( textproc_SOURCES
   c++-src/textproc/OptionParser.cc
+  c++-src/textproc/Scanner.cc
   c++-src/textproc/ShString.cc
   c++-src/textproc/StrBuff.cc
   )

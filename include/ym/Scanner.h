@@ -44,6 +44,7 @@ public:
   );
 
   /// @brief デストラクタ
+  virtual
   ~Scanner() = default;
 
 
@@ -69,9 +70,9 @@ public:
   }
 
 
-protected:
+public:
   //////////////////////////////////////////////////////////////////////
-  // 継承クラスから用いられる関数
+  // 値を読み出す関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 次の文字を読み出す．
@@ -101,13 +102,24 @@ protected:
     return mNextChar;
   }
 
+  /// @brief ファイルの末尾の時にtrue を返す．
+  bool
+  is_eof() const { return mNextChar == EOF; }
+
   /// @brief 現在の位置をトークンの最初の位置にセットする．
   void
   set_first_loc();
 
+  /// @brief 現在の位置を返す．
+  FileLoc
+  cur_pos() const
+  {
+    return FileLoc(file_info(), mCurLine, mCurColumn);
+  }
+
   /// @brief 直前の set_first_loc() から現在の位置までを返す．
   FileRegion
-  cur_loc() const
+  cur_region() const
   {
     return FileRegion(file_info(), mFirstLine, mFirstColumn, mCurLine, mCurColumn);
   }
@@ -143,23 +155,11 @@ private:
   // ファイル情報
   FileInfo mFileInfo;
 
-  // 行バッファ
-  string mLineBuff;
-
-  // バッファ中の読み出し位置
-  int mReadPos;
-
-  // バッファの末尾
-  int mEndPos;
-
   // 現在の行番号
   int mCurLine;
 
   // 現在のコラム位置
   int mCurColumn;
-
-  // 最後に読み込んだ文字が \r で有ることを示すフラグ
-  bool mCR;
 
   // トークンの最初の行番号
   int mFirstLine;

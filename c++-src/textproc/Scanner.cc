@@ -15,62 +15,42 @@ BEGIN_NAMESPACE_YM
 Scanner::Scanner(istream& s,
 		 const FileInfo& file_info)
   : mS{s},
-    mFileInfo{file_info}
+    mFileInfo{file_info},
+    mCurLine{1},
+    mCurColumn{1},
+    mFirstLine{1},
+    mFirstColumn{1},
+    mNextLine{1},
+    mNextColumn{1},
+    mNeedUpdate{true}
 {
-  mReadPos = 0;
-  mEndPos = 0;
-  mCurLine = 1;
-  mCurColumn = 1;
-  mFirstLine = 1;
-  mFirstColumn = 1;
-  mNextLine = 1;
-  mNextColumn = 1;
-  mNeedUpdate = true;
 }
 
 // @brief peek() の下請け関数
 void
 Scanner::update()
 {
-  int c = 0;
-  for ( ; ; ) {
-    if ( mReadPos >= mEndPos ) {
-      mReadPos = 0;
-      getline(mS, mLineBuff);
-      mEndPos = mLineBuff.size();
-    }
-    if ( mEndPos == 0 ) {
-      c = EOF;
-      break;
-    }
-    c = mLineBuff[mReadPos];
-    ++ mReadPos;
+  int c = mS.peek();
+  mS.ignore();
 
-    // Windows(DOS)/Mac/UNIX の間で改行コードの扱いが異なるのでここで
-    // 強制的に '\n' に書き換えてしまう．
-    // Windows : '\r', '\n'
-    // Mac     : '\r'
-    // UNIX    : '\n'
-    // なので '\r' を '\n' に書き換えてしまう．
-    // ただし次に本当の '\n' が来たときには無視するために
-    // mCR を true にしておく．
-    if ( c == '\r' ) {
-      mCR = true;
+  // Windows(DOS)/Mac/UNIX の間で改行コードの扱いが異なるのでここで
+  // 強制的に '\n' に書き換えてしまう．
+  // Windows : '\r', '\n'
+  // Mac     : '\r'
+  // UNIX    : '\n'
+  // なので '\r' を '\n' に書き換えてしまう．
+  // ただし次に本当の '\n' が来たときには無視するために
+  // mCR を true にしておく．
+  if ( c == '\r' ) {
+    c = mS.peek();
+    if ( c != '\n' ) {
+      // MAC 形式 ('\r' のみ)
       c = '\n';
-      break;
     }
-    if ( c == '\n' ) {
-      if ( mCR ) {
-	// 直前に '\r' を読んで '\n' を返していたので今の '\n' を
-	// 無視する．これが唯一ループを回る条件
-	mCR = false;
-	continue;
-      }
-      break;
+    else {
+      // Windows 形式 ('\r', '\n')
+      mS.ignore();
     }
-    // 普通の文字の時はそのまま返す．
-    mCR = false;
-    break;
   }
   mNeedUpdate = false;
   mNextChar = c;
