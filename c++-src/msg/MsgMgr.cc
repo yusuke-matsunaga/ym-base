@@ -20,24 +20,6 @@ MsgMgrImpl gTheMgr;
 END_NONAMESPACE
 
 
-// @brief MsgType のストリーム出力演算子
-// @param[in] s 出力先のストリーム
-// @param[in] type メッセージの種類
-ostream&
-operator<<(ostream& s,
-	   MsgType type)
-{
-  switch ( type ) {
-  case MsgType::Error:   s << "(ERROR  )"; break;
-  case MsgType::Warning: s << "(WARNING)"; break;
-  case MsgType::Info:    s << "(INFO   )"; break;
-  case MsgType::Failure: s << "(FAILURE)"; break;
-  case MsgType::Debug:   s << "(DEBUG  )"; break;
-  }
-  return s;
-}
-
-
 //////////////////////////////////////////////////////////////////////
 // クラス MsgMgr
 //////////////////////////////////////////////////////////////////////
