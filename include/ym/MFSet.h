@@ -54,7 +54,10 @@ public:
 
   /// @brief 要素数を返す．
   int
-  num() const;
+  num() const
+  {
+    return mNum;
+  }
 
   /// @brief 代表元の検索 (Find)
   /// @retval 要素 x の属する集合の代表元

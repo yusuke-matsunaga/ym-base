@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014, 2018, 2019 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/MFSet.h"
 
 
@@ -20,11 +19,27 @@ class MFSetCell
 private:
 
   // コンストラクタ
-  MFSetCell();
+  MFSetCell(
+  ) : mParent{this},
+      mRank{0}
+  {
+  }
 
   // この要素の属する集合の代表元を返す．
   MFSetCell*
-  find();
+  find()
+  {
+    auto tmp = this;
+
+    // 検索の途中で道の圧縮を行なう．
+    auto parent = tmp->mParent;
+    while ( parent->mParent != parent ) {
+      tmp = tmp->mParent = parent->mParent;
+      parent = tmp->mParent;
+    }
+
+    return parent;
+  }
 
 
 private:
@@ -44,35 +59,13 @@ private:
 };
 
 
-// コンストラクタ
-MFSetCell::MFSetCell()
+/// @brief コンストラクタ
+MFSet::MFSet(
+  int n ///< [in] 確保したい要素の数．
+) : mNum{n},
+    mCellArray{new MFSetCell[mNum]}
 {
-  mParent = this;
-  mRank = 0;
-}
-
-// 検索処理
-MFSetCell*
-MFSetCell::find()
-{
-  auto tmp = this;
-
-  // 検索の途中で道の圧縮を行なう．
-  auto parent = tmp->mParent;
-  while ( parent->mParent != parent ) {
-    tmp = tmp->mParent = parent->mParent;
-    parent = tmp->mParent;
-  }
-
-  return parent;
-}
-
-// n 個の要素を持つ集合を作るコンストラクタ．
-MFSet::MFSet(int n) :
-  mNum{n},
-  mCellArray{new MFSetCell[mNum]}
-{
-  for ( int i = 0; i < n; ++ i ) {
+  for ( int i = 0; i < mNum; ++ i ) {
     mCellArray[i].mId = i;
   }
 }
@@ -83,17 +76,12 @@ MFSet::~MFSet()
   delete [] mCellArray;
 }
 
-// @brief 要素数を返す．
-int
-MFSet::num() const
-{
-  return mNum;
-}
-
 // x を含む集合の代表元を返す．
 // x が存在しない時には 0 を返す．
 int
-MFSet::find(int id)
+MFSet::find(
+  int id
+)
 {
   auto x = get(id);
   if ( x ) {
@@ -108,8 +96,10 @@ MFSet::find(int id)
 // x_id を含む集合と y_id を含む集合を併合し，新しい集合の代表元を返す．
 // x_id や y_id が存在しない時には 0 を返す．
 int
-MFSet::merge(int x_id,
-	     int y_id)
+MFSet::merge(
+  int x_id,
+  int y_id
+)
 {
   auto x = get(x_id);
   if ( !x ) return kBadID;
@@ -151,7 +141,9 @@ MFSet::merge(int x_id,
 
 // x 番めのセルを取り出す．
 MFSetCell*
-MFSet::get(int id)
+MFSet::get(
+  int id
+)
 {
   if ( id < 0 || id >= mNum ) {
     // 範囲外の場合はnullptrを返す．
