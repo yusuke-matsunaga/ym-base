@@ -9,7 +9,6 @@
 /// All rights reserved.
 
 #include "ym_config.h"
-#include "ym/Range.h"
 #include <random>
 
 
@@ -25,19 +24,15 @@ public:
 
   /// @brief コンストラクタ
   RandCombiGen(
-    int n, ///< [in] 全要素数
-    int k  ///< [in] 組み合わせの要素数
-  ) : mNum{n},
-      mCombiNum{k},
-      mArray{new int[n]}
+    SizeType n, ///< [in] 全要素数
+    SizeType k  ///< [in] 組み合わせの要素数
+  ) : mCombiNum{k},
+      mArray(n)
   {
   }
 
   /// @brief デストラクタ
-  ~RandCombiGen()
-  {
-    delete [] mArray;
-  }
+  ~RandCombiGen() = default;
 
 
 public:
@@ -46,11 +41,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 全要素数を返す．
-  int
-  num() const { return mNum; }
+  SizeType
+  num() const { return mArray.size(); }
 
   /// @brief 組み合わせの要素数を返す．
-  int
+  SizeType
   combi_num() const { return mCombiNum; }
 
   /// @brief ランダムな組み合わせを生成する．
@@ -61,25 +56,23 @@ public:
   )
   {
     vector<int> src_array(mNum);
-    for ( int i: Range(mNum) ) {
+    for ( int i = 0; i < num(); ++ i ) {
       src_array[i] = i;
     }
-    int n = mNum - 1;
-    for ( int i: Range(mCombiNum) ) {
+    int n = num() - 1;
+    for ( int i = 0; i < combi_num(); ++ i ) {
       std::uniform_int_distribution<int> rd(0, n);
       int r = rd(randgen);
       mArray[i] = src_array[r];
-      for ( int j: Range(r, n) ) {
-	src_array[j] = src_array[j + 1];
-      }
       -- n;
+      src_array[r] = src_array[n];
     }
   }
 
   /// @brief 組み合わせの要素を取り出す．
   int
   elem(
-    int pos ///< [in] 要素の位置番号 ( 0 <= pos < combi_num() )
+    SizeType pos ///< [in] 要素の位置番号 ( 0 <= pos < combi_num() )
   ) const
   {
     ASSERT_COND( 0 <= pos && pos < combi_num() );
@@ -93,14 +86,11 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 要素数
-  int mNum;
-
   // 組み合わせの要素数
-  int mCombiNum;
+  SizeType mCombiNum;
 
   // 現在の順列
-  int* mArray;
+  vector<int> mArray;
 
 };
 

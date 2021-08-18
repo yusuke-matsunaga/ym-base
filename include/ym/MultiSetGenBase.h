@@ -23,8 +23,8 @@ public:
 
   /// @brief コンストラクタ
   MultiSetGenBase(
-    const vector<int>& num_array, ///< [in] 各要素の重複度を納めた配列
-    int k                         ///< [in] 選び出す要素数
+    const vector<SizeType>& num_array, ///< [in] 各要素の重複度を納めた配列
+    SizeType k                         ///< [in] 選び出す要素数
   ) : mNumArray{num_array},
       mK{k},
       mElem(mK)
@@ -33,8 +33,8 @@ public:
 
   /// @brief コンストラクタ
   MultiSetGenBase(
-    initializer_list<int>& num_array, ///< [in] 各要素の重複度を納めた初期化リスト
-    int k                             ///< [in] 選び出す要素数
+    initializer_list<SizeType>& num_array, ///< [in] 各要素の重複度を納めた初期化リスト
+    SizeType k                             ///< [in] 選び出す要素数
   ) : mNumArray{num_array},
       mK{k},
       mElem(mK)
@@ -51,21 +51,21 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素の種類の数を得る．
-  int
-  group_num() const { return static_cast<int>(mNumArray.size()); }
+  SizeType
+  group_num() const { return mNumArray.size(); }
 
   /// @brief 各要素の重複度を得る．
-  int
+  SizeType
   n(
-    int grp ///< [in] グループ番号 ( 0 <= grp < group_num() )
+    SizeType grp ///< [in] グループ番号 ( 0 <= grp < group_num() )
   ) const
   {
-    ASSERT_COND( grp < group_num() );
+    ASSERT_COND( 0 <= grp && grp < group_num() );
     return mNumArray[grp];
   }
 
   /// @brief 選択する要素数を返す．
-  int
+  SizeType
   k() const
   {
     return mK;
@@ -78,7 +78,7 @@ public:
   /// @brief 要素の取得
   int
   operator()(
-    int pos ///< [in] 取り出す要素の位置 ( 0 <= pos <, k() )
+    SizeType pos ///< [in] 取り出す要素の位置 ( 0 <= pos <, k() )
   ) const
   {
     return mElem[pos];
@@ -98,17 +98,11 @@ protected:
   // 継承クラスから用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 内容をコピーする関数
-  void
-  copy(
-    const MultiSetGenBase& src ///< [in] コピー元のオブジェクト
-  );
-
   /// @brief 要素の参照の取得
   /// @return pos 番目の要素への参照
   int&
   elem(
-    int pos ///< [in] 取り出す要素の位置 ( 0 <= pos < k() )
+    SizeType pos ///< [in] 取り出す要素の位置 ( 0 <= pos < k() )
   )
   {
     return mElem[pos];
@@ -121,10 +115,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 要素の重複度
-  vector<int> mNumArray;
+  vector<SizeType> mNumArray;
 
   // 選択する要素数
-  int mK;
+  SizeType mK;
 
   // 現在の要素
   vector<int> mElem;

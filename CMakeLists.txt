@@ -89,7 +89,6 @@ set ( file_info_SOURCES
 
 set ( gen_SOURCES
   c++-src/gen/CombiGen.cc
-  c++-src/gen/GenBase.cc
   c++-src/gen/MultiCombiGen.cc
   c++-src/gen/MultiGenBase.cc
   c++-src/gen/MultiPermGen.cc
@@ -142,12 +141,12 @@ endif ( LIBLZMA_FOUND )
 
 set ( itvl_SOURCES
   c++-src/itvl/ItvlMgr.cc
-  c++-src/itvl/ItvlMgrImpl.cc
+  c++-src/itvl/ItvlTree.cc
   c++-src/itvl/NameMgr.cc
   )
 
 set ( misc_SOURCES
-  c++-src/misc/MFSet.cc
+  c++-src/misc/UnionFindSet.cc
   )
 
 set ( msg_SOURCES

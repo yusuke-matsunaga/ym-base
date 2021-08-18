@@ -23,7 +23,6 @@
 /// 値を取り出すには () 演算子を用いる．
 
 #include "ym_config.h"
-#include "ym/Array.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -38,14 +37,24 @@ class GenBase
 public:
 
   /// @brief コンストラクタ
-  GenBase(int n,  ///< [in] 全要素数
-	  int k); ///< [in] 選び出す要素数
+  GenBase(
+    SizeType n, ///< [in] 全要素数
+    SizeType k  ///< [in] 選び出す要素数
+  ) : mN{n},
+      mElemList(k)
+  {
+    for ( int i = 0; i < k; ++ i ) {
+      mElemList[i] = i;
+    }
+  }
 
   /// @brief コピーコンストラクタ
-  GenBase(const GenBase& src); ///< [in] コピー元のオブジェクト
+  GenBase(
+    const GenBase& src ///< [in] コピー元のオブジェクト
+  ) = default;
 
   /// @brief デストラクタ
-  ~GenBase();
+  ~GenBase() = default;
 
 
 public:
@@ -55,31 +64,29 @@ public:
 
   /// @brief 全要素数を得る．
   /// @return 全要素数
-  int
+  SizeType
   n() const { return mN; }
 
   /// @brief 選択する要素数を得る．
   /// @return 選択する要素数
-  int
-  k() const { return mK; }
-
-  /// @brief 最初の要素を指すように初期化する．
-  void
-  init();
+  SizeType
+  k() const { return mElemList.size(); }
 
   /// @brief 要素の取得
   /// @return pos 番目の要素
   int
-  operator()(int pos) const ///< [in] 取り出す要素の位置 (最初の位置は 0)
+  operator()(
+    SizeType pos ///< [in] 取り出す要素の位置 (最初の位置は 0)
+  ) const
   {
-    ASSERT_COND( pos >= 0 && pos < mK );
+    ASSERT_COND( 0 <= pos && pos < mElemList.size() );
 
     return mElemList[pos];
   }
 
   /// @brief 要素リストの取得
-  Array<int>
-  elem_list() const { return Array<int>(mElemList, 0, mK); }
+  vector<int>
+  elem_list() const { return mElemList; }
 
   /// @brief 末尾のチェック
   /// @return 末尾の時に true を返す．
@@ -96,16 +103,14 @@ protected:
   // 継承クラスから用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 内容をコピーする関数
-  void
-  copy(const GenBase& src); ///< [in] コピー元のオブジェクト
-
   /// @brief 要素の参照の取得
   /// @return pos 番目の要素への参照
   int&
-  elem(int pos) ///< [in] 取り出す要素の位置 (最初の位置は 0)
+  elem(
+    SizeType pos ///< [in] 取り出す要素の位置 (最初の位置は 0)
+  )
   {
-    ASSERT_COND( pos >= 0 && pos < mK );
+    ASSERT_COND( 0 <= pos && pos < mElemList.size() );
 
     return mElemList[pos];
   }
@@ -117,14 +122,11 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 全要素数
-  int mN;
-
-  // 選択する要素数
-  int mK;
+  SizeType mN;
 
   // 現在の要素を持つ配列
   // サイズは mK;
-  int* mElemList;
+  vector<int> mElemList;
 
 };
 

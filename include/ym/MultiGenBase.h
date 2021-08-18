@@ -9,7 +9,6 @@
 /// All rights reserved.
 
 #include "ym_config.h"
-#include "ym/Array.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -36,10 +35,10 @@ public:
   /// @brief コピーコンストラクタ
   MultiGenBase(
     const MultiGenBase& src ///< [in] コピー元のオブジェクト
-  );
+  ) = default;
 
   /// @brief デストラクタ
-  ~MultiGenBase();
+  ~MultiGenBase() = default;
 
 
 public:
@@ -49,14 +48,14 @@ public:
 
   /// @brief グループ数の取得
   /// @return グループ数
-  int
+  SizeType
   group_num() const { return mGroupNum; }
 
   /// @brief 全要素数の取得
   /// @return grp 番目のグループの全要素数
-  int
+  SizeType
   n(
-    int grp ///< [in] グループ番号 ( 0 <= grp < group_num() )
+    SizeType grp ///< [in] グループ番号 ( 0 <= grp < group_num() )
   ) const
   {
     ASSERT_COND( grp >= 0 && grp < mGroupNum );
@@ -65,9 +64,9 @@ public:
 
   /// @brief 選択する要素数の取得
   /// @return grp 番目のグループの選択する要素数
-  int
+  SizeType
   k(
-    int grp ///< [in] グループ番号 ( 0 <= grp < group_num() )
+    SizeType grp ///< [in] グループ番号 ( 0 <= grp < group_num() )
   ) const
   {
     ASSERT_COND( grp >= 0 && grp < mGroupNum );
@@ -82,8 +81,8 @@ public:
   /// @return grp 番目のグループの pos 番目の要素を取り出す．
   int
   operator()(
-    int grp,       ///< [in] グループ番号 ( 0 <= grp < group_num() )
-    int pos        ///< [in] 要素の位置 ( 0 <= pos < k(grp) )
+    SizeType grp,       ///< [in] グループ番号 ( 0 <= grp < group_num() )
+    SizeType pos        ///< [in] 要素の位置 ( 0 <= pos < k(grp) )
   ) const
   {
     ASSERT_COND( grp >= 0 && grp < mGroupNum );
@@ -102,29 +101,24 @@ protected:
   // 継承クラスから用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief コピーする．
-  void
-  copy(
-    const MultiGenBase& src ///< [in] コピー元のオブジェクト
-  );
-
   /// @brief 要素配列の初期化
   ///
   /// grp 番目のグループの要素配列を初期化する．
   void
   init_group(
-    int grp ///< [in] グループ番号
+    SizeType grp ///< [in] グループ番号
   );
 
-  /// @brief 要素配列の取得
-  /// @return grp 番目のグループの要素配列
-  Array<int>
+  int&
   elem(
-    int grp ///< [in] グループ番号
+    SizeType grp, ///< [in] グループ番号 ( 0 <= grp < group_num() )
+    SizeType pos  ///< [in] 要素の位置 ( 0 <= pos < k(grp) )
   )
   {
-    int offset = mOffsetArray[grp];
-    return Array<int>(mElemArray, offset, offset + mKArray[grp]);
+    ASSERT_COND( 0 <= grp && grp < group_num() );
+    ASSERT_COND( 0 <= pos && pos < k(grp) );
+    SizeType offset = mOffsetArray[grp];
+    return mElemArray[offset + pos];
   }
 
   /// @brief grp 番目のグループが終了状態の時 true を返す．
@@ -143,24 +137,24 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // グループ数
-  int mGroupNum;
+  SizeType mGroupNum;
 
   // 各グループごとの要素数の配列
   // サイズは mGroupNum
-  int* mNArray;
+  vector<SizeType> mNArray;
 
   // 各グループごとの選択数の配列
   // サイズは mGroupNum
-  int* mKArray;
+  vector<SizeType> mKArray;
 
   // 各グループごとのmElemArray上のオフセットの配列
   // = mOffsetArray[i] = sum_j^{i - 1} mKArray[j]
   // サイズは mGroupNum
-  int* mOffsetArray;
+  vector<SizeType> mOffsetArray;
 
   // 現在の要素(二重の配列を一次元の配列で表すので少しめんどくさい)
   // サイズは sum_i mKArray[i]
-  int* mElemArray;
+  vector<int> mElemArray;
 
 };
 

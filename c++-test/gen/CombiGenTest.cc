@@ -3,11 +3,10 @@
 /// @brief CombiGenTest の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2017, 2018 Yusuke Matsunaga
+/// Copyright (C) 2017, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include "ym/CombiGen.h"
 
 
@@ -15,11 +14,13 @@ BEGIN_NAMESPACE_YM
 
 // CombiGen の出力結果が exp_list と等しいか検査する．
 bool
-check_gen(CombiGen& gen,
-	 const int exp_list[])
+check_gen(
+  CombiGen& gen,
+  const int exp_list[]
+)
 {
-  int num = gen.n();
-  int combi_num = gen.k();
+  SizeType num = gen.n();
+  SizeType combi_num = gen.k();
   int pos = 0;
   for ( ; !gen.is_end(); ++ gen) {
     for ( auto val: gen.elem_list() ) {
@@ -46,8 +47,8 @@ check_gen(CombiGen& gen,
 // GenBase のメンバ関数のチェック
 TEST(CombiGenTest, basic_test)
 {
-  const int n = 10;
-  const int k = 5;
+  const SizeType n = 10;
+  const SizeType k = 5;
 
   CombiGen gen(n, k);
 

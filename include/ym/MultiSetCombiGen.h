@@ -24,16 +24,16 @@ public:
 
   /// @brief コンストラクタ
   MultiSetCombiGen(
-    const vector<int>& num_array, ///< [in] 各要素の重複度を納めた配列
-    int k                         ///< [in] 選び出す要素数
+    const vector<SizeType>& num_array, ///< [in] 各要素の重複度を納めた配列
+    SizeType k                         ///< [in] 選び出す要素数
   ) : MultiSetGenBase(num_array, k)
   {
   }
 
   /// @brief コンストラクタ
   MultiSetCombiGen(
-    initializer_list<int>& num_array, ///< [in] 各要素の重複度を納めた初期化リスト
-    int k                             ///< [in] 選び出す要素数
+    initializer_list<SizeType>& num_array, ///< [in] 各要素の重複度を納めた初期化リスト
+    SizeType k                             ///< [in] 選び出す要素数
   ) : MultiSetGenBase(num_array, k)
   {
   }
@@ -41,20 +41,14 @@ public:
   /// @brief コピーコンストラクタ
   MultiSetCombiGen(
     const MultiSetCombiGen& src ///< [in] コピー元のオブジェクト
-  ) : MultiSetGenBase(src)
-  {
-  }
+  ) = default;
 
   /// @brief 代入演算子
   /// @return 自分自身
-  const MultiSetCombiGen&
+  MultiSetCombiGen&
   operator=(
     const MultiSetCombiGen& src ///< [in] コピー元のオブジェクト
-  )
-  {
-    copy(src);
-    return *this;
-  }
+  ) = default;
 
   /// @brief デストラクタ
   ~MultiSetCombiGen() = default;

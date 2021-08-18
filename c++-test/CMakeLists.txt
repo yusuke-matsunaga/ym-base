@@ -47,6 +47,11 @@ ym_add_gtest ( base_Array_test
   $<TARGET_OBJECTS:ym_base_obj_d>
   )
 
+ym_add_gtest ( base_UnionFindSet_test
+  misc/UnionFindSet_test.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
+
 ym_add_gtest ( base_Range_test
   misc/RangeTest.cc
   $<TARGET_OBJECTS:ym_base_obj_d>

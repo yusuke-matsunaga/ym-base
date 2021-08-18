@@ -3,9 +3,8 @@
 /// @brief PermGen の実装ファイル
 /// @author Yusuke Matsunaga
 ///
-/// Copyright (C) 2005-2011, 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2013-2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/PermGen.h"
 
@@ -20,8 +19,8 @@ BEGIN_NAMESPACE_YM
 void
 PermGen::operator++()
 {
-  int n = this->n();
-  int k = this->k();
+  SizeType n = this->n();
+  SizeType k = this->k();
 
   // 各値の使用回数(0/1)を数える．
   vector<bool> used(n, false);

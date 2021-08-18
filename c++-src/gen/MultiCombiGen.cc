@@ -19,17 +19,17 @@ BEGIN_NAMESPACE_YM
 void
 MultiCombiGen::operator++()
 {
-  for (int g = group_num(); g -- > 0; ) {
-    for (int pos = k(g); pos -- > 0; ) {
-      if ( elem(g)[pos] < n(g) - k(g) + pos ) {
-	++ elem(g)[pos];
+  for ( int g = group_num(); g -- > 0; ) {
+    for ( int pos = k(g); pos -- > 0; ) {
+      if ( elem(g, pos) < n(g) - k(g) + pos ) {
+	++ elem(g, pos);
 	for (int pos1 = pos + 1; pos1 < k(g); ++ pos1) {
-	  elem(g)[pos1] = elem(g)[pos1 - 1] + 1;
+	  elem(g, pos1) = elem(g, pos1 - 1) + 1;
 	}
 	break;
       }
       else if ( pos == 0 ) {
-	elem(g)[0] = n(g);
+	elem(g, 0) = n(g);
       }
     }
     if ( !is_end_sub(g) ) {

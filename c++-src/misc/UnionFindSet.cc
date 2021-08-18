@@ -1,32 +1,32 @@
 ﻿
-/// @file MFSet.cc
-/// @brief MFSet の実装ファイル
+/// @file UnionFindSet.cc
+/// @brief UnionFindSet の実装ファイル
 /// @author Yusuke Matsunaga
 ///
-/// Copyright (C) 2005-2010, 2014, 2018, 2019 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2018, 2019, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/MFSet.h"
+#include "ym/UnionFindSet.h"
 
 
 BEGIN_NAMESPACE_YM
 
-/// @class MFSetCell MFSet.cc
-/// @brief MFSet 内部で用いられるクラス
-class MFSetCell
+/// @class UFCell UnionFindSet.cc
+/// @brief UnionFindSet 内部で用いられるクラス
+class UFCell
 {
-  friend class MFSet;
+  friend class UnionFindSet;
 private:
 
   // コンストラクタ
-  MFSetCell(
+  UFCell(
   ) : mParent{this},
       mRank{0}
   {
   }
 
   // この要素の属する集合の代表元を返す．
-  MFSetCell*
+  UFCell*
   find()
   {
     auto tmp = this;
@@ -51,7 +51,7 @@ private:
   int mId;
 
   // 親を指すポインタ
-  MFSetCell* mParent;
+  UFCell* mParent;
 
   // 根本までのレベル
   int mRank;
@@ -60,10 +60,10 @@ private:
 
 
 /// @brief コンストラクタ
-MFSet::MFSet(
-  int n ///< [in] 確保したい要素の数．
+UnionFindSet::UnionFindSet(
+  SizeType n ///< [in] 確保したい要素の数．
 ) : mNum{n},
-    mCellArray{new MFSetCell[mNum]}
+    mCellArray{new UFCell[mNum]}
 {
   for ( int i = 0; i < mNum; ++ i ) {
     mCellArray[i].mId = i;
@@ -71,7 +71,7 @@ MFSet::MFSet(
 }
 
 // デストラクタ
-MFSet::~MFSet()
+UnionFindSet::~UnionFindSet()
 {
   delete [] mCellArray;
 }
@@ -79,11 +79,11 @@ MFSet::~MFSet()
 // x を含む集合の代表元を返す．
 // x が存在しない時には 0 を返す．
 int
-MFSet::find(
+UnionFindSet::find(
   int id
 )
 {
-  auto x = get(id);
+  auto x = _get(id);
   if ( x ) {
     x = x->find();
     return x->mId;
@@ -96,15 +96,15 @@ MFSet::find(
 // x_id を含む集合と y_id を含む集合を併合し，新しい集合の代表元を返す．
 // x_id や y_id が存在しない時には 0 を返す．
 int
-MFSet::merge(
+UnionFindSet::merge(
   int x_id,
   int y_id
 )
 {
-  auto x = get(x_id);
+  auto x = _get(x_id);
   if ( !x ) return kBadID;
 
-  auto y = get(y_id);
+  auto y = _get(y_id);
   if ( !y ) return kBadID;
 
   if ( x->mParent != x ) {
@@ -140,8 +140,8 @@ MFSet::merge(
 }
 
 // x 番めのセルを取り出す．
-MFSetCell*
-MFSet::get(
+UFCell*
+UnionFindSet::_get(
   int id
 )
 {

@@ -19,9 +19,9 @@ BEGIN_NAMESPACE_YM
 void
 MultiSetGenBase::init()
 {
-  int pos = 0;
-  int count = 0;
-  for (int i = 0; i < mK; ++ i) {
+  SizeType pos = 0;
+  SizeType count = 0;
+  for ( int i = 0; i < mK; ++ i) {
     if ( count >= mNumArray[pos] ) {
       ++ pos;
       count = 0;
@@ -31,16 +31,6 @@ MultiSetGenBase::init()
     mElem[i] = pos;
     ++ count;
   }
-}
-
-// @brief 内容をコピーする関数
-// @param[in] src コピー元のオブジェクト
-void
-MultiSetGenBase::copy(const MultiSetGenBase& src)
-{
-  mNumArray = src.mNumArray;
-  mK = src.mK;
-  mElem = src.mElem;
 }
 
 END_NAMESPACE_YM

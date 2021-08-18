@@ -3,11 +3,11 @@
 /// @brief NameMgr の実装ファイル
 /// @author Yusuke Matsunaga
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/NameMgr.h"
+#include "ItvlTree.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -17,18 +17,22 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-NameMgr::NameMgr(const char* prefix,
-		 const char* suffix) :
-  mPrefix{prefix},
-  mSuffix{suffix}
+NameMgr::NameMgr(
+  const char* prefix,
+  const char* suffix
+) : mPrefix{prefix},
+    mSuffix{suffix},
+    mInterval{new ItvlTree}
 {
 }
 
 // コンストラクタ
-NameMgr::NameMgr(const string& prefix,
-		 const string& suffix) :
-  mPrefix{prefix},
-  mSuffix{suffix}
+NameMgr::NameMgr(
+  const string& prefix,
+  const string& suffix
+) : mPrefix{prefix},
+    mSuffix{suffix},
+    mInterval{new ItvlTree}
 {
 }
 
@@ -38,12 +42,12 @@ NameMgr::~NameMgr()
 }
 
 // @brief 接頭語と接尾語を変更する．
-// @param[in] prefix 接頭語
-// @param[in] suffix 接尾語
 // @note 既に登録されている名前はクリアされる．
 void
-NameMgr::change(const char* prefix,
-		const char* suffix)
+NameMgr::change(
+  const char* prefix,
+  const char* suffix
+)
 {
   clear();
   mPrefix = prefix;
@@ -51,12 +55,12 @@ NameMgr::change(const char* prefix,
 }
 
 // @brief 接頭語と接尾語を変更する．
-// @param[in] prefix 接頭語
-// @param[in] suffix 接尾語
 // @note 既に登録されている名前はクリアされる．
 void
-NameMgr::change(const string& prefix,
-		const string& suffix)
+NameMgr::change(
+  const string& prefix,
+  const string& suffix
+)
 {
   clear();
   mPrefix = prefix;
@@ -67,27 +71,26 @@ NameMgr::change(const string& prefix,
 void
 NameMgr::clear()
 {
-  mInterval.clear();
+  mInterval->clear();
 }
 
 // 次に使用可能な名前を接頭語も含めて返す．
 // 使用可能な名前がない場合(!!!)，アボートする．
-const StrBuff&
-NameMgr::new_name(bool add_name)
+string
+NameMgr::new_name(
+  bool add_name
+)
 {
-  int d = mInterval.avail_num();
+  int d = mInterval->get_min();
   ASSERT_COND( d >= 0 );
 
-  int size = mPrefix.size() + mSuffix.size() + 10;
-  mTmpString.reserve(size);
-  mTmpString.clear();
-  mTmpString.put_str(mPrefix);
-  mTmpString.put_digit(d);
-  mTmpString.put_str(mSuffix);
+  ostringstream buf;
+  buf << mPrefix << d << mSuffix;
+  mTmpString = buf.str();
   mLastNum = d;
 
   if ( add_name ) {
-    mInterval.erase(d);
+    mInterval->add(d);
   }
 
   return mTmpString;
@@ -96,35 +99,29 @@ NameMgr::new_name(bool add_name)
 // 名前を登録する．
 // name が <prefix>ddd<suffix> の形でない場合にはなにもしない．
 void
-NameMgr::add(const char* name)
+NameMgr::add(
+  const char* name
+)
 {
-  int d = -1;
-  if ( strcmp(name, mTmpString.c_str()) == 0 ) {
-    // name が直前の new_name() で作られたものなら数字はすぐにわかる．
-    d = mLastNum;
-  }
-  else {
-    // 数字を抜き出す．
-    d = str_to_num(name);
-  }
-
+  // 数字を抜き出す．
+  int d = str_to_num(name);
   if ( d != -1 ) {
-    // 区間から d を削除
-    mInterval.erase(d);
+    mInterval->add(d);
   }
 }
 
 // 名前を削除する(使用可能にする)．
 // name が <prefix>ddd<suffix> の形でない場合にはなにもしない．
 void
-NameMgr::erase(const char* name)
+NameMgr::erase(
+  const char* name
+)
 {
   // 数字を抜き出す．
   int d = str_to_num(name);
-
   if ( d != -1 ) {
     // 区間に d を追加
-    mInterval.add(d);
+    mInterval->del(d);
   }
 }
 
@@ -132,11 +129,13 @@ NameMgr::erase(const char* name)
 // ddd の部分を数値に直したものを返す．
 // そうでなければ -1 を返す．
 int
-NameMgr::str_to_num(const char* name) const
+NameMgr::str_to_num(
+  const char* name
+) const
 {
-  int plen = mPrefix.size();
-  int slen = mSuffix.size();
-  int nlen = strlen(name);
+  SizeType plen = mPrefix.size();
+  SizeType slen = mSuffix.size();
+  SizeType nlen = strlen(name);
 
   // 接頭語と接尾語を足した長さのほうが長ければ数値があるわけない．
   if ( plen + slen >= nlen ) {
@@ -173,12 +172,14 @@ NameMgr::str_to_num(const char* name) const
 
 // 内容を表示する．
 void
-NameMgr::print(ostream& s) const
+NameMgr::print(
+  ostream& s
+) const
 {
   s << "<<<<NameMgr>>>>" << endl
     << "Prefix: '" << mPrefix << "'" << endl
     << "Suffix: '" << mSuffix << "'" << endl;
-  mInterval.print(s);
+  mInterval->print(s);
 }
 
 END_NAMESPACE_YM

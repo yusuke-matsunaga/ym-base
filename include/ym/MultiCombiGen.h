@@ -62,20 +62,14 @@ public:
   /// @brief コピーコンストラクタ
   MultiCombiGen(
     const MultiCombiGen& src ///< [in] コピー元のオブジェクト
-  ) : MultiGenBase{src}
-  {
-  }
+  ) = default;
 
   /// @brief 代入演算子
   /// @return 自分自身
-  const MultiCombiGen&
+  MultiCombiGen&
   operator=(
     const MultiCombiGen& src ///< [in] コピー元のオブジェクト
-  )
-  {
-    copy(src);
-    return *this;
-  }
+  ) = default;
 
   /// @brief デストラクタ
   ~MultiCombiGen() = default;
