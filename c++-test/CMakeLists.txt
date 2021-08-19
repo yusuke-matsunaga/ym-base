@@ -52,6 +52,15 @@ ym_add_gtest ( base_UnionFindSet_test
   $<TARGET_OBJECTS:ym_base_obj_d>
   )
 
+ym_add_gtest ( base_ItvlTree_test
+  misc/ItvlTree_test.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
+
+target_include_directories( base_ItvlTree_test
+  PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/../c++-src/itvl
+  )
 ym_add_gtest ( base_Range_test
   misc/RangeTest.cc
   $<TARGET_OBJECTS:ym_base_obj_d>

@@ -28,8 +28,12 @@ void
 ItvlTree::clear()
 {
   delete mRoot;
+  mRoot = nullptr;
+
   // [-1, -1] の区間を番兵として登録しておく
   auto node = new Node{-1, -1};
+  // 実質的には mRoot = node でよいが将来の仕様変更に備えて
+  // 行儀のよい追加の仕方をしている．
   insert_node(node, mRoot);
 }
 
@@ -41,20 +45,20 @@ ItvlTree::add(
 {
   // x の左側のノードを見つける．
   auto left = find_left(x);
-  int left_e = x - 1;
+  int left_e = x - 2;
   if ( left != nullptr ) {
     left_e = left->E;
   }
 
   // x の右側のノードを見つける．
   auto right = find_right(x);
-  int right_s = x + 1;
+  int right_s = x + 2;
   if ( right != nullptr ) {
     right_s = right->S;
   }
 
-  if ( left_e == x ) {
-    if ( right_s == x ) {
+  if ( left_e + 1 == x ) {
+    if ( right_s - 1 == x ) {
       // left と right の隙間がぴったり埋まった．
       int right_e = right->E;
       // right を削除して left の終端を変更する．
@@ -68,7 +72,7 @@ ItvlTree::add(
       left->E = x;
     }
   }
-  else if ( right_s == x ) {
+  else if ( right_s - 1 == x ) {
     // right の左端に x を足す．
     right->S = x;
   }
@@ -104,6 +108,7 @@ ItvlTree::del(
     node->E = x - 1;
   }
   else {
+    // x が node の区間に含まれていたので
     // 2つの区間に分割する．
     auto node1 = new Node{x + 1, node->E};
     node->E = x - 1;
@@ -115,12 +120,12 @@ ItvlTree::del(
 int
 ItvlTree::get_min() const
 {
-  // 最も左端にあるノードを見つける．
-  auto node = mRoot;
-  for ( ; node->L != nullptr; node = node->L ) {
+  // 最左端のノードを求める．
+  auto left_most = mRoot;
+  for ( ; left_most->L != nullptr; left_most = left_most->L ) {
     ;
   }
-  return node->E + 1;
+  return left_most->E + 1;
 }
 
 ItvlTree::Node::~Node()
@@ -425,7 +430,7 @@ ItvlTree::remove_right(
   auto dnode = ptr;
   ptr = ptr->L;
   dnode->L = nullptr;
-  delete node;
+  delete dnode;
   // 高さは1減る．
   return true;
 }
