@@ -43,9 +43,7 @@ public:
   ) : mN{n},
       mElemList(k)
   {
-    for ( int i = 0; i < k; ++ i ) {
-      mElemList[i] = i;
-    }
+    init();
   }
 
   /// @brief コピーコンストラクタ
@@ -71,6 +69,10 @@ public:
   /// @return 選択する要素数
   SizeType
   k() const { return mElemList.size(); }
+
+  /// @brief 初期化する．
+  void
+  init();
 
   /// @brief 要素の取得
   /// @return pos 番目の要素

@@ -29,6 +29,7 @@ public:
       mK{k},
       mElem(mK)
   {
+    init();
   }
 
   /// @brief コンストラクタ
@@ -39,6 +40,7 @@ public:
       mK{k},
       mElem(mK)
   {
+    init();
   }
 
   /// @brief デストラクタ

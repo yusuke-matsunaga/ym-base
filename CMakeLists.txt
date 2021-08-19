@@ -88,14 +88,9 @@ set ( file_info_SOURCES
   )
 
 set ( gen_SOURCES
-  c++-src/gen/CombiGen.cc
-  c++-src/gen/MultiCombiGen.cc
+  c++-src/gen/GenBase.cc
   c++-src/gen/MultiGenBase.cc
-  c++-src/gen/MultiPermGen.cc
-  c++-src/gen/MultiSetCombiGen.cc
   c++-src/gen/MultiSetGenBase.cc
-  c++-src/gen/MultiSetPermGen.cc
-  c++-src/gen/PermGen.cc
   )
 
 set ( io_SOURCES
