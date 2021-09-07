@@ -3,15 +3,13 @@
 /// @brief FileBuff の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2013-2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "FileBuff.h"
 
 
 BEGIN_NAMESPACE_YM
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス FileBuff
@@ -21,18 +19,20 @@ BEGIN_NAMESPACE_YM
 // @param[in] buff データを格納したバッファ
 // @param[in] num 書き込むバイト数
 // @return 実際に書き込んだバイト数を返す．
-int
-FileBuff::write(const ymuint8* buff,
-		int num)
+SizeType
+FileBuff::write(
+  const ymuint8* buff,
+  SizeType num
+)
 {
   if ( mFd < 0 ) {
     return 0;
   }
 
-  int count = 0;
+  SizeType count = 0;
   while ( num > 0 ) {
     // 一度に書き込めるサイズを num1 に入れる．
-    int num1 = num;
+    SizeType num1 = num;
     if ( mPos + num1 > mBuffSize ) {
       // バッファサイズの関係でこれだけしか書けない．
       num1 = mBuffSize - mPos;
@@ -48,11 +48,11 @@ FileBuff::write(const ymuint8* buff,
     count += num1;
     buff += num1;
     num -= num1;
-    mNeedFlush = true;
+    set_need_flush();
 
     if ( mPos == mBuffSize ) {
       // バッファが満杯になったので実際の書き込みを行う．
-      int tmp_size = mBuffSize;
+      SizeType tmp_size = mBuffSize;
       ymuint8* tmp_buff = mBuff;
       while ( tmp_size > 0 ) {
 #if defined(YM_WIN32)
@@ -69,7 +69,7 @@ FileBuff::write(const ymuint8* buff,
       }
 
       mPos = 0;
-      mNeedFlush = false;
+      clear_need_flush();
     }
   }
 
@@ -80,15 +80,17 @@ FileBuff::write(const ymuint8* buff,
 // @param[in] buff データを格納するバッファ
 // @param[in] num 読み込むバイト数．
 // @return 実際に読み込んだバイト数を返す．
-int
-FileBuff::read(ymuint8* buff,
-	       int num)
+SizeType
+FileBuff::read(
+  ymuint8* buff,
+  SizeType num
+)
 {
   if ( mFd < 0 ) {
     return 0;
   }
 
-  int count = 0;
+  SizeType count = 0;
   while ( num > 0 ) {
     if ( !prepare() ) {
       return -1;
@@ -98,7 +100,7 @@ FileBuff::read(ymuint8* buff,
     }
 
     // 一度に読み出せるサイズを num1 に入れる．
-    int num1 = num;
+    SizeType num1 = num;
     if ( mPos + num1 > mDataSize ) {
       // バッファサイズの関係でこれしか読み出せない．
       num1 = mDataSize - mPos;
@@ -123,8 +125,10 @@ FileBuff::read(ymuint8* buff,
 // @note ただし読み込んだデータは捨てる．
 // @param[in] num 読み込むバイト数．
 // @return 実際に読み込んだバイト数を返す．
-int
-FileBuff::dummy_read(int num)
+SizeType
+FileBuff::dummy_read(
+  SizeType num
+)
 {
   // read() との違いは中央の memcpy() がないだけ．
 
@@ -132,14 +136,14 @@ FileBuff::dummy_read(int num)
     return 0;
   }
 
-  int count = 0;
+  SizeType count = 0;
   while ( num > 0 ) {
     if ( !prepare() ) {
       return -1;
     }
 
     // 一度に読み出せるサイズを num1 に入れる．
-    int num1 = num;
+    SizeType num1 = num;
     if ( mPos + num1 > mDataSize ) {
       // バッファサイズの関係でこれしか読み出せない．
       num1 = mDataSize - mPos;
@@ -176,13 +180,13 @@ FileBuff::prepare()
     mDataSize = n;
 
     // 先頭の BOM マークを検出し，空読みする．
-    if ( mFirstTime ) {
+    if ( is_first_time() ) {
       if ( n >= 3 ) {
 	if ( mBuff[0] == 0xEF && mBuff[1] == 0xBB && mBuff[2] == 0xBF ) {
 	  mPos = 3;
 	}
       }
-      mFirstTime = false;
+      clear_first_time();
     }
   }
   return true;

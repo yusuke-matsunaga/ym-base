@@ -3,9 +3,8 @@
 /// @brief BzCoder の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2013-2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2013-2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "BzCoder.h"
 
@@ -41,9 +40,11 @@ BzCoder::is_ready() const
 // @retval true オープンが成功した．
 // @retval false オープンが失敗した．
 bool
-BzCoder::open(const char* filename,
-	      mode_t mode,
-	      int level)
+BzCoder::open(
+  const char* filename,
+  mode_t mode,
+  int level
+)
 {
   bool stat = mBuff.open(filename, O_WRONLY | O_CREAT | O_TRUNC, mode);
   if ( !stat ) {
@@ -117,9 +118,11 @@ BzCoder::close()
 // @param[in] buff データを収めた領域のアドレス
 // @param[in] n データサイズ
 // @return 実際に書き出した量を返す．
-int
-BzCoder::write(const ymuint8* buff,
-	       int n)
+SizeType
+BzCoder::write(
+  const ymuint8* buff,
+  SizeType n
+)
 {
   if ( !mBuff.is_ready() ) {
     return -1;
@@ -164,7 +167,7 @@ BzCoder::write(const ymuint8* buff,
     }
 
     // 今の処理で書き込まれた分だけバッファのポインタを進める．
-    int wr = mBuff.buff_size() - mCompEngine.avail_out();
+    SizeType wr = mBuff.buff_size() - mCompEngine.avail_out();
     mBuff.seek(wr);
 
     if ( mCompEngine.avail_out() == 0 ) {

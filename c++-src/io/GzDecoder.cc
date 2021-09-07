@@ -3,9 +3,8 @@
 /// @brief GzDecoder の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2013-2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "GzDecoder.h"
 #include "gz_common.h"
@@ -33,7 +32,9 @@ GzDecoder::~GzDecoder()
 // @retval true オープンが成功した．
 // @retval false オープンが失敗した．
 bool
-GzDecoder::open(const char* filename)
+GzDecoder::open(
+  const char* filename
+)
 {
   bool stat = mBuff.open(filename, O_RDONLY, 0);
   if ( !stat ) {
@@ -44,7 +45,7 @@ GzDecoder::open(const char* filename)
 
   // ヘッダを解釈する．
   ymuint8 header[10];
-  int hsize = mBuff.read(header, sizeof(header));
+  SizeType hsize = mBuff.read(header, sizeof(header));
   if ( hsize != sizeof(header) ||
        header[0] != GZIP_MAGIC0 ||
        ((header[1] != GZIP_MAGIC1) && (header[1] != GZIP_OMAGIC1)) ) {
@@ -150,7 +151,9 @@ BEGIN_NONAMESPACE
 // 4バイトのデータを32ビットの符号なし整数に変換する．
 inline
 ymuint32
-conv_4bytes(ymuint8 buff[])
+conv_4bytes(
+  ymuint8 buff[]
+)
 {
   ymuint32 val0 = static_cast<ymuint32>(buff[0]);
   ymuint32 val1 = static_cast<ymuint32>(buff[1]);
@@ -165,9 +168,11 @@ END_NONAMESPACE
 // @brief 圧縮されたデータを伸長してバッファに書き込む．
 // @param[in] buff 伸長したデータを格納するバッファ
 // @param[in] size バッファの空きサイズ
-int
-GzDecoder::read(ymuint8* buff,
-		int size)
+SizeType
+GzDecoder::read(
+  ymuint8* buff,
+  SizeType size
+)
 {
   mZS.set_outbuf(buff, size);
 
@@ -180,14 +185,14 @@ GzDecoder::read(ymuint8* buff,
     }
 
     // 入力データをセットする．
-    int old_size = mBuff.buff_size();
+    SizeType old_size = mBuff.buff_size();
     mZS.set_inbuf(mBuff.buff_ptr(), old_size);
 
     // 伸長する．
     ret = mZS.inflate(Z_FINISH);
 
     // 今回の inflate で消費した分だけ入力バッファを空読みする．
-    int in_size = old_size - mZS.avail_in();
+    SizeType in_size = old_size - mZS.avail_in();
     mBuff.seek(in_size);
 
     switch ( ret ) {
@@ -232,7 +237,7 @@ GzDecoder::read(ymuint8* buff,
   }
 
   // バッファに書き込まれた量を計算する．
-  int wr = size - mZS.avail_out();
+  SizeType wr = size - mZS.avail_out();
   if ( wr != 0 ) {
     // CRC 値を更新しておく．
     mCRC = crc32(mCRC, (const Bytef*)buff, wr);

@@ -3,9 +3,8 @@
 /// @brief ZCoder の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2013-2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ZCoder.h"
 
@@ -37,9 +36,11 @@ ZCoder::~ZCoder()
 // 失敗する理由は以下の通り
 //  - ファイルに対する書き込み許可がない．
 bool
-ZCoder::open(const char* filename,
-	     mode_t mode,
-	     int level)
+ZCoder::open(
+  const char* filename,
+  mode_t mode,
+  int level
+)
 {
   m_state = kStart;
 
@@ -90,22 +91,24 @@ ZCoder::is_ready() const
 // @param[in] num 書き込むデータ数(バイト)
 // @return 実際に書き込んだバイト数を返す．
 // @note エラーが起こったら -1 を返す．
-int
-ZCoder::write(const ymuint8* wbuff,
-	      int num)
+SizeType
+ZCoder::write(
+  const ymuint8* wbuff,
+  SizeType num
+)
 {
   if ( num == 0 ) {
     return 0;
   }
 
-  int count = num;
+  SizeType count = num;
   const ymuint8* bp = wbuff;
 
   if ( m_state == kStart ) {
     m_state = kMiddle;
 
     m_maxmaxcode = 1ULL << m_maxbits;
-    int n = mBuff.write(k_MAGICHEADER, sizeof(k_MAGICHEADER));
+    SizeType n = mBuff.write(k_MAGICHEADER, sizeof(k_MAGICHEADER));
     if ( n != sizeof(k_MAGICHEADER) ) {
       return -1;
     }

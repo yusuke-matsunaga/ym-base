@@ -100,11 +100,11 @@ set ( gen_SOURCES
   )
 
 set ( io_SOURCES
-  c++-src/io/CodecType.cc
-  c++-src/io/FileBuff.cc
-  c++-src/io/FileBuff.h
-  c++-src/io/FileCoder.cc
-  c++-src/io/FileDecoder.cc
+#  c++-src/io/CodecType.cc
+#  c++-src/io/FileBuff.cc
+#  c++-src/io/FileBuff.h
+#  c++-src/io/FileCoder.cc
+#  c++-src/io/FileDecoder.cc
 #  c++-src/io/FileIDO.cc
 #  c++-src/io/FileODO.cc
 #  c++-src/io/IDO.cc
@@ -112,31 +112,31 @@ set ( io_SOURCES
 #  c++-src/io/StreamIDO.cc
 #  c++-src/io/StringIDO.cc
 #  c++-src/io/StrListIDO.cc
-  c++-src/io/ThruCoder.cc
-  c++-src/io/ThruDecoder.cc
-  c++-src/io/ZCoder.cc
-  c++-src/io/ZDecoder.cc
+#  c++-src/io/ThruCoder.cc
+#  c++-src/io/ThruDecoder.cc
+#  c++-src/io/ZCoder.cc
+#  c++-src/io/ZDecoder.cc
   )
 
 if ( ZLIB_FOUND )
   set (io_SOURCES ${io_SOURCES}
-    c++-src/io/GzCoder.cc
-    c++-src/io/GzDecoder.cc
+#    c++-src/io/GzCoder.cc
+#    c++-src/io/GzDecoder.cc
     c++-src/io/zstream.cc
     )
 endif ( ZLIB_FOUND )
 
 if ( BZIP2_FOUND )
   set (io_SOURCES ${io_SOURCES}
-    c++-src/io/BzCoder.cc
-    c++-src/io/BzDecoder.cc
+#    c++-src/io/BzCoder.cc
+#    c++-src/io/BzDecoder.cc
     )
 endif ( BZIP2_FOUND )
 
 if ( LIBLZMA_FOUND )
   set (io_SOURCES ${io_SOURCES}
-    c++-src/io/LzmaCoder.cc
-    c++-src/io/LzmaDecoder.cc
+#    c++-src/io/LzmaCoder.cc
+#    c++-src/io/LzmaDecoder.cc
     )
 endif ( LIBLZMA_FOUND )
 

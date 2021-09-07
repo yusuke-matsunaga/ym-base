@@ -3,9 +3,8 @@
 /// @brief zstream の実装ファイル
 /// @author Yusuke Matsunaga
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "zstream.h"
 
@@ -13,14 +12,14 @@
 BEGIN_NAMESPACE_YM
 
 // @brief 入力用のコンストラクタ
-// @param[in] s 入力ストリーム
-zstream_buff::zstream_buff(istream* s,
-			   int size) :
-  mInStream(s),
-  mOutStream(nullptr),
-  mBuff(new Bytef[size]),
-  mSize(size),
-  mInFlush(Z_NO_FLUSH)
+zstream_buff::zstream_buff(
+  istream* s,
+  SizeType size
+) : mInStream{s},
+    mOutStream{nullptr},
+    mBuff{new Bytef[size]},
+    mSize{size},
+    mInFlush(Z_NO_FLUSH)
 {
   inflate_init();
 
@@ -28,14 +27,14 @@ zstream_buff::zstream_buff(istream* s,
 }
 
 // @brief 出力用のコンストラクタ
-// @param[in] s 出力ストリーム
-zstream_buff::zstream_buff(ostream* s,
-			   int size) :
-  mInStream(nullptr),
-  mOutStream(s),
-  mBuff(new Bytef[size]),
-  mSize(size),
-  mInFlush(Z_NO_FLUSH)
+zstream_buff::zstream_buff(
+  ostream* s,
+  SizeType size
+) : mInStream{nullptr},
+    mOutStream{s},
+    mBuff{new Bytef[size]},
+    mSize{size},
+    mInFlush{Z_NO_FLUSH}
 {
   deflate_init(Z_DEFAULT_COMPRESSION);
 
@@ -49,14 +48,12 @@ zstream_buff::~zstream_buff()
 }
 
 // @brief データの圧縮を行う．
-// @param[in] buff 圧縮するデータを格納しているバッファ
-// @param[in] size バッファ中の有効なデータのサイズ
-// @param[in] flush フラッシュ制御用のフラグ
-// @note 結果は出力ストリームに書き込まれる．
 void
-zstream_buff::compress(Bytef* buff,
-		       int size,
-		       int flush)
+zstream_buff::compress(
+  Bytef* buff,
+  SizeType size,
+  int flush
+)
 {
   set_inbuf(buff, size);
   for( ; ; ){
@@ -79,13 +76,11 @@ zstream_buff::compress(Bytef* buff,
 }
 
 // @brief データの伸長を行う．
-// @param[in] buff 伸長したデータを格納するバッファ
-// @param[in] バッファ中の空きサイズ(in byte)
-// @return バッファに書き出されたサイズ(in bytes)を返す．
-// @note データは入力ストリームから読み込まれる．
 int
-zstream_buff::decompress(Bytef* buff,
-			 int size)
+zstream_buff::decompress(
+  Bytef* buff,
+  SizeType size
+)
 {
   set_outbuf(buff, size);
   int orig_size = avail_out();

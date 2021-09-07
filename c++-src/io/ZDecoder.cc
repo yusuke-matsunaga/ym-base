@@ -3,9 +3,8 @@
 /// @brief CpressDecoder の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2013-2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ZDecoder.h"
 
@@ -47,7 +46,9 @@ ZDecoder::~ZDecoder()
 //  - ファイルに対する読み出し許可がない．
 //  - ファイルの形式が異なる．
 bool
-ZDecoder::open(const char* filename)
+ZDecoder::open(
+  const char* filename
+)
 {
   return mBuff.open(filename, O_RDONLY, 0);
 }
@@ -71,9 +72,11 @@ ZDecoder::is_ready() const
 // @param[in] num 読み出すデータ数(バイト)
 // @return 実際に読み出したバイト数を返す．
 // @note エラーが起こったら -1 を返す．
-int
-ZDecoder::read(ymuint8* rbuff,
-	       int num)
+SizeType
+ZDecoder::read(
+  ymuint8* rbuff,
+  SizeType num
+)
 {
   if ( num == 0 ) {
     cerr << "num == 0" << endl;

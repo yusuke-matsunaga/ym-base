@@ -5,9 +5,8 @@
 /// @brief ZCoder のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2013-2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "FileCoder.h"
 #include "FileBuff.h"
@@ -29,7 +28,6 @@ public:
   ZCoder();
 
   /// @brief デストラクタ
-  virtual
   ~ZCoder();
 
 
@@ -39,39 +37,34 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイルを開く
-  /// @param[in] filename ファイル名
-  /// @param[in] mode ファイル作成用のモード
-  /// @param[in] level 圧縮レベル
   /// @retval true 成功した
   /// @retval false 失敗した．
   ///
   /// 失敗する理由は以下の通り
   ///  - ファイルに対する書き込み許可がない．
-  virtual
   bool
-  open(const char* filename,
-       mode_t mode = 0666,
-       int level = 0);
+  open(
+    const char* filename, ///< [in] ファイル名
+    mode_t mode = 0666,   ///< [in] ファイル作成用のモード
+    int level = 0         ///< [in] 圧縮レベル
+  ) override;
 
   /// @brief ファイルを閉じる．
-  virtual
   void
-  close();
+  close() override;
 
   /// @brief 書き込み可能の時に true を返す．
-  virtual
   bool
-  is_ready() const;
+  is_ready() const override;
 
   /// @brief 最大 num バイトのデータを圧縮してファイルに書き込む．
-  /// @param[in] wbuff 圧縮するデータを格納するバッファ
-  /// @param[in] num 書き込むデータ数(バイト)
   /// @return 実際に書き込んだバイト数を返す．
   /// @note エラーが起こったら -1 を返す．
-  virtual
-  int
-  write(const ymuint8* wbuff,
-	int num);
+  SizeType
+  write(
+    const ymuint8* wbuff, ///< [in] 圧縮するデータを格納するバッファ
+    SizeType num          ///< [in] 書き込むデータ数(バイト)
+  ) override;
 
 
 private:
@@ -89,10 +82,16 @@ private:
   output(code_int code);
 
   count_int&
-  htabof(code_int i);
+  htabof(code_int i)
+  {
+    return m_htab[i];
+  }
 
   code_int&
-  codetabof(code_int i);
+  codetabof(code_int i)
+  {
+    return m_codetab[i];
+  }
 
 
 private:
@@ -101,10 +100,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // コードあたりのビット数
-  int m_n_bits;
+  SizeType m_n_bits;
 
   // n_bits の最大値
-  int m_maxbits;
+  SizeType m_maxbits;
 
   // Maximum code
   code_int m_maxcode;
@@ -152,26 +151,6 @@ private:
   FileBuff mBuff;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-inline
-count_int&
-ZCoder::htabof(code_int i)
-{
-  return m_htab[i];
-}
-
-inline
-code_int&
-ZCoder::codetabof(code_int i)
-{
-  return m_codetab[i];
-}
-
 
 END_NAMESPACE_YM_COMPCOMMON
 

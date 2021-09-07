@@ -3,9 +3,8 @@
 /// @brief BzDecoder の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2013-2014 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "BzDecoder.h"
 
@@ -32,7 +31,9 @@ BzDecoder::~BzDecoder()
 // @retval true オープンが成功した．
 // @retval false オープンが失敗した．
 bool
-BzDecoder::open(const char* filename)
+BzDecoder::open(
+  const char* filename
+)
 {
   bool stat = mBuff.open(filename, O_RDONLY, 0);
   if ( !stat ) {
@@ -67,9 +68,11 @@ BzDecoder::is_ready() const
 // @brief 圧縮されたデータを伸長してバッファに書き込む．
 // @param[in] buff 伸長したデータを格納するバッファ
 // @param[in] size バッファの空きサイズ
-int
-BzDecoder::read(ymuint8* buff,
-		int size)
+SizeType
+BzDecoder::read(
+  ymuint8* buff,
+  SizeType size
+)
 {
   mDecompEngine.set_outbuf(buff, size);
 
@@ -82,7 +85,7 @@ BzDecoder::read(ymuint8* buff,
     }
 
     // 入力データをセットする．
-    int old_size = mBuff.buff_size();
+    SizeType old_size = mBuff.buff_size();
     if ( old_size == 0 ) {
       // 入力の読み込みが末尾に達している．
       return 0;
@@ -94,7 +97,7 @@ BzDecoder::read(ymuint8* buff,
     int rcode = mDecompEngine.decompress();
 
     // 今回の decompress で消費した分だけ入力バッファを空読みする．
-    int in_size = old_size - mDecompEngine.avail_in();
+    SizeType in_size = old_size - mDecompEngine.avail_in();
     mBuff.seek(in_size);
 
     switch ( rcode ) {

@@ -5,9 +5,8 @@
 /// @brief ZDecoder のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2013-2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "FileDecoder.h"
 #include "FileBuff.h"
@@ -29,7 +28,6 @@ public:
   ZDecoder();
 
   /// @brief デストラクタ
-  virtual
   ~ZDecoder();
 
 
@@ -39,7 +37,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイルを開く
-  /// @param[in] filename ファイル名
   /// @retval true 成功した
   /// @retval false 失敗した．
   ///
@@ -47,29 +44,27 @@ public:
   ///  - ファイルが存在しない．
   ///  - ファイルに対する読み出し許可がない．
   ///  - ファイルの形式が異なる．
-  virtual
   bool
-  open(const char* filename);
+  open(
+    const char* filename ///< [in] ファイル名
+  ) override;
 
   /// @brief ファイルを閉じる．
-  virtual
   void
-  close();
+  close() override;
 
   /// @brief 読み出せるデータがある時に true を返す．
-  virtual
   bool
-  is_ready() const;
+  is_ready() const override;
 
   /// @brief 圧縮されたファイルを読んで最大 num バイトをバッファに格納する．
-  /// @param[in] rbuff 展開したデータを格納するバッファ
-  /// @param[in] num 読み出すデータ数(バイト)
   /// @return 実際に読み出したバイト数を返す．
   /// @note エラーが起こったら -1 を返す．
-  virtual
-  int
-  read(ymuint8* rbuff,
-       int num);
+  SizeType
+  read(
+    ymuint8* rbuff, ///< [in] 展開したデータを格納するバッファ
+    SizeType num    ///< [in] 読み出すデータ数(バイト)
+  );
 
 
 private:

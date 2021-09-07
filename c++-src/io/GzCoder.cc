@@ -3,9 +3,8 @@
 /// @brief GzCoder の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2013-2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "GzCoder.h"
 #include "gz_common.h"
@@ -42,9 +41,11 @@ GzCoder::is_ready() const
 // @retval true オープンが成功した．
 // @retval false オープンが失敗した．
 bool
-GzCoder::open(const char* filename,
-	      mode_t mode,
-	      int level)
+GzCoder::open(
+  const char* filename,
+  mode_t mode,
+  int level
+)
 {
   static ymuint8 header[] = { GZIP_MAGIC0, GZIP_MAGIC1, Z_DEFLATED, 0,
 			      0, 0, 0, 0,
@@ -91,8 +92,10 @@ BEGIN_NONAMESPACE
 // 32ビットの符号なし整数を4バイトのデータに変換する．
 inline
 void
-conv_to_4bytes(ymuint32 data,
-	       ymuint8 buff[])
+conv_to_4bytes(
+  ymuint32 data,
+  ymuint8 buff[]
+)
 {
   buff[0] = (data >>  0) & 0xFF;
   buff[1] = (data >>  8) & 0xFF;
@@ -163,9 +166,11 @@ GzCoder::close()
 // @param[in] buff データを収めた領域のアドレス
 // @param[in] n データサイズ
 // @return 実際に書き出した量を返す．
-int
-GzCoder::write(const ymuint8* buff,
-	       int n)
+SizeType
+GzCoder::write(
+  const ymuint8* buff,
+  SizeType n
+)
 {
   if ( n == 0 ) {
     return 0;

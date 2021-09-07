@@ -5,9 +5,8 @@
 /// @brief LzmaCoder のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2013-2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "FileCoder.h"
 #include "LzmaEngine.h"
@@ -29,7 +28,6 @@ public:
   LzmaCoder();
 
   /// @brief デストラクタ
-  virtual
   ~LzmaCoder();
 
 
@@ -51,9 +49,11 @@ public:
   /// 失敗する理由は以下の通り
   ///  - ファイルに対する書き込み許可がない．
   bool
-  open(const char* filename,
-       mode_t mode = 0666,
-       int level = 0) override;
+  open(
+    const char* filename,
+    mode_t mode = 0666,
+    int level = 0
+  ) override;
 
   /// @brief ファイルを閉じる．
   void
@@ -68,9 +68,11 @@ public:
   /// @param[in] num 書き込むデータ数(バイト)
   /// @return 実際に書き込んだバイト数を返す．
   /// @note エラーが起こったら -1 を返す．
-  int
-  write(const ymuint8* wbuff,
-	int num) override;
+  SizeType
+  write(
+    const ymuint8* wbuff,
+    SizeType num
+  ) override;
 
 
 private:

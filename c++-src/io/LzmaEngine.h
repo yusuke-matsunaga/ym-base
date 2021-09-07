@@ -24,11 +24,21 @@ class LzmaEngine
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] af alloc 関数
-  LzmaEngine(lzma_allocator* af = nullptr);
+  LzmaEngine(
+    lzma_allocator* af = nullptr ///< [in] alloc 関数
+  )
+  {
+    mLzmaStream = (lzma_stream)LZMA_STREAM_INIT;
+    if ( af != nullptr ) {
+      mLzmaStream.allocator = af;
+    }
+  }
 
   /// @brief デストラクタ
-  ~LzmaEngine();
+  ~LzmaEngine()
+  {
+    end();
+  }
 
 
 public:
@@ -37,32 +47,39 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief xz 圧縮用の初期化を行う．
-  /// @param[in] preset 圧縮レベル ( 0 - 9: 6 がデフォルト )
-  /// @param[in] check 検査方法
   /// @return 終了コードを返す．
-  ///
-  /// 検査方法は以下のとおり
-  ///  - LZMA_CHECK_NONE
-  ///  - LZMA_CHECK_CRC32
-  ///  - LZMA_CHECK_CRC64
-  ///  - LZMA_CHECK_SHA256
   ///
   /// 成功したら LZMA_OK を返す．
   lzma_ret
-  easy_encoder(int preset = 6,
-	       lzma_check check = LZMA_CHECK_CRC64);
+  easy_encoder(
+    int preset = 6,                     ///< [in] 圧縮レベル ( 0 - 9: 6 がデフォルト )
+    lzma_check check = LZMA_CHECK_CRC64 ///< [in] 検査方法
+                                        ///<  - LZMA_CHECK_NONE
+                                        ///<  - LZMA_CHECK_CRC32
+                                        ///<  - LZMA_CHECK_CRC64
+                                        ///<  - LZMA_CHECK_SHA256
+  )
+  {
+    return lzma_easy_encoder(&mLzmaStream, preset, check);
+  }
 
   /// @brief xz 伸長用の初期化を行う．
-  /// @param[in] memlimit 割り当てるメモリの上限
-  /// @param[in] flags 動作制御用のフラグ
   /// @return 終了コードを返す．
   lzma_ret
-  stream_decoder(int memlimit = 128 * 1024 * 1024,
-		 ymuint32 flags = 0);
+  stream_decoder(
+    SizeType memlimit = 128 * 1024 * 1024, ///< [in] 割り当てるメモリの上限
+    ymuint32 flags = 0                     ///< [in] 動作制御用のフラグ
+  )
+  {
+    return lzma_stream_decoder(&mLzmaStream, memlimit, flags);
+  }
 
   /// @brief 終了処理を行う．
   void
-  end();
+  end()
+  {
+    lzma_end(&mLzmaStream);
+  }
 
 
 public:
@@ -71,16 +88,18 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 圧縮/伸長を行う．
-  /// @param[in] action 動作コード
   /// @return 終了コードを返す．
-  ///
-  /// action のとりうる値は以下のとおり
-  ///  - LZMA_RUN
-  ///  - LZMA_SYNC_FLUSH
-  ///  - LZMA_FULL_FLUSH
-  ///  - LZMA_FINISH
   lzma_ret
-  code(lzma_action action);
+  code(
+    lzma_action action ///< [in] 動作コード
+                       ///<  - LZMA_RUN
+                       ///<  - LZMA_SYNC_FLUSH
+                       ///<  - LZMA_FULL_FLUSH
+                       ///<  - LZMA_FINISH
+  )
+  {
+    return lzma_code(&mLzmaStream, action);
+  }
 
 
 public:
@@ -89,26 +108,40 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief in バッファを設定する．
-  /// @param[in] buf バッファ本体
-  /// @param[in] size バッファのサイズ
   void
-  set_inbuf(const ymuint8* buf,
-	    int size);
+  set_inbuf(
+    const ymuint8* buf, ///< [in] バッファ本体
+    SizeType size       ///< [in] バッファのサイズ
+  )
+  {
+    mLzmaStream.next_in = buf;
+    mLzmaStream.avail_in = size;
+  }
 
   /// @brief out バッファを設定する．
-  /// @param[in] buf バッファ本体
-  /// @param[in] size バッファのサイズ
   void
-  set_outbuf(ymuint8* buf,
-	     int size);
+  set_outbuf(
+    ymuint8* buf, ///< [in] バッファ本体
+    SizeType size ///< [in] バッファのサイズ
+  )
+  {
+    mLzmaStream.next_out = buf;
+    mLzmaStream.avail_out = size;
+  }
 
   /// @brief 読み出せるデータのバイト数を返す．
-  int
-  avail_in();
+  SizeType
+  avail_in()
+  {
+    return mLzmaStream.avail_in;
+  }
 
   /// @brief 書き込めるデータのバイト数を返す．
-  int
-  avail_out();
+  SizeType
+  avail_out()
+  {
+    return mLzmaStream.avail_out;
+  }
 
 
 private:
@@ -120,111 +153,6 @@ private:
   lzma_stream mLzmaStream;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-// @param[in] af alloc 関数
-inline
-LzmaEngine::LzmaEngine(lzma_allocator* af)
-{
-  mLzmaStream = (lzma_stream)LZMA_STREAM_INIT;
-  if ( af != nullptr ) {
-    mLzmaStream.allocator = af;
-  }
-}
-
-// @brief デストラクタ
-inline
-LzmaEngine::~LzmaEngine()
-{
-  end();
-}
-
-// @brief xz 圧縮用の初期化を行う．
-// @param[in] preset 圧縮レベル ( 0 - 9: 6 がデフォルト )
-// @param[in] check 検査方法
-// @return 終了コードを返す．
-inline
-lzma_ret
-LzmaEngine::easy_encoder(int preset,
-			 lzma_check check)
-{
-  return lzma_easy_encoder(&mLzmaStream, preset, check);
-}
-
-// @brief xz 伸長用の初期化を行う．
-// @param[in] memlimit 割り当てるメモリの上限
-// @param[in] flags 動作制御用のフラグ
-// @return 終了コードを返す．
-inline
-lzma_ret
-LzmaEngine::stream_decoder(int memlimit,
-			   ymuint32 flags)
-{
-  return lzma_stream_decoder(&mLzmaStream, memlimit, flags);
-}
-
-// @brief 終了処理を行う．
-inline
-void
-LzmaEngine::end()
-{
-  lzma_end(&mLzmaStream);
-}
-
-// @brief 圧縮/伸長を行う．
-// @param[in] action 動作コード
-// @return 終了コードを返す．
-inline
-lzma_ret
-LzmaEngine::code(lzma_action action)
-{
-  return lzma_code(&mLzmaStream, action);
-}
-
-// @brief in バッファを設定する．
-// @param[in] buf バッファ本体
-// @param[in] size バッファのサイズ
-inline
-void
-LzmaEngine::set_inbuf(const ymuint8* buf,
-		      int size)
-{
-  mLzmaStream.next_in = buf;
-  mLzmaStream.avail_in = size;
-}
-
-// @brief out バッファを設定する．
-// @param[in] buf バッファ本体
-// @param[in] size バッファのサイズ
-inline
-void
-LzmaEngine::set_outbuf(ymuint8* buf,
-		       int size)
-{
-  mLzmaStream.next_out = buf;
-  mLzmaStream.avail_out = size;
-}
-
-// @brief 読み出せるデータのバイト数を返す．
-inline
-int
-LzmaEngine::avail_in()
-{
-  return mLzmaStream.avail_in;
-}
-
-// @brief 書き込めるデータのバイト数を返す．
-inline
-int
-LzmaEngine::avail_out()
-{
-  return mLzmaStream.avail_out;
-}
 
 END_NAMESPACE_YM
 
