@@ -3,12 +3,11 @@
 /// @brief ItvlMgrの実装ファイル
 /// @author Yusuke Matsunaga
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/ItvlMgr.h"
-#include "ItvlMgrImpl.h"
+#include "ItvlTree.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -18,15 +17,15 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-ItvlMgr::ItvlMgr() :
-  mImpl{new ItvlMgrImpl}
+ItvlMgr::ItvlMgr(
+) : mImpl{new ItvlTree}
 {
 }
 
 // @brief デストラクタ
 ItvlMgr::~ItvlMgr()
 {
-  // ItvlMgrImpl.h をここのローカルにしておくために
+  // ItvlTree をここのローカルにしておくために
   // この関数は inline 化できない．
 }
 
@@ -43,100 +42,25 @@ ItvlMgr::clear()
 int
 ItvlMgr::avail_num() const
 {
-  return mImpl->avail_num();
-}
-
-// [d1, d2]という区間が使用可能などうか調べる．
-bool
-ItvlMgr::check(int d1,
-	       int d2) const
-{
-  return mImpl->check(d1, d2);
-}
-
-// 使用されている区間の最小値を求める．
-// 全区間が未使用の場合は -1 を返す．
-int
-ItvlMgr::min_id() const
-{
-  return mImpl->min_id();
-}
-
-// 使用されている区間の最大値を求める．
-// 全区間が未使用の場合は -1 を返す．
-int
-ItvlMgr::max_id() const
-{
-  return mImpl->max_id();
+  return mImpl->get_min();
 }
 
 // d を使用可能な区間から削除する．
 void
-ItvlMgr::erase(int d)
+ItvlMgr::erase(
+  int d
+)
 {
-  mImpl->erase(d);
-  sanity_check();
-}
-
-// [d1, d2] を使用可能な区間から削除する．
-void
-ItvlMgr::erase(int d1,
-	       int d2)
-{
-  mImpl->erase(d1, d2);
-  sanity_check();
+  mImpl->add(d);
 }
 
 // d を使用可能区間に追加する．
 void
-ItvlMgr::add(int d)
+ItvlMgr::add(
+  int d
+)
 {
-  mImpl->add(d);
-  sanity_check();
-}
-
-// [d1, d2] を使用可能区間に追加する．
-void
-ItvlMgr::add(int d1,
-	     int d2)
-{
-  mImpl->add(d1, d2);
-  sanity_check();
-}
-
-// 正しい構造かチェックする．
-void
-ItvlMgr::sanity_check() const
-{
-  mImpl->sanity_check();
-}
-
-// 内容を表示する．
-void
-ItvlMgr::print(ostream& s) const
-{
-  mImpl->print(s);
-}
-
-// 木構造を表示する．
-void
-ItvlMgr::print_tree(ostream& s) const
-{
-  mImpl->print_tree(s);
-}
-
-// @brief バイナリファイルに書き出す．
-void
-ItvlMgr::dump(ostream& s) const
-{
-  mImpl->dump(s);
-}
-
-// @brief バイナリファイルを読み込む．
-void
-ItvlMgr::restore(istream& s)
-{
-  mImpl->restore(s);
+  mImpl->del(d);
 }
 
 END_NAMESPACE_YM

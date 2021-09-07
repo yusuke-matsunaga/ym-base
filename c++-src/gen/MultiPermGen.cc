@@ -20,17 +20,17 @@ BEGIN_NAMESPACE_YM
 void
 MultiPermGen::operator++()
 {
-  for (int g = group_num(); g -- > 0; ) {
+  for ( int g = group_num(); g -- > 0; ) {
     vector<int> bitmap(n(g), 0);
-    for (int pos = 0; pos < k(g); ++ pos) {
-      bitmap[elem(g)[pos]] = 1;
+    for ( int pos = 0; pos < k(g); ++ pos) {
+      bitmap[elem(g, pos)] = 1;
     }
-    for (int pos = k(g); pos -- > 0; ) {
+    for ( int pos = k(g); pos -- > 0; ) {
       bool found = false;
-      for (int val = elem(g)[pos]; ++ val < n(g); ) {
+      for ( int val = elem(g, pos); ++ val < n(g); ) {
 	if ( bitmap[val] == 0 ) {
-	  bitmap[elem(g)[pos]] = 0;
-	  elem(g)[pos] = val;
+	  bitmap[elem(g, pos)] = 0;
+	  elem(g, pos) = val;
 	  bitmap[val] = 1;
 	  found = true;
 	  break;
@@ -41,16 +41,16 @@ MultiPermGen::operator++()
 	for (int j = pos + 1; j < k(g); ++ j) {
 	  for ( ; bitmap[val] == 1; ++ val) ;
 	  bitmap[val] = 1;
-	  elem(g)[j] = val;
+	  elem(g, j) = val;
 	  ++ val;
 	}
 	break;
       }
       if ( pos > 0 ) {
-	bitmap[elem(g)[pos]] = 0;
+	bitmap[elem(g, pos)] = 0;
       }
       else {
-	elem(g)[0] = n(g);
+	elem(g, 0) = n(g);
       }
     }
     if ( !is_end_sub(g) ) {

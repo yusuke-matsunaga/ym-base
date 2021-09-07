@@ -38,8 +38,8 @@ public:
 
   /// @brief コンストラクタ
   PermGen(
-    int n, ///< [in] 全要素数
-    int k  ///< [in] 選択する要素数
+    SizeType n, ///< [in] 全要素数
+    SizeType k  ///< [in] 選択する要素数
   ) : GenBase(n, k)
   {
   }
@@ -47,20 +47,14 @@ public:
   /// @brief コピーコンストラクタ
   PermGen(
     const PermGen& src ///< [in] コピー元のオブジェクト
-  ) : GenBase(src)
-  {
-  }
+  ) = default;
 
   /// @brief 代入演算子
   /// @return 自分自身
-  const PermGen&
+  PermGen&
   operator=(
     const PermGen& src ///< [in] コピー元のオブジェクト
-  )
-  {
-    copy(src);
-    return *this;
-  }
+  ) = default;
 
   /// @brief デストラクタ
   ~PermGen() = default;

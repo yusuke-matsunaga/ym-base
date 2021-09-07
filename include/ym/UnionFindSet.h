@@ -1,8 +1,8 @@
-﻿#ifndef YM_MFSET_H
-#define YM_MFSET_H
+﻿#ifndef YM_UNIONFINDSET_H
+#define YM_UNIONFINDSET_H
 
-/// @file ym/MFSet.h
-/// @brief MFSet のヘッダファイル
+/// @file ym/UnionFindSet.h
+/// @brief UnionFindSet のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
@@ -15,17 +15,17 @@ BEGIN_NAMESPACE_YM
 
 // クラスの前方参照定義
 // ユーザは知る必要はない．
-class MFSetCell;
+class UFCell;
 
 //////////////////////////////////////////////////////////////////////
-/// @class MFSet MFSet.h "ym/MFSet.h"
+/// @class UnionFindSet UnionFindSet.h "ym/UnionFindSet.h"
 /// @ingroup YmUtils
 /// @brief Merge/Find set を実装したクラス
 ///
 /// データ構造とアルゴリズムの教科書でおなじみの Merge/Find-set
 /// お互いに素な集合のマージと検索のみを行なう抽象データ型
 //////////////////////////////////////////////////////////////////////
-class MFSet
+class UnionFindSet
 {
 public:
   //////////////////////////////////////////////////////////////////////
@@ -39,12 +39,12 @@ public:
 public:
 
   /// @brief コンストラクタ
-  MFSet(
-    int n ///< [in] 確保したい要素の数．
+  UnionFindSet(
+    SizeType n ///< [in] 確保したい要素の数．
   );
 
   /// @brief デストラクタ
-  ~MFSet();
+  ~UnionFindSet();
 
 
 public:
@@ -53,7 +53,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素数を返す．
-  int
+  SizeType
   num() const
   {
     return mNum;
@@ -89,8 +89,10 @@ private:
 
   /// @brief 番号 x の要素セルを取ってくる．
   /// そのような要素がない場合にはnullptrを返す．
-  MFSetCell*
-  get(int x);
+  UFCell*
+  _get(
+    int x
+  );
 
 
 private:
@@ -99,13 +101,13 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 配列の要素数
-  int mNum;
+  SizeType mNum;
 
   // 要素の配列
-  MFSetCell* mCellArray;
+  UFCell* mCellArray;
 
 };
 
 END_NAMESPACE_YM
 
-#endif // YM_MFSET_H
+#endif // YM_UNIONFINDSET_H

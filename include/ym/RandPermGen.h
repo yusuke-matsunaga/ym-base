@@ -9,7 +9,6 @@
 /// All rights reserved.
 
 #include "ym_config.h"
-#include "ym/Range.h"
 #include <random>
 
 
@@ -25,17 +24,13 @@ public:
 
   /// @brief コンストラクタ
   RandPermGen(
-    int n ///< [in] 要素数
-  ) : mNum{n},
-      mArray{new int[n]}
+    SizeType n ///< [in] 要素数
+  ) : mArray(n)
   {
   }
 
   /// @brief デストラクタ
-  ~RandPermGen()
-  {
-    delete [] mArray;
-  }
+  ~RandPermGen() = default;
 
 
 public:
@@ -44,8 +39,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素数を返す．
-  int
-  num() const { return mNum; }
+  SizeType
+  num() const { return mArray.size(); }
 
   /// @brief ランダムな順列を生成する．
   template<class URNG>
@@ -54,18 +49,16 @@ public:
     URNG& randgen ///< [in] 乱数発生器
   )
   {
-    vector<int> src_array(mNum);
-    for ( int i: Range(mNum) ) {
+    vector<int> src_array(num());
+    for ( int i = 0; i < num(); ++ i ) {
       src_array[i] = i;
     }
-    int n = mNum - 1;
-    for ( int i: Range(mNum) ) {
+    int n = num() - 1;
+    for ( int i = 0; i < num(); ++ i ) {
       std::uniform_int_distribution<int> rd(0, n);
       int r = rd(randgen);
       mArray[i] = src_array[r];
-      for ( int j: Range(r, n) ) {
-	src_array[j] = src_array[j + 1];
-      }
+      src_array[r] = src_array[n];
       -- n;
     }
   }
@@ -73,7 +66,7 @@ public:
   /// @brief 順列の要素を取り出す．
   int
   elem(
-    int pos ///< [in] 要素の位置番号 ( 0 <= pos < num() )
+    SizeType pos ///< [in] 要素の位置番号 ( 0 <= pos < num() )
   ) const
   {
     ASSERT_COND( 0 <= pos && pos < num() );
@@ -87,11 +80,8 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 要素数
-  int mNum;
-
   // 現在の順列
-  int* mArray;
+  vector<int> mArray;
 
 };
 

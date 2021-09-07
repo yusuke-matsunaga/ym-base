@@ -19,8 +19,8 @@ BEGIN_NAMESPACE_YM
 void
 CombiGen::operator++()
 {
-  int n = this->n();
-  int k = this->k();
+  SizeType n = this->n();
+  SizeType k = this->k();
   for ( int pos = k; pos -- > 0; ) {
     if ( elem(pos) < n - k + pos ) {
       ++ elem(pos);

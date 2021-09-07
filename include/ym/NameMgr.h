@@ -9,11 +9,11 @@
 /// All rights reserved.
 
 #include "ym_config.h"
-#include "ym/ItvlMgr.h"
-#include "ym/StrBuff.h"
 
 
 BEGIN_NAMESPACE_YM
+
+class ItvlTree;
 
 //////////////////////////////////////////////////////////////////////
 /// @class NameMgr NameMgr.h "ym/NameMgr.h"
@@ -74,7 +74,7 @@ public:
   suffix() const { return mSuffix; }
 
   /// @brief 次に使用可能な名前を接頭語，接尾語を連結して返す．
-  const StrBuff&
+  string
   new_name(
     bool add_name ///< [in] true の時，名前の登録も行う．
   );
@@ -135,7 +135,9 @@ private:
   // ddd を数値に直したものを返す．
   // 形にあっていない場合には -1 を返す．
   int
-  str_to_num(const char* name) const;
+  str_to_num(
+    const char* name
+  ) const;
 
 
 private:
@@ -144,17 +146,17 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 接頭語
-  StrBuff mPrefix;
+  string mPrefix;
 
   // 接尾語
-  StrBuff mSuffix;
+  string mSuffix;
 
-  // 使用可能な数字を表す区間(interval)リスト
-  ItvlMgr mInterval;
+  // 使用中の数字を表す区間(interval)リスト
+  unique_ptr<ItvlTree> mInterval;
 
   // new_name() で用いる作業領域
   mutable
-  StrBuff mTmpString;
+  string mTmpString;
 
   // 最後の new_name() で得られた番号
   mutable

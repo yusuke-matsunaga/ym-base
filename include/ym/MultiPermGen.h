@@ -61,20 +61,14 @@ public:
   /// @brief コピーコンストラクタ
   MultiPermGen(
     const MultiPermGen& src ///< [in] コピー元のオブジェクト
-  ) : MultiGenBase{src}
-  {
-  }
+  ) = default;
 
   /// @brief 代入演算子
   /// @return 自分自身
-  const MultiPermGen&
+  MultiPermGen&
   operator=(
     const MultiPermGen& src ///< [in] コピー元のオブジェクト
-  )
-  {
-    copy(src);
-    return *this;
-  }
+  ) = default;
 
   /// @brief デストラクタ
   ~MultiPermGen() = default;
