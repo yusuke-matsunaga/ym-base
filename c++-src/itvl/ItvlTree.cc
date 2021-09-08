@@ -128,12 +128,6 @@ ItvlTree::get_min() const
   return left_most->E + 1;
 }
 
-ItvlTree::Node::~Node()
-{
-  delete L;
-  delete R;
-}
-
 // @brief x を含むノードを探す．
 //
 // なければ nullptr を返す．

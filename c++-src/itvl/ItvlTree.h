@@ -16,6 +16,10 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 /// @class ItvlTree ItvlTree.h "ItvlTree.h"
 /// @brief 区間を表す平衡二分木
+///
+/// 各節点は [S, E] の区間を持つ．
+/// 二分木なので節点 V の左の部分木のすべての節点の E は V の S よりも小さい
+/// 右の部分木のすべての節点の S は V の E よりも大きい．
 //////////////////////////////////////////////////////////////////////
 class ItvlTree
 {
@@ -68,7 +72,11 @@ private:
   // 二分木のノードを表すデータ型
   struct Node
   {
-    ~Node();
+    ~Node()
+    {
+      delete L;
+      delete R;
+    }
 
     // 開始点
     int S;
@@ -77,7 +85,7 @@ private:
     int E;
 
     // 平衡度(-1, 0, 1)
-    int B;
+    ymint8 B;
 
     // 左の子供
     Node* L{nullptr};
@@ -131,31 +139,31 @@ private:
   /// @return 部分木の高さが変わった時に true を返す．
   bool
   remove_right(
-    Node* node,
-    Node*& ptr
+    Node* node, ///< [in] 削除するノード
+    Node*& ptr  ///< [in] 親のノード
   );
 
   /// @brief 左の部分木の高さが減少したときの処理
   /// @return 自分自身の高さも減少する時に true を返す．
   bool
   balance_left(
-    Node*& ptr
+    Node*& ptr  ///< [in] 親のノード
   );
 
   /// @brief 右の部分木の高さが減少したときの処理
   /// @return 自分自身の高さも減少する時に true を返す．
   bool
   balance_right(
-    Node*& ptr
+    Node*& ptr  ///< [in] 親のノード
   );
 
   /// @brief print() の下請け関数
   static
   bool
   print_sub(
-    Node* node,
-    ostream& s,
-    bool first
+    Node* node, ///< [in] 対象のノード
+    ostream& s, ///< [in] 出力ストリーム
+    bool first  ///< [in] 最初の要素の時 true にするフラグ
   );
 
 

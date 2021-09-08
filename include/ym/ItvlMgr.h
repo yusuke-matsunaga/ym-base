@@ -32,7 +32,8 @@ class ItvlMgr
 public:
 
   /// @brief コンストラクタ
-  /// @note 初期値として [0〜numeric_limits<int>::max()) の区間を持つ
+  ///
+  /// 初期値として [0〜numeric_limits<int>::max()) の区間を持つ
   ItvlMgr();
 
   /// @brief デストラクタ
