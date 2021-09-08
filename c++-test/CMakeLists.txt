@@ -42,6 +42,11 @@ ym_add_gtest ( base_MultiPermGen_test
   $<TARGET_OBJECTS:ym_base_obj_d>
   )
 
+ym_add_gtest ( base_MultiSetCombiGen_test
+  gen/MultiSetCombiGenTest.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
+
 ym_add_gtest ( base_MultiSetPermGen_test
   gen/MultiSetPermGenTest.cc
   $<TARGET_OBJECTS:ym_base_obj_d>

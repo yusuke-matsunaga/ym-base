@@ -80,7 +80,7 @@ public:
   /// @brief 要素の取得
   int
   operator()(
-    SizeType pos ///< [in] 取り出す要素の位置 ( 0 <= pos <, k() )
+    SizeType pos ///< [in] 取り出す要素の位置 ( 0 <= pos < k() )
   ) const
   {
     return mElem[pos];

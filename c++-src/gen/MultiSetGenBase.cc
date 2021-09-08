@@ -21,10 +21,14 @@ BEGIN_NAMESPACE_YM
 void
 MultiSetGenBase::init()
 {
+  // 先頭から若い番号を埋めてゆく
+  // その番号の要素数が上限に達したら次の番号を割り当てる．
+  // いわゆる辞書式順序で最初の順列となる．
   SizeType grp = 0;
   SizeType count = 0;
   for ( int i = 0; i < mK; ++ i ) {
-    if ( n(grp) <= count ) {
+    if ( count >= n(grp) ) {
+      // 上限に達したので次の要素にする．
       ++ grp;
       count = 0;
     }
@@ -38,10 +42,11 @@ MultiSetGenBase::init()
 // クラス MultiSetPermGen
 //////////////////////////////////////////////////////////////////////
 
-// @brief 次の要素を求める．
+// @brief (辞書式順序で)次の要素を求める．
 void
 MultiSetPermGen::operator++()
 {
+  // 各要素の使用数を求める．
   SizeType ng = group_num();
   vector<int> count(ng, 0);
   for ( int i = 0; i < k(); ++ i ) {
@@ -49,21 +54,24 @@ MultiSetPermGen::operator++()
     ++ count[v];
   }
 
-  // 唯一，後置型の演算子の意味のある使い方
-  // 符号なし数なので pos >= 0 は常に成り立ってしまう．
-  // あえて pos <= k という使い方もできないことはないが，，，，
+  // 末尾からインクリメントしてゆく．
   for ( int pos = k(); pos -- > 0; ) {
     bool found = false;
-    for ( int v = elem(pos); ++ v < ng; ++ v ) {
-      if ( count[v] < n(v) ) {
-	-- count[elem(pos)];
-	elem(pos) = v;
-	++ count[v];
+    // 今の要素
+    int g0 = elem(pos);
+    for ( int g1 = g0 + 1; g1 < ng; ++ g1 ) {
+      if ( count[g1] < n(g1) ) {
+	// 使用可能な要素があった．
+	-- count[g0];
+	elem(pos) = g1;
+	++ count[g1];
 	found = true;
 	break;
       }
     }
     if ( found ) {
+      // pos 番目の要素を更新したのでそれより後ろの要素を初期化する．
+      // 具体的には可能な限り先頭の要素から割り当てる．
       int g = 0;
       for ( int pos1 = pos + 1; pos1 < k(); ++ pos1 ) {
 	for ( ; count[g] == n(g); ++ g) ;
@@ -72,11 +80,14 @@ MultiSetPermGen::operator++()
       }
       break;
     }
-    if ( pos > 0 ) {
-      -- count[elem(pos)];
-    }
     else {
-      elem(0) = ng;
+      if ( pos > 0 ) {
+	-- count[g0];
+      }
+      else {
+	// 終わり
+	elem(0) = ng;
+      }
     }
   }
 }
@@ -97,12 +108,9 @@ MultiSetCombiGen::operator++()
     ++ count[v];
   }
 
-  // 唯一，後置型の演算子の意味のある使い方
-  // 符号なし数なので pos >= 0 は常に成り立ってしまう．
-  // あえて pos <= k という使い方もできないことはないが，，，，
   for ( int pos = k(); pos -- > 0; ) {
     bool found = false;
-    for ( int v = elem(pos); ++ v < ng; ++ v ) {
+    for ( int v = elem(pos) + 1; v < ng; ++ v ) {
       if ( count[v] < n(v) ) {
 	-- count[elem(pos)];
 	elem(pos) = v;
