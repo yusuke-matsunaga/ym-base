@@ -84,7 +84,6 @@ set ( file_info_SOURCES
   c++-src/file_info/File.cc
   c++-src/file_info/FileInfo.cc
   c++-src/file_info/FileInfoMgr.cc
-#  c++-src/file_info/InputFileObj.cc
   )
 
 set ( gen_SOURCES
