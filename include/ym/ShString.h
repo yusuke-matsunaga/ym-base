@@ -9,6 +9,8 @@
 /// All rights reserved.
 
 #include "ym_config.h"
+#include "ym/BinDec.h"
+#include "ym/BinEnc.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -267,6 +269,38 @@ operator<<(
   ostream& s,         ///< [in] 出力ストリーム
   const ShString& str ///< [in] 出力対象の文字列
 );
+
+/// @relates ShString
+/// @ingroup ym
+/// @brief ShString 用のバイナリ出力演算子
+/// @return s をそのまま返す．
+inline
+BinEnc&
+operator<<(
+  BinEnc& s,          ///< [in] 出力ストリーム
+  const ShString& str ///< [in] 出力対象の文字列
+)
+{
+  s << static_cast<string>(str);
+  return s;
+}
+
+/// @relates ShString
+/// @ingroup ym
+/// @brief ShString 用のバイナリ入力演算子
+/// @return s をそのまま返す．
+inline
+BinDec&
+operator<<(
+  BinDec& s,    ///< [in] 入力ストリーム
+  ShString& str ///< [out] 対象の文字列
+)
+{
+  string tmp;
+  s >> tmp;
+  str = ShString{tmp};
+  return s;
+}
 
 /// @}
 

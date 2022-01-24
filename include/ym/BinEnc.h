@@ -105,6 +105,16 @@ public:
     raw_write(reinterpret_cast<const ymuint8*>(val.c_str()), l);
   }
 
+  /// @brief ブロックデータの書き込み
+  void
+  write_block(
+    const ymuint8* block, ///< [in] ブロックの先頭アドレス
+    SizeType n            ///< [in] データサイズ
+  )
+  {
+    raw_write(block, n);
+  }
+
 
 private:
   //////////////////////////////////////////////////////////////////////
