@@ -448,8 +448,7 @@ ZFile::read(
     if ( n != sizeof(header) ||
 	 memcmp(header, k_MAGICHEADER, sizeof(k_MAGICHEADER)) != 0 ) {
       // ファイルタイプミスマッチ
-      cerr << "invalid magic header" << endl;
-      return -1;
+      throw ZError{"invalid magic header"};
     }
     m_maxbits = header[2];
     m_block_compress = m_maxbits & k_BLOCK_MASK;
@@ -457,8 +456,7 @@ ZFile::read(
     m_maxmaxcode = 1ULL << m_maxbits;
     if ( m_maxbits > k_BITS || m_maxbits < 12 ) {
       // EFTYPE
-      cerr << "m_maxbits = " << m_maxbits << endl;
-      return -1;
+      throw ZError{"incorrect m_maxbits"};
     }
 
     m_n_bits = k_INIT_BITS;
@@ -497,7 +495,7 @@ ZFile::read(
       if ( code > m_free_ent || m_oldcode == -1 ) {
 	// Bad stream
 	// EINVAL;
-	return -1;
+	throw ZError{"Bad stream"};
       }
       push_stack(m_finchar);
       code = m_oldcode;
@@ -554,16 +552,16 @@ ZFile::getcode()
       m_maxcode = MAXCODE(m_n_bits = k_INIT_BITS);
       m_clear_flg = 0;
     }
-    int n = mFileBuff.read(m_gbuf, m_n_bits);
-    if ( n <= 0 ) {
+    auto n = mFileBuff.read(m_gbuf, m_n_bits);
+    if ( n == 0 ) {
       return -1;
     }
     m_roffset = 0;
     int n1 = n;
     m_size = (n1 << 3) - (m_n_bits - 1);
   }
-  int r_off = m_roffset;
-  int bits = m_n_bits;
+  auto r_off = m_roffset;
+  auto bits = m_n_bits;
 
   // Get to the first byte.
   bp += static_cast<ymuint8>(r_off >> 3);
