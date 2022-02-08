@@ -69,7 +69,7 @@ ym_add_gtest ( base_ItvlTree_test
 
 target_include_directories( base_ItvlTree_test
   PRIVATE
-  ${CMAKE_CURRENT_SOURCE_DIR}/../c++-src/itvl
+  ${CMAKE_CURRENT_SOURCE_DIR}/../c++-srcs/itvl
   )
 
 ym_add_gtest ( base_Range_test
@@ -94,7 +94,117 @@ ym_add_gtest ( base_ShString_test
 #  "-DDATAPATH=\"${CMAKE_CURRENT_SOURCE_DIR}/testdata/\""
 #  )
 
+
+# ===================================================================
+# BinCodec 関係のテスト
+# ===================================================================
+
 ym_add_gtest ( base_BinCodec_test
   io/BinCodecTest.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
   )
+
+
+# ===================================================================
+# ZFile 関係のテスト
+# ===================================================================
+
+set ( TESTDATA_DIR
+  ${CMAKE_CURRENT_SOURCE_DIR}/testdata
+  )
+
+ym_add_gtest ( base_compress_test
+  io/compress_test.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
+
+target_include_directories ( base_compress_test
+  PRIVATE
+  ../c++-srcs/io
+  )
+
+target_compile_definitions ( base_compress_test
+  PRIVATE
+  "-DTESTDATA_DIR=\"${TESTDATA_DIR}\""
+  )
+
+target_link_libraries ( base_compress_test
+  )
+
+
+# ===================================================================
+# XzFile 関係のテスト
+# ===================================================================
+if ( LIBLZMA_FOUND )
+  ym_add_gtest ( base_xz_test
+    io/xz_test.cc
+    $<TARGET_OBJECTS:ym_base_obj_d>
+    )
+
+  target_include_directories ( base_xz_test
+    PRIVATE
+    ../c++-srcs/io
+    )
+
+  target_compile_definitions ( base_xz_test
+    PRIVATE
+    "-DTESTDATA_DIR=\"${TESTDATA_DIR}\""
+    )
+
+  target_link_libraries ( base_xz_test
+    ${LIBLZMA_LIBRARIES}
+    )
+
+endif ( LIBLZMA_FOUND )
+
+
+# ===================================================================
+# GzFile 関係のテスト
+# ===================================================================
+if ( ZLIB_FOUND )
+  ym_add_gtest ( base_gzip_test
+    io/gzip_test.cc
+    $<TARGET_OBJECTS:ym_base_obj_d>
+    )
+
+  target_include_directories ( base_gzip_test
+    PRIVATE
+    ../c++-srcs/io
+    )
+
+  target_compile_definitions ( base_gzip_test
+    PRIVATE
+    "-DTESTDATA_DIR=\"${TESTDATA_DIR}\""
+    )
+
+  target_link_libraries ( base_gzip_test
+    ${ZLIB_LIBRARIES}
+    )
+
+endif ( ZLIB_FOUND )
+
+
+# ===================================================================
+# BzFile 関係のテスト
+# ===================================================================
+if ( BZIP2_FOUND )
+  ym_add_gtest ( base_bzip2_test
+    io/bzip2_test.cc
+    $<TARGET_OBJECTS:ym_base_obj_d>
+    )
+
+  target_include_directories ( base_bzip2_test
+    PRIVATE
+    ../c++-srcs/io
+    )
+
+  target_compile_definitions ( base_bzip2_test
+    PRIVATE
+    "-DTESTDATA_DIR=\"${TESTDATA_DIR}\""
+    )
+
+  target_link_libraries ( base_bzip2_test
+    ${BZIP2_LIBRARIES}
+    )
+
+endif ( BZIP2_FOUND )

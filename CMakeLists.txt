@@ -77,95 +77,78 @@ configure_file(
 # ===================================================================
 
 set ( binder_SOURCES
-  c++-src/binder/Binder.cc
+  c++-srcs/binder/Binder.cc
   )
 
 set ( file_info_SOURCES
-  c++-src/file_info/File.cc
-  c++-src/file_info/FileInfo.cc
-  c++-src/file_info/FileInfoMgr.cc
+  c++-srcs/file_info/File.cc
+  c++-srcs/file_info/FileInfo.cc
+  c++-srcs/file_info/FileInfoMgr.cc
   )
 
 set ( gen_SOURCES
-  c++-src/gen/GenBase.cc
-  c++-src/gen/MultiGenBase.cc
-  c++-src/gen/MultiSetGenBase.cc
+  c++-srcs/gen/GenBase.cc
+  c++-srcs/gen/MultiGenBase.cc
+  c++-srcs/gen/MultiSetGenBase.cc
   )
 
 set ( io_SOURCES
-#  c++-src/io/CodecType.cc
-#  c++-src/io/FileBuff.cc
-#  c++-src/io/FileBuff.h
-#  c++-src/io/FileCoder.cc
-#  c++-src/io/FileDecoder.cc
-#  c++-src/io/FileIDO.cc
-#  c++-src/io/FileODO.cc
-#  c++-src/io/IDO.cc
-#  c++-src/io/ODO.cc
-#  c++-src/io/StreamIDO.cc
-#  c++-src/io/StringIDO.cc
-#  c++-src/io/StrListIDO.cc
-#  c++-src/io/ThruCoder.cc
-#  c++-src/io/ThruDecoder.cc
-#  c++-src/io/ZCoder.cc
-#  c++-src/io/ZDecoder.cc
+  c++-srcs/io/FileBuff.cc
+  c++-srcs/io/FileBuff.h
+  c++-srcs/io/ZFile.cc
   )
 
 if ( ZLIB_FOUND )
   set (io_SOURCES ${io_SOURCES}
-#    c++-src/io/GzCoder.cc
-#    c++-src/io/GzDecoder.cc
-    c++-src/io/zstream.cc
+    c++-srcs/io/GzFile.cc
     )
 endif ( ZLIB_FOUND )
 
 if ( BZIP2_FOUND )
   set (io_SOURCES ${io_SOURCES}
-#    c++-src/io/BzCoder.cc
-#    c++-src/io/BzDecoder.cc
+    c++-srcs/io/BzFile.cc
     )
 endif ( BZIP2_FOUND )
 
 if ( LIBLZMA_FOUND )
   set (io_SOURCES ${io_SOURCES}
-#    c++-src/io/LzmaCoder.cc
-#    c++-src/io/LzmaDecoder.cc
+    c++-srcs/io/XzFile.cc
     )
 endif ( LIBLZMA_FOUND )
 
 set ( itvl_SOURCES
-  c++-src/itvl/ItvlMgr.cc
-  c++-src/itvl/ItvlTree.cc
-  c++-src/itvl/NameMgr.cc
+  c++-srcs/itvl/ItvlMgr.cc
+  c++-srcs/itvl/ItvlTree.cc
+  c++-srcs/itvl/NameMgr.cc
   )
 
 set ( misc_SOURCES
-  c++-src/misc/UnionFindSet.cc
+  c++-srcs/misc/UnionFindSet.cc
   )
 
 set ( msg_SOURCES
-  c++-src/msg/MsgHandler.cc
-  c++-src/msg/MsgMgr.cc
-  c++-src/msg/MsgMgrImpl.cc
+  c++-srcs/msg/MsgHandler.cc
+  c++-srcs/msg/MsgMgr.cc
+  c++-srcs/msg/MsgMgrImpl.cc
   )
 
 if ( POPT_FOUND )
   set ( popt_SOURCES
-    c++-src/popt/PoptMainApp.cc
+    c++-srcs/popt/PoptMainApp.cc
     )
 else ( )
   set ( popt_SOURCES )
 endif ( )
 
 set ( textproc_SOURCES
-  c++-src/textproc/OptionParser.cc
-  c++-src/textproc/Scanner.cc
-  c++-src/textproc/ShString.cc
-  c++-src/textproc/StrBuff.cc
+  c++-srcs/textproc/OptionParser.cc
+  c++-srcs/textproc/Scanner.cc
+  c++-srcs/textproc/ShString.cc
+  c++-srcs/textproc/StrBuff.cc
   )
 
 set ( time_SOURCES
-  c++-src/time/StopWatch.cc
+  c++-srcs/time/StopWatch.cc
   )
 
 set ( ym_base_SOURCES
