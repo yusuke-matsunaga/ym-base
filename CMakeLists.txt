@@ -93,26 +93,25 @@ set ( gen_SOURCES
   )
 
 set ( io_SOURCES
-  c++-srcs/io/FileBuff.cc
-  c++-srcs/io/FileBuff.h
-  c++-srcs/io/ZFile.cc
+  c++-srcs/io/CodecEngine.cc
+  c++-srcs/io/ZEngine.cc
   )
 
 if ( ZLIB_FOUND )
   set (io_SOURCES ${io_SOURCES}
-    c++-srcs/io/GzFile.cc
+    c++-srcs/io/GzEngine.cc
     )
 endif ( ZLIB_FOUND )
 
 if ( BZIP2_FOUND )
   set (io_SOURCES ${io_SOURCES}
-    c++-srcs/io/BzFile.cc
+    c++-srcs/io/BzEngine.cc
     )
 endif ( BZIP2_FOUND )
 
 if ( LIBLZMA_FOUND )
   set (io_SOURCES ${io_SOURCES}
-    c++-srcs/io/XzFile.cc
+    c++-srcs/io/XzEngine.cc
     )
 endif ( LIBLZMA_FOUND )
 

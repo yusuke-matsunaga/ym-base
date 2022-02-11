@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 #include <gtest/gtest.h>
-#include "XzFile.h"
+#include "XzEngine.h"
 #include "codec_test.h"
 
 
@@ -24,10 +24,11 @@ public codec_test
 TEST_F(xz_test, inflate)
 {
   string xz_filename = string{TESTDATA_DIR} + string{"/quick_brown_fox.txt.xz"};
+  ifstream ifs{xz_filename};
+  ASSERT_TRUE( ifs.is_open() );
 
-  XzFile ibuff;
-  auto ret = ibuff.inflate_open(xz_filename);
-  ASSERT_TRUE( ret );
+  XzEngine ibuff{&ifs};
+
   auto size = ibuff.read(reinterpret_cast<ymuint8*>(mBuff), BUFF_SIZE);
 
   EXPECT_EQ( mTestSize, size );
@@ -39,13 +40,16 @@ TEST_F(xz_test, deflate)
 {
   // unxz は拡張子の ".xz" を仮定している．
   string xz_filename = mFileName + string{".xz"};
+
   {
-    XzFile obuff;
-    auto ret = obuff.deflate_open(xz_filename, 0666);
-    ASSERT_TRUE( ret );
+    ofstream ofs{xz_filename};
+    ASSERT_TRUE( ofs.is_open() );
+
+    XzEngine obuff{&ofs};
 
     obuff.write(reinterpret_cast<const ymuint8*>(mTestData), mTestSize);
   }
+
   {
     string cmd = string{"unxz "} + xz_filename + ";";
     cmd += " diff " + mFileName;
@@ -58,20 +62,22 @@ TEST_F(xz_test, deflate)
 TEST_F(xz_test, big_buffer)
 {
   {
-    XzFile obuff{4096};
-    int level = 6;
-    auto ret = obuff.deflate_open(mFileName, 0666, level, LZMA_CHECK_CRC64);
-    ASSERT_TRUE( ret );
+    ofstream ofs{mFileName};
+    ASSERT_TRUE( ofs.is_open() );
+
+    XzEngine obuff{&ofs, 4096, nullptr, 6, LZMA_CHECK_CRC64};
 
     obuff.write(reinterpret_cast<const ymuint8*>(mTestData), mTestSize);
   }
   {
-    XzFile ibuff{4096};
+    ifstream ifs{mFileName};
+    ASSERT_TRUE( ifs.is_open() );
+
     SizeType memlimit = 128 * 1024 * 1024;
-    ymuint32 flags = 0;
-    auto ret = ibuff.inflate_open(mFileName, memlimit, flags);
-    ASSERT_TRUE( ret );
-    ibuff.read(reinterpret_cast<ymuint8*>(mBuff), mTestSize);
+    XzEngine ibuff{&ifs, 4096, nullptr, memlimit, 0};
+
+    auto size = ibuff.read(reinterpret_cast<ymuint8*>(mBuff), mTestSize);
+    EXPECT_EQ( mTestSize, size );
   }
   EXPECT_EQ( 0, memcmp(mTestData, mBuff, mTestSize) );
 }
@@ -79,20 +85,22 @@ TEST_F(xz_test, big_buffer)
 TEST_F(xz_test, small_obuffer)
 {
   {
-    XzFile obuff{10};
-    int level = 6;
-    auto ret = obuff.deflate_open(mFileName, 0666, level, LZMA_CHECK_CRC64);
-    ASSERT_TRUE( ret );
+    ofstream ofs{mFileName};
+    ASSERT_TRUE( ofs.is_open() );
+
+    XzEngine obuff{&ofs, 10, nullptr, 6, LZMA_CHECK_CRC64};
 
     obuff.write(reinterpret_cast<const ymuint8*>(mTestData), mTestSize);
   }
   {
-    XzFile ibuff{4096};
+    ifstream ifs{mFileName};
+    ASSERT_TRUE( ifs.is_open() );
+
     SizeType memlimit = 128 * 1024 * 1024;
-    ymuint32 flags = 0;
-    auto ret = ibuff.inflate_open(mFileName, memlimit, flags);
-    ASSERT_TRUE( ret );
-    ibuff.read(reinterpret_cast<ymuint8*>(mBuff), mTestSize);
+    XzEngine ibuff{&ifs, 4096, nullptr, memlimit, 0};
+
+    auto size = ibuff.read(reinterpret_cast<ymuint8*>(mBuff), mTestSize);
+    EXPECT_EQ( mTestSize, size );
   }
 
   EXPECT_EQ( 0, memcmp(mTestData, mBuff, mTestSize) );
@@ -101,20 +109,22 @@ TEST_F(xz_test, small_obuffer)
 TEST_F(xz_test, small_ibuffer)
 {
   {
-    XzFile obuff{4096};
-    int level = 6;
-    auto ret = obuff.deflate_open(mFileName, 0666, level, LZMA_CHECK_CRC64);
-    ASSERT_TRUE( ret );
+    ofstream ofs{mFileName};
+    ASSERT_TRUE( ofs.is_open() );
+
+    XzEngine obuff{&ofs, 4096, nullptr, 6, LZMA_CHECK_CRC64};
 
     obuff.write(reinterpret_cast<const ymuint8*>(mTestData), mTestSize);
   }
   {
-    XzFile ibuff{10};
+    ifstream ifs{mFileName};
+    ASSERT_TRUE( ifs.is_open() );
+
     SizeType memlimit = 128 * 1024 * 1024;
-    ymuint32 flags = 0;
-    auto ret = ibuff.inflate_open(mFileName, memlimit, flags);
-    ASSERT_TRUE( ret );
-    ibuff.read(reinterpret_cast<ymuint8*>(mBuff), mTestSize);
+    XzEngine ibuff{&ifs, 10, nullptr, memlimit, 0};
+
+    auto size = ibuff.read(reinterpret_cast<ymuint8*>(mBuff), mTestSize);
+    EXPECT_EQ( mTestSize, size );
   }
 
   EXPECT_EQ( 0, memcmp(mTestData, mBuff, mTestSize) );

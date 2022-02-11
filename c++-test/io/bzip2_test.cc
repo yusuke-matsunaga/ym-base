@@ -8,7 +8,7 @@
 
 #include <gtest/gtest.h>
 #include <stdlib.h>
-#include "BzFile.h"
+#include "BzEngine.h"
 #include "codec_test.h"
 
 
@@ -25,10 +25,11 @@ public codec_test
 TEST_F(bzip2_test, inflate)
 {
   string bz_filename = string{TESTDATA_DIR} + string{"/quick_brown_fox.txt.bz"};
+  ifstream ifs{bz_filename};
+  ASSERT_TRUE( ifs.is_open() );
 
-  BzFile ibuff;
-  auto ret = ibuff.inflate_open(bz_filename);
-  ASSERT_TRUE( ret );
+  BzEngine ibuff{&ifs};
+
   auto size = ibuff.read(reinterpret_cast<ymuint8*>(mBuff), BUFF_SIZE);
 
   EXPECT_EQ( mTestSize, size );
@@ -41,9 +42,10 @@ TEST_F(bzip2_test, deflate)
   // bunzip2 は拡張子の ".bz" を仮定している．
   string bz_filename = mFileName + string{".bz"};
   {
-    BzFile obuff;
-    auto ret = obuff.deflate_open(bz_filename, 0666);
-    ASSERT_TRUE( ret );
+    ofstream ofs{bz_filename};
+    ASSERT_TRUE( ofs.is_open() );
+
+    BzEngine obuff{&ofs};
 
     obuff.write(reinterpret_cast<const ymuint8*>(mTestData), mTestSize);
   }
@@ -59,18 +61,21 @@ TEST_F(bzip2_test, deflate)
 TEST_F(bzip2_test, big_buffer)
 {
   {
-    BzFile obuff{4096};
-    auto ret = obuff.deflate_open(mFileName, 0666);
-    ASSERT_TRUE( ret );
+    ofstream ofs{mFileName};
+    ASSERT_TRUE( ofs.is_open() );
+
+    BzEngine obuff{&ofs, 4096};
 
     obuff.write(reinterpret_cast<const ymuint8*>(mTestData), mTestSize);
   }
   {
-    BzFile ibuff{4096};
-    auto ret = ibuff.inflate_open(mFileName);
-    ASSERT_TRUE( ret );
+    ifstream ifs{mFileName};
+    ASSERT_TRUE( ifs.is_open() );
 
-    ibuff.read(reinterpret_cast<ymuint8*>(mBuff), mTestSize);
+    BzEngine ibuff{&ifs, 4096};
+
+    auto size = ibuff.read(reinterpret_cast<ymuint8*>(mBuff), mTestSize);
+    EXPECT_EQ( mTestSize, size );
   }
   EXPECT_EQ( 0, memcmp(mTestData, mBuff, mTestSize) );
 }
@@ -78,38 +83,44 @@ TEST_F(bzip2_test, big_buffer)
 TEST_F(bzip2_test, small_obuffer)
 {
   {
-    BzFile obuff{10};
-    auto ret = obuff.deflate_open(mFileName, 0666);
-    ASSERT_TRUE( ret );
+    ofstream ofs{mFileName};
+    ASSERT_TRUE( ofs.is_open() );
+
+    BzEngine obuff{&ofs, 10};
 
     obuff.write(reinterpret_cast<const ymuint8*>(mTestData), mTestSize);
   }
   {
-    BzFile ibuff{4096};
-    auto ret = ibuff.inflate_open(mFileName);
-    ASSERT_TRUE( ret );
-    ibuff.read(reinterpret_cast<ymuint8*>(mBuff), mTestSize);
-  }
+    ifstream ifs{mFileName};
+    ASSERT_TRUE( ifs.is_open() );
 
+    BzEngine ibuff{&ifs, 4096};
+
+    auto size = ibuff.read(reinterpret_cast<ymuint8*>(mBuff), mTestSize);
+    EXPECT_EQ( mTestSize, size );
+  }
   EXPECT_EQ( 0, memcmp(mTestData, mBuff, mTestSize) );
 }
 
 TEST_F(bzip2_test, small_ibuffer)
 {
   {
-    BzFile obuff{4096};
-    auto ret = obuff.deflate_open(mFileName, 0666);
-    ASSERT_TRUE( ret );
+    ofstream ofs{mFileName};
+    ASSERT_TRUE( ofs.is_open() );
+
+    BzEngine obuff{&ofs, 4096};
 
     obuff.write(reinterpret_cast<const ymuint8*>(mTestData), mTestSize);
   }
   {
-    BzFile ibuff{10};
-    auto ret = ibuff.inflate_open(mFileName);
-    ASSERT_TRUE( ret );
-    ibuff.read(reinterpret_cast<ymuint8*>(mBuff), mTestSize);
-  }
+    ifstream ifs{mFileName};
+    ASSERT_TRUE( ifs.is_open() );
 
+    BzEngine ibuff{&ifs, 10};
+
+    auto size = ibuff.read(reinterpret_cast<ymuint8*>(mBuff), mTestSize);
+    EXPECT_EQ( mTestSize, size );
+  }
   EXPECT_EQ( 0, memcmp(mTestData, mBuff, mTestSize) );
 }
 

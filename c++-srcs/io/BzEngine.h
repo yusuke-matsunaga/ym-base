@@ -1,21 +1,21 @@
-﻿#ifndef BZSTREAM_H
-#define BZSTREAM_H
+#ifndef BZENGINE_H
+#define BZENGINE_H
 
-/// @file BzStream.h
-/// @brief BzStream のヘッダファイル
+/// @file BzEngine.h
+/// @brief BzEngine のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2013, 2021, 2022 Yusuke Matsunaga
+/// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym_config.h"
+#include "CodecEngine.h"
 #include <bzlib.h>
 
 
 BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
-/// @class BzError BzStream.h "BzStream.h"
+/// @class BzError BzEngine.h "BzEngine.h"
 /// @brief bz_stream のエラーを表すクラス
 //////////////////////////////////////////////////////////////////////
 class BzError
@@ -50,21 +50,12 @@ public:
 
 
 //////////////////////////////////////////////////////////////////////
-/// @class BzStream BzStream.h "BzStream.h"
-/// @brief bz_stream の C++ 用ラッパクラス
+/// @class BzEngine BzEngine.h "BzEngine.h"
+/// @brief
 //////////////////////////////////////////////////////////////////////
-class BzStream
+class BzEngine :
+  public CodecEngine
 {
-private:
-
-  /// @brief 内部状態
-  enum Mode {
-    None,    ///< 中立
-    Deflate, ///< 圧縮
-    Inflate  ///< 伸張
-  };
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // 関数の型定義
@@ -79,41 +70,62 @@ public:
 
 public:
 
+  /// @brief 伸張用のコンストラクタ
+  BzEngine(
+    istream* is,               ///< [in] 入力ストリーム
+    SizeType buff_size = 4096, ///< [in] バッファサイズ
+    int verbosity = 0,         ///< [in] デバッグ用の出力レベル ( 0 - 4 )
+    int small = 0,             ///< [in] 伸張アルゴリズム用のパラメータ ( 0 か 非0 )
+    alloc_func af = nullptr,   ///< [in] alloc 関数
+    free_func ff = nullptr,    ///< [in] free 関数
+    void* op = nullptr         ///< [in] opaque オブジェクト
+  );
+
   /// @brief コンストラクタ
-  BzStream(
-    alloc_func af = nullptr, ///< [in] alloc 関数
-    free_func ff = nullptr,  ///< [in] free 関数
-    void* op = nullptr       ///< [in] opaque オブジェクト
-  )
-  {
-    mBzStream.bzalloc = af;
-    mBzStream.bzfree = ff;
-    mBzStream.opaque = op;
-  }
+  BzEngine(
+    ostream* os,               ///< [in] 出力ストリーム
+    SizeType buff_size = 4096, ///< [in] バッファサイズ
+    int block_size_100k = 9,   ///< [in] 作業用のメモリサイズ ( 0 - 9 )
+    int verbosity = 0,         ///< [in] デバッグ用の出力レベル ( 0 - 4 )
+    int work_factor = 0,       ///< [in] 圧縮アルゴリズム用のパラメータ ( 0 - 250 )
+    alloc_func af = nullptr,   ///< [in] alloc 関数
+    free_func ff = nullptr,    ///< [in] free 関数
+    void* op = nullptr         ///< [in] opaque オブジェクト
+  );
 
   /// @brief デストラクタ
-  ~BzStream()
-  {
-    if ( deflate_mode() ) {
-      deflate_end();
-    }
-    else if ( inflate_mode() ) {
-      inflate_end();
-    }
-  }
+  ~BzEngine();
 
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // 圧縮用の外部インターフェイス
+  // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 圧縮モードの時 true を返す．
-  bool
-  deflate_mode() const
-  {
-    return mMode == Deflate;
-  }
+  /// @brief データを伸長して読み出す．
+  /// @return 読み出したデータサイズを返す．
+  ///
+  /// エラーの場合には例外が送出される．
+  SizeType
+  read(
+    ymuint8* buff, ///< [in] 読み出したデータを格納するバッファ
+    SizeType size  ///< [in] 読み出すデータの最大サイズ
+  ) override;
+
+  /// @brief データを圧縮して書き込む．
+  ///
+  /// エラーの場合には例外が送出される．
+  void
+  write(
+    const ymuint8* buff, ///< [in] 入力データのバッファ
+    SizeType size        ///< [in] データサイズ
+  ) override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
 
   /// @brief 圧縮用の初期化を行う．
   void
@@ -121,114 +133,31 @@ public:
     int block_size_100k = 9, ///< [in] 作業用のメモリサイズ ( 1 - 9 )
     int verbosity       = 0, ///< [in] デバッグ用の出力レベル ( 0 - 4 )
     int work_factor     = 0  ///< [in] 圧縮アルゴリズム用のパラメータ ( 0 - 250 )
-  )
-  {
-    ASSERT_COND( mMode == None );
-    auto ret = BZ2_bzCompressInit(&mBzStream, block_size_100k, verbosity, work_factor);
-    if ( ret != BZ_OK ) {
-      throw BzError{ret, "BZ2_bzCompressInit"};
-    }
-    mMode = Deflate;
-  }
+  );
 
   /// @brief 圧縮を行う．
   int
-  deflate(
+  deflate_common(
     int action ///< [in] 動作コード
                ///<  - BZ_RUN
                ///<  - BZ_FLUSH
                ///<  - BZ_FINISH
-  )
-  {
-    ASSERT_COND( mMode == Deflate );
-    auto ret = BZ2_bzCompress(&mBzStream, action);
-    switch ( ret ) {
-    case BZ_RUN_OK:
-    case BZ_FLUSH_OK:
-    case BZ_FINISH_OK:
-    case BZ_STREAM_END:
-      break;
-    default:
-      // それ以外はエラー
-      throw BzError{ret, "BZ2_bzCompress"};
-    }
-    return ret;
-  }
+  );
 
   /// @brief 圧縮を終了する．
   void
-  deflate_end()
-  {
-    ASSERT_COND( mMode == Deflate );
-    auto ret = BZ2_bzCompressEnd(&mBzStream);
-    if ( ret != BZ_OK ) {
-      throw BzError{ret, "BZ2_bzCompressEnd"};
-    }
-    mMode = None;
-  }
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 伸張用の外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 進捗モードの時 true を返す．
-  bool
-  inflate_mode() const
-  {
-    return mMode == Inflate;
-  }
+  deflate_end();
 
   /// @brief 伸張用のの初期化を行う．
   void
   inflate_init(
     int verbosity, ///< [in] デバッグ用の出力レベル ( 0 - 4 )
     int small      ///< [in] 伸張アルゴリズム用のパラメータ ( 0 か 非0 )
-  )
-  {
-    ASSERT_COND( mMode == None );
-    auto ret = BZ2_bzDecompressInit(&mBzStream, verbosity, small);
-    if ( ret != BZ_OK ) {
-      throw BzError{ret, "BZ2_bzDecompressInit"};
-    }
-    mMode = Inflate;
-  }
-
-  /// @brief 伸張を行う．
-  int
-  inflate()
-  {
-    ASSERT_COND( mMode == Inflate );
-    auto ret = BZ2_bzDecompress(&mBzStream);
-    switch ( ret ) {
-    case BZ_OK:
-    case BZ_STREAM_END:
-      break;
-    default:
-      // それ以外はエラー
-      throw BzError{ret, "BZ2_bzDecompress"};
-    }
-    return ret;
-  }
+  );
 
   /// @brief 伸張を終了する．
   void
-  inflate_end()
-  {
-    ASSERT_COND( mMode == Inflate );
-    auto ret = BZ2_bzDecompressEnd(&mBzStream);
-    if ( ret != BZ_OK ) {
-      throw BzError{ret, "BZ2_bzDecompressEnd"};
-    }
-    mMode = None;
-  }
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // バッファの操作関数
-  //////////////////////////////////////////////////////////////////////
+  inflate_end();
 
   /// @brief in バッファを設定する．
   void
@@ -276,11 +205,8 @@ private:
   // 本当の構造体
   bz_stream mBzStream;
 
-  // 内部状態
-  Mode mMode{None};
-
 };
 
 END_NAMESPACE_YM
 
-#endif // BZSTREAM_H
+#endif // BZENGINE_H

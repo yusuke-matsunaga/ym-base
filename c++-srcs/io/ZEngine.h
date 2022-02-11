@@ -1,22 +1,21 @@
-﻿#ifndef ZFILE_H
-#define ZFILE_H
+﻿#ifndef ZENGINE_H
+#define ZENGINE_H
 
-/// @file ZFile.h
-/// @brief ZFile のヘッダファイル
+/// @file ZEngine.h
+/// @brief ZEngine のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "BzStream.h"
-#include "FileBuff.h"
+#include "CodecEngine.h"
 
 
 BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
-/// @class ZError ZFile.h "ZFile.h"
-/// @brief ZFile のエラーを表すクラス
+/// @class ZError ZEngine.h "ZEngine.h"
+/// @brief ZEngine のエラーを表すクラス
 //////////////////////////////////////////////////////////////////////
 class ZError
 {
@@ -45,11 +44,11 @@ public:
 
 
 //////////////////////////////////////////////////////////////////////
-/// @class ZFile ZFile.h "ZFile.h"
+/// @class ZEngine ZEngine.h "ZEngine.h"
 /// @brief compress(Z) 形式の圧縮/伸張を行なうファイルバッファ
 //////////////////////////////////////////////////////////////////////
-class ZFile :
-  public BzStream
+class ZEngine :
+  public CodecEngine
 {
 public:
   //////////////////////////////////////////////////////////////////////
@@ -63,13 +62,21 @@ public:
 
 public:
 
-  /// @brief コンストラクタ
-  ZFile(
-    SizeType buff_size = 4096 ///< [in] バッファサイズ
+  /// @brief 伸張用のコンストラクタ
+  ZEngine(
+    istream* is,               ///< [in] 入力ストリーム
+    SizeType buff_size = 4096  ///< [in] バッファサイズ
+  );
+
+  /// @brief 圧縮用のコンストラクタ
+  ZEngine(
+    ostream* os,               ///< [in] 出力ストリーム
+    SizeType buff_size = 4096, ///< [in] バッファサイズ
+    int level = 0              ///< [in] 圧縮レベル
   );
 
   /// @brief デストラクタ
-  ~ZFile();
+  ~ZEngine();
 
 
 public:
@@ -77,92 +84,40 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief ファイルを圧縮用に開く
-  /// @retval true 成功した
-  /// @retval false 失敗した．
-  ///
-  /// 失敗する理由は以下の通り
-  ///  - ファイルに対する書き込み許可がない．
-  bool
-  deflate_open(
-    const char* filename, ///< [in] ファイル名
-    mode_t mode = 0666,   ///< [in] ファイル作成用のモード
-    int level = 0         ///< [in] 圧縮レベル
-  );
-
-  /// @brief ファイルを圧縮用に開く
-  /// @retval true 成功した
-  /// @retval false 失敗した．
-  ///
-  /// 失敗する理由は以下の通り
-  ///  - ファイルに対する書き込み許可がない．
-  bool
-  deflate_open(
-    const string& filename, ///< [in] ファイル名
-    mode_t mode = 0666,     ///< [in] ファイル作成用のモード
-    int level = 0           ///< [in] 圧縮レベル
-  )
-  {
-    return deflate_open(filename.c_str(), mode, level);
-  }
-
-  /// @brief ファイルを伸張用に開く
-  /// @retval true 成功した
-  /// @retval false 失敗した．
-  ///
-  /// 失敗する理由は以下の通り
-  ///  - ファイルが存在しない．
-  ///  - ファイルに対する読み出し許可がない．
-  ///  - ファイルの形式が異なる．
-  bool
-  inflate_open(
-    const char* filename ///< [in] ファイル名
-  );
-
-  /// @brief ファイルを伸張用に開く
-  /// @retval true 成功した
-  /// @retval false 失敗した．
-  ///
-  /// 失敗する理由は以下の通り
-  ///  - ファイルが存在しない．
-  ///  - ファイルに対する読み出し許可がない．
-  ///  - ファイルの形式が異なる．
-  bool
-  inflate_open(
-    const string& filename ///< [in] ファイル名
-  )
-  {
-    return inflate_open(filename.c_str());
-  }
-
-  /// @brief ファイルを閉じる．
-  void
-  close();
-
-  /// @brief 最大 num バイトのデータを圧縮してファイルに書き込む．
-  ///
-  /// エラーが起こったら -1 を返す．
-  void
-  write(
-    const ymuint8* wbuff, ///< [in] 圧縮するデータを格納するバッファ
-    SizeType num          ///< [in] 書き込むデータ数(バイト)
-  );
-
-  /// @brief 圧縮されたファイルを読んで最大 num バイトをバッファに格納する．
+  /// @brief 圧縮されたファイルを読んで最大 size バイトをバッファに格納する．
   /// @return 実際に読み出したバイト数を返す．
   ///
-  /// エラーが起こったら -1 を返す．
+  /// エラーが起こったら例外を送出する．
   SizeType
   read(
     ymuint8* rbuff, ///< [in] 展開したデータを格納するバッファ
-    SizeType num    ///< [in] 読み出すデータ数(バイト)
-  );
+    SizeType size   ///< [in] 読み出すデータ数(バイト)
+  ) override;
+
+  /// @brief 最大 num バイトのデータを圧縮してファイルに書き込む．
+  ///
+  /// エラーが起こったら例外を送出する．
+  void
+  write(
+    const ymuint8* wbuff, ///< [in] 圧縮するデータを格納するバッファ
+    SizeType size         ///< [in] 書き込むデータ数(バイト)
+  ) override;
 
 
 private:
   //////////////////////////////////////////////////////////////////////
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief 圧縮用の初期化
+  void
+  deflate_init(
+    int level ///< [in] 圧縮レベル
+  );
+
+  /// @brief 伸張用の初期化
+  void
+  inflate_init();
 
   void
   cl_block();
@@ -252,6 +207,7 @@ private:
     SizeType num   ///< [in] 読み込むバイト数．
   );
 
+
 private:
   //////////////////////////////////////////////////////////////////////
   // データ構造の定義
@@ -264,21 +220,11 @@ private:
     EOF_STATE     ///< 末尾
   };
 
-  /// @brief モード
-  enum Mode {
-    None,    ///< なし
-    Deflate, ///< 圧縮
-    Inflate  ///< 伸張
-  };
-
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // モード
-  Mode mMode{None};
 
   // Default bits
   static
@@ -356,11 +302,8 @@ private:
 
   char_type m_gbuf[k_BITS];
 
-  // ファイルバッファ
-  FileBuff mFileBuff;
-
 };
 
 END_NAMESPACE_YM
 
-#endif // ZFILE_H
+#endif // ZENGINE_H
