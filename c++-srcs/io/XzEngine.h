@@ -8,7 +8,8 @@
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "CodecEngine.h"
+#include "ym/CodecEngine.h"
+#include "ym/CodecGen.h"
 #include <lzma.h>
 
 
@@ -48,6 +49,7 @@ public:
 
 };
 
+
 //////////////////////////////////////////////////////////////////////
 /// @class XzEngine XzEngine.h "XzEngine.h"
 /// @brief lzma 圧縮/伸張を行なうクラス
@@ -57,26 +59,18 @@ class XzEngine :
 {
 public:
 
-  /// @brief 伸張用のコンストラクタ
+  /// @brief 伸張用のコンストラクタ(初期化パラメータ付き)
   XzEngine(
-    istream* is,                           ///< [in] 入力ストリーム
-    SizeType buff_size = 4096,             ///< [in] バッファサイズ
-    lzma_allocator* af = nullptr,          ///< [in] alloc 関数
-    SizeType memlimit = 128 * 1024 * 1024, ///< [in] 割り当てるメモリの上限
-    ymuint32 flags = 0                     ///< [in] 動作制御用のフラグ
+    istream& is,                         ///< [in] 入力ストリーム
+    SizeType buff_size = 4096,           ///< [in] バッファサイズ
+    const XzEngineGen::Param& param = {} ///< [in] 初期化パラメータ
   );
 
-  /// @brief 圧縮用のコンストラクタ
+  /// @brief 圧縮用のコンストラクタ(初期化パラメーター付き)
   XzEngine(
-    ostream* os,                        ///< [in] 出力ストリーム
-    SizeType buff_size = 4096,          ///< [in] バッファサイズ
-    lzma_allocator* af = nullptr,       ///< [in] alloc 関数
-    int preset = 6,                     ///< [in] 圧縮レベル ( 0 - 9: 6 がデフォルト )
-    lzma_check check = LZMA_CHECK_CRC64 ///< [in] 検査方法
-                                        ///<  - LZMA_CHECK_NONE
-                                        ///<  - LZMA_CHECK_CRC32
-                                        ///<  - LZMA_CHECK_CRC64
-                                        ///<  - LZMA_CHECK_SHA256
+    ostream& os,                         ///< [in] 出力ストリーム
+    SizeType buff_size = 4096,           ///< [in] バッファサイズ
+    const XzEngineGen::Param& param = {} ///< [in] 初期化パラメータ
   );
 
   /// @brief デストラクタ

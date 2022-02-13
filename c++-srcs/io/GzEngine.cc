@@ -11,6 +11,35 @@
 
 BEGIN_NAMESPACE_YM
 
+//////////////////////////////////////////////////////////////////////
+// クラス GzEngineGen
+//////////////////////////////////////////////////////////////////////
+
+// @brief 伸張用のエンジンを作る．
+CodecEngine*
+GzEngineGen::new_engine(
+  istream& is,
+  SizeType buff_size
+) const
+{
+  return new GzEngine{is, buff_size, mParam};
+}
+
+// @brief 圧縮用のエンジンを作る．
+CodecEngine*
+GzEngineGen::new_engine(
+  ostream& os,
+  SizeType buff_size
+) const
+{
+  return new GzEngine{os, buff_size, mParam};
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス GzEngine
+//////////////////////////////////////////////////////////////////////
+
 BEGIN_NONAMESPACE
 
 // gzip 形式のファイルフォーマットに関する定数定義
@@ -58,40 +87,32 @@ conv_from_4bytes(
 
 END_NONAMESPACE
 
-//////////////////////////////////////////////////////////////////////
-// クラス GzEngine
-//////////////////////////////////////////////////////////////////////
-
 // @brief 伸張用のコンストラクタ
 GzEngine::GzEngine(
-  istream* is,
+  istream& is,
   SizeType buff_size,
-  alloc_func af,
-  free_func ff,
-  voidp op
+  const GzEngineGen::Param& param
 ) : CodecEngine{is, buff_size}
 {
-  mZ.zalloc = af;
-  mZ.zfree = ff;
-  mZ.opaque = op;
+  mZ.zalloc = param.alloc_func;
+  mZ.zfree = param.free_func;
+  mZ.opaque = param.opaque;
 
   inflate_init();
 }
 
 /// @brief 圧縮用のコンストラクタ
 GzEngine::GzEngine(
-  ostream* os,
+  ostream& os,
   SizeType buff_size,
-  alloc_func af,
-  free_func ff,
-  voidp op
+  const GzEngineGen::Param& param
 ) : CodecEngine{os, buff_size}
 {
-  mZ.zalloc = af;
-  mZ.zfree = ff;
-  mZ.opaque = op;
+  mZ.zalloc = param.alloc_func;
+  mZ.zfree = param.free_func;
+  mZ.opaque = param.opaque;
 
-  deflate_init();
+  deflate_init(param.level);
 }
 
 // @brief デストラクタ
@@ -226,9 +247,11 @@ GzEngine::write(
 }
 
 void
-GzEngine::deflate_init()
+GzEngine::deflate_init(
+  int level
+)
 {
-  auto ret = deflateInit2(&mZ, Z_BEST_COMPRESSION, Z_DEFLATED, (-MAX_WBITS),
+  auto ret = deflateInit2(&mZ, level, Z_DEFLATED, (-MAX_WBITS),
 			  8, Z_DEFAULT_STRATEGY);
   if ( ret != Z_OK ) {
     cerr << "deflateInit2" << endl;

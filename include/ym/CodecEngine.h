@@ -22,14 +22,16 @@ class CodecEngine
 public:
 
   /// @brief 伸張用のコンストラクタ
+  explicit
   CodecEngine(
-    istream* is,              ///< [in] 入力ストリーム
+    istream& is,              ///< [in] 入力ストリーム
     SizeType buff_size = 4096 ///< [in] バッファサイズ
   );
 
   /// @brief 圧縮用のコンストラクタ
+  explicit
   CodecEngine(
-    ostream* os,              ///< [in] 出力ストリーム
+    ostream& os,              ///< [in] 出力ストリーム
     SizeType buff_size = 4096 ///< [in] バッファサイズ
   );
 

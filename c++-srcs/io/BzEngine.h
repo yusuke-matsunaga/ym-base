@@ -8,7 +8,8 @@
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "CodecEngine.h"
+#include "ym/CodecEngine.h"
+#include "ym/CodecGen.h"
 #include <bzlib.h>
 
 
@@ -57,40 +58,19 @@ class BzEngine :
   public CodecEngine
 {
 public:
-  //////////////////////////////////////////////////////////////////////
-  // 関数の型定義
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief alloc 関数の型定義
-  using alloc_func = void* (*)(void *, int, int);
-
-  /// @brief free 関数の型定義
-  using free_func = void (*)(void *, void *);
-
-
-public:
 
   /// @brief 伸張用のコンストラクタ
   BzEngine(
-    istream* is,               ///< [in] 入力ストリーム
-    SizeType buff_size = 4096, ///< [in] バッファサイズ
-    int verbosity = 0,         ///< [in] デバッグ用の出力レベル ( 0 - 4 )
-    int small = 0,             ///< [in] 伸張アルゴリズム用のパラメータ ( 0 か 非0 )
-    alloc_func af = nullptr,   ///< [in] alloc 関数
-    free_func ff = nullptr,    ///< [in] free 関数
-    void* op = nullptr         ///< [in] opaque オブジェクト
+    istream& is,                         ///< [in] 入力ストリーム
+    SizeType buff_size = 4096,           ///< [in] バッファサイズ
+    const BzEngineGen::Param& param = {} ///< [in] 初期化パラメータ
   );
 
   /// @brief コンストラクタ
   BzEngine(
-    ostream* os,               ///< [in] 出力ストリーム
-    SizeType buff_size = 4096, ///< [in] バッファサイズ
-    int block_size_100k = 9,   ///< [in] 作業用のメモリサイズ ( 0 - 9 )
-    int verbosity = 0,         ///< [in] デバッグ用の出力レベル ( 0 - 4 )
-    int work_factor = 0,       ///< [in] 圧縮アルゴリズム用のパラメータ ( 0 - 250 )
-    alloc_func af = nullptr,   ///< [in] alloc 関数
-    free_func ff = nullptr,    ///< [in] free 関数
-    void* op = nullptr         ///< [in] opaque オブジェクト
+    ostream& os,                         ///< [in] 出力ストリーム
+    SizeType buff_size = 4096,           ///< [in] バッファサイズ
+    const BzEngineGen::Param& param = {} ///< [in] 初期化パラメータ
   );
 
   /// @brief デストラクタ

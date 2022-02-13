@@ -27,7 +27,7 @@ TEST_F(xz_test, inflate)
   ifstream ifs{xz_filename};
   ASSERT_TRUE( ifs.is_open() );
 
-  XzEngine ibuff{&ifs};
+  XzEngine ibuff{ifs};
 
   auto size = ibuff.read(reinterpret_cast<ymuint8*>(mBuff), BUFF_SIZE);
 
@@ -45,7 +45,7 @@ TEST_F(xz_test, deflate)
     ofstream ofs{xz_filename};
     ASSERT_TRUE( ofs.is_open() );
 
-    XzEngine obuff{&ofs};
+    XzEngine obuff{ofs};
 
     obuff.write(reinterpret_cast<const ymuint8*>(mTestData), mTestSize);
   }
@@ -65,7 +65,7 @@ TEST_F(xz_test, big_buffer)
     ofstream ofs{mFileName};
     ASSERT_TRUE( ofs.is_open() );
 
-    XzEngine obuff{&ofs, 4096, nullptr, 6, LZMA_CHECK_CRC64};
+    XzEngine obuff{ofs, 4096};
 
     obuff.write(reinterpret_cast<const ymuint8*>(mTestData), mTestSize);
   }
@@ -73,8 +73,7 @@ TEST_F(xz_test, big_buffer)
     ifstream ifs{mFileName};
     ASSERT_TRUE( ifs.is_open() );
 
-    SizeType memlimit = 128 * 1024 * 1024;
-    XzEngine ibuff{&ifs, 4096, nullptr, memlimit, 0};
+    XzEngine ibuff{ifs, 4096};
 
     auto size = ibuff.read(reinterpret_cast<ymuint8*>(mBuff), mTestSize);
     EXPECT_EQ( mTestSize, size );
@@ -88,7 +87,7 @@ TEST_F(xz_test, small_obuffer)
     ofstream ofs{mFileName};
     ASSERT_TRUE( ofs.is_open() );
 
-    XzEngine obuff{&ofs, 10, nullptr, 6, LZMA_CHECK_CRC64};
+    XzEngine obuff{ofs, 10};
 
     obuff.write(reinterpret_cast<const ymuint8*>(mTestData), mTestSize);
   }
@@ -96,8 +95,7 @@ TEST_F(xz_test, small_obuffer)
     ifstream ifs{mFileName};
     ASSERT_TRUE( ifs.is_open() );
 
-    SizeType memlimit = 128 * 1024 * 1024;
-    XzEngine ibuff{&ifs, 4096, nullptr, memlimit, 0};
+    XzEngine ibuff{ifs, 4096};
 
     auto size = ibuff.read(reinterpret_cast<ymuint8*>(mBuff), mTestSize);
     EXPECT_EQ( mTestSize, size );
@@ -112,7 +110,7 @@ TEST_F(xz_test, small_ibuffer)
     ofstream ofs{mFileName};
     ASSERT_TRUE( ofs.is_open() );
 
-    XzEngine obuff{&ofs, 4096, nullptr, 6, LZMA_CHECK_CRC64};
+    XzEngine obuff{ofs, 4096};
 
     obuff.write(reinterpret_cast<const ymuint8*>(mTestData), mTestSize);
   }
@@ -120,8 +118,7 @@ TEST_F(xz_test, small_ibuffer)
     ifstream ifs{mFileName};
     ASSERT_TRUE( ifs.is_open() );
 
-    SizeType memlimit = 128 * 1024 * 1024;
-    XzEngine ibuff{&ifs, 10, nullptr, memlimit, 0};
+    XzEngine ibuff{ifs, 10};
 
     auto size = ibuff.read(reinterpret_cast<ymuint8*>(mBuff), mTestSize);
     EXPECT_EQ( mTestSize, size );

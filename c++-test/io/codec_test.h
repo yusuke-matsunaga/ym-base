@@ -59,7 +59,7 @@ void
 codec_test::TearDown()
 {
   // 一時ファイルの削除
-  unlink(mFileName.c_str());
+  //unlink(mFileName.c_str());
 }
 
 END_NAMESPACE_YM

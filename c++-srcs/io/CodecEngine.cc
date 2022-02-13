@@ -6,7 +6,11 @@
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "CodecEngine.h"
+#include "ym/CodecEngine.h"
+#include "ZEngine.h"
+#include "GzEngine.h"
+#include "BzEngine.h"
+#include "XzEngine.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -17,9 +21,9 @@ BEGIN_NAMESPACE_YM
 
 // @brief 伸張用のコンストラクタ
 CodecEngine::CodecEngine(
-  istream* is,
+  istream& is,
   SizeType buff_size
-) : mInStream{is},
+) : mInStream{&is},
     mBuffSize{buff_size},
     mBuff{new ymuint8[mBuffSize]}
 {
@@ -28,9 +32,9 @@ CodecEngine::CodecEngine(
 
 // @brief 圧縮用のコンストラクタ
 CodecEngine::CodecEngine(
-  ostream* os,
+  ostream& os,
   SizeType buff_size
-) : mOutStream{os},
+) : mOutStream{&os},
     mBuffSize{buff_size},
     mBuff{new ymuint8[mBuffSize]}
 {

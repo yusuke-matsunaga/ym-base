@@ -11,37 +11,61 @@
 
 BEGIN_NAMESPACE_YM
 
+//////////////////////////////////////////////////////////////////////
+// クラス XzEngineGen
+//////////////////////////////////////////////////////////////////////
+
+// @brief 伸張用のエンジンを作る．
+CodecEngine*
+XzEngineGen::new_engine(
+  istream& is,
+  SizeType buff_size
+) const
+{
+  return new XzEngine{is, buff_size, mParam};
+}
+
+// @brief 圧縮用のエンジンを作る．
+CodecEngine*
+XzEngineGen::new_engine(
+  ostream& os,
+  SizeType buff_size
+) const
+{
+  return new XzEngine{os, buff_size, mParam};
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス XzEngine
+//////////////////////////////////////////////////////////////////////
+
 // @brief 伸張用のコンストラクタ
 XzEngine::XzEngine(
-  istream* is,
+  istream& is,
   SizeType buff_size,
-  lzma_allocator* af,
-  SizeType memlimit,
-  ymuint32 flags
+  const XzEngineGen::Param& param
 ) : CodecEngine{is, buff_size}
 {
   mLzmaStream = (lzma_stream)LZMA_STREAM_INIT;
-  if ( af != nullptr ) {
-    mLzmaStream.allocator = af;
+  if ( param.allocator != nullptr ) {
+    mLzmaStream.allocator = param.allocator;
   }
-  inflate_init(memlimit, flags);
+  inflate_init(param.memlimit, param.flags);
 }
 
 // @brief 圧縮用のコンストラクタ
 XzEngine::XzEngine(
-  ostream* os,
+  ostream& os,
   SizeType buff_size,
-  lzma_allocator* af,
-  int preset,
-  lzma_check check
-
+  const XzEngineGen::Param& param
 ) : CodecEngine{os, buff_size}
 {
   mLzmaStream = (lzma_stream)LZMA_STREAM_INIT;
-  if ( af != nullptr ) {
-    mLzmaStream.allocator = af;
+  if ( param.allocator != nullptr ) {
+    mLzmaStream.allocator = param.allocator;
   }
-  deflate_init(preset, check);
+  deflate_init(param.preset, param.check);
 }
 
 // @brief デストラクタ

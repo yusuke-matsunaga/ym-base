@@ -11,6 +11,36 @@
 
 BEGIN_NAMESPACE_YM
 
+
+//////////////////////////////////////////////////////////////////////
+// クラス ZEngineGen
+//////////////////////////////////////////////////////////////////////
+
+// @brief 伸張用のエンジンを作る．
+CodecEngine*
+ZEngineGen::new_engine(
+  istream& is,
+  SizeType buff_size
+) const
+{
+  return new ZEngine{is, buff_size, mParam};
+}
+
+// @brief 圧縮用のエンジンを作る．
+CodecEngine*
+ZEngineGen::new_engine(
+  ostream& os,
+  SizeType buff_size
+) const
+{
+  return new ZEngine{os, buff_size, mParam};
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス ZEngine
+//////////////////////////////////////////////////////////////////////
+
 BEGIN_NONAMESPACE
 
 // magic number
@@ -76,15 +106,11 @@ print_code(
 
 END_NONAMESPACE
 
-
-//////////////////////////////////////////////////////////////////////
-// クラス ZEngine
-//////////////////////////////////////////////////////////////////////
-
 // @brief 伸張用のコンストラクタ
 ZEngine::ZEngine(
-  istream* is,
-  SizeType buff_size
+  istream& is,
+  SizeType buff_size,
+  const ZEngineGen::Param& param
 ) : CodecEngine{is, buff_size}
 {
   inflate_init();
@@ -92,12 +118,12 @@ ZEngine::ZEngine(
 
 // @brief 圧縮用のコンストラクタ
 ZEngine::ZEngine(
-  ostream* os,
+  ostream& os,
   SizeType buff_size,
-  int level
+  const ZEngineGen::Param& param
 ) : CodecEngine{os, buff_size}
 {
-  deflate_init(level);
+  deflate_init(param.level);
 }
 
 // @brief デストラクタ

@@ -8,7 +8,8 @@
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "CodecEngine.h"
+#include "ym/CodecEngine.h"
+#include "ym/CodecGen.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -64,15 +65,16 @@ public:
 
   /// @brief 伸張用のコンストラクタ
   ZEngine(
-    istream* is,               ///< [in] 入力ストリーム
-    SizeType buff_size = 4096  ///< [in] バッファサイズ
+    istream& is,                        ///< [in] 入力ストリーム
+    SizeType buff_size = 4096,          ///< [in] バッファサイズ
+    const ZEngineGen::Param& param = {} ///< [in] 初期化パラメータ
   );
 
   /// @brief 圧縮用のコンストラクタ
   ZEngine(
-    ostream* os,               ///< [in] 出力ストリーム
-    SizeType buff_size = 4096, ///< [in] バッファサイズ
-    int level = 0              ///< [in] 圧縮レベル
+    ostream& os,                        ///< [in] 出力ストリーム
+    SizeType buff_size = 4096,          ///< [in] バッファサイズ
+    const ZEngineGen::Param& param = {} ///< [in] 初期化パラメータ
   );
 
   /// @brief デストラクタ

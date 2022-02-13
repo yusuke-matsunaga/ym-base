@@ -8,7 +8,8 @@
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "CodecEngine.h"
+#include "ym/CodecEngine.h"
+#include "ym/CodecGen.h"
 #include <zlib.h>
 
 
@@ -60,20 +61,16 @@ public:
 
   /// @brief 伸張用のコンストラクタ
   GzEngine(
-    istream* is,               ///< [in] 入力ストリーム
-    SizeType buff_size = 4096, ///< [in] バッファサイズ
-    alloc_func af = Z_NULL,    ///< [in] alloc 関数
-    free_func ff = Z_NULL,     ///< [in] free 関数
-    voidp op = Z_NULL          ///< [in] opaque オブジェクト
+    istream& is,                         ///< [in] 入力ストリーム
+    SizeType buff_size = 4096,           ///< [in] バッファサイズ
+    const GzEngineGen::Param& param = {} ///< [in] 初期化パラメータ
   );
 
   /// @brief 圧縮用のコンストラクタ
   GzEngine(
-    ostream* os,               ///< [in] 出力ストリーム
-    SizeType buff_size = 4096, ///< [in] バッファサイズ
-    alloc_func af = Z_NULL,    ///< [in] alloc 関数
-    free_func ff = Z_NULL,     ///< [in] free 関数
-    voidp op = Z_NULL          ///< [in] opaque オブジェクト
+    ostream& os,                         ///< [in] 出力ストリーム
+    SizeType buff_size = 4096,           ///< [in] バッファサイズ
+    const GzEngineGen::Param& param = {} ///< [in] 初期化パラメータ
   );
 
   /// @brief デストラクタ
@@ -112,7 +109,9 @@ private:
 
   /// @brief deflate の初期化
   void
-  deflate_init();
+  deflate_init(
+    int level ///< [in] 圧縮レベル
+  );
 
   /// @brief deflate の終了処理
   void

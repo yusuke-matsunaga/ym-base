@@ -28,7 +28,7 @@ TEST_F(gzip_test, inflate)
   ifstream ifs{filename};
   ASSERT_TRUE( ifs.is_open() );
 
-  GzEngine ibuff{&ifs};
+  GzEngine ibuff{ifs};
 
   auto size = ibuff.read(reinterpret_cast<ymuint8*>(mBuff), BUFF_SIZE);
 
@@ -45,7 +45,7 @@ TEST_F(gzip_test, deflate)
     ofstream ofs{gz_filename};
     ASSERT_TRUE( ofs.is_open() );
 
-    GzEngine obuff{&ofs};
+    GzEngine obuff{ofs};
 
     obuff.write(reinterpret_cast<const ymuint8*>(mTestData), mTestSize);
   }
@@ -64,14 +64,14 @@ TEST_F(gzip_test, big_buffer)
     ofstream ofs{mFileName};
     ASSERT_TRUE( ofs.is_open() );
 
-    GzEngine obuff{&ofs, 4096};
+    GzEngine obuff{ofs, 4096};
     obuff.write(reinterpret_cast<const ymuint8*>(mTestData), mTestSize);
   }
   {
     ifstream ifs{mFileName};
     ASSERT_TRUE( ifs.is_open() );
 
-    GzEngine ibuff{&ifs, 4096};
+    GzEngine ibuff{ifs, 4096};
     auto size = ibuff.read(reinterpret_cast<ymuint8*>(mBuff), mTestSize);
     EXPECT_EQ( mTestSize, size );
   }
@@ -84,7 +84,7 @@ TEST_F(gzip_test, small_obuffer)
     ofstream ofs{mFileName};
     ASSERT_TRUE( ofs.is_open() );
 
-    GzEngine obuff{&ofs, 20};
+    GzEngine obuff{ofs, 10};
     obuff.write(reinterpret_cast<const ymuint8*>(mTestData), mTestSize);
   }
 
@@ -92,7 +92,7 @@ TEST_F(gzip_test, small_obuffer)
     ifstream ifs{mFileName};
     ASSERT_TRUE( ifs.is_open() );
 
-    GzEngine ibuff{&ifs, 4096};
+    GzEngine ibuff{ifs, 4096};
     auto size = ibuff.read(reinterpret_cast<ymuint8*>(mBuff), mTestSize);
     EXPECT_EQ( mTestSize, size );
   }
@@ -106,7 +106,7 @@ TEST_F(gzip_test, small_ibuffer)
     ofstream ofs{mFileName};
     ASSERT_TRUE( ofs.is_open() );
 
-    GzEngine obuff{&ofs, 4096};
+    GzEngine obuff{ofs, 4096};
     obuff.write(reinterpret_cast<const ymuint8*>(mTestData), mTestSize);
   }
 
@@ -114,7 +114,7 @@ TEST_F(gzip_test, small_ibuffer)
     ifstream ifs{mFileName};
     ASSERT_TRUE( ifs.is_open() );
 
-    GzEngine ibuff{&ifs, 10};
+    GzEngine ibuff{ifs, 10};
     auto size = ibuff.read(reinterpret_cast<ymuint8*>(mBuff), mTestSize);
     EXPECT_EQ( mTestSize, size );
   }

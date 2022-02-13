@@ -28,7 +28,7 @@ TEST_F(compress_test, inflate)
   ifstream ifs{z_filename};
   ASSERT_TRUE( ifs.is_open() );
 
-  ZEngine ibuff{&ifs};
+  ZEngine ibuff{ifs};
 
   auto size = ibuff.read(reinterpret_cast<ymuint8*>(mBuff), BUFF_SIZE);
 
@@ -45,7 +45,7 @@ TEST_F(compress_test, deflate)
     ofstream ofs{z_filename};
     ASSERT_TRUE( ofs.is_open() );
 
-    ZEngine obuff{&ofs};
+    ZEngine obuff{ofs};
 
     obuff.write(reinterpret_cast<const ymuint8*>(mTestData), mTestSize);
   }
@@ -64,7 +64,7 @@ TEST_F(compress_test, big_buffer)
     ofstream ofs{mFileName};
     ASSERT_TRUE( ofs.is_open() );
 
-    ZEngine obuff{&ofs, 4096};
+    ZEngine obuff{ofs, 4096};
 
     obuff.write(reinterpret_cast<const ymuint8*>(mTestData), mTestSize);
   }
@@ -72,7 +72,7 @@ TEST_F(compress_test, big_buffer)
     ifstream ifs{mFileName};
     ASSERT_TRUE( ifs.is_open() );
 
-    ZEngine ibuff{&ifs, 4096};
+    ZEngine ibuff{ifs, 4096};
 
     auto size = ibuff.read(reinterpret_cast<ymuint8*>(mBuff), mTestSize);
     EXPECT_EQ( mTestSize, size );
@@ -86,7 +86,7 @@ TEST_F(compress_test, small_obuffer)
     ofstream ofs{mFileName};
     ASSERT_TRUE( ofs.is_open() );
 
-    ZEngine obuff{&ofs, 10};
+    ZEngine obuff{ofs, 10};
 
     obuff.write(reinterpret_cast<const ymuint8*>(mTestData), mTestSize);
   }
@@ -94,7 +94,7 @@ TEST_F(compress_test, small_obuffer)
     ifstream ifs{mFileName};
     ASSERT_TRUE( ifs.is_open() );
 
-    ZEngine ibuff{&ifs, 4096};
+     ZEngine ibuff{ifs, 4096};
 
     auto size = ibuff.read(reinterpret_cast<ymuint8*>(mBuff), mTestSize);
     EXPECT_EQ( mTestSize, size );
@@ -108,7 +108,7 @@ TEST_F(compress_test, small_ibuffer)
     ofstream ofs{mFileName};
     ASSERT_TRUE( ofs.is_open() );
 
-    ZEngine obuff{&ofs, 4096};
+    ZEngine obuff{ofs, 4096};
 
     obuff.write(reinterpret_cast<const ymuint8*>(mTestData), mTestSize);
   }
@@ -116,7 +116,7 @@ TEST_F(compress_test, small_ibuffer)
     ifstream ifs{mFileName};
     ASSERT_TRUE( ifs.is_open() );
 
-    ZEngine ibuff{&ifs, 10};
+    ZEngine ibuff{ifs, 10};
 
     auto size = ibuff.read(reinterpret_cast<ymuint8*>(mBuff), mTestSize);
     EXPECT_EQ( mTestSize, size );

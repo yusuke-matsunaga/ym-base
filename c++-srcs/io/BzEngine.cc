@@ -12,44 +12,60 @@
 BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
+// クラス BzEngineGen
+//////////////////////////////////////////////////////////////////////
+
+// @brief 伸張用のエンジンを作る．
+CodecEngine*
+BzEngineGen::new_engine(
+  istream& is,
+  SizeType buff_size
+) const
+{
+  return new BzEngine{is, buff_size, mParam};
+}
+
+// @brief 圧縮用のエンジンを作る．
+CodecEngine*
+BzEngineGen::new_engine(
+  ostream& os,
+  SizeType buff_size
+) const
+{
+  return new BzEngine{os, buff_size, mParam};
+}
+
+
+//////////////////////////////////////////////////////////////////////
 // クラス BzEngine
 //////////////////////////////////////////////////////////////////////
 
 // @brief 伸張用のコンストラクタ
 BzEngine::BzEngine(
-  istream* is,
+  istream& is,
   SizeType buff_size,
-  int verbosity,
-  int small,
-  alloc_func af,
-  free_func ff,
-  void* op
+  const BzEngineGen::Param& param
 ) : CodecEngine{is, buff_size}
 {
-  mBzStream.bzalloc = af;
-  mBzStream.bzfree = ff;
-  mBzStream.opaque = op;
+  mBzStream.bzalloc = param.alloc_func;
+  mBzStream.bzfree = param.free_func;
+  mBzStream.opaque = param.opaque;
 
-  inflate_init(verbosity, small);
+  inflate_init(param.verbosity, param.small);
 }
 
 // @brief コンストラクタ
 BzEngine::BzEngine(
-  ostream* os,
+  ostream& os,
   SizeType buff_size,
-  int block_size_100k,
-  int verbosity,
-  int work_factor,
-  alloc_func af,
-  free_func ff,
-  void* op
+  const BzEngineGen::Param& param
 ) : CodecEngine{os, buff_size}
 {
-  mBzStream.bzalloc = af;
-  mBzStream.bzfree = ff;
-  mBzStream.opaque = op;
+  mBzStream.bzalloc = param.alloc_func;
+  mBzStream.bzfree = param.free_func;
+  mBzStream.opaque = param.opaque;
 
-  deflate_init(block_size_100k, verbosity, work_factor);
+  deflate_init(param.block_size_100k, param.verbosity, param.work_factor);
 }
 
 // @brief デストラクタ

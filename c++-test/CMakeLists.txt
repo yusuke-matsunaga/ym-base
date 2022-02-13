@@ -208,3 +208,21 @@ if ( BZIP2_FOUND )
     )
 
 endif ( BZIP2_FOUND )
+
+
+# ===================================================================
+# CodecGen 関係のテスト
+# ===================================================================
+ym_add_gtest ( base_codecgen_test
+  io/codecgen_test.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
+
+
+# ===================================================================
+# basic_codec_streambuf 関係のテスト
+# ===================================================================
+ym_add_gtest ( base_streambuf_test
+  io/streambuf_test.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
