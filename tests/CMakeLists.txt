@@ -3,6 +3,7 @@
 # インクルードパスの設定
 # ===================================================================
 include_directories(
+  ${GTEST_INCLUDE_DIR}
   )
 
 
@@ -21,11 +22,11 @@ include_directories(
 # ===================================================================
 
 set ( RandSamplerTest_SOURCES
-  RandSamplerTest.cc
+  misc/RandSamplerTest.cc
   )
 
 add_executable ( RandSamplerTest
-  RandSamplerTest.cc
+  ${RandSamplerTest_SOURCES}
   $<TARGET_OBJECTS:ym_base_obj>
   )
 
@@ -44,7 +45,7 @@ target_link_libraries ( RandSamplerTest
   )
 
 add_executable ( RandSamplerTest_d
-  RandSamplerTest.cc
+  ${RandSamplerTest_SOURCES}
   $<TARGET_OBJECTS:ym_base_obj_d>
   )
 
@@ -56,4 +57,84 @@ target_link_libraries ( RandSamplerTest_d
   pthread
   ${YM_LIB_DEPENDS}
   ${GTEST_BOTH_LIBRARIES}
+  )
+
+
+# ===================================================================
+#  テスト用のターゲットの設定
+# ===================================================================
+
+ym_add_gtest ( base_CombiGen_test
+  gen/CombiGenTest.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
+
+ym_add_gtest ( base_PermGen_test
+  gen/PermGenTest.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
+
+ym_add_gtest ( base_MultiCombiGen_test
+  gen/MultiCombiGenTest.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
+
+ym_add_gtest ( base_MultiPermGen_test
+  gen/MultiPermGenTest.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
+
+ym_add_gtest ( base_MultiSetCombiGen_test
+  gen/MultiSetCombiGenTest.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
+
+ym_add_gtest ( base_MultiSetPermGen_test
+  gen/MultiSetPermGenTest.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
+
+ym_add_gtest ( base_Array_test
+  misc/ArrayTest.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
+
+ym_add_gtest ( base_UnionFindSet_test
+  misc/UnionFindSet_test.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
+
+ym_add_gtest ( base_ItvlTree_test
+  itvl/ItvlTree_test.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
+
+target_include_directories( base_ItvlTree_test
+  PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/../c++-srcs/itvl
+  )
+
+ym_add_gtest ( base_Range_test
+  misc/RangeTest.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
+
+ym_add_gtest ( base_OptionParser_test
+  textproc/OptionParserTest.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
+
+ym_add_gtest ( base_ShString_test
+  textproc/ShStringTest.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
+
+
+# ===================================================================
+# BinCodec 関係のテスト
+# ===================================================================
+
+ym_add_gtest ( base_BinCodec_test
+  misc/BinCodecTest.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
   )

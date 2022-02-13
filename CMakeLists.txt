@@ -33,18 +33,6 @@ include_directories (
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   )
 
-if ( ZLIB_FOUND )
-  include_directories(${ZLIBINCLUDE_DIRS})
-endif ()
-
-if ( BZIP2_FOUND )
-  include_directories(${BZIP2_INCLUDE_DIRS})
-endif ()
-
-if ( LIBLZMA_FOUND )
-  include_directories(${LIBLZMA_INCLUDE_DIRS})
-endif ()
-
 if ( POPT_FOUND )
   include_directories(${POPT_INCLUDE_DIR})
 endif ()
@@ -59,17 +47,7 @@ endif ()
 # サブディレクトリの設定
 # ===================================================================
 
-add_subdirectory ( c++-test )
 add_subdirectory ( tests )
-
-
-# ===================================================================
-# コンフィグレーション依存のファイルの生成
-# ===================================================================
-configure_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/etc/CodecTypeConf.h.in"
-  "${PROJECT_BINARY_DIR}/include/CodecTypeConf.h"
-  )
 
 
 # ===================================================================
@@ -91,31 +69,6 @@ set ( gen_SOURCES
   c++-srcs/gen/MultiGenBase.cc
   c++-srcs/gen/MultiSetGenBase.cc
   )
-
-if ( 0 )
-set ( io_SOURCES
-  c++-srcs/io/CodecEngine.cc
-  c++-srcs/io/ZEngine.cc
-  )
-
-if ( ZLIB_FOUND )
-  set (io_SOURCES ${io_SOURCES}
-    c++-srcs/io/GzEngine.cc
-    )
-endif ( ZLIB_FOUND )
-
-if ( BZIP2_FOUND )
-  set (io_SOURCES ${io_SOURCES}
-    c++-srcs/io/BzEngine.cc
-    )
-endif ( BZIP2_FOUND )
-
-if ( LIBLZMA_FOUND )
-  set (io_SOURCES ${io_SOURCES}
-    c++-srcs/io/XzEngine.cc
-    )
-endif ( LIBLZMA_FOUND )
-endif ()
 
 set ( itvl_SOURCES
   c++-srcs/itvl/ItvlMgr.cc
@@ -156,7 +109,6 @@ set ( ym_base_SOURCES
   ${binder_SOURCES}
   ${file_info_SOURCES}
   ${gen_SOURCES}
-#  ${io_SOURCES}
   ${itvl_SOURCES}
   ${misc_SOURCES}
   ${msg_SOURCES}
