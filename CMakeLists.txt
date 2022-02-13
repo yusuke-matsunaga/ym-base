@@ -92,6 +92,7 @@ set ( gen_SOURCES
   c++-srcs/gen/MultiSetGenBase.cc
   )
 
+if ( 0 )
 set ( io_SOURCES
   c++-srcs/io/CodecEngine.cc
   c++-srcs/io/ZEngine.cc
@@ -114,6 +115,7 @@ if ( LIBLZMA_FOUND )
     c++-srcs/io/XzEngine.cc
     )
 endif ( LIBLZMA_FOUND )
+endif ()
 
 set ( itvl_SOURCES
   c++-srcs/itvl/ItvlMgr.cc
@@ -154,7 +156,7 @@ set ( ym_base_SOURCES
   ${binder_SOURCES}
   ${file_info_SOURCES}
   ${gen_SOURCES}
-  ${io_SOURCES}
+#  ${io_SOURCES}
   ${itvl_SOURCES}
   ${misc_SOURCES}
   ${msg_SOURCES}

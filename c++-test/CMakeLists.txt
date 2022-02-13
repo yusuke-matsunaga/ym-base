@@ -104,7 +104,7 @@ ym_add_gtest ( base_BinCodec_test
   $<TARGET_OBJECTS:ym_base_obj_d>
   )
 
-
+if ( 0 )
 # ===================================================================
 # ZFile 関係のテスト
 # ===================================================================
@@ -226,3 +226,4 @@ ym_add_gtest ( base_streambuf_test
   io/streambuf_test.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
   )
+endif()
