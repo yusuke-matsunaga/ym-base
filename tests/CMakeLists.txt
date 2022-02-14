@@ -94,11 +94,6 @@ ym_add_gtest ( base_MultiSetPermGen_test
   $<TARGET_OBJECTS:ym_base_obj_d>
   )
 
-ym_add_gtest ( base_Array_test
-  misc/ArrayTest.cc
-  $<TARGET_OBJECTS:ym_base_obj_d>
-  )
-
 ym_add_gtest ( base_UnionFindSet_test
   misc/UnionFindSet_test.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
@@ -114,11 +109,6 @@ target_include_directories( base_ItvlTree_test
   ${CMAKE_CURRENT_SOURCE_DIR}/../c++-srcs/itvl
   )
 
-ym_add_gtest ( base_Range_test
-  misc/RangeTest.cc
-  $<TARGET_OBJECTS:ym_base_obj_d>
-  )
-
 ym_add_gtest ( base_OptionParser_test
   textproc/OptionParserTest.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
@@ -126,15 +116,5 @@ ym_add_gtest ( base_OptionParser_test
 
 ym_add_gtest ( base_ShString_test
   textproc/ShStringTest.cc
-  $<TARGET_OBJECTS:ym_base_obj_d>
-  )
-
-
-# ===================================================================
-# BinCodec 関係のテスト
-# ===================================================================
-
-ym_add_gtest ( base_BinCodec_test
-  misc/BinCodecTest.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
   )

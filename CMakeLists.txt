@@ -33,10 +33,6 @@ include_directories (
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   )
 
-if ( POPT_FOUND )
-  include_directories(${POPT_INCLUDE_DIR})
-endif ()
-
 
 # ===================================================================
 #  マクロの定義
