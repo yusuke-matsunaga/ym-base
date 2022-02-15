@@ -8,7 +8,7 @@
 
 
 #include "ym/Range.h"
-#include "ym/StopWatch.h"
+#include "ym/Timer.h"
 #include <random>
 
 
@@ -16,10 +16,12 @@ BEGIN_NAMESPACE_YM
 
 template<class RandSampler>
 void
-RandSamplerTest(RandSampler& rs,
-		const vector<int>& w_array)
+RandSamplerTest(
+  RandSampler& rs,
+  const vector<int>& w_array
+)
 {
-  StopWatch timer;
+  Timer timer;
   timer.start();
 
   int num_data = w_array.size();
@@ -48,22 +50,24 @@ RandSamplerTest(RandSampler& rs,
   double sqerr = sqrt(err_accum / (num_data * 100000));
   cout << "Error: " << sqerr << endl;
   timer.stop();
-  cout << "CPU time: " << timer.time() << endl;
+  cout << "CPU time: " << timer.get_time() << endl
+       << endl;
 }
 
 END_NAMESPACE_YM
 
 int
-main(int argc,
-     char** argv)
+main(
+  int argc,
+  char** argv
+)
 {
-  using namespace nsYm;
+  using namespace YM_NAMESPACE;
 
   vector<int> w_array{2, 4, 10, 1};
   cout << "discrete_distribution(small)" << endl;
   std::discrete_distribution<int> dd1(w_array.begin(), w_array.end());
   RandSamplerTest(dd1, w_array);
-  cout << endl;
 
   vector<int> w_array2(100);
   for ( int i: Range(100) ) {
@@ -73,7 +77,6 @@ main(int argc,
   cout << "discrete_distribution(large)" << endl;
   std::discrete_distribution<int> dd2(w_array2.begin(), w_array2.end());
   RandSamplerTest(dd2, w_array2);
-  cout << endl;
 
   return 0;
 }

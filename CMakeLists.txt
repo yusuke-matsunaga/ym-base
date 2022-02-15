@@ -30,7 +30,7 @@
 include_directories (
   ${PROJECT_BINARY_DIR}/include
   ${PROJECT_SOURCE_DIR}/ym-common/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/include
+  include
   )
 
 
@@ -97,10 +97,6 @@ set ( textproc_SOURCES
   c++-srcs/textproc/StrBuff.cc
   )
 
-set ( time_SOURCES
-  c++-srcs/time/StopWatch.cc
-  )
-
 set ( ym_base_SOURCES
   ${binder_SOURCES}
   ${file_info_SOURCES}
@@ -110,7 +106,6 @@ set ( ym_base_SOURCES
   ${msg_SOURCES}
   ${popt_SOURCES}
   ${textproc_SOURCES}
-  ${time_SOURCES}
   )
 
 
