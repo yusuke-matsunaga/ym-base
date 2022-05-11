@@ -2,9 +2,6 @@
 # ===================================================================
 # インクルードパスの設定
 # ===================================================================
-include_directories(
-  ${GTEST_INCLUDE_DIR}
-  )
 
 
 # ===================================================================
@@ -41,7 +38,6 @@ target_compile_definitions ( RandSamplerTest
 target_link_libraries ( RandSamplerTest
   pthread
   ${YM_LIB_DEPENDS}
-  ${GTEST_BOTH_LIBRARIES}
   )
 
 add_executable ( RandSamplerTest_d
@@ -56,7 +52,6 @@ target_compile_options ( RandSamplerTest_d
 target_link_libraries ( RandSamplerTest_d
   pthread
   ${YM_LIB_DEPENDS}
-  ${GTEST_BOTH_LIBRARIES}
   )
 
 
