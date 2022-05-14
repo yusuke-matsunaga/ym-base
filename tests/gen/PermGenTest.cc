@@ -15,8 +15,10 @@ BEGIN_NAMESPACE_YM
 
 // PermGen の出力結果が exp_list と等しいか検査する．
 bool
-check_gen(PermGen& gen,
-	 const int exp_list[])
+check_gen(
+  PermGen& gen,
+  const int exp_list[]
+)
 {
   int num = gen.n();
   int combi_num = gen.k();
@@ -41,6 +43,19 @@ check_gen(PermGen& gen,
   }
 
   return true;
+}
+
+// 空のジェネレータのテスト
+TEST(PermGenTest, null_test)
+{
+  PermGen gen(0, 0);
+
+  EXPECT_EQ( 0, gen.n() );
+  EXPECT_EQ( 0, gen.k() );
+
+  for ( ; !gen.is_end(); ++ gen ) {
+    ;
+  }
 }
 
 // GenBase のメンバ関数のチェック

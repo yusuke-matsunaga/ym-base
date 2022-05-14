@@ -95,6 +95,9 @@ public:
   bool
   is_end() const
   {
+    if ( n() == 0 ) {
+      return true;
+    }
     // 末尾の時には範囲外の値(= n())を持っている．
     return operator()(0) == n();
   }
