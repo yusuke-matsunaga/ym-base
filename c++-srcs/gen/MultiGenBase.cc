@@ -3,7 +3,7 @@
 /// @brief MultiGenBase の実装ファイル
 /// @author Yusuke Matsunaga
 ///
-/// Copyright (C) 2005-2011, 2013-2014, 2021 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2013-2014, 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/MultiGenBase.h"
@@ -116,7 +116,7 @@ MultiPermGen::operator++()
 	  elem(g, j) = val;
 	  ++ val;
 	}
-	break;
+	return;
       }
       if ( pos > 0 ) {
 	bitmap[elem(g, pos)] = 0;
@@ -125,13 +125,16 @@ MultiPermGen::operator++()
 	elem(g, 0) = n(g);
       }
     }
-    if ( !is_end_sub(g) ) {
-      break;
+    if ( is_end_sub(g) ) {
+      if ( g > 0 ) {
+	init_group(g);
+      }
     }
-    if ( g > 0 ) {
-      init_group(g);
+    else {
+      return;
     }
   }
+  finish();
 }
 
 
@@ -150,19 +153,22 @@ MultiCombiGen::operator++()
 	for (int pos1 = pos + 1; pos1 < k(g); ++ pos1) {
 	  elem(g, pos1) = elem(g, pos1 - 1) + 1;
 	}
-	break;
+	return;
       }
       else if ( pos == 0 ) {
 	elem(g, 0) = n(g);
       }
     }
-    if ( !is_end_sub(g) ) {
-      break;
+    if ( is_end_sub(g) ) {
+      if ( g > 0 ) {
+	init_group(g);
+      }
     }
-    if ( g > 0 ) {
-      init_group(g);
+    else {
+      return;
     }
   }
+  finish();
 }
 
 END_NAMESPACE_YM

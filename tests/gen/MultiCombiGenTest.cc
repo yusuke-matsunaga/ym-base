@@ -3,9 +3,8 @@
 /// @brief MultiCombiGenTest の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2017, 2018 Yusuke Matsunaga
+/// Copyright (C) 2017, 2018, 2022 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "gtest/gtest.h"
 #include "ym/MultiCombiGen.h"
@@ -15,8 +14,10 @@ BEGIN_NAMESPACE_YM
 
 // MultiCombiGen の出力結果が exp_list と等しいか検査する．
 bool
-check_gen(MultiCombiGen& gen,
-	  const int exp_list[])
+check_gen(
+  MultiCombiGen& gen,
+  const int exp_list[]
+)
 {
   int ng = gen.group_num();
   int pos = 0;
@@ -48,6 +49,19 @@ check_gen(MultiCombiGen& gen,
   }
 
   return true;
+}
+
+// 空の組み合わせのテスト
+TEST(MultiCombiGenTest, empty_test)
+{
+  vector<pair<int, int>> nk_array{};
+  MultiCombiGen gen{nk_array};
+
+  EXPECT_EQ( nk_array.size(), gen.group_num() );
+
+  for ( ; !gen.is_end(); ++ gen ) {
+    ;
+  }
 }
 
 // GenBase のメンバ関数のチェック

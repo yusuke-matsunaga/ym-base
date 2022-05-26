@@ -93,7 +93,10 @@ public:
   /// @brief 末尾のチェック
   /// @return 末尾の時に true を返す．
   bool
-  is_end() const { return is_end_sub(0); }
+  is_end() const
+  {
+    return mDone;
+  }
 
 
 protected:
@@ -108,6 +111,13 @@ protected:
   init_group(
     SizeType grp ///< [in] グループ番号
   );
+
+  /// @brief 終了フラグを立てる．
+  void
+  finish()
+  {
+    mDone = true;
+  }
 
   int&
   elem(
@@ -155,6 +165,9 @@ private:
   // 現在の要素(二重の配列を一次元の配列で表すので少しめんどくさい)
   // サイズは sum_i mKArray[i]
   vector<int> mElemArray;
+
+  // 末尾に到達したことを示すフラグ
+  bool mDone{false};
 
 };
 
