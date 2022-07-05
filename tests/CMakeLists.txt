@@ -54,6 +54,19 @@ target_link_libraries ( RandSamplerTest_d
   ${YM_LIB_DEPENDS}
   )
 
+add_executable ( ReadLineTest
+  misc/ReadLineTest.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
+
+target_compile_options ( ReadLineTest
+  PRIVATE "-g"
+  )
+
+target_link_libraries ( ReadLineTest
+  ${YM_LIB_DEPENDS}
+  )
+
 
 # ===================================================================
 #  テスト用のターゲットの設定
