@@ -1,5 +1,5 @@
 
-/// @file BinCodecTest.cc
+/// @file BinEncDecTest.cc
 /// @brief BinDec/BinEnc のテストプログラム
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
@@ -14,7 +14,7 @@
 BEGIN_NAMESPACE_YM
 
 // 1バイトの読み書きのテスト
-TEST(BinCodecTest, rw_8)
+TEST(BinEncDecTest, rw_8)
 {
   ostringstream obuff;
   BinEnc ofs{obuff};
@@ -29,7 +29,7 @@ TEST(BinCodecTest, rw_8)
 }
 
 // 1バイトの読み書きのテスト
-TEST(BinCodecTest, s_8)
+TEST(BinEncDecTest, s_8)
 {
   ostringstream obuff;
   BinEnc ofs{obuff};
@@ -45,7 +45,7 @@ TEST(BinCodecTest, s_8)
 }
 
 // 2バイトの読み書きのテスト
-TEST(BinCodecTest, rw_16)
+TEST(BinEncDecTest, rw_16)
 {
   ostringstream obuff;
   BinEnc ofs{obuff};
@@ -60,7 +60,7 @@ TEST(BinCodecTest, rw_16)
 }
 
 // 2バイトの読み書きのテスト
-TEST(BinCodecTest, s_16)
+TEST(BinEncDecTest, s_16)
 {
   ostringstream obuff;
   BinEnc ofs{obuff};
@@ -76,7 +76,7 @@ TEST(BinCodecTest, s_16)
 }
 
 // 4バイトの読み書きのテスト
-TEST(BinCodecTest, rw_32)
+TEST(BinEncDecTest, rw_32)
 {
   ostringstream obuff;
   BinEnc ofs{obuff};
@@ -91,7 +91,7 @@ TEST(BinCodecTest, rw_32)
 }
 
 // 4バイトの読み書きのテスト
-TEST(BinCodecTest, s_32)
+TEST(BinEncDecTest, s_32)
 {
   ostringstream obuff;
   BinEnc ofs{obuff};
@@ -107,7 +107,7 @@ TEST(BinCodecTest, s_32)
 }
 
 // 8バイトの読み書きのテスト
-TEST(BinCodecTest, rw_64)
+TEST(BinEncDecTest, rw_64)
 {
   ostringstream obuff;
   BinEnc ofs{obuff};
@@ -122,7 +122,7 @@ TEST(BinCodecTest, rw_64)
 }
 
 // 8バイトの読み書きのテスト
-TEST(BinCodecTest, s_64)
+TEST(BinEncDecTest, s_64)
 {
   ostringstream obuff;
   BinEnc ofs{obuff};
@@ -137,8 +137,36 @@ TEST(BinCodecTest, s_64)
   EXPECT_EQ( oval, ival );
 }
 
+// 可変長整数の読み書きのテスト
+TEST(BinEncDecTest, rw_vint)
+{
+  ostringstream obuff;
+  BinEnc ofs{obuff};
+  SizeType val1 = 0x0F;
+  SizeType val2 = 0x0FA5;
+  SizeType val3 = 0x0FA536ED;
+  SizeType val4 = 0xF0E1D2C3B4A59688;
+
+  ofs.write_vint(val1);
+  ofs.write_vint(val2);
+  ofs.write_vint(val3);
+  ofs.write_vint(val4);
+
+  istringstream ibuff{obuff.str()};
+  BinDec ifs{ibuff};
+  SizeType rval1 = ifs.read_vint();
+  SizeType rval2 = ifs.read_vint();
+  SizeType rval3 = ifs.read_vint();
+  SizeType rval4 = ifs.read_vint();
+
+  EXPECT_EQ( val1, rval1 );
+  EXPECT_EQ( val2, rval2 );
+  EXPECT_EQ( val3, rval3 );
+  EXPECT_EQ( val4, rval4 );
+}
+
 // floatの読み書きのテスト
-TEST(BinCodecTest, rw_float)
+TEST(BinEncDecTest, rw_float)
 {
   ostringstream obuff;
   BinEnc ofs{obuff};
@@ -153,7 +181,7 @@ TEST(BinCodecTest, rw_float)
 }
 
 // floatの読み書きのテスト
-TEST(BinCodecTest, s_float)
+TEST(BinEncDecTest, s_float)
 {
   ostringstream obuff;
   BinEnc ofs{obuff};
@@ -169,7 +197,7 @@ TEST(BinCodecTest, s_float)
 }
 
 // doubleの読み書きのテスト
-TEST(BinCodecTest, rw_double)
+TEST(BinEncDecTest, rw_double)
 {
   ostringstream obuff;
   BinEnc ofs{obuff};
@@ -184,7 +212,7 @@ TEST(BinCodecTest, rw_double)
 }
 
 // doubleの読み書きのテスト
-TEST(BinCodecTest, s_double)
+TEST(BinEncDecTest, s_double)
 {
   ostringstream obuff;
   BinEnc ofs{obuff};
@@ -200,7 +228,7 @@ TEST(BinCodecTest, s_double)
 }
 
 // stringの読み書きのテスト
-TEST(BinCodecTest, rw_string)
+TEST(BinEncDecTest, rw_string)
 {
   ostringstream obuff;
   BinEnc ofs{obuff};
@@ -215,7 +243,7 @@ TEST(BinCodecTest, rw_string)
 }
 
 // stringの読み書きのテスト
-TEST(BinCodecTest, s_string)
+TEST(BinEncDecTest, s_string)
 {
   ostringstream obuff;
   BinEnc ofs{obuff};
@@ -231,7 +259,7 @@ TEST(BinCodecTest, s_string)
 }
 
 // 複合テスト
-TEST(BinCodecTest, total_1)
+TEST(BinEncDecTest, total_1)
 {
   ostringstream obuff;
   BinEnc ofs{obuff};

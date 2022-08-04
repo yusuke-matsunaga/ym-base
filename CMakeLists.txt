@@ -56,6 +56,10 @@ set ( binder_SOURCES
   c++-srcs/binder/Binder.cc
   )
 
+set ( binio_SOURCES
+  c++-srcs/binio/BinEnc.cc
+  )
+
 set ( file_info_SOURCES
   c++-srcs/file_info/File.cc
   c++-srcs/file_info/FileInfo.cc
@@ -102,6 +106,7 @@ set ( textproc_SOURCES
 
 set ( ym_base_SOURCES
   ${binder_SOURCES}
+  ${binio_SOURCES}
   ${file_info_SOURCES}
   ${gen_SOURCES}
   ${itvl_SOURCES}

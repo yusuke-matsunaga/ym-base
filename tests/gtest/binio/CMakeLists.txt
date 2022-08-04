@@ -8,13 +8,17 @@
 # サブディレクトリの設定
 # ===================================================================
 
-add_subdirectory ( gtest/binio )
-add_subdirectory ( gtest/gen )
-add_subdirectory ( gtest/itvl )
-add_subdirectory ( gtest/misc )
-add_subdirectory ( gtest/textproc )
-add_subdirectory ( programs )
 
 # ===================================================================
 #  ソースファイルの設定
 # ===================================================================
+
+
+# ===================================================================
+#  テスト用のターゲットの設定
+# ===================================================================
+
+ym_add_gtest ( base_BinEncDec_test
+  BinEncDec_test.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
