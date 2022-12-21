@@ -55,7 +55,7 @@ public:
     URNG& randgen ///< [in] 乱数発生器
   )
   {
-    vector<int> src_array(mNum);
+    vector<int> src_array(combi_num());
     for ( int i = 0; i < num(); ++ i ) {
       src_array[i] = i;
     }
