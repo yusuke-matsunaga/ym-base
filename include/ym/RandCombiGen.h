@@ -26,8 +26,9 @@ public:
   RandCombiGen(
     SizeType n, ///< [in] 全要素数
     SizeType k  ///< [in] 組み合わせの要素数
-  ) : mCombiNum{k},
-      mArray(n)
+  ) : mNum{n},
+      mCombiNum{k},
+      mArray(k)
   {
   }
 
@@ -42,7 +43,7 @@ public:
 
   /// @brief 全要素数を返す．
   SizeType
-  num() const { return mArray.size(); }
+  num() const { return mNum; }
 
   /// @brief 組み合わせの要素数を返す．
   SizeType
@@ -55,7 +56,7 @@ public:
     URNG& randgen ///< [in] 乱数発生器
   )
   {
-    vector<int> src_array(combi_num());
+    vector<int> src_array(num());
     for ( int i = 0; i < num(); ++ i ) {
       src_array[i] = i;
     }
@@ -86,10 +87,13 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
+  // 全要素数
+  SizeType mNum;
+
   // 組み合わせの要素数
   SizeType mCombiNum;
 
-  // 現在の順列
+  // 結果を収める配列
   vector<int> mArray;
 
 };
