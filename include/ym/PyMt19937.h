@@ -8,12 +8,12 @@
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "magus.h"
+#include "ym_config.h"
 #include "PyBase.h"
 #include <random>
 
 
-BEGIN_NAMESPACE_MAGUS
+BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
 /// @class PyMt19937 PyMt19937.h "PyMt19937.h"
@@ -82,6 +82,6 @@ public:
 
 };
 
-END_NAMESPACE_MAGUS
+END_NAMESPACE_YM
 
 #endif // PYMT19937_H

@@ -11,10 +11,10 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
-#include "magus.h"
+#include "ym_config.h"
 
 
-BEGIN_NAMESPACE_MAGUS
+BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
 /// @class PyBase PyBase.h "PyBase.h"
@@ -65,6 +65,6 @@ public:
 
 };
 
-END_NAMESPACE_MAGUS
+END_NAMESPACE_YM
 
 #endif // PYBASE_H

@@ -9,11 +9,11 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
-#include "magus.h"
+#include "ym_config.h"
 #include "ym/PyMt19937.h"
 
 
-BEGIN_NAMESPACE_MAGUS
+BEGIN_NAMESPACE_YM
 
 BEGIN_NONAMESPACE
 
@@ -52,4 +52,4 @@ PyInit_ymbase()
   return nullptr;
 }
 
-END_NAMESPACE_MAGUS
+END_NAMESPACE_YM
