@@ -23,6 +23,7 @@ include_directories(
 
 set ( py_ymbase_SOURCES
   PyMt19937.cc
+  ymbase_module.cc
   )
 
 
@@ -36,7 +37,6 @@ ym_add_object_library( py_ymbase
 
 add_library ( py_ymbaselib
   SHARED
-  ymbase_module.cc
   $<TARGET_OBJECTS:py_ymbase_obj>
   )
 
