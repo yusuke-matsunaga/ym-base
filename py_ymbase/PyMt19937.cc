@@ -7,6 +7,7 @@
 /// All rights reserved.
 
 #include "ym/PyMt19937.h"
+#include "ym/PyModule.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -109,7 +110,7 @@ PyMt19937::init(
   Mt19937Type.tp_init = reinterpret_cast<initproc>(Mt19937_init);
   Mt19937Type.tp_new = Mt19937_new;
 
-  if ( !reg_type(m, "Mt19937", &Mt19937Type) ) {
+  if ( !PyModule::reg_type(m, "Mt19937", &Mt19937Type) ) {
     goto error;
   }
 

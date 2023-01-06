@@ -27,27 +27,6 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 型オブジェクトを登録する．
-  static
-  bool
-  reg_type(
-    PyObject* m,           ///< [in] モジュールオブジェクト
-    const char* name,      ///< [in] 名前
-    PyTypeObject* type_obj ///< [in] 型オブジェクト
-  )
-  {
-    if ( PyType_Ready(type_obj) < 0 ) {
-      return false;
-    }
-    auto obj = reinterpret_cast<PyObject*>(type_obj);
-    Py_INCREF(obj);
-    if ( PyModule_AddObject(m, name, obj) < 0 ) {
-      Py_DECREF(obj);
-      return false;
-    }
-    return true;
-  }
-
   /// @brief PyObject から文字列を取り出す．
   /// @return 変換が成功したら true を返す．
   ///

@@ -8,8 +8,10 @@
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
+#define PY_SSIZE_T_CLEAN
+#include <Python.h>
+
 #include "ym_config.h"
-#include "PyBase.h"
 #include <random>
 
 
@@ -21,8 +23,7 @@ BEGIN_NAMESPACE_YM
 ///
 /// 実際には static メンバ関数しか持たないのでクラスではない．
 //////////////////////////////////////////////////////////////////////
-class PyMt19937 :
-  public PyBase
+class PyMt19937
 {
 public:
   //////////////////////////////////////////////////////////////////////

@@ -11,6 +11,7 @@
 
 #include "ym_config.h"
 #include "ym/PyMt19937.h"
+#include "ym/PyModule.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -36,7 +37,7 @@ END_NONAMESPACE
 PyMODINIT_FUNC
 PyInit_ymbase()
 {
-  auto m = PyModule_Create(&ymbase_module);
+  auto m = PyModule::init(&ymbase_module);
   if ( m == nullptr ) {
     return nullptr;
   }
