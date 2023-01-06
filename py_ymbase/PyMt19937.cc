@@ -104,16 +104,12 @@ PyMt19937::init(
   Mt19937Type.tp_itemsize = 0;
   Mt19937Type.tp_dealloc = Mt19937_dealloc;
   Mt19937Type.tp_flags = Py_TPFLAGS_DEFAULT;
-  Mt19937Type.tp_doc = PyDoc_STR("Mt19937 objects");
+  Mt19937Type.tp_doc = PyDoc_STR("Mt19937 object");
   Mt19937Type.tp_methods = Mt19937_methods;
   Mt19937Type.tp_init = reinterpret_cast<initproc>(Mt19937_init);
   Mt19937Type.tp_new = Mt19937_new;
-  if ( PyType_Ready(&Mt19937Type) < 0 ) {
-    return false;
-  }
 
-  auto type_obj = reinterpret_cast<PyObject*>(&Mt19937Type);
-  if ( !reg_type_obj(m, "Mt19937", type_obj) ) {
+  if ( !reg_type(m, "Mt19937", &Mt19937Type) ) {
     goto error;
   }
 

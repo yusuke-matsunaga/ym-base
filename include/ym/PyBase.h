@@ -30,15 +30,19 @@ public:
   /// @brief 型オブジェクトを登録する．
   static
   bool
-  reg_type_obj(
-    PyObject* m,       ///< [in] モジュールオブジェクト
-    const char* name,  ///< [in] 名前
-    PyObject* type_obj ///< [in] 型オブジェクト
+  reg_type(
+    PyObject* m,           ///< [in] モジュールオブジェクト
+    const char* name,      ///< [in] 名前
+    PyTypeObject* type_obj ///< [in] 型オブジェクト
   )
   {
-    Py_INCREF(type_obj);
-    if ( PyModule_AddObject(m, name, type_obj) < 0 ) {
-      Py_DECREF(type_obj);
+    if ( PyType_Ready(type_obj) < 0 ) {
+      return false;
+    }
+    auto obj = reinterpret_cast<PyObject*>(type_obj);
+    Py_INCREF(obj);
+    if ( PyModule_AddObject(m, name, obj) < 0 ) {
+      Py_DECREF(obj);
       return false;
     }
     return true;
