@@ -38,17 +38,6 @@ public:
     PyObject* m ///< [in] 親のモジュールを表す PyObject
   );
 
-  /// @brief mt19937 を表す PyObject から mt19937 を取り出す．
-  /// @return 変換が成功したら true を返す．
-  ///
-  /// エラーの場合にはPython例外がセットされる．
-  static
-  bool
-  FromPyObject(
-    PyObject* obj,         ///< [in] Color を表す PyObject
-    std::mt19937*& mt19937 ///< [out] 変換された mt19937 を格納する変数
-  );
-
   /// @brief PyObject が mt19937 タイプか調べる．
   static
   bool
@@ -61,19 +50,9 @@ public:
   ///
   /// Check(obj) == true であると仮定している．
   static
-  std::mt19937*
+  std::mt19937&
   _get(
     PyObject* obj ///< [in] 変換元の PyObject
-  );
-
-  /// @brief mt19937 を表す PyObject に値を設定する．
-  ///
-  /// Check(obj) == true であると仮定している．
-  static
-  void
-  _put(
-    PyObject* obj,          ///< [in] 対象の PyObject
-    const std::mt19937& ban ///< [in] 設定する値
   );
 
   /// @brief mt19937 を表すオブジェクトの型定義を返す．
