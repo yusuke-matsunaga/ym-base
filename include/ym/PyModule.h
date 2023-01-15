@@ -58,6 +58,28 @@ public:
     return true;
   }
 
+  /// @brief サブモジュールを登録する．
+  static
+  bool
+  reg_submodule(
+    PyObject* m,      ///< [in] モジュールオブジェクト
+    const char* name, ///< [in] 名前
+    PyObject* sub_m   ///< [in] 登録するサブモジュール
+  )
+  {
+    if ( !reg_item(m, name, sub_m) ) {
+      return false;
+    }
+    auto sys_modules = PyImport_GetModuleDict();
+    auto m_name = string{PyModule_GetName(m)};
+    string h_name = m_name + "." + name;
+    if ( PyDict_SetItemString(sys_modules,
+			      h_name.c_str(), sub_m) < 0 ) {
+      return false;
+    }
+    return true;
+  }
+
   /// @brief 型オブジェクトを登録する．
   static
   bool
