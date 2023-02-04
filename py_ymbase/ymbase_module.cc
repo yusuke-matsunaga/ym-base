@@ -9,9 +9,8 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
-#include "ym_config.h"
-#include "ym/PyMt19937.h"
-#include "ym/PyModule.h"
+#include "pym/PyMt19937.h"
+#include "pym/PyModule.h"
 
 
 BEGIN_NAMESPACE_YM

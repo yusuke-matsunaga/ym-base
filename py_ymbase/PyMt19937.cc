@@ -6,8 +6,8 @@
 /// Copyright (C) 2022, 2023 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/PyMt19937.h"
-#include "ym/PyModule.h"
+#include "pym/PyMt19937.h"
+#include "pym/PyModule.h"
 
 
 BEGIN_NAMESPACE_YM
