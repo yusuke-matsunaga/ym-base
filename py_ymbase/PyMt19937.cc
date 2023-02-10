@@ -70,7 +70,7 @@ Mt19937_eval(
   PyObject* Py_UNUSED(args)
 )
 {
-  auto& randgen = PyMt19937::_get(self);
+  auto& randgen = PyMt19937::Get(self);
   auto val = randgen.operator()();
   return PyLong_FromLong(val);
 }
@@ -119,7 +119,7 @@ PyMt19937::init(
 
 // @brief PyObject が mt19937 タイプか調べる．
 bool
-PyMt19937::_check(
+PyMt19937::Check(
   PyObject* obj
 )
 {
@@ -128,7 +128,7 @@ PyMt19937::_check(
 
 // @brief mt19937 を表す PyObject から mt19937 を取り出す．
 std::mt19937&
-PyMt19937::_get(
+PyMt19937::Get(
   PyObject* obj
 )
 {
