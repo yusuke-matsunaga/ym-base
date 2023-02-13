@@ -48,6 +48,7 @@ set_target_properties( py_ymbaselib
 
 target_link_libraries( py_ymbaselib
   ${YM_LIB_DEPENDS}
+  ${Python3_LIBRARIES}
   )
 
 # ===================================================================
