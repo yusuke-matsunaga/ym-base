@@ -291,7 +291,7 @@ operator<<(
 /// @return s をそのまま返す．
 inline
 BinDec&
-operator<<(
+operator>>(
   BinDec& s,    ///< [in] 入力ストリーム
   ShString& str ///< [out] 対象の文字列
 )
