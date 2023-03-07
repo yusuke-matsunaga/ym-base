@@ -65,8 +65,8 @@ public:
       std::uniform_int_distribution<int> rd(0, n);
       int r = rd(randgen);
       mArray[i] = src_array[r];
-      -- n;
       src_array[r] = src_array[n];
+      -- n;
     }
   }
 
