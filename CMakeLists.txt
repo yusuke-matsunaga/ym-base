@@ -107,6 +107,13 @@ set ( textproc_SOURCES
   c++-srcs/textproc/StrBuff.cc
   )
 
+set ( json_SOURCES
+  c++-srcs/json/Json.cc
+  c++-srcs/json/JsonValue.cc
+  c++-srcs/json/JsonParser.cc
+  c++-srcs/json/JsonScanner.cc
+  )
+
 set ( ym_base_SOURCES
   ${binder_SOURCES}
   ${binio_SOURCES}
@@ -117,6 +124,7 @@ set ( ym_base_SOURCES
   ${msg_SOURCES}
   ${popt_SOURCES}
   ${textproc_SOURCES}
+  ${json_SOURCES}
   )
 
 
