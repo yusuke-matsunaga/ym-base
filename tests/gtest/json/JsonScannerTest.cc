@@ -491,4 +491,15 @@ TEST(JsonScannerTest, string_bad1)
   );
 }
 
+TEST(JsonScannerTest, ustring)
+{
+  istringstream s{"\"\\u3042\""};
+
+  JsonScanner scanner{s, FileInfo{}};
+
+  auto tk = scanner.read_token();
+  EXPECT_EQ( JsonToken::String, tk );
+  EXPECT_EQ( "あ", scanner.cur_string() );
+}
+
 END_NAMESPACE_YM

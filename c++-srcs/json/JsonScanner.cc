@@ -308,7 +308,7 @@ JsonScanner::scan()
     case 'n': c = '\n'; break;
     case 'r': c = '\r'; break;
     case 't': c = '\t'; break;
-      //case 'u': c = read_hex4(); break;
+    case 'u': goto ST_UHEX4; break;
     default: goto ST_ERROR;
     }
   }
@@ -316,6 +316,40 @@ JsonScanner::scan()
     goto ST_ERROR;
   }
   mCurString.put_char(c);
+  goto ST_DQ;
+
+ ST_UHEX4: // 4桁のHEXコードを読み込み，unicode と解釈する．
+  {
+    char buff[5];
+    for ( SizeType i = 0; i < 4; ++ i ) {
+      int c = get();
+      if ( !isxdigit(c) ) {
+	goto ST_ERROR;
+      }
+      buff[i] = c;
+    }
+    buff[4] = '\0';
+    ymuint32 code = strtol(buff, nullptr, 16);
+    // code を unicode とみなして UTF-8 に符号化する．
+    if ( code <= 0x007F ) {
+      char c = static_cast<char>(code);
+      mCurString.put_char(c);
+    }
+    else if ( code <= 0x07FF ) {
+      char l = static_cast<char>(code & 0x3F) | 0x80;
+      char h = static_cast<char>((code >> 6) & 0x1F) | 0xC0;
+      mCurString.put_char(h);
+      mCurString.put_char(l);
+    }
+    else { // ここでは 0x10000 以上のコードはない．
+      char l = static_cast<char>(code & 0x3F) | 0x80;
+      char m = static_cast<char>((code >> 6) & 0x3F) | 0x80;
+      char h = static_cast<char>((code >> 12) & 0x0F) | 0xE0;
+      mCurString.put_char(h);
+      mCurString.put_char(m);
+      mCurString.put_char(l);
+    }
+  }
   goto ST_DQ;
 
  ST_CM1: // '*/' までをコメントとして読み飛ばす．
