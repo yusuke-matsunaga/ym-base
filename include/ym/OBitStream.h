@@ -44,19 +44,19 @@ public:
   /// @brief 8ビット値の出力
   void
   write_8(
-    ymuint8 val ///< [in] 値
+    std::uint8_t val ///< [in] 値
   );
 
   /// @brief 16ビット値の出力
   void
   write_16(
-    ymuint16 val ///< [in] 値
+    std::uint16_t val ///< [in] 値
   );
 
   /// @brief 32ビット値の出力
   void
   write_32(
-    ymuint32 val ///< [in] 値
+    std::uint32_t val ///< [in] 値
   );
 
 
@@ -86,7 +86,7 @@ private:
   static const SizeType BUFF_SIZE = 512;
 
   // バッファ
-  ymuint8 mBuff[BUFF_SIZE];
+  std::uint8_t mBuff[BUFF_SIZE];
 
   // バイト単位のオフセット
   SizeType mByteOffset{0};

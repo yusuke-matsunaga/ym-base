@@ -329,7 +329,7 @@ JsonScanner::scan()
       buff[i] = c;
     }
     buff[4] = '\0';
-    ymuint32 code = strtol(buff, nullptr, 16);
+    std::uint32_t code = strtol(buff, nullptr, 16);
     // code を unicode とみなして UTF-8 に符号化する．
     if ( code <= 0x007F ) {
       char c = static_cast<char>(code);

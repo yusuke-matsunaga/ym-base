@@ -19,11 +19,11 @@ BinEnc::write_vint(
 )
 {
   if ( val <= 127 ) {
-    write_8(static_cast<ymuint8>(val));
+    write_8(static_cast<std::uint8_t>(val));
   }
   else {
     SizeType val1 = (val & 127) | 128;
-    write_8(static_cast<ymuint8>(val1));
+    write_8(static_cast<std::uint8_t>(val1));
     write_vint((val >> 7));
   }
 }

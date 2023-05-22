@@ -116,14 +116,14 @@ public:
 
   /// @brief id を返す．
   /// @note 実際には文字列へのポインタをキャストしたもの
-  ympuint
-  id() const { return reinterpret_cast<ympuint>(mPtr); }
+  PtrIntType
+  id() const { return reinterpret_cast<PtrIntType>(mPtr); }
 
   /// @brief ハッシュ用のキーを返す．
   SizeType
   hash() const
   {
-    ympuint tmp = reinterpret_cast<ympuint>(mPtr)/sizeof(void*);
+    PtrIntType tmp = reinterpret_cast<PtrIntType>(mPtr)/sizeof(void*);
     return static_cast<SizeType>(tmp);
   }
 

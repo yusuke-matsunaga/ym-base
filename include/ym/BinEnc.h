@@ -45,37 +45,37 @@ public:
   /// @brief 1バイトの書き込み
   void
   write_8(
-    ymuint8 val ///< [in] 値
+    std::uint8_t val ///< [in] 値
   )
   {
-    raw_write(&val, sizeof(ymuint8));
+    raw_write(&val, sizeof(std::uint8_t));
   }
 
   /// @brief 2バイトの書き込み
   void
   write_16(
-    ymuint16 val ///< [in] 値
+    std::uint16_t val ///< [in] 値
   )
   {
-    raw_write(reinterpret_cast<const ymuint8*>(&val), sizeof(ymuint16));
+    raw_write(reinterpret_cast<const std::uint8_t*>(&val), sizeof(std::uint16_t));
   }
 
   /// @brief 4バイトの書き込み
   void
   write_32(
-    ymuint32 val ///< [in] 値
+    std::uint32_t val ///< [in] 値
   )
   {
-    raw_write(reinterpret_cast<const ymuint8*>(&val), sizeof(ymuint32));
+    raw_write(reinterpret_cast<const std::uint8_t*>(&val), sizeof(std::uint32_t));
   }
 
   /// @brief 8バイトの書き込み
   void
   write_64(
-    ymuint64 val ///< [in] 値
+    std::uint64_t val ///< [in] 値
   )
   {
-    raw_write(reinterpret_cast<const ymuint8*>(&val), sizeof(ymuint64));
+    raw_write(reinterpret_cast<const std::uint8_t*>(&val), sizeof(std::uint64_t));
   }
 
   /// @brief 可変長の整数の書き込み
@@ -90,7 +90,7 @@ public:
     float val ///< [in] 値
   )
   {
-    raw_write(reinterpret_cast<const ymuint8*>(&val), sizeof(float));
+    raw_write(reinterpret_cast<const std::uint8_t*>(&val), sizeof(float));
   }
 
   /// @brief 倍精度浮動小数点数の書き込み
@@ -99,7 +99,7 @@ public:
     double val ///< [in] 値
   )
   {
-    raw_write(reinterpret_cast<const ymuint8*>(&val), sizeof(double));
+    raw_write(reinterpret_cast<const std::uint8_t*>(&val), sizeof(double));
   }
 
   /// @brief 文字列の書き込み
@@ -110,13 +110,13 @@ public:
   {
     auto l = val.size();
     write_64(l);
-    raw_write(reinterpret_cast<const ymuint8*>(val.c_str()), l);
+    raw_write(reinterpret_cast<const std::uint8_t*>(val.c_str()), l);
   }
 
   /// @brief ブロックデータの書き込み
   void
   write_block(
-    const ymuint8* block, ///< [in] ブロックの先頭アドレス
+    const std::uint8_t* block, ///< [in] ブロックの先頭アドレス
     SizeType n            ///< [in] データサイズ
   )
   {
@@ -132,7 +132,7 @@ public:
   )
   {
     auto l = signature.size();
-    raw_write(reinterpret_cast<const ymuint8*>(signature.c_str()), l);
+    raw_write(reinterpret_cast<const std::uint8_t*>(signature.c_str()), l);
   }
 
 
@@ -144,7 +144,7 @@ private:
   /// @brief write_XXX() の下請け関数
   void
   raw_write(
-    const ymuint8* buff, ///< [in] データを収めた領域のアドレス
+    const std::uint8_t* buff, ///< [in] データを収めた領域のアドレス
     SizeType n           ///< [in] データサイズ
   )
   {
@@ -176,7 +176,7 @@ operator<<(
   bool val   ///< [in] 値
 )
 {
-  s.write_8(static_cast<ymuint8>(val));
+  s.write_8(static_cast<std::uint8_t>(val));
   return s;
 }
 
@@ -186,10 +186,10 @@ inline
 BinEnc&
 operator<<(
   BinEnc& s, ///< [in] 出力先のストリーム
-  ymint8 val ///< [in] 値
+  std::int8_t val ///< [in] 値
 )
 {
-  s.write_8(static_cast<ymuint8>(val));
+  s.write_8(static_cast<std::uint8_t>(val));
   return s;
 }
 
@@ -199,10 +199,10 @@ inline
 BinEnc&
 operator<<(
   BinEnc& s,  ///< [in] 出力先のストリーム
-  ymint16 val ///< [in] 値
+  std::int16_t val ///< [in] 値
 )
 {
-  s.write_16(static_cast<ymuint16>(val));
+  s.write_16(static_cast<std::uint16_t>(val));
   return s;
 }
 
@@ -212,10 +212,10 @@ inline
 BinEnc&
 operator<<(
   BinEnc& s,  ///< [in] 出力先のストリーム
-  ymint32 val ///< [in] 値
+  std::int32_t val ///< [in] 値
 )
 {
-  s.write_32(static_cast<ymuint32>(val));
+  s.write_32(static_cast<std::uint32_t>(val));
   return s;
 }
 
@@ -225,10 +225,10 @@ inline
 BinEnc&
 operator<<(
   BinEnc& s,  ///< [in] 出力先のストリーム
-  ymint64 val ///< [in] 値
+  std::int64_t val ///< [in] 値
 )
 {
-  s.write_64(static_cast<ymuint64>(val));
+  s.write_64(static_cast<std::uint64_t>(val));
   return s;
 }
 
@@ -238,7 +238,7 @@ inline
 BinEnc&
 operator<<(
   BinEnc& s,  ///< [in] 出力先のストリーム
-  ymuint8 val ///< [in] 値
+  std::uint8_t val ///< [in] 値
 )
 {
   s.write_8(val);
@@ -251,7 +251,7 @@ inline
 BinEnc&
 operator<<(
   BinEnc& s,   ///< [in] 出力先のストリーム
-  ymuint16 val ///< [in] 値
+  std::uint16_t val ///< [in] 値
 )
 {
   s.write_16(val);
@@ -264,7 +264,7 @@ inline
 BinEnc&
 operator<<(
   BinEnc& s,   ///< [in] 出力先のストリーム
-  ymuint32 val ///< [in] 値
+  std::uint32_t val ///< [in] 値
 )
 {
   s.write_32(val);
@@ -277,7 +277,7 @@ inline
 BinEnc&
 operator<<(
   BinEnc& s,   ///< [in] 出力先のストリーム
-  ymuint64 val ///< [in] 値
+  std::uint64_t val ///< [in] 値
 )
 {
   s.write_64(val);

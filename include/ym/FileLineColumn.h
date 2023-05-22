@@ -35,8 +35,8 @@ public:
     ASSERT_COND( line >= 0 && line < 0x100000 );
     ASSERT_COND( column >= 0 && column < 0x1000 );
 
-    mLineColumn = (static_cast<ymuint32>(line) << 12) |
-      (static_cast<ymuint32>(column) & 0xFFFU);
+    mLineColumn = (static_cast<std::uint32_t>(line) << 12) |
+      (static_cast<std::uint32_t>(column) & 0xFFFU);
   }
 
   /// @brief デストラクタ
@@ -67,7 +67,7 @@ private:
   // 内容
   // 上位 20 ビットが行番号
   // 下位 12 ビットがコラム位置
-  ymuint32 mLineColumn;
+  std::uint32_t mLineColumn;
 
 };
 

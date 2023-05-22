@@ -18,12 +18,12 @@ TEST(BinEncDecTest, rw_8)
 {
   ostringstream obuff;
   BinEnc ofs{obuff};
-  ymuint8 oval{0xF0};
+  std::uint8_t oval{0xF0};
   ofs.write_8(oval);
 
   istringstream ibuff{obuff.str()};
   BinDec ifs{ibuff};
-  ymuint8 ival = ifs.read_8();
+  std::uint8_t ival = ifs.read_8();
 
   EXPECT_EQ( oval, ival );
 }
@@ -33,12 +33,12 @@ TEST(BinEncDecTest, s_8)
 {
   ostringstream obuff;
   BinEnc ofs{obuff};
-  ymuint8 oval{0xF0};
+  std::uint8_t oval{0xF0};
   ofs << oval;
 
   istringstream ibuff{obuff.str()};
   BinDec ifs{ibuff};
-  ymuint8 ival;
+  std::uint8_t ival;
   ifs >> ival;
 
   EXPECT_EQ( oval, ival );
@@ -49,12 +49,12 @@ TEST(BinEncDecTest, rw_16)
 {
   ostringstream obuff;
   BinEnc ofs{obuff};
-  ymuint16 oval{0xF0A5};
+  std::uint16_t oval{0xF0A5};
   ofs.write_16(oval);
 
   istringstream ibuff{obuff.str()};
   BinDec ifs{ibuff};
-  ymuint16 ival = ifs.read_16();
+  std::uint16_t ival = ifs.read_16();
 
   EXPECT_EQ( oval, ival );
 }
@@ -64,12 +64,12 @@ TEST(BinEncDecTest, s_16)
 {
   ostringstream obuff;
   BinEnc ofs{obuff};
-  ymuint16 oval{0x1234};
+  std::uint16_t oval{0x1234};
   ofs << oval;
 
   istringstream ibuff{obuff.str()};
   BinDec ifs{ibuff};
-  ymuint16 ival;
+  std::uint16_t ival;
   ifs >> ival;
 
   EXPECT_EQ( oval, ival );
@@ -80,12 +80,12 @@ TEST(BinEncDecTest, rw_32)
 {
   ostringstream obuff;
   BinEnc ofs{obuff};
-  ymuint32 oval{0xF0A536ED};
+  std::uint32_t oval{0xF0A536ED};
   ofs.write_32(oval);
 
   istringstream ibuff{obuff.str()};
   BinDec ifs{ibuff};
-  ymuint32 ival = ifs.read_32();
+  std::uint32_t ival = ifs.read_32();
 
   EXPECT_EQ( oval, ival );
 }
@@ -95,12 +95,12 @@ TEST(BinEncDecTest, s_32)
 {
   ostringstream obuff;
   BinEnc ofs{obuff};
-  ymuint32 oval{0x12345678};
+  std::uint32_t oval{0x12345678};
   ofs << oval;
 
   istringstream ibuff{obuff.str()};
   BinDec ifs{ibuff};
-  ymuint32 ival;
+  std::uint32_t ival;
   ifs >> ival;
 
   EXPECT_EQ( oval, ival );
@@ -111,12 +111,12 @@ TEST(BinEncDecTest, rw_64)
 {
   ostringstream obuff;
   BinEnc ofs{obuff};
-  ymuint64 oval{0xF0E1D2C3B4A59688};
+  std::uint64_t oval{0xF0E1D2C3B4A59688};
   ofs.write_64(oval);
 
   istringstream ibuff{obuff.str()};
   BinDec ifs{ibuff};
-  ymuint64 ival = ifs.read_64();
+  std::uint64_t ival = ifs.read_64();
 
   EXPECT_EQ( oval, ival );
 }
@@ -126,12 +126,12 @@ TEST(BinEncDecTest, s_64)
 {
   ostringstream obuff;
   BinEnc ofs{obuff};
-  ymuint64 oval{0x123456789ABCDEF};
+  std::uint64_t oval{0x123456789ABCDEF};
   ofs << oval;
 
   istringstream ibuff{obuff.str()};
   BinDec ifs{ibuff};
-  ymuint64 ival;
+  std::uint64_t ival;
   ifs >> ival;
 
   EXPECT_EQ( oval, ival );
@@ -264,10 +264,10 @@ TEST(BinEncDecTest, total_1)
   ostringstream obuff;
   BinEnc ofs{obuff};
 
-  ymuint8  oval1{0xF0};
-  ymuint16 oval2{0xF0A5};
-  ymuint32 oval3{0xF0A536ED};
-  ymuint64 oval4{0xF0E1D2C3B4A59688};
+  std::uint8_t  oval1{0xF0};
+  std::uint16_t oval2{0xF0A5};
+  std::uint32_t oval3{0xF0A536ED};
+  std::uint64_t oval4{0xF0E1D2C3B4A59688};
   float    oval5{1.234};
   double   oval6{9.82e+10};
   string   oval7{"abcdefgh"};
@@ -283,10 +283,10 @@ TEST(BinEncDecTest, total_1)
   istringstream ibuff{obuff.str()};
   BinDec ifs{ibuff};
 
-  ymuint8  ival1 = ifs.read_8();
-  ymuint16 ival2 = ifs.read_16();
-  ymuint32 ival3 = ifs.read_32();
-  ymuint64 ival4 = ifs.read_64();
+  std::uint8_t  ival1 = ifs.read_8();
+  std::uint16_t ival2 = ifs.read_16();
+  std::uint32_t ival3 = ifs.read_32();
+  std::uint64_t ival4 = ifs.read_64();
   float    ival5 = ifs.read_float();
   double   ival6 = ifs.read_double();
   string   ival7 = ifs.read_string();

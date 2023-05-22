@@ -44,14 +44,14 @@ OBitStream::write_bool(
 // @brief 8ビット値の出力
 void
 OBitStream::write_8(
-  ymuint8 val
+  std::uint8_t val
 )
 {
-  ymuint8 val1 = (val << mBitOffset) & 0xFF;
+  std::uint8_t val1 = (val << mBitOffset) & 0xFF;
   mBuff[mByteOffset] |= val1;
   next_byte();
   if ( mBitOffset > 0 ) {
-    ymuint8 val2 = val >> (8 - mBitOffset);
+    std::uint8_t val2 = val >> (8 - mBitOffset);
     mBuff[mByteOffset] = val2;
   }
 }
@@ -59,17 +59,17 @@ OBitStream::write_8(
 // @brief 16ビット値の出力
 void
 OBitStream::write_16(
-  ymuint16 val
+  std::uint16_t val
 )
 {
-  ymuint8 val1 = (val << mBitOffset) & 0xFF;
+  std::uint8_t val1 = (val << mBitOffset) & 0xFF;
   mBuff[mByteOffset] |= val1;
   next_byte();
-  ymuint8 val2 = (val >> (8 - mBitOffset)) & 0xFF;
+  std::uint8_t val2 = (val >> (8 - mBitOffset)) & 0xFF;
   mBuff[mByteOffset] = val2;
   next_byte();
   if ( mByteOffset > 0 ) {
-    ymuint8 val3 = (val >> (16 - mBitOffset));
+    std::uint8_t val3 = (val >> (16 - mBitOffset));
     mBuff[mByteOffset] = val3;
   }
 }
@@ -77,16 +77,16 @@ OBitStream::write_16(
 // @brief 32ビット値の出力
 void
 OBitStream::write_32(
-  ymuint32 val ///< [in] 値
+  std::uint32_t val ///< [in] 値
 )
 {
-  ymuint8 val1 = (val << mBitOffset) & 0xFF;
+  std::uint8_t val1 = (val << mBitOffset) & 0xFF;
   mBuff[mByteOffset] |= val1;
   next_byte();
-  ymuint8 val2 = (val >> (8 - mBitOffset)) & 0xFF;
+  std::uint8_t val2 = (val >> (8 - mBitOffset)) & 0xFF;
   mBuff[mByteOffset] = val2;
   next_byte();
-  ymuint8 val3 = (val >> (16 - mBitOffset));
+  std::uint8_t val3 = (val >> (16 - mBitOffset));
   mBuff[mByteOffset] = val3;
   next_byte();
 

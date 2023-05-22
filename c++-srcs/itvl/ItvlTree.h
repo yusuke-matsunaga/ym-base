@@ -85,7 +85,7 @@ private:
     int E;
 
     // 平衡度(-1, 0, 1)
-    ymint8 B;
+    std::int8_t B;
 
     // 左の子供
     Node* L{nullptr};
