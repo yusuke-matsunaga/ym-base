@@ -320,19 +320,6 @@ operator>>(
   return s;
 }
 
-/// @brief SizeTypeの読み出し
-/// @return BinDec を返す．
-inline
-BinDec&
-operator>>(
-  BinDec& s,    ///< [in] 入力元のストリーム
-  SizeType& val ///< [out] 値を格納する変数
-)
-{
-  val = s.read_64();
-  return s;
-}
-
 /// @brief 単精度不動週数点数の読み出し
 /// @return BinDec を返す．
 inline
