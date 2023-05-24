@@ -232,6 +232,19 @@ operator<<(
   return s;
 }
 
+/// @brief SizeTypeの書き込み
+/// @return BinEnc を返す．
+inline
+BinEnc&
+operator<<(
+  BinEnc& s,   ///< [in] 出力先のストリーム
+  SizeType val ///< [in] 値
+)
+{
+  s.write_64(static_cast<std::uint64_t>(val));
+  return s;
+}
+
 /// @brief 1バイトの書き込み
 /// @return BinEnc を返す．
 inline
