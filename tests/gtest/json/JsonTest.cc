@@ -77,4 +77,88 @@ TEST(JsonTest, null)
   EXPECT_TRUE( value1.is_null() );
 }
 
+TEST(JsonTest, read)
+{
+  string filename{"test.json"};
+  auto path = string{TESTDATA_DIR} + "/" + filename;
+  ifstream s{path};
+  ASSERT_TRUE( s );
+
+  auto value = JsonValue::read(s, FileInfo{filename});
+
+  EXPECT_TRUE( value.has_key("str_key") );
+  auto value1 = value["str_key"];
+  EXPECT_TRUE( value1.is_string() );
+  EXPECT_EQ( "abcd", value1.get_string() );
+
+  EXPECT_TRUE( value.has_key("int_key") );
+  auto value2 = value["int_key"];
+  EXPECT_TRUE( value2.is_int() );
+  EXPECT_EQ( 4, value2.get_int() );
+
+  EXPECT_TRUE( value.has_key("float_key") );
+  auto value3 = value["float_key"];
+  EXPECT_TRUE( value3.is_float() );
+  EXPECT_EQ( 0.15, value3.get_float() );
+
+  EXPECT_TRUE( value.has_key("bool_key") );
+  auto value4 = value["bool_key"];
+  EXPECT_TRUE( value4.is_bool() );
+  EXPECT_EQ( true, value4.get_bool() );
+
+  EXPECT_TRUE( value.has_key("object_key") );
+  auto value5 = value["object_key"];
+  EXPECT_TRUE( value5.is_object() );
+
+  EXPECT_TRUE( value.has_key("array_key") );
+  auto value6 = value["array_key"];
+  EXPECT_TRUE( value6.is_array() );
+}
+
+TEST(JsonTest, parse)
+{
+  string source_str;
+  source_str += "{";
+  source_str += "\"str_key\": \"abcd\",";
+  source_str += "\"int_key\": 4,";
+  source_str += "\"float_key\": 0.15,";
+  source_str += "\"bool_key\": true,";
+  source_str += "\"object_key\": {";
+  source_str += "\"sub_key1\": 0,";
+  source_str += "\"sub_key2\": 1";
+  source_str += "},";
+  source_str += "\"array_key\": [ 0, 1, 2, 3]";
+  source_str += "}";
+
+  auto value = JsonValue::parse(source_str);
+
+  EXPECT_TRUE( value.has_key("str_key") );
+  auto value1 = value["str_key"];
+  EXPECT_TRUE( value1.is_string() );
+  EXPECT_EQ( "abcd", value1.get_string() );
+
+  EXPECT_TRUE( value.has_key("int_key") );
+  auto value2 = value["int_key"];
+  EXPECT_TRUE( value2.is_int() );
+  EXPECT_EQ( 4, value2.get_int() );
+
+  EXPECT_TRUE( value.has_key("float_key") );
+  auto value3 = value["float_key"];
+  EXPECT_TRUE( value3.is_float() );
+  EXPECT_EQ( 0.15, value3.get_float() );
+
+  EXPECT_TRUE( value.has_key("bool_key") );
+  auto value4 = value["bool_key"];
+  EXPECT_TRUE( value4.is_bool() );
+  EXPECT_EQ( true, value4.get_bool() );
+
+  EXPECT_TRUE( value.has_key("object_key") );
+  auto value5 = value["object_key"];
+  EXPECT_TRUE( value5.is_object() );
+
+  EXPECT_TRUE( value.has_key("array_key") );
+  auto value6 = value["array_key"];
+  EXPECT_TRUE( value6.is_array() );
+}
+
 END_NAMESPACE_YM

@@ -35,4 +35,6 @@ ym_add_gtest ( base_JsonParserTest
 ym_add_gtest ( base_JsonTest
   JsonTest.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
+  DEFINITIONS
+  "-DTESTDATA_DIR=\"${TESTDATA_DIR}\""
   )

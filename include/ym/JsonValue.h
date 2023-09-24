@@ -152,6 +152,14 @@ public:
     const FileInfo& file_info ///< [in] ファイル情報
   );
 
+  /// @brief JSON文字列をパースする．
+  /// @return 結果を格納したオブジェクトを返す．
+  static
+  JsonValue
+  parse(
+    const string& json_str ///< [in] JSON文字列
+  );
+
   /// @brief 内容を書き出す．
   void
   write(

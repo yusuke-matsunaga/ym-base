@@ -1,0 +1,11 @@
+{
+    "str_key": "abcd",
+    "int_key": 4,
+    "float_key": 0.15,
+    "bool_key": true,
+    "object_key": {
+	"sub_key1": 0,
+	"sub_key2": 1
+    },
+    "array_key": [ 0, 1, 2, 3]
+}

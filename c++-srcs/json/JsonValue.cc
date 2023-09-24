@@ -218,8 +218,20 @@ JsonValue::read(
 )
 {
   JsonParser parser;
-  auto value = parser.read(s, file_info);
-  return JsonValue{value};
+  auto obj = parser.read(s, file_info);
+  return JsonValue{obj};
+}
+
+// @brief JSON文字列をパースする．
+JsonValue
+JsonValue::parse(
+  const string& json_str
+)
+{
+  istringstream s{json_str};
+  JsonParser parser;
+  auto obj = parser.read(s, FileInfo{});
+  return JsonValue{obj};
 }
 
 // @brief 内容を書き出す．
