@@ -108,8 +108,8 @@ set ( textproc_SOURCES
   )
 
 set ( json_SOURCES
-  c++-srcs/json/Json.cc
   c++-srcs/json/JsonValue.cc
+  c++-srcs/json/JsonObj.cc
   c++-srcs/json/JsonParser.cc
   c++-srcs/json/JsonScanner.cc
   )

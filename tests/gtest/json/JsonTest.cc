@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 #include "gtest/gtest.h"
-#include "ym/Json.h"
+#include "ym/JsonValue.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -16,7 +16,7 @@ TEST(JsonTest, int)
 {
   istringstream s{"{ \"key\" : 123 }"};
 
-  auto value = Json::read(s, FileInfo{});
+  auto value = JsonValue::read(s, FileInfo{});
   EXPECT_TRUE( value.is_object() );
   auto value1 = value["key"];
   EXPECT_TRUE( value1.is_int() );
@@ -27,7 +27,7 @@ TEST(JsonTest, float)
 {
   istringstream s{"{ \"key\" : 123.456 }"};
 
-  auto value = Json::read(s, FileInfo{});
+  auto value = JsonValue::read(s, FileInfo{});
   EXPECT_TRUE( value.is_object() );
   auto value1 = value["key"];
   EXPECT_TRUE( value1.is_float() );
@@ -38,7 +38,7 @@ TEST(JsonTest, string)
 {
   istringstream s{"{ \"key\" : \"123\" }"};
 
-  auto value = Json::read(s, FileInfo{});
+  auto value = JsonValue::read(s, FileInfo{});
   EXPECT_TRUE( value.is_object() );
   auto value1 = value["key"];
   EXPECT_TRUE( value1.is_string() );
@@ -49,7 +49,7 @@ TEST(JsonTest, true)
 {
   istringstream s{"{ \"key\" : true }"};
 
-  auto value = Json::read(s, FileInfo{});
+  auto value = JsonValue::read(s, FileInfo{});
   EXPECT_TRUE( value.is_object() );
   auto value1 = value["key"];
   EXPECT_TRUE( value1.is_bool() );
@@ -60,7 +60,7 @@ TEST(JsonTest, false)
 {
   istringstream s{"{ \"key\" : false }"};
 
-  auto value = Json::read(s, FileInfo{});
+  auto value = JsonValue::read(s, FileInfo{});
   EXPECT_TRUE( value.is_object() );
   auto value1 = value["key"];
   EXPECT_TRUE( value1.is_bool() );
@@ -71,7 +71,7 @@ TEST(JsonTest, null)
 {
   istringstream s{"{ \"key\" : null }"};
 
-  auto value = Json::read(s, FileInfo{});
+  auto value = JsonValue::read(s, FileInfo{});
   EXPECT_TRUE( value.is_object() );
   auto value1 = value["key"];
   EXPECT_TRUE( value1.is_null() );

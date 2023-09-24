@@ -8,11 +8,12 @@
 /// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
+#include "ym/json.h"
 #include "ym/Scanner.h"
 #include "ym/StrBuff.h"
 
 
-BEGIN_NAMESPACE_YM
+BEGIN_NAMESPACE_YM_JSON
 
 /// @brief json のトークン
 enum class JsonToken {
@@ -122,6 +123,6 @@ private:
 
 };
 
-END_NAMESPACE_YM
+END_NAMESPACE_YM_JSON
 
 #endif // JSONSCANNER_H

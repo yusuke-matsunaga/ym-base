@@ -6,379 +6,228 @@
 /// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "JsonValue.h"
+#include "ym/JsonValue.h"
+#include "JsonObj.h"
+#include "JsonParser.h"
 
 
 BEGIN_NAMESPACE_YM
 
-//////////////////////////////////////////////////////////////////////
-// クラス JsonValue
-//////////////////////////////////////////////////////////////////////
+// @brief 空のコンストラクタ
+JsonValue::JsonValue()
+{
+}
+
+// @brief 値を指定したコンストラクタ
+JsonValue::JsonValue(
+  JsonObj* value
+) : mPtr{shared_ptr<JsonObj>{value}}
+{
+}
+
+// @brief デストラクタ
+JsonValue::~JsonValue()
+{
+}
 
 // @brief オブジェクト型の時 true を返す．
 bool
 JsonValue::is_object() const
 {
-  return false;
+  if ( is_null() ) {
+    return false;
+  }
+  return mPtr->is_object();
 }
 
 // @brief 配列型の時 true を返す．
 bool
 JsonValue::is_array() const
 {
-  return false;
+  if ( is_null() ) {
+    return false;
+  }
+  return mPtr->is_array();
 }
 
 // @brief 文字列型の時 true を返す．
 bool
 JsonValue::is_string() const
 {
-  return false;
+  if ( is_null() ) {
+    return false;
+  }
+  return mPtr->is_string();
+}
+
+// @brief 数値型の時 true を返す．
+bool
+JsonValue::is_number() const
+{
+  return is_int() || is_float();
 }
 
 // @brief 整数型の時 true を返す．
 bool
 JsonValue::is_int() const
 {
-  return false;
+  if ( is_null() ) {
+    return false;
+  }
+  return mPtr->is_int();
 }
 
 // @brief 浮動小数点型の時 true を返す．
 bool
 JsonValue::is_float() const
 {
-  return false;
+  if ( is_null() ) {
+    return false;
+  }
+  return mPtr->is_float();
 }
 
 // @brief ブール型の時 true を返す．
 bool
 JsonValue::is_bool() const
 {
-  return false;
+  if ( is_null() ) {
+    return false;
+  }
+  return mPtr->is_bool();
+}
+
+// @brief null型の時 true を返す．
+bool
+JsonValue::is_null() const
+{
+  return mPtr.get() == nullptr;
 }
 
 // @brief オブジェクトがキーを持つか調べる．
 bool
 JsonValue::has_key(
-  const string& key ///< [in] キー
+  const string& key
 ) const
 {
-  ASSERT_NOT_REACHED;
-  return false;
+  if ( !is_object() ) {
+    throw std::invalid_argument{"not an object-type"};
+  }
+  return mPtr->has_key(key);
 }
 
 // @brief キーのリストを返す．
 vector<string>
 JsonValue::key_list() const
 {
-  ASSERT_NOT_REACHED;
-  return {};
+  if ( !is_object() ) {
+    throw std::invalid_argument{"not an object-type"};
+  }
+  return mPtr->key_list();
 }
 
 // @brief キーと値のリストを返す．
-vector<pair<string, Json>>
+vector<pair<string, JsonValue>>
 JsonValue::item_list() const
 {
-  ASSERT_NOT_REACHED;
-  return {};
+  if ( !is_object() ) {
+    throw std::invalid_argument{"not an object-type"};
+  }
+  return mPtr->item_list();
 }
 
 // @brief オブジェクトの要素を得る．
-Json
-JsonValue::get_value(
+JsonValue
+JsonValue::operator[](
   const string& key
 ) const
 {
-  ASSERT_NOT_REACHED;
-  return Json{};
+  if ( !is_object() ) {
+    throw std::invalid_argument{"not an object-type"};
+  }
+  return mPtr->get_value(key);
 }
 
 // @brief 配列の要素数を得る．
 SizeType
 JsonValue::array_size() const
 {
-  ASSERT_NOT_REACHED;
-  return 0;
+  if ( !is_array() ) {
+    throw std::invalid_argument{"not an array-type"};
+  }
+  return mPtr->array_size();
 }
 
 // @brief 配列の要素を得る．
-Json
-JsonValue::get_value(
+JsonValue
+JsonValue::operator[](
   SizeType pos
 ) const
 {
-  ASSERT_NOT_REACHED;
-  return Json{};
+  if ( !is_array() ) {
+    throw std::invalid_argument{"not an array-type"};
+  }
+  return mPtr->get_value(pos);
 }
 
 // @brief 文字列を得る．
 string
 JsonValue::get_string() const
 {
-  ASSERT_NOT_REACHED;
-  return string{};
+  if ( !is_string() ) {
+    throw std::invalid_argument{"not a string-type"};
+  }
+  return mPtr->get_string();
 }
 
 // @brief 整数値を得る．
 int
 JsonValue::get_int() const
 {
-  ASSERT_NOT_REACHED;
-  return 0;
+  if ( !is_int() ) {
+    throw std::invalid_argument{"not an int-type"};
+  }
+  return mPtr->get_int();
 }
 
 // @brief 浮動小数点値を得る．
 double
 JsonValue::get_float() const
 {
-  ASSERT_NOT_REACHED;
-  return 0.0;
+  if ( !is_float() ) {
+    throw std::invalid_argument{"not a float-type"};
+  }
+  return mPtr->get_float();
 }
 
 // @brief ブール値を得る．
 bool
 JsonValue::get_bool() const
 {
-  ASSERT_NOT_REACHED;
-  return false;
+  if ( !is_bool() ) {
+    throw std::invalid_argument{"not a bool-type"};
+  }
+  return mPtr->get_bool();
 }
 
-
-//////////////////////////////////////////////////////////////////////
-// クラス JsonObject
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-JsonObject::JsonObject(
-  const unordered_map<string, Json>& dict
-) : mDict{dict}
+// @brief 読み込む．
+JsonValue
+JsonValue::read(
+  istream& s,
+  const FileInfo& file_info
+)
 {
+  JsonParser parser;
+  auto value = parser.read(s, file_info);
+  return JsonValue{value};
 }
 
-// @brief デストラクタ
-JsonObject::~JsonObject()
-{
-}
-
-// @brief オブジェクト型の時 true を返す．
-bool
-JsonObject::is_object() const
-{
-  return true;
-}
-
-// @brief オブジェクトがキーを持つか調べる．
-bool
-JsonObject::has_key(
-  const string& key
+// @brief 内容を書き出す．
+void
+JsonValue::write(
+  ostream& s
 ) const
 {
-  return mDict.count(key) > 0;
-}
-
-// @brief キーのリストを返す．
-vector<string>
-JsonObject::key_list() const
-{
-  vector<string> ans_list;
-  for ( auto& p: mDict ) {
-    ans_list.push_back(p.first);
-  }
-  sort(ans_list.begin(), ans_list.end());
-  return ans_list;
-}
-
-// @brief キーと値のリストを返す．
-vector<pair<string, Json>>
-JsonObject::item_list() const
-{
-  vector<pair<string, Json>> ans_list;
-  for ( auto& p: mDict ) {
-    ans_list.push_back(p);
-  }
-  sort(ans_list.begin(), ans_list.end(),
-       [](const pair<string, Json>& a,
-	  const pair<string, Json>& b){
-	 return a.first < b.first;
-       });
-  return ans_list;
-}
-
-// @brief オブジェクトの要素を得る．
-Json
-JsonObject::get_value(
-  const string& key
-) const
-{
-  if ( mDict.count(key) > 0 ) {
-    return mDict.at(key);
-  }
-  return Json{};
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス JsonArray
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-JsonArray::JsonArray(
-  const vector<Json>& array
-) : mArray{array}
-{
-}
-
-// @brief デストラクタ
-JsonArray::~JsonArray()
-{
-}
-
-// @brief 配列型の時 true を返す．
-bool
-JsonArray::is_array() const
-{
-  return true;
-}
-
-// @brief 配列の要素数を得る．
-SizeType
-JsonArray::array_size() const
-{
-  return mArray.size();
-}
-
-// @brief 配列の要素を得る．
-Json
-JsonArray::get_value(
-  SizeType pos
-) const
-{
-  ASSERT_COND( 0 <= pos && pos < array_size() );
-  return mArray[pos];
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス JsonString
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-JsonString::JsonString(
-  const string& value
-) : mValue{value}
-{
-}
-
-// @brief デストラクタ
-JsonString::~JsonString()
-{
-}
-
-// @brief 文字列型の時 true を返す．
-bool
-JsonString::is_string() const
-{
-  return true;
-}
-
-// @brief 文字列を得る．
-string
-JsonString::get_string() const
-{
-  return mValue;
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス JsonInt
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-JsonInt::JsonInt(
-  int value
-) : mValue{value}
-{
-}
-
-// @brief デストラクタ
-JsonInt::~JsonInt()
-{
-}
-
-// @brief 整数型の時 true を返す．
-bool
-JsonInt::is_int() const
-{
-  return true;
-}
-
-// @brief 整数値を得る．
-int
-JsonInt::get_int() const
-{
-  return mValue;
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス JsonFloat
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-JsonFloat::JsonFloat(
-  double value
-) : mValue{value}
-{
-}
-
-/// @brief デストラクタ
-JsonFloat::~JsonFloat()
-{
-}
-
-// @brief 浮動小数点型の時 true を返す．
-bool
-JsonFloat::is_float() const
-{
-  return true;
-}
-
-// @brief 浮動小数点値を得る．
-double
-JsonFloat::get_float() const
-{
-  return mValue;
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス JsonBool
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-JsonBool::JsonBool(
-  bool value
-) : mValue{value}
-{
-}
-
-// @brief デストラクタ
-JsonBool::~JsonBool()
-{
-}
-
-// @brief ブール型の時 true を返す．
-bool
-JsonBool::is_bool() const
-{
-  return true;
-}
-
-// @brief ブール値を得る．
-bool
-JsonBool::get_bool() const
-{
-  return mValue;
 }
 
 END_NAMESPACE_YM

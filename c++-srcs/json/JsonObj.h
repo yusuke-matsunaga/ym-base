@@ -1,29 +1,29 @@
-#ifndef JSONVALUE_H
-#define JSONVALUE_H
+#ifndef JSONOBJ_H
+#define JSONOBJ_H
 
-/// @file JsonValue.h
-/// @brief JsonValue のヘッダファイル
+/// @file JsonObj.h
+/// @brief JsonObj のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/Json.h"
+#include "ym/json.h"
 
 
-BEGIN_NAMESPACE_YM
+BEGIN_NAMESPACE_YM_JSON
 
 //////////////////////////////////////////////////////////////////////
-/// @class JsonValue JsonValue.h "JsonValue.h"
+/// @class JsonObj JsonObj.h "JsonObj.h"
 /// @brief json の値を表す基底クラス
 //////////////////////////////////////////////////////////////////////
-class JsonValue
+class JsonObj
 {
 public:
 
   /// @brief デストラクタ
   virtual
-  ~JsonValue() = default;
+  ~JsonObj() = default;
 
 
 public:
@@ -81,7 +81,7 @@ public:
   ///
   /// - オブジェクト型でない場合は無効
   virtual
-  vector<pair<string, Json>>
+  vector<pair<string, JsonValue>>
   item_list() const;
 
   /// @brief オブジェクトの要素を得る．
@@ -89,7 +89,7 @@ public:
   /// - オブジェクト型でない場合は無効
   /// - key に対応する値がない場合は null を返す．
   virtual
-  Json
+  JsonValue
   get_value(
     const string& key ///< [in] キー
   ) const;
@@ -106,7 +106,7 @@ public:
   /// - 配列型でない場合は無効
   /// - 配列のサイズ外のアクセスはエラーとなる．
   virtual
-  Json
+  JsonValue
   get_value(
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < array_size() )
   ) const;
@@ -143,21 +143,21 @@ public:
 
 
 //////////////////////////////////////////////////////////////////////
-/// @class JsonObject JsonValue.h "JsonValue.h"
+/// @class JsonDict JsonObj.h "JsonObj.h"
 /// @brief オブジェクト型を表すクラス
 //////////////////////////////////////////////////////////////////////
-class JsonObject :
-  public JsonValue
+class JsonDict :
+  public JsonObj
 {
 public:
 
   /// @brief コンストラクタ
-  JsonObject(
-    const unordered_map<string, Json>& dict ///< [in] 本体の辞書
+  JsonDict(
+    const unordered_map<string, JsonValue>& dict ///< [in] 本体の辞書
   );
 
   /// @brief デストラクタ
-  ~JsonObject();
+  ~JsonDict();
 
 
 public:
@@ -186,14 +186,14 @@ public:
   /// @brief キーと値のリストを返す．
   ///
   /// - オブジェクト型でない場合は無効
-  vector<pair<string, Json>>
+  vector<pair<string, JsonValue>>
   item_list() const override;
 
   /// @brief オブジェクトの要素を得る．
   ///
   /// - オブジェクト型でない場合は無効
   /// - key に対応する値がない場合は null を返す．
-  Json
+  JsonValue
   get_value(
     const string& key ///< [in] キー
   ) const override;
@@ -205,7 +205,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 本体
-  unordered_map<string, Json> mDict;
+  unordered_map<string, JsonValue> mDict;
 
 };
 
@@ -215,13 +215,13 @@ private:
 /// @brief 配列型を表すクラス
 //////////////////////////////////////////////////////////////////////
 class JsonArray :
-  public JsonValue
+  public JsonObj
 {
 public:
 
   /// @brief コンストラクタ
   JsonArray(
-    const vector<Json>& array ///< [in] 配列の本体
+    const vector<JsonValue>& array ///< [in] 配列の本体
   );
 
   /// @brief デストラクタ
@@ -247,7 +247,7 @@ public:
   ///
   /// - 配列型でない場合は無効
   /// - 配列のサイズ外のアクセスはエラーとなる．
-  Json
+  JsonValue
   get_value(
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < array_size() )
   ) const override;
@@ -259,7 +259,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 配列の実体
-  vector<Json> mArray;
+  vector<JsonValue> mArray;
 
 };
 
@@ -269,7 +269,7 @@ private:
 /// @brief 文字列型を表すクラス
 //////////////////////////////////////////////////////////////////////
 class JsonString :
-  public JsonValue
+  public JsonObj
 {
 public:
 
@@ -314,7 +314,7 @@ private:
 /// @brief 整数型を表すクラス
 //////////////////////////////////////////////////////////////////////
 class JsonInt :
-  public JsonValue
+  public JsonObj
 {
 public:
 
@@ -359,7 +359,7 @@ private:
 /// @brief 浮動小数点型を表すクラス
 //////////////////////////////////////////////////////////////////////
 class JsonFloat :
-  public JsonValue
+  public JsonObj
 {
 public:
 
@@ -404,7 +404,7 @@ private:
 /// @brief ブール型を表すクラス
 //////////////////////////////////////////////////////////////////////
 class JsonBool :
-  public JsonValue
+  public JsonObj
 {
 public:
 
@@ -443,6 +443,6 @@ private:
 
 };
 
-END_NAMESPACE_YM
+END_NAMESPACE_YM_JSON
 
-#endif // JSONVALUE_H
+#endif // JSONOBJ_H

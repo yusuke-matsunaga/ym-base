@@ -10,7 +10,7 @@
 #include "ym/MsgMgr.h"
 
 
-BEGIN_NAMESPACE_YM
+BEGIN_NAMESPACE_YM_JSON
 
 // @brief コンストラクタ
 JsonScanner::JsonScanner(
@@ -473,4 +473,4 @@ JsonScanner::read_null()
   return true;
 }
 
-END_NAMESPACE_YM
+END_NAMESPACE_YM_JSON

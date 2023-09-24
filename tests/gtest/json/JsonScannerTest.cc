@@ -12,7 +12,7 @@
 #include "ym/StreamMsgHandler.h"
 
 
-BEGIN_NAMESPACE_YM
+BEGIN_NAMESPACE_YM_JSON
 
 TEST(JsonScannerTest, empty)
 {
@@ -502,4 +502,4 @@ TEST(JsonScannerTest, ustring)
   EXPECT_EQ( "あ", scanner.cur_string() );
 }
 
-END_NAMESPACE_YM
+END_NAMESPACE_YM_JSON

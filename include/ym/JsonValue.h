@@ -1,41 +1,41 @@
-#ifndef JSON_H
-#define JSON_H
+#ifndef JSONVALUE_H
+#define JSONVALUE_H
 
-/// @file Json.h
-/// @brief Json のヘッダファイル
+/// @file JsonValue.h
+/// @brief JsonValue のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym_config.h"
+#include "ym/json.h"
 #include "ym/FileInfo.h"
 
 
-BEGIN_NAMESPACE_YM
+BEGIN_NAMESPACE_YM_JSON
 
-class JsonValue;
+class JsonObj;
 
 //////////////////////////////////////////////////////////////////////
-/// @class Json Json.h "ym/Json.h"
+/// @class JsonValue JsonValue.h "ym/JsonValue.h"
 /// @brief json オブジェクトを表すクラス
 //////////////////////////////////////////////////////////////////////
-class Json
+class JsonValue
 {
 public:
 
   /// @brief 空のコンストラクタ
   ///
   /// null 型の値となる．
-  Json();
+  JsonValue();
 
   /// @brief 値を指定したコンストラクタ
-  Json(
-    JsonValue* value ///< [in] 値
+  JsonValue(
+    JsonObj* value ///< [in] 値
   );
 
   /// @brief デストラクタ
-  ~Json();
+  ~JsonValue();
 
 
 public:
@@ -92,14 +92,14 @@ public:
   /// @brief キーと値のリストを返す．
   ///
   /// - オブジェクト型でない場合は無効
-  vector<pair<string, Json>>
+  vector<pair<string, JsonValue>>
   item_list() const;
 
   /// @brief オブジェクトの要素を得る．
   ///
   /// - オブジェクト型でない場合は無効
   /// - key に対応する値がない場合は null を返す．
-  Json
+  JsonValue
   operator[](
     const string& key ///< [in] キー
   ) const;
@@ -114,7 +114,7 @@ public:
   ///
   /// - 配列型でない場合は無効
   /// - 配列のサイズ外のアクセスはエラーとなる．
-  Json
+  JsonValue
   operator[](
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < array_size() )
   ) const;
@@ -146,7 +146,7 @@ public:
   /// @brief 読み込む．
   /// @return 結果を格納したオブジェクトを返す．
   static
-  Json
+  JsonValue
   read(
     istream& s,               ///< [in] 入力ストリーム
     const FileInfo& file_info ///< [in] ファイル情報
@@ -165,10 +165,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 値の実体
-  shared_ptr<JsonValue> mPtr;
+  shared_ptr<JsonObj> mPtr;
 
 };
 
-END_NAMESPACE_YM
+END_NAMESPACE_YM_JSON
 
-#endif // JSON_H
+#endif // JSONVALUE_H

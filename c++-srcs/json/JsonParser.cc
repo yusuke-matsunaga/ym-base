@@ -8,11 +8,12 @@
 
 #include "JsonParser.h"
 #include "JsonScanner.h"
-#include "JsonValue.h"
+#include "JsonObj.h"
+#include "ym/JsonValue.h"
 #include "ym/MsgMgr.h"
 
 
-BEGIN_NAMESPACE_YM
+BEGIN_NAMESPACE_YM_JSON
 
 // @brief コンストラクタ
 JsonParser::JsonParser()
@@ -25,7 +26,7 @@ JsonParser::~JsonParser()
 }
 
 // @brief 読み込む．
-JsonValue*
+JsonObj*
 JsonParser::read(
   istream& s,
   const FileInfo& file_info
@@ -43,7 +44,7 @@ JsonParser::read(
 }
 
 // @brief 値を読み込む．
-JsonValue*
+JsonObj*
 JsonParser::read_value()
 {
   auto tk = mScanner->read_token();
@@ -86,15 +87,15 @@ JsonParser::read_value()
 }
 
 // @brief オブジェクトを読み込む．
-JsonValue*
+JsonObj*
 JsonParser::read_object()
 {
 
-  unordered_map<string, Json> dict;
+  unordered_map<string, JsonValue> dict;
   auto tk = mScanner->read_token();
   if ( tk == JsonToken::RCB ) {
     // 空のオブジェクト
-    auto obj = new JsonObject{dict};
+    auto obj = new JsonDict{dict};
     return obj;
   }
   mScanner->unget_token(tk);
@@ -109,7 +110,7 @@ JsonParser::read_object()
 	error("':' is expected", loc);
       }
       auto value = read_value();
-      dict.emplace(key, Json{value});
+      dict.emplace(key, JsonValue{value});
     }
     else {
       // シンタックスエラー
@@ -134,12 +135,12 @@ JsonParser::read_object()
       error(buf.str(), loc);
     }
   }
-  auto obj = new JsonObject{dict};
+  auto obj = new JsonDict{dict};
   return obj;
 }
 
 // @brief 配列を読み込む．
-JsonValue*
+JsonObj*
 JsonParser::read_array()
 {
   auto tk = mScanner->read_token();
@@ -155,10 +156,10 @@ JsonParser::read_array()
   }
 
   mScanner->unget_token(tk);
-  vector<Json> array;
+  vector<JsonValue> array;
   for ( ; ; ) {
     auto value = read_value();
-    array.push_back(Json{value});
+    array.push_back(JsonValue{value});
     tk = mScanner->read_token();
     if ( tk == JsonToken::RBK ) {
       break;
@@ -191,4 +192,4 @@ JsonParser::error(
   throw std::invalid_argument(msg);
 }
 
-END_NAMESPACE_YM
+END_NAMESPACE_YM_JSON

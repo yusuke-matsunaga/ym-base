@@ -8,14 +8,14 @@
 /// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/Json.h"
+#include "ym/json.h"
 #include "ym/FileInfo.h"
 #include "ym/FileRegion.h"
 
 
-BEGIN_NAMESPACE_YM
+BEGIN_NAMESPACE_YM_JSON
 
-class JsonValue;
+class JsonObj;
 class JsonScanner;
 
 //////////////////////////////////////////////////////////////////////
@@ -39,7 +39,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 読み込む．
-  JsonValue*
+  JsonObj*
   read(
     istream& s,               ///< [in] 入力ストリーム
     const FileInfo& file_info ///< [in] ファイル情報
@@ -52,15 +52,15 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値を読み込む．
-  JsonValue*
+  JsonObj*
   read_value();
 
   /// @brief オブジェクトを読み込む．
-  JsonValue*
+  JsonObj*
   read_object();
 
   /// @brief 配列を読み込む．
-  JsonValue*
+  JsonObj*
   read_array();
 
   /// @brief エラーを出力する．
@@ -81,6 +81,6 @@ private:
 
 };
 
-END_NAMESPACE_YM
+END_NAMESPACE_YM_JSON
 
 #endif // JSONPARSER_H

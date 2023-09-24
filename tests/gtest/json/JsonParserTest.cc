@@ -8,12 +8,13 @@
 
 #include "gtest/gtest.h"
 #include "JsonParser.h"
-#include "JsonValue.h"
+#include "JsonObj.h"
+#include "ym/JsonValue.h"
 #include "ym/MsgMgr.h"
 #include "ym/StreamMsgHandler.h"
 
 
-BEGIN_NAMESPACE_YM
+BEGIN_NAMESPACE_YM_JSON
 
 TEST(JsonParserTest, int)
 {
@@ -240,4 +241,4 @@ TEST(JsonParserTest, array_bad2)
   );
 }
 
-END_NAMESPACE_YM
+END_NAMESPACE_YM_JSON
