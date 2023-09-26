@@ -18,6 +18,55 @@ JsonValue::JsonValue()
 {
 }
 
+// @brief 文字列型のコンストラクタ
+JsonValue::JsonValue(
+  const char* value
+) : mPtr{new JsonString{value}}
+{
+}
+
+// @brief 文字列型のコンストラクタ
+JsonValue::JsonValue(
+  const string& value
+) : mPtr{new JsonString{value}}
+{
+}
+
+// @brief 整数型のコンストラクタ
+JsonValue::JsonValue(
+  int value
+) : mPtr{new JsonInt{value}}
+{
+}
+
+// @brief 浮動小数点型のコンストラクタ
+JsonValue::JsonValue(
+  double value
+) : mPtr{new JsonFloat{value}}
+{
+}
+
+// @brief ブール型のコンストラクタ
+JsonValue::JsonValue(
+  bool value
+) : mPtr{new JsonBool{value}}
+{
+}
+
+// @brief 配列型のコンストラクタ
+JsonValue::JsonValue(
+  const vector<JsonValue>& value
+) : mPtr{new JsonArray{value}}
+{
+}
+
+// @brief オブジェクト型のコンストラクタ
+JsonValue::JsonValue(
+  const unordered_map<string, JsonValue>& value
+) : mPtr{new JsonDict{value}}
+{
+}
+
 // @brief 値を指定したコンストラクタ
 JsonValue::JsonValue(
   JsonObj* value

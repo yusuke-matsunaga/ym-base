@@ -28,6 +28,41 @@ public:
   /// null 型の値となる．
   JsonValue();
 
+  /// @brief 文字列型のコンストラクタ
+  JsonValue(
+    const char* value ///< [in] 値
+  );
+
+  /// @brief 文字列型のコンストラクタ
+  JsonValue(
+    const string& value ///< [in] 値
+  );
+
+  /// @brief 整数型のコンストラクタ
+  JsonValue(
+    int value ///< [in] 値
+  );
+
+  /// @brief 浮動小数点型のコンストラクタ
+  JsonValue(
+    double value ///< [in] 値
+  );
+
+  /// @brief ブール型のコンストラクタ
+  JsonValue(
+    bool value ///< [in] 値
+  );
+
+  /// @brief 配列型のコンストラクタ
+  JsonValue(
+    const vector<JsonValue>& value ///< [in] 値
+  );
+
+  /// @brief オブジェクト型のコンストラクタ
+  JsonValue(
+    const unordered_map<string, JsonValue>& value ///< [in] 値
+  );
+
   /// @brief 値を指定したコンストラクタ
   JsonValue(
     JsonObj* value ///< [in] 値
