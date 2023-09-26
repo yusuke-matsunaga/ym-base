@@ -110,9 +110,7 @@ JsonValue::has_key(
   const string& key
 ) const
 {
-  if ( !is_object() ) {
-    throw std::invalid_argument{"not an object-type"};
-  }
+  _check_object();
   return mPtr->has_key(key);
 }
 
@@ -120,9 +118,7 @@ JsonValue::has_key(
 vector<string>
 JsonValue::key_list() const
 {
-  if ( !is_object() ) {
-    throw std::invalid_argument{"not an object-type"};
-  }
+  _check_object();
   return mPtr->key_list();
 }
 
@@ -130,21 +126,17 @@ JsonValue::key_list() const
 vector<pair<string, JsonValue>>
 JsonValue::item_list() const
 {
-  if ( !is_object() ) {
-    throw std::invalid_argument{"not an object-type"};
-  }
+  _check_object();
   return mPtr->item_list();
 }
 
 // @brief オブジェクトの要素を得る．
 JsonValue
-JsonValue::operator[](
+JsonValue::at(
   const string& key
 ) const
 {
-  if ( !is_object() ) {
-    throw std::invalid_argument{"not an object-type"};
-  }
+  _check_object();
   return mPtr->get_value(key);
 }
 
@@ -152,9 +144,7 @@ JsonValue::operator[](
 SizeType
 JsonValue::array_size() const
 {
-  if ( !is_array() ) {
-    throw std::invalid_argument{"not an array-type"};
-  }
+  _check_array();
   return mPtr->array_size();
 }
 
@@ -164,9 +154,7 @@ JsonValue::operator[](
   SizeType pos
 ) const
 {
-  if ( !is_array() ) {
-    throw std::invalid_argument{"not an array-type"};
-  }
+  _check_array();
   return mPtr->get_value(pos);
 }
 
@@ -174,9 +162,7 @@ JsonValue::operator[](
 string
 JsonValue::get_string() const
 {
-  if ( !is_string() ) {
-    throw std::invalid_argument{"not a string-type"};
-  }
+  _check_string();
   return mPtr->get_string();
 }
 
@@ -184,9 +170,7 @@ JsonValue::get_string() const
 int
 JsonValue::get_int() const
 {
-  if ( !is_int() ) {
-    throw std::invalid_argument{"not an int-type"};
-  }
+  _check_int();
   return mPtr->get_int();
 }
 
@@ -194,9 +178,7 @@ JsonValue::get_int() const
 double
 JsonValue::get_float() const
 {
-  if ( !is_float() ) {
-    throw std::invalid_argument{"not a float-type"};
-  }
+  _check_float();
   return mPtr->get_float();
 }
 
@@ -204,21 +186,25 @@ JsonValue::get_float() const
 bool
 JsonValue::get_bool() const
 {
-  if ( !is_bool() ) {
-    throw std::invalid_argument{"not a bool-type"};
-  }
+  _check_bool();
   return mPtr->get_bool();
 }
 
 // @brief 読み込む．
 JsonValue
 JsonValue::read(
-  istream& s,
-  const FileInfo& file_info
+  const string& filename
 )
 {
+  ifstream s{filename};
+  if ( !s ) {
+    ostringstream buf;
+    buf << filename << ": No such file";
+    throw std::invalid_argument{buf.str()};
+  }
+
   JsonParser parser;
-  auto obj = parser.read(s, file_info);
+  auto obj = parser.read(s, FileInfo{filename});
   return JsonValue{obj};
 }
 

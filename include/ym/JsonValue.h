@@ -9,7 +9,6 @@
 /// All rights reserved.
 
 #include "ym/json.h"
-#include "ym/FileInfo.h"
 
 
 BEGIN_NAMESPACE_YM_JSON
@@ -102,6 +101,18 @@ public:
   JsonValue
   operator[](
     const string& key ///< [in] キー
+  ) const
+  {
+    return at(key);
+  }
+
+  /// @brief operator[] の別名
+  ///
+  /// - オブジェクト型でない場合は無効
+  /// - key に対応する値がない場合は null を返す．
+  JsonValue
+  at(
+    const string& key ///< [in] キー
   ) const;
 
   /// @brief 配列の要素数を得る．
@@ -148,8 +159,7 @@ public:
   static
   JsonValue
   read(
-    istream& s,               ///< [in] 入力ストリーム
-    const FileInfo& file_info ///< [in] ファイル情報
+    const string& filename ///< [in] ファイル名
   );
 
   /// @brief JSON文字列をパースする．
@@ -165,6 +175,66 @@ public:
   write(
     ostream& s ///< [in] 出力ストリーム
   ) const;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 文字列型かたどうかチェックする．
+  void
+  _check_string() const
+  {
+    if ( !is_string() ) {
+      throw std::invalid_argument{"not a string-type"};
+    }
+  }
+
+  /// @brief 整数型かどうかチェックする．
+  void
+  _check_int() const
+  {
+    if ( !is_int() ) {
+      throw std::invalid_argument{"not an int-type"};
+    }
+  }
+
+  /// @brief 浮動小数点型かどうかチェックする．
+  void
+  _check_float() const
+  {
+    if ( !is_float() ) {
+      throw std::invalid_argument{"not an float-type"};
+    }
+  }
+
+  /// @brief ブール型かどうかチェックする．
+  void
+  _check_bool() const
+  {
+    if ( !is_bool() ) {
+      throw std::invalid_argument{"not a bool-type"};
+    }
+  }
+
+  /// @brief オブジェクト型かどうかチェックする．
+  void
+  _check_object() const
+  {
+    if ( !is_object() ) {
+      throw std::invalid_argument{"not an object-type"};
+    }
+  }
+
+  /// @brief 配列型かどうかチェックする．
+  void
+  _check_array() const
+  {
+    if ( !is_array() ) {
+      throw std::invalid_argument{"not an array-type"};
+    }
+  }
 
 
 private:

@@ -14,9 +14,9 @@ BEGIN_NAMESPACE_YM
 
 TEST(JsonTest, int)
 {
-  istringstream s{"{ \"key\" : 123 }"};
+  string json_str{"{ \"key\" : 123 }"};
 
-  auto value = JsonValue::read(s, FileInfo{});
+  auto value = JsonValue::parse(json_str);
   EXPECT_TRUE( value.is_object() );
   auto value1 = value["key"];
   EXPECT_TRUE( value1.is_int() );
@@ -25,9 +25,9 @@ TEST(JsonTest, int)
 
 TEST(JsonTest, float)
 {
-  istringstream s{"{ \"key\" : 123.456 }"};
+  string json_str{"{ \"key\" : 123.456 }"};
 
-  auto value = JsonValue::read(s, FileInfo{});
+  auto value = JsonValue::parse(json_str);
   EXPECT_TRUE( value.is_object() );
   auto value1 = value["key"];
   EXPECT_TRUE( value1.is_float() );
@@ -36,9 +36,9 @@ TEST(JsonTest, float)
 
 TEST(JsonTest, string)
 {
-  istringstream s{"{ \"key\" : \"123\" }"};
+  string json_str{"{ \"key\" : \"123\" }"};
 
-  auto value = JsonValue::read(s, FileInfo{});
+  auto value = JsonValue::parse(json_str);
   EXPECT_TRUE( value.is_object() );
   auto value1 = value["key"];
   EXPECT_TRUE( value1.is_string() );
@@ -47,9 +47,9 @@ TEST(JsonTest, string)
 
 TEST(JsonTest, true)
 {
-  istringstream s{"{ \"key\" : true }"};
+  string json_str{"{ \"key\" : true }"};
 
-  auto value = JsonValue::read(s, FileInfo{});
+  auto value = JsonValue::parse(json_str);
   EXPECT_TRUE( value.is_object() );
   auto value1 = value["key"];
   EXPECT_TRUE( value1.is_bool() );
@@ -58,9 +58,9 @@ TEST(JsonTest, true)
 
 TEST(JsonTest, false)
 {
-  istringstream s{"{ \"key\" : false }"};
+  string json_str{"{ \"key\" : false }"};
 
-  auto value = JsonValue::read(s, FileInfo{});
+  auto value = JsonValue::parse(json_str);
   EXPECT_TRUE( value.is_object() );
   auto value1 = value["key"];
   EXPECT_TRUE( value1.is_bool() );
@@ -69,9 +69,9 @@ TEST(JsonTest, false)
 
 TEST(JsonTest, null)
 {
-  istringstream s{"{ \"key\" : null }"};
+  string json_str{"{ \"key\" : null }"};
 
-  auto value = JsonValue::read(s, FileInfo{});
+  auto value = JsonValue::parse(json_str);
   EXPECT_TRUE( value.is_object() );
   auto value1 = value["key"];
   EXPECT_TRUE( value1.is_null() );
@@ -81,10 +81,8 @@ TEST(JsonTest, read)
 {
   string filename{"test.json"};
   auto path = string{TESTDATA_DIR} + "/" + filename;
-  ifstream s{path};
-  ASSERT_TRUE( s );
 
-  auto value = JsonValue::read(s, FileInfo{filename});
+  auto value = JsonValue::read(path);
 
   EXPECT_TRUE( value.has_key("str_key") );
   auto value1 = value["str_key"];
