@@ -157,6 +157,29 @@ TEST(JsonTest, parse)
   EXPECT_TRUE( value.has_key("array_key") );
   auto value6 = value["array_key"];
   EXPECT_TRUE( value6.is_array() );
+
+  string exp_str;
+  exp_str += "{\n";
+  exp_str += "    \"array_key\": [\n";
+  exp_str += "        0,\n";
+  exp_str += "        1,\n";
+  exp_str += "        2,\n";
+  exp_str += "        3\n";
+  exp_str += "    ],\n";
+  exp_str += "    \"bool_key\": true,\n";
+  exp_str += "    \"float_key\": 0.15,\n";
+  exp_str += "    \"int_key\": 4,\n";
+  exp_str += "    \"object_key\": {\n";
+  exp_str += "        \"sub_key1\": 0,\n";
+  exp_str += "        \"sub_key2\": 1\n";
+  exp_str += "    },\n";
+  exp_str += "    \"str_key\": abcd\n";
+  exp_str += "}\n";
+
+  ostringstream os;
+  value.write(os, true);
+
+  EXPECT_EQ( exp_str, os.str() );
 }
 
 END_NAMESPACE_YM

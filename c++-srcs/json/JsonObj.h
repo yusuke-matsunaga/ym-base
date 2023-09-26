@@ -139,6 +139,42 @@ public:
   bool
   get_bool() const;
 
+  /// @brief 要素を追加する．
+  virtual
+  void
+  emplace(
+    const string& key,
+    const JsonValue& value
+  );
+
+  /// @brief 内容を書き出す．
+  virtual
+  void
+  write(
+    ostream& s,
+    int indent
+  ) const = 0;
+
+  /// @brief 等価比較
+  virtual
+  bool
+  is_eq(
+    const JsonObj* right
+  ) const = 0;
+
+
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // 継承クラスから用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief JsonValue の内容を取り出す．
+  static
+  JsonObj*
+  obj_ptr(
+    const JsonValue& value
+  );
+
 };
 
 
@@ -198,6 +234,26 @@ public:
     const string& key ///< [in] キー
   ) const override;
 
+  /// @brief 要素を追加する．
+  void
+  emplace(
+    const string& key,
+    const JsonValue& value
+  ) override;
+
+  /// @brief 内容を書き出す．
+  void
+  write(
+    ostream& s,
+    int indent
+  ) const override;
+
+  /// @brief 等価比較
+  bool
+  is_eq(
+    const JsonObj* right
+  ) const override;
+
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -252,6 +308,19 @@ public:
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < array_size() )
   ) const override;
 
+  /// @brief 内容を書き出す．
+  void
+  write(
+    ostream& s,
+    int indent
+  ) const override;
+
+  /// @brief 等価比較
+  bool
+  is_eq(
+    const JsonObj* right
+  ) const override;
+
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -296,6 +365,19 @@ public:
   /// - 文字列型でない場合は無効
   string
   get_string() const override;
+
+  /// @brief 内容を書き出す．
+  void
+  write(
+    ostream& s,
+    int indent
+  ) const override;
+
+  /// @brief 等価比較
+  bool
+  is_eq(
+    const JsonObj* right
+  ) const override;
 
 
 private:
@@ -342,6 +424,19 @@ public:
   int
   get_int() const override;
 
+  /// @brief 内容を書き出す．
+  void
+  write(
+    ostream& s,
+    int indent
+  ) const override;
+
+  /// @brief 等価比較
+  bool
+  is_eq(
+    const JsonObj* right
+  ) const override;
+
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -387,6 +482,19 @@ public:
   double
   get_float() const override;
 
+  /// @brief 内容を書き出す．
+  void
+  write(
+    ostream& s,
+    int indent
+  ) const override;
+
+  /// @brief 等価比較
+  bool
+  is_eq(
+    const JsonObj* right
+  ) const override;
+
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -431,6 +539,19 @@ public:
   /// - ブール型でない場合は無効
   bool
   get_bool() const override;
+
+  /// @brief 内容を書き出す．
+  void
+  write(
+    ostream& s,
+    int indent
+  ) const override;
+
+  /// @brief 等価比較
+  bool
+  is_eq(
+    const JsonObj* right
+  ) const override;
 
 
 private:

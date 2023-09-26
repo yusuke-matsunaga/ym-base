@@ -21,6 +21,8 @@ class JsonObj;
 //////////////////////////////////////////////////////////////////////
 class JsonValue
 {
+  friend class JsonObj;
+
 public:
 
   /// @brief 空のコンストラクタ
@@ -62,6 +64,14 @@ public:
   JsonValue(
     const unordered_map<string, JsonValue>& value ///< [in] 値
   );
+
+  /// @brief オブジェクト型のインスタンスを作る関数
+  static
+  JsonValue
+  Object()
+  {
+    return JsonValue{unordered_map<string, JsonValue>{}};
+  }
 
   /// @brief 値を指定したコンストラクタ
   JsonValue(
@@ -163,6 +173,18 @@ public:
   JsonValue
   operator[](
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < array_size() )
+  ) const
+  {
+    return at(pos);
+  }
+
+  /// @brief operator[] の別名
+  ///
+  /// - 配列型でない場合は無効
+  /// - 配列のサイズ外のアクセスはエラーとなる．
+  JsonValue
+  at(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < array_size() )
   ) const;
 
   /// @brief 文字列を得る．
@@ -189,6 +211,15 @@ public:
   bool
   get_bool() const;
 
+  /// @brief オブジェクト型の要素を追加する．
+  ///
+  /// - オブジェクト型でない場合は無効
+  void
+  emplace(
+    const string& key,     ///< [in] キー
+    const JsonValue& value ///< [in] 値
+  );
+
   /// @brief 読み込む．
   /// @return 結果を格納したオブジェクトを返す．
   static
@@ -208,8 +239,24 @@ public:
   /// @brief 内容を書き出す．
   void
   write(
-    ostream& s ///< [in] 出力ストリーム
+    ostream& s,         ///< [in] 出力ストリーム
+    bool indent = false ///< [in] インデントフラグ
   ) const;
+
+  /// @brief 等価比較演算子
+  bool
+  operator==(
+    const JsonValue& right ///< [in] オペランド
+  ) const;
+
+  /// @brief 非等価比較演算子
+  bool
+  operator!=(
+    const JsonValue& right ///< [in] オペランド
+  ) const
+  {
+    return !operator==(right);
+  }
 
 
 private:

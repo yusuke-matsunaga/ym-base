@@ -12,6 +12,22 @@
 
 BEGIN_NAMESPACE_YM_JSON
 
+BEGIN_NONAMESPACE
+
+string
+tab(
+  SizeType n
+)
+{
+  string ans;
+  for ( SizeType i = 0; i < n; ++ i ) {
+    ans += "    ";
+  }
+  return ans;
+}
+
+END_NONAMESPACE
+
 //////////////////////////////////////////////////////////////////////
 // クラス JsonObj
 //////////////////////////////////////////////////////////////////////
@@ -144,6 +160,25 @@ JsonObj::get_bool() const
   return false;
 }
 
+// @brief 要素を追加する．
+void
+JsonObj::emplace(
+  const string& key,
+  const JsonValue& value
+)
+{
+  ASSERT_NOT_REACHED;
+}
+
+// @brief JsonValue の内容を取り出す．
+JsonObj*
+JsonObj::obj_ptr(
+  const JsonValue& value
+)
+{
+  return value.mPtr.get();
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス JsonDict
@@ -217,6 +252,71 @@ JsonDict::get_value(
   return JsonValue{};
 }
 
+// @brief 要素を追加する．
+void
+JsonDict::emplace(
+  const string& key,
+  const JsonValue& value
+)
+{
+  mDict.emplace(key, value);
+}
+
+// @brief 内容を書き出す．
+void
+JsonDict::write(
+  ostream& s,
+  int indent
+) const
+{
+  bool first = true;
+  int indent1 = indent;
+  s << "{";
+  if ( indent >= 0 ) {
+    s << endl;
+    ++ indent1;
+  }
+  for ( auto& p: item_list() ) {
+    if ( first ) {
+      first = false;
+    }
+    else {
+      s << ",";
+      if ( indent >= 0 ) {
+	s << endl;
+      }
+      else {
+	s << " ";
+      }
+    }
+    auto key = p.first;
+    auto value = p.second;
+    if ( indent >= 0 ) {
+      s << tab(indent1);
+    }
+    s << "\"" << key << "\": ";
+    obj_ptr(value)->write(s, indent1);
+  }
+  if ( indent >= 0 ) {
+    s << endl;
+    s << tab(indent);
+  }
+  s << "}";
+}
+
+// @brief 等価比較
+bool
+JsonDict::is_eq(
+  const JsonObj* right
+) const
+{
+  if ( right->is_object() ) {
+    auto obj = reinterpret_cast<const JsonDict*>(right);
+    return mDict == obj->mDict;
+  }
+  return false;
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス JsonArray
@@ -258,6 +358,57 @@ JsonArray::get_value(
   return mArray[pos];
 }
 
+// @brief 内容を書き出す．
+void
+JsonArray::write(
+  ostream& s,
+  int indent
+) const
+{
+  s << "[";
+  if ( indent >= 0 ) {
+    s << endl;
+  }
+  bool first = true;
+  int indent1 = indent;
+  if ( indent >= 0 ) {
+    ++ indent1;
+  }
+  for ( auto value: mArray ) {
+    if ( first ) {
+      first = false;
+    }
+    else {
+      s << ",";
+      if ( indent >= 0 ) {
+	s << endl;
+      }
+    }
+    if ( indent >= 0 ) {
+      s << tab(indent1);
+    }
+    obj_ptr(value)->write(s, indent1);
+  }
+  if ( indent >= 0 ) {
+    s << endl
+      << tab(indent);
+  }
+  s << "]";
+}
+
+// @brief 等価比較
+bool
+JsonArray::is_eq(
+  const JsonObj* right
+) const
+{
+  if ( right->is_array() ) {
+    auto obj = reinterpret_cast<const JsonArray*>(right);
+    return mArray == obj->mArray;
+  }
+  return false;
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス JsonString
@@ -287,6 +438,28 @@ string
 JsonString::get_string() const
 {
   return mValue;
+}
+
+// @brief 内容を書き出す．
+void
+JsonString::write(
+  ostream& s,
+  int indent
+) const
+{
+  s << get_string();
+}
+
+// @brief 等価比較
+bool
+JsonString::is_eq(
+  const JsonObj* right
+) const
+{
+  if ( right->is_string() ) {
+    return get_string() == right->get_string();
+  }
+  return false;
 }
 
 
@@ -320,6 +493,28 @@ JsonInt::get_int() const
   return mValue;
 }
 
+// @brief 内容を書き出す．
+void
+JsonInt::write(
+  ostream& s,
+  int indent
+) const
+{
+  s << get_int();
+}
+
+// @brief 等価比較
+bool
+JsonInt::is_eq(
+  const JsonObj* right
+) const
+{
+  if ( right->is_int() ) {
+    return get_int() == right->get_int();
+  }
+  return false;
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス JsonFloat
@@ -351,6 +546,28 @@ JsonFloat::get_float() const
   return mValue;
 }
 
+// @brief 内容を書き出す．
+void
+JsonFloat::write(
+  ostream& s,
+  int indent
+) const
+{
+  s << get_float();
+}
+
+// @brief 等価比較
+bool
+JsonFloat::is_eq(
+  const JsonObj* right
+) const
+{
+  if ( right->is_float() ) {
+    return get_float() == right->get_float();
+  }
+  return false;
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス JsonBool
@@ -380,6 +597,33 @@ bool
 JsonBool::get_bool() const
 {
   return mValue;
+}
+
+// @brief 内容を書き出す．
+void
+JsonBool::write(
+  ostream& s,
+  int indent
+) const
+{
+  if ( is_bool() ) {
+    s << "true";
+  }
+  else {
+    s << "false";
+  }
+}
+
+// @brief 等価比較
+bool
+JsonBool::is_eq(
+  const JsonObj* right
+) const
+{
+  if ( right->is_bool() ) {
+    return get_bool() == right->get_bool();
+  }
+  return false;
 }
 
 END_NAMESPACE_YM_JSON

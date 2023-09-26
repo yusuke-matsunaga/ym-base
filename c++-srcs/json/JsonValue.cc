@@ -199,7 +199,7 @@ JsonValue::array_size() const
 
 // @brief 配列の要素を得る．
 JsonValue
-JsonValue::operator[](
+JsonValue::at(
   SizeType pos
 ) const
 {
@@ -239,6 +239,17 @@ JsonValue::get_bool() const
   return mPtr->get_bool();
 }
 
+// @brief オブジェクト型の要素を追加する．
+void
+JsonValue::emplace(
+  const string& key,
+  const JsonValue& value
+)
+{
+  _check_object();
+  mPtr->emplace(key, value);
+}
+
 // @brief 読み込む．
 JsonValue
 JsonValue::read(
@@ -272,9 +283,27 @@ JsonValue::parse(
 // @brief 内容を書き出す．
 void
 JsonValue::write(
-  ostream& s
+  ostream& s,
+  bool indent
 ) const
 {
+  int indent_val = -1;
+  if ( indent ) {
+    indent_val = 0;
+  }
+  mPtr->write(s, indent_val);
+  if ( indent ) {
+    s << endl;
+  }
+}
+
+// @brief 等価比較演算子
+bool
+JsonValue::operator==(
+  const JsonValue& right
+) const
+{
+  return mPtr->is_eq(right.mPtr.get());
 }
 
 END_NAMESPACE_YM
