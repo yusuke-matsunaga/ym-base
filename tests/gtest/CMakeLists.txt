@@ -8,10 +8,12 @@
 # サブディレクトリの設定
 # ===================================================================
 
-set ( TESTDATA_DIR "${CMAKE_CURRENT_SOURCE_DIR}/testdata/" )
+add_subdirectory ( binio )
+add_subdirectory ( gen )
+add_subdirectory ( itvl )
+add_subdirectory ( misc )
+add_subdirectory ( textproc )
 
-add_subdirectory ( gtest )
-add_subdirectory ( programs )
 
 # ===================================================================
 #  ソースファイルの設定

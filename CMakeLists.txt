@@ -30,9 +30,6 @@ ym_init_readline ()
 # ===================================================================
 
 include_directories (
-  ${PROJECT_BINARY_DIR}/include
-  ${PROJECT_SOURCE_DIR}/ym-common/include
-  include
   )
 
 
@@ -107,13 +104,6 @@ set ( textproc_SOURCES
   c++-srcs/textproc/StrBuff.cc
   )
 
-set ( json_SOURCES
-  c++-srcs/json/JsonValue.cc
-  c++-srcs/json/JsonObj.cc
-  c++-srcs/json/JsonParser.cc
-  c++-srcs/json/JsonScanner.cc
-  )
-
 set ( ym_base_SOURCES
   ${binder_SOURCES}
   ${binio_SOURCES}
@@ -124,7 +114,6 @@ set ( ym_base_SOURCES
   ${msg_SOURCES}
   ${popt_SOURCES}
   ${textproc_SOURCES}
-  ${json_SOURCES}
   )
 
 
