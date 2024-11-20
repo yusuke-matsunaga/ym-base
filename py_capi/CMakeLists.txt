@@ -23,6 +23,7 @@ include_directories(
 
 set ( py_ymbase_SOURCES
   PyMt19937.cc
+  PyJsonValue.cc
   ymbase_module.cc
   )
 
@@ -38,6 +39,7 @@ ym_add_object_library( py_ymbase
 add_library ( py_ymbaselib
   SHARED
   $<TARGET_OBJECTS:py_ymbase_obj>
+  $<TARGET_OBJECTS:ym_base_obj>
   )
 
 set_target_properties( py_ymbaselib

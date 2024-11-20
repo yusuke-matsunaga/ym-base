@@ -1,15 +1,15 @@
 
-/// @file ymbase_module.cc
-/// @brief Python 用の ymbase モジュールを定義する．
+/// @file ymjson_module.cc
+/// @brief Python 用の ymjson モジュールを定義する．
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2022 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
-#include "pym/PyMt19937.h"
+#include "pym/PyJsonValue.h"
 #include "pym/PyModule.h"
 
 
@@ -18,30 +18,30 @@ BEGIN_NAMESPACE_YM
 BEGIN_NONAMESPACE
 
 // メソッド定義構造体
-PyMethodDef ymbase_methods[] = {
+PyMethodDef ymjson_methods[] = {
   {nullptr, nullptr, 0, nullptr},
 };
 
 // モジュール定義構造体
-PyModuleDef ymbase_module = {
+PyModuleDef ymjson_module = {
   PyModuleDef_HEAD_INIT,
-  "ymbase",
-  PyDoc_STR("ymbase: Extension module for ym-base"),
+  "ymjson",
+  PyDoc_STR("ymjson: Extension module for json"),
   -1,
-  ymbase_methods,
+  ymjson_methods,
 };
 
 END_NONAMESPACE
 
 PyMODINIT_FUNC
-PyInit_ymbase()
+PyInit_ymjson()
 {
-  auto m = PyModule::init(&ymbase_module);
+  auto m = PyModule::init(&ymjson_module);
   if ( m == nullptr ) {
     return nullptr;
   }
 
-  if ( !PyMt19937::init(m) ) {
+  if ( !PyJsonValue::init(m) ) {
     goto error;
   }
 

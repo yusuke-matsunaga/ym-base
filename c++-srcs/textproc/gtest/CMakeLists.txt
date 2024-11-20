@@ -8,11 +8,29 @@
 # サブディレクトリの設定
 # ===================================================================
 
-set ( TESTDATA_DIR "${CMAKE_CURRENT_SOURCE_DIR}/testdata/" )
-
-add_subdirectory ( gtest )
-add_subdirectory ( programs )
 
 # ===================================================================
 #  ソースファイルの設定
 # ===================================================================
+
+
+# ===================================================================
+#  テスト用のターゲットの設定
+# ===================================================================
+
+ym_add_gtest ( base_OptionParser_test
+  OptionParser_test.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
+
+ym_add_gtest ( base_ShString_test
+  ShString_test.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
+
+ym_add_gtest ( base_Scanner_test
+  Scanner_test.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  DEFINITIONS
+  "-DDATAPATH=\"${TESTDATA_DIR}\""
+  )

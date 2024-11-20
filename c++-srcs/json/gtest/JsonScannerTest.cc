@@ -8,8 +8,8 @@
 
 #include "gtest/gtest.h"
 #include "JsonScanner.h"
-#include "ym/MsgMgr.h"
-#include "ym/StreamMsgHandler.h"
+//#include "ym/MsgMgr.h"
+//#include "ym/StreamMsgHandler.h"
 
 
 BEGIN_NAMESPACE_YM_JSON
@@ -18,7 +18,7 @@ TEST(JsonScannerTest, empty)
 {
   istringstream s{""};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -29,7 +29,7 @@ TEST(JsonScannerTest, LCB)
 {
   istringstream s{"{"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -40,7 +40,7 @@ TEST(JsonScannerTest, RCB)
 {
   istringstream s{"}"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -51,7 +51,7 @@ TEST(JsonScannerTest, LBK)
 {
   istringstream s{"["};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -62,7 +62,7 @@ TEST(JsonScannerTest, RBK)
 {
   istringstream s{"]"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -73,7 +73,7 @@ TEST(JsonScannerTest, Comma)
 {
   istringstream s{","};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -84,7 +84,7 @@ TEST(JsonScannerTest, Colon)
 {
   istringstream s{":"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -95,7 +95,7 @@ TEST(JsonScannerTest, True)
 {
   istringstream s{"true"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -106,7 +106,7 @@ TEST(JsonScannerTest, False)
 {
   istringstream s{"false"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -117,7 +117,7 @@ TEST(JsonScannerTest, Null)
 {
   istringstream s{"null"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -128,7 +128,7 @@ TEST(JsonScannerTest, String)
 {
   istringstream s{"\"abc\""};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -140,7 +140,7 @@ TEST(JsonScannerTest, Int1)
 {
   istringstream s{"0"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -152,7 +152,7 @@ TEST(JsonScannerTest, Int2)
 {
   istringstream s{"-0"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -164,7 +164,7 @@ TEST(JsonScannerTest, Int3)
 {
   istringstream s{"123"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -176,7 +176,7 @@ TEST(JsonScannerTest, Int4)
 {
   istringstream s{"-123"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -188,7 +188,7 @@ TEST(JsonScannerTest, Float1)
 {
   istringstream s{"0."};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -200,7 +200,7 @@ TEST(JsonScannerTest, Float2)
 {
   istringstream s{"0.1"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -212,7 +212,7 @@ TEST(JsonScannerTest, Float3)
 {
   istringstream s{"0.1e10"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -224,7 +224,7 @@ TEST(JsonScannerTest, Float4)
 {
   istringstream s{"-0.1E10"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -236,7 +236,7 @@ TEST(JsonScannerTest, Float5)
 {
   istringstream s{".1e10"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -248,7 +248,7 @@ TEST(JsonScannerTest, True_bad1)
 {
   istringstream s{"tue"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   EXPECT_THROW(
     auto tk = scanner.read_token(),
@@ -260,7 +260,7 @@ TEST(JsonScannerTest, True_bad2)
 {
   istringstream s{"trrue"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   EXPECT_THROW(
     auto tk = scanner.read_token(),
@@ -272,7 +272,7 @@ TEST(JsonScannerTest, True_bad3)
 {
   istringstream s{"tru"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   EXPECT_THROW(
     auto tk = scanner.read_token(),
@@ -284,7 +284,7 @@ TEST(JsonScannerTest, False_bad1)
 {
   istringstream s{"ffalse"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   EXPECT_THROW(
     auto tk = scanner.read_token(),
@@ -296,7 +296,7 @@ TEST(JsonScannerTest, False_bad2)
 {
   istringstream s{"fase"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   EXPECT_THROW(
     auto tk = scanner.read_token(),
@@ -308,7 +308,7 @@ TEST(JsonScannerTest, False_bad3)
 {
   istringstream s{"fale"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   EXPECT_THROW(
     auto tk = scanner.read_token(),
@@ -320,7 +320,7 @@ TEST(JsonScannerTest, False_bad4)
 {
   istringstream s{"fals"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   EXPECT_THROW(
     auto tk = scanner.read_token(),
@@ -332,7 +332,7 @@ TEST(JsonScannerTest, Null_bad1)
 {
   istringstream s{"nl"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   EXPECT_THROW(
     auto tk = scanner.read_token(),
@@ -344,7 +344,7 @@ TEST(JsonScannerTest, Null_bad2)
 {
   istringstream s{"nual"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   EXPECT_THROW(
     auto tk = scanner.read_token(),
@@ -356,7 +356,7 @@ TEST(JsonScannerTest, Null_bad3)
 {
   istringstream s{"nul"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   EXPECT_THROW(
     auto tk = scanner.read_token(),
@@ -368,7 +368,7 @@ TEST(JsonScannerTest, comment1)
 {
   istringstream s{"/* comment */:"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -379,7 +379,7 @@ TEST(JsonScannerTest, comment1_2)
 {
   istringstream s{"/* **** comment */:"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -390,7 +390,7 @@ TEST(JsonScannerTest, comment2)
 {
   istringstream s{"//\n:"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -401,7 +401,7 @@ TEST(JsonScannerTest, comment2_2)
 {
   istringstream s{"//"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -412,7 +412,7 @@ TEST(JsonScannerTest, comment3)
 {
   istringstream s{"#\n:"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
 
@@ -423,7 +423,7 @@ TEST(JsonScannerTest, comment_bad1)
 {
   istringstream s{"/ * comment */:"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   EXPECT_THROW(
     auto tk = scanner.read_token(),
@@ -435,7 +435,7 @@ TEST(JsonScannerTest, comment_bad2)
 {
   istringstream s{"/ * comment "};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   EXPECT_THROW(
     auto tk = scanner.read_token(),
@@ -447,7 +447,7 @@ TEST(JsonScannerTest, comment_bad3)
 {
   istringstream s{"/ * comment *"};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   EXPECT_THROW(
     auto tk = scanner.read_token(),
@@ -459,7 +459,7 @@ TEST(JsonScannerTest, bad1)
 {
   istringstream s{"abccomment "};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   EXPECT_THROW(
     auto tk = scanner.read_token(),
@@ -471,7 +471,7 @@ TEST(JsonScannerTest, num_bad1)
 {
   istringstream s{"-abccomment "};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   EXPECT_THROW(
     auto tk = scanner.read_token(),
@@ -483,7 +483,7 @@ TEST(JsonScannerTest, string_bad1)
 {
   istringstream s{"\"abccomment "};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   EXPECT_THROW(
     auto tk = scanner.read_token(),
@@ -495,7 +495,7 @@ TEST(JsonScannerTest, ustring)
 {
   istringstream s{"\"\\u3042\""};
 
-  JsonScanner scanner{s, FileInfo{}};
+  JsonScanner scanner{s};
 
   auto tk = scanner.read_token();
   EXPECT_EQ( JsonToken::String, tk );
