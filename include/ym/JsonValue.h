@@ -205,7 +205,7 @@ public:
   /// - 配列のサイズ外のアクセスは std::out_of_range 例外を送出する．
   JsonValue
   operator[](
-    SizeType pos ///< [in] 位置番号 ( 0 <= pos < array_size() )
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < size() )
   ) const
   {
     return at(pos);
@@ -217,7 +217,7 @@ public:
   /// - 配列のサイズ外のアクセスは std::out_of_range 例外を送出する．
   JsonValue
   at(
-    SizeType pos ///< [in] 位置番号 ( 0 <= pos < array_size() )
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < size() )
   ) const;
 
   /// @brief 文字列を得る．
