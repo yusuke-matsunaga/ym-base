@@ -36,16 +36,7 @@
 # サブディレクトリの設定
 # ===================================================================
 
-add_subdirectory( binder )
-add_subdirectory( binio )
-add_subdirectory( file_info )
-add_subdirectory( gen )
-add_subdirectory( itvl )
-add_subdirectory( json )
-add_subdirectory( misc )
-add_subdirectory( msg )
-add_subdirectory( popt )
-add_subdirectory( textproc )
+add_subdirectory( gtest )
 
 
 # ===================================================================
@@ -53,19 +44,18 @@ add_subdirectory( textproc )
 # ===================================================================
 
 
+if ( POPT_FOUND )
+  set ( popt_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/PoptMainApp.cc
+    PARENT_SCOPE
+    )
+else ( )
+  set ( popt_SOURCES
+    PARENT_SCOPE
+    )
+endif ( )
+
+
 # ===================================================================
 #  ターゲットの設定
 # ===================================================================
-
-ym_add_object_library ( ym_base
-  ${binder_SOURCES}
-  ${binio_SOURCES}
-  ${file_info_SOURCES}
-  ${gen_SOURCES}
-  ${itvl_SOURCES}
-  ${json_SOURCES}
-  ${misc_SOURCES}
-  ${msg_SOURCES}
-  ${popt_SOURCES}
-  ${textproc_SOURCES}
-  )
