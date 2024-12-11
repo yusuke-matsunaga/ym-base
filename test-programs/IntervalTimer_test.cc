@@ -7,6 +7,7 @@
 /// All rights reserved.
 
 #include "ym/IntervalTimer.h"
+#include <libgen.h>
 
 
 BEGIN_NAMESPACE_YM
@@ -31,22 +32,29 @@ itimer_test(
   char** argv
 )
 {
+  if ( argc != 2 ) {
+    cerr << "USAGE: " << basename(argv[0]) << " <n>" << endl;
+    return 1;
+  }
 
-  bool stop = false;
-  auto interval = IntervalTimer::millisec(1000);
+  SizeType n = atoi(argv[1]);
 
-  IntervalTimer::start(interval,
-		       [&]() {
-			 stop = true;
-		       });
+  std::atomic<bool> stop = false;
 
-  for ( int i = 0; i < 10000; ++ i ) {
+  IntervalTimer itimer{10};
+
+  itimer.start([&](){ stop = true; });
+
+  for ( int i = 0; i < n; ++ i ) {
     auto v = fib(i);
     std::cout << "fib(" << i << ") = " << v << std::endl;
     if ( stop ) {
       break;
     }
   }
+
+  itimer.stop();
+
 
   return 0;
 }
