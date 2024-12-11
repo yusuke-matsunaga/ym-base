@@ -71,3 +71,21 @@ target_compile_options ( ReadLineTest
 target_link_libraries ( ReadLineTest
   ${YM_LIB_DEPENDS}
   )
+
+
+# ===================================================================
+#  IntervalTimer_test
+# ===================================================================
+
+add_executable ( IntervalTimer_test
+  IntervalTimer_test.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
+
+target_compile_options ( IntervalTimer_test
+  PRIVATE "-g"
+  )
+
+target_link_libraries ( IntervalTimer_test
+  ${YM_LIB_DEPENDS}
+  )
