@@ -19,10 +19,10 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] name 名前 (alias 用)
-// @param[in] auto_help --help オプションを有効にするフラグ
-PoptMainApp::PoptMainApp(const char* name,
-			 bool auto_help)
+PoptMainApp::PoptMainApp(
+  const char* name,
+  bool auto_help
+)
 {
   mName = name;
   mAutoHelp = auto_help;
@@ -38,17 +38,19 @@ PoptMainApp::~PoptMainApp()
 }
 
 // @brief オプションを追加する．
-// @param[in] option 追加するオプション
 void
-PoptMainApp::add_option(Popt* option)
+PoptMainApp::add_option(
+  Popt* option
+)
 {
   mOptionList.push_back(option);
 }
 
 // @brief ヘルプ文字列を指定する．
-// @param[in] text ヘルプ文字列
 void
-PoptMainApp::set_other_option_help(const char* text)
+PoptMainApp::set_other_option_help(
+  const char* text
+)
 {
   mHelpText = text;
 }
@@ -61,13 +63,12 @@ PoptMainApp::reset()
 }
 
 // @brief オプション解析を行なう．
-// @param[in] argc コマンド行の引数の数
-// @param[in] argv コマンド行の引数配列
-// @param[in] flags フラグ
 PoptStat
-PoptMainApp::parse_options(int argc,
-			   const char** argv,
-			   int flags)
+PoptMainApp::parse_options(
+  int argc,
+  const char** argv,
+  int flags
+)
 {
   if ( mDone ) {
     cerr << "PoptMainApp::parse_options() is called more than once." << endl;
@@ -158,10 +159,10 @@ PoptMainApp::parse_options(int argc,
 }
 
 // @brief 残った引数を得る．
-// @param[in] args 引数を格納するベクタ
-// @return 引数の数を返す．
 int
-PoptMainApp::get_args(vector<string>& args)
+PoptMainApp::get_args(
+  vector<string>& args
+)
 {
   args.clear();
   for ( ; ; ) {
@@ -175,30 +176,32 @@ PoptMainApp::get_args(vector<string>& args)
 }
 
 // @brief ヘルプメッセージを出力する．
-// @param[in] fp FILE 構造体へのポインタ(古！)
-// @param[in] flags フラグ(現時点では未使用)
 void
-PoptMainApp::print_help(FILE* fp,
-			int flags)
+PoptMainApp::print_help(
+  FILE* fp,
+  int flags
+)
 {
   poptPrintHelp(reinterpret_cast<poptContext>(mCon), fp, flags);
 }
 
 // @brief ユーセージ(ショートヘルプ)メッセージを出力する．
-// @param[in] fp FILE 構造体へのポインタ(古！)
-// @param[in] flags フラグ(現時点では未使用)
 void
-PoptMainApp::print_usage(FILE* fp,
-			 int flags)
+PoptMainApp::print_usage(
+  FILE* fp,
+  int flags
+)
 {
   poptPrintUsage(reinterpret_cast<poptContext>(mCon), fp, flags);
 }
 
 // @brief usage を出力して終了する．
 void
-PoptMainApp::usage(int exitcode,
-		   const char* error,
-		   const char* addl)
+PoptMainApp::usage(
+  int exitcode,
+  const char* error,
+  const char* addl
+)
 {
   print_usage(stderr, 0);
   if ( error ) {
@@ -208,53 +211,50 @@ PoptMainApp::usage(int exitcode,
 }
 
 // @brief PoptMainApp 用の strerror() 関数
-// @param[in] error エラーコード
 const char*
-PoptMainApp::popt_strerror(const int error)
+PoptMainApp::popt_strerror(
+  const int error
+)
 {
   return poptStrerror(error);
 }
 
 // @brief エラーが起きた場合にそのもととなったオプション文字列を返す．
-// @param[in] flags フラグ
-// @note フラグに使用可能な値は以下のとおり
-//  - 0 なにもしない．
-//  - POPT_BADOPTION_NOALIAS もっとも外側(outermost)のオプションを返す．
 const char*
-PoptMainApp::bad_option(int flags)
+PoptMainApp::bad_option(
+  int flags
+)
 {
   return poptBadOption(reinterpret_cast<poptContext>(mCon), flags);
 }
 
 // @brief alias 用のデフォルト設定を読み込む．
-// @param[in] flags フラグ(現時点では未使用)
-// @return 返り値に関しては man popt に記載なし．
 int
-PoptMainApp::read_default_config(int flags)
+PoptMainApp::read_default_config(
+  int flags
+)
 {
   return poptReadDefaultConfig(reinterpret_cast<poptContext>(mCon), flags);
 }
 
 // @brief alias 用の設定ファイルを読み込む．
-// @param[in] filename ファイル名
 int
-PoptMainApp::read_config_file(const char* filename)
+PoptMainApp::read_config_file(
+  const char* filename
+)
 {
   return poptReadConfigFile(reinterpret_cast<poptContext>(mCon), filename);
 }
 
 // @brief alias を追加する．
-// @param[in] long_name 長い名前 (--xxxx)
-// @param[in] short_name 短い名前 (-x)
-// @param[in] alias 本体の引数の数
-// @param[in] alias 本体の文字列の配列()
-// @param[in] flags フラグ(現時点では未使用)
 int
-PoptMainApp::add_alias(const char* long_name,
-		       char short_name,
-		       int argc,
-		       const char** argv,
-		       int flags)
+PoptMainApp::add_alias(
+  const char* long_name,
+  char short_name,
+  int argc,
+  const char** argv,
+  int flags
+)
 {
   struct poptAlias alias;
   alias.longName = long_name;
@@ -270,17 +270,14 @@ PoptMainApp::add_alias(const char* long_name,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] opt_str このオプションを表す文字列
-// @param[in] opt_char このオプションを表す文字
-// @param[in] opt_desc このオプションの説明文
-// @note opt_str が空文字列だったり opt_char が \0 だったりする場合もある．
-Popt::Popt(const char* opt_str,
-	   char opt_char,
-	   const char* opt_desc) :
-  mOptStr(opt_str),
-  mOptChar(opt_char),
-  mOptDesc(opt_desc),
-  mCount(0)
+Popt::Popt(
+  const char* opt_str,
+  char opt_char,
+  const char* opt_desc
+) : mOptStr(opt_str),
+    mOptChar(opt_char),
+    mOptDesc(opt_desc),
+    mCount(0)
 {
 }
 
@@ -311,7 +308,6 @@ Popt::opt_desc() const
 }
 
 // @brief オプションの引数の記述を返す．
-// @note デフォルトの実装では nullptr を返す．
 const char*
 Popt::arg_desc() const
 {
@@ -333,7 +329,6 @@ Popt::count() const
 }
 
 // @brief オプションが指定されたときに呼び出される関数
-// @return 処理結果を返す．
 bool
 Popt::action()
 {
@@ -346,13 +341,11 @@ Popt::action()
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] opt_str オプション文字列
-// @param[in] opt_char オプション文字
-// @param[in] opt_desc オプションの説明文
-PoptNone::PoptNone(const char* opt_str,
-		   char opt_char,
-		   const char* opt_desc) :
-  Popt(opt_str, opt_char, opt_desc)
+PoptNone::PoptNone(
+  const char* opt_str,
+  char opt_char,
+  const char* opt_desc
+) : Popt{opt_str, opt_char, opt_desc}
 {
 }
 
@@ -382,16 +375,13 @@ PoptNone::arg()
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] opt_str オプション文字列
-// @param[in] opt_char オプション文字
-// @param[in] opt_desc オプションの説明文
-// @param[in] arg_desc 引数の説明文
-PoptArg::PoptArg(const char* opt_str,
-		 char opt_char,
-		 const char* opt_desc,
-		 const char* arg_desc) :
-  Popt(opt_str, opt_char, opt_desc),
-  mArgDesc(arg_desc)
+PoptArg::PoptArg(
+  const char* opt_str,
+  char opt_char,
+  const char* opt_desc,
+  const char* arg_desc
+) : Popt{opt_str, opt_char, opt_desc},
+    mArgDesc{arg_desc}
 {
 }
 
@@ -401,7 +391,6 @@ PoptArg::~PoptArg()
 }
 
 // @brief オプションの引数の記述を返す．
-// @note デフォルトの実装では nullptr を返す．
 const char*
 PoptArg::arg_desc() const
 {
@@ -414,15 +403,12 @@ PoptArg::arg_desc() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] opt_str オプション文字列
-// @param[in] opt_char オプション文字
-// @param[in] opt_desc オプションの説明文
-// @param[in] arg_desc 引数の説明文
-PoptStr::PoptStr(const char* opt_str,
-		 char opt_char,
-		 const char* opt_desc,
-		 const char* arg_desc) :
-  PoptArg(opt_str, opt_char, opt_desc, arg_desc)
+PoptStr::PoptStr(
+  const char* opt_str,
+  char opt_char,
+  const char* opt_desc,
+  const char* arg_desc
+) : PoptArg{opt_str, opt_char, opt_desc, arg_desc}
 {
 }
 
@@ -458,15 +444,12 @@ PoptStr::val() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] opt_str オプション文字列
-// @param[in] opt_char オプション文字
-// @param[in] opt_desc オプションの説明文
-// @param[in] arg_desc 引数の説明文
-PoptInt::PoptInt(const char* opt_str,
-		 char opt_char,
-		 const char* opt_desc,
-		 const char* arg_desc) :
-  PoptArg(opt_str, opt_char, opt_desc, arg_desc)
+PoptInt::PoptInt(
+  const char* opt_str,
+  char opt_char,
+  const char* opt_desc,
+  const char* arg_desc
+) : PoptArg{opt_str, opt_char, opt_desc, arg_desc}
 {
 }
 
@@ -502,15 +485,12 @@ PoptInt::val() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] opt_str オプション文字列
-// @param[in] opt_char オプション文字
-// @param[in] opt_desc オプションの説明文
-// @param[in] arg_desc 引数の説明文
-PoptBool::PoptBool(const char* opt_str,
-		   char opt_char,
-		   const char* opt_desc,
-		   const char* arg_desc) :
-  PoptInt(opt_str, opt_char, opt_desc, arg_desc)
+PoptBool::PoptBool(
+  const char* opt_str,
+  char opt_char,
+  const char* opt_desc,
+  const char* arg_desc
+) : PoptInt{opt_str, opt_char, opt_desc, arg_desc}
 {
 }
 
@@ -532,15 +512,12 @@ PoptBool::val() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] opt_str オプション文字列
-// @param[in] opt_char オプション文字
-// @param[in] opt_desc オプションの説明文
-// @param[in] arg_desc 引数の説明文
-PoptUint::PoptUint(const char* opt_str,
-		   char opt_char,
-		   const char* opt_desc,
-		   const char* arg_desc) :
-  PoptInt(opt_str, opt_char, opt_desc, arg_desc)
+PoptUint::PoptUint(
+  const char* opt_str,
+  char opt_char,
+  const char* opt_desc,
+  const char* arg_desc
+) : PoptInt{opt_str, opt_char, opt_desc, arg_desc}
 {
 }
 
@@ -562,15 +539,12 @@ PoptUint::val() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] opt_str オプション文字列
-// @param[in] opt_char オプション文字
-// @param[in] opt_desc オプションの説明文
-// @param[in] arg_desc 引数の説明文
-PoptFloat::PoptFloat(const char* opt_str,
-		     char opt_char,
-		     const char* opt_desc,
-		     const char* arg_desc) :
-  PoptArg(opt_str, opt_char, opt_desc, arg_desc)
+PoptFloat::PoptFloat(
+  const char* opt_str,
+  char opt_char,
+  const char* opt_desc,
+  const char* arg_desc
+) : PoptArg{opt_str, opt_char, opt_desc, arg_desc}
 {
 }
 
@@ -606,15 +580,12 @@ PoptFloat::val() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] opt_str オプション文字列
-// @param[in] opt_char オプション文字
-// @param[in] opt_desc オプションの説明文
-// @param[in] arg_desc 引数の説明文
-PoptDouble::PoptDouble(const char* opt_str,
-		       char opt_char,
-		       const char* opt_desc,
-		       const char* arg_desc) :
-  PoptArg(opt_str, opt_char, opt_desc, arg_desc)
+PoptDouble::PoptDouble(
+  const char* opt_str,
+  char opt_char,
+  const char* opt_desc,
+  const char* arg_desc
+) : PoptArg{opt_str, opt_char, opt_desc, arg_desc}
 {
 }
 
