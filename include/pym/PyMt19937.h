@@ -41,7 +41,7 @@ public:
   /// @brief PyObject が mt19937 タイプか調べる．
   static
   bool
-  Check(
+  _check(
     PyObject* obj ///< [in] 対象の PyObject
   );
 
@@ -51,7 +51,7 @@ public:
   /// Check(obj) == true であると仮定している．
   static
   std::mt19937&
-  Get(
+  _get_ref(
     PyObject* obj ///< [in] 変換元の PyObject
   );
 

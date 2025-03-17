@@ -8,7 +8,7 @@
 
 #include "pym/PyJsonValue.h"
 #include "pym/PyModule.h"
-#include "pym/PyBase.h"
+#include "pym/PyString.h"
 #include "ym/JsonValue.h"
 
 
@@ -396,7 +396,7 @@ JsonValue_key_list(
   }
   try {
     auto val_list = val.key_list();
-    return PyBase::ToPyList(val_list);
+    return PyString::ToPyList(val_list);
   }
   catch ( std::invalid_argument err ) {
     PyErr_SetString(PyExc_ValueError, err.what());
