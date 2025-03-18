@@ -21,7 +21,7 @@ BEGIN_NONAMESPACE
 struct Mt19937Object
 {
   PyObject_HEAD
-  std::mt19937* mPtr;
+  std::mt19937 mVal;
 };
 
 // 生成関数
@@ -44,10 +44,9 @@ Mt19937_new(
   }
   auto obj = type->tp_alloc(type, 0);
   auto mt_obj = reinterpret_cast<Mt19937Object*>(obj);
-  auto randgen = new std::mt19937;
-  mt_obj->mPtr = randgen;
+  new (&mt_obj->mVal) std::mt19937;
   if ( seed_val != -1 ) {
-    randgen->seed(seed_val);
+    mt_obj->mVal.seed(seed_val);
   }
   return obj;
 }
@@ -59,7 +58,8 @@ Mt19937_dealloc(
 )
 {
   auto mt_obj = reinterpret_cast<Mt19937Object*>(self);
-  delete mt_obj->mPtr;
+  // 実は mt19937 はクラス名ではない．
+  mt_obj->mVal.~mersenne_twister_engine();
   Py_TYPE(self)->tp_free(self);
 }
 
@@ -133,7 +133,7 @@ PyMt19937::_get_ref(
 )
 {
   auto mt_obj = reinterpret_cast<Mt19937Object*>(obj);
-  return *(mt_obj->mPtr);
+  return mt_obj->mVal;
 }
 
 // @brief mt19937 を表すオブジェクトの型定義を返す．

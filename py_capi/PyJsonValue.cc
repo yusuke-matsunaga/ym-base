@@ -20,7 +20,7 @@ BEGIN_NONAMESPACE
 struct JsonValueObject
 {
   PyObject_HEAD
-  JsonValue* mPtr;
+  JsonValue mVal;
 };
 
 // Python 用のタイプ定義
@@ -48,7 +48,8 @@ JsonValue_new(
     return nullptr;
   }
   JsonValue val;
-  if ( !PyJsonValue::ConvToJsonValue(obj, val) ) {
+  PyJsonValueDeconv json_dec;
+  if ( !json_dec(obj, val) ) {
     PyErr_SetString(PyExc_TypeError, "cannot convert to JsonValue");
     return nullptr;
   }
@@ -62,7 +63,7 @@ JsonValue_repr(
   PyObject* self
 )
 {
-  auto& val = PyJsonValue::Get(self);
+  auto& val = PyJsonValue::_get_ref(self);
   auto tmp_str = val.to_json();
   return Py_BuildValue("s", tmp_str.c_str());
 }
@@ -74,7 +75,8 @@ JsonValue_dealloc(
 )
 {
   auto node_obj = reinterpret_cast<JsonValueObject*>(self);
-  delete node_obj->mPtr;
+  // デストラクタの明示的な呼び出し
+  (node_obj->mVal).~JsonValue();
   Py_TYPE(self)->tp_free(self);
 }
 
@@ -84,7 +86,7 @@ JsonValue_is_null(
   PyObject* Py_UNUSED(args)
 )
 {
-  auto& val = PyJsonValue::Get(self);
+  auto& val = PyJsonValue::_get_ref(self);
   auto ans = val.is_null();
   return PyBool_FromLong(ans);
 }
@@ -95,7 +97,7 @@ JsonValue_is_string(
   PyObject* Py_UNUSED(args)
 )
 {
-  auto& val = PyJsonValue::Get(self);
+  auto& val = PyJsonValue::_get_ref(self);
   auto ans = val.is_string();
   return PyBool_FromLong(ans);
 }
@@ -106,7 +108,7 @@ JsonValue_is_number(
   PyObject* Py_UNUSED(args)
 )
 {
-  auto& val = PyJsonValue::Get(self);
+  auto& val = PyJsonValue::_get_ref(self);
   auto ans = val.is_number();
   return PyBool_FromLong(ans);
 }
@@ -117,7 +119,7 @@ JsonValue_is_int(
   PyObject* Py_UNUSED(args)
 )
 {
-  auto& val = PyJsonValue::Get(self);
+  auto& val = PyJsonValue::_get_ref(self);
   auto ans = val.is_int();
   return PyBool_FromLong(ans);
 }
@@ -128,7 +130,7 @@ JsonValue_is_float(
   PyObject* Py_UNUSED(args)
 )
 {
-  auto& val = PyJsonValue::Get(self);
+  auto& val = PyJsonValue::_get_ref(self);
   auto ans = val.is_float();
   return PyBool_FromLong(ans);
 }
@@ -139,7 +141,7 @@ JsonValue_is_bool(
   PyObject* Py_UNUSED(args)
 )
 {
-  auto& val = PyJsonValue::Get(self);
+  auto& val = PyJsonValue::_get_ref(self);
   auto ans = val.is_bool();
   return PyBool_FromLong(ans);
 }
@@ -150,7 +152,7 @@ JsonValue_is_object(
   PyObject* Py_UNUSED(args)
 )
 {
-  auto& val = PyJsonValue::Get(self);
+  auto& val = PyJsonValue::_get_ref(self);
   auto ans = val.is_object();
   return PyBool_FromLong(ans);
 }
@@ -161,7 +163,7 @@ JsonValue_is_array(
   PyObject* Py_UNUSED(args)
 )
 {
-  auto& val = PyJsonValue::Get(self);
+  auto& val = PyJsonValue::_get_ref(self);
   auto ans = val.is_array();
   return PyBool_FromLong(ans);
 }
@@ -184,7 +186,7 @@ JsonValue_has_key(
 				    &key) ) {
     return nullptr;
   }
-  auto& val = PyJsonValue::Get(self);
+  auto& val = PyJsonValue::_get_ref(self);
   if ( !val.is_object() ) {
     PyErr_SetString(PyExc_TypeError, "not an Object type");
     return nullptr;
@@ -199,7 +201,7 @@ JsonValue_get_string(
   PyObject* Py_UNUSED(args)
 )
 {
-  auto& val = PyJsonValue::Get(self);
+  auto& val = PyJsonValue::_get_ref(self);
   if ( !val.is_string() ) {
     PyErr_SetString(PyExc_TypeError, "not a string type");
     return nullptr;
@@ -214,7 +216,7 @@ JsonValue_get_int(
   PyObject* Py_UNUSED(args)
 )
 {
-  auto& val = PyJsonValue::Get(self);
+  auto& val = PyJsonValue::_get_ref(self);
   if ( !val.is_int() ) {
     PyErr_SetString(PyExc_TypeError, "not an integer type");
     return nullptr;
@@ -229,7 +231,7 @@ JsonValue_get_float(
   PyObject* Py_UNUSED(args)
 )
 {
-  auto& val = PyJsonValue::Get(self);
+  auto& val = PyJsonValue::_get_ref(self);
   if ( !val.is_float() ) {
     PyErr_SetString(PyExc_TypeError, "not a float type");
     return nullptr;
@@ -244,7 +246,7 @@ JsonValue_get_bool(
   PyObject* Py_UNUSED(args)
 )
 {
-  auto& val = PyJsonValue::Get(self);
+  auto& val = PyJsonValue::_get_ref(self);
   if ( !val.is_bool() ) {
     PyErr_SetString(PyExc_TypeError, "not a Boolean type");
     return nullptr;
@@ -336,7 +338,7 @@ JsonValue_write(
     PyErr_SetString(PyExc_ValueError, buff.str().c_str());
     return nullptr;
   }
-  auto& json_value = PyJsonValue::Get(self);
+  auto& json_value = PyJsonValue::_get_ref(self);
   json_value.write(s, static_cast<bool>(indent));
 
   Py_RETURN_NONE;
@@ -389,7 +391,7 @@ JsonValue_key_list(
   void* Py_UNUSED(closure)
 )
 {
-  auto& val = PyJsonValue::Get(self);
+  auto& val = PyJsonValue::_get_ref(self);
   if ( !val.is_object() ) {
     PyErr_SetString(PyExc_TypeError, "not an Object type");
     return nullptr;
@@ -410,7 +412,7 @@ JsonValue_item_list(
   void* Py_UNUSED(closure)
 )
 {
-  auto& val = PyJsonValue::Get(self);
+  auto& val = PyJsonValue::_get_ref(self);
   if ( !val.is_object() ) {
     PyErr_SetString(PyExc_TypeError, "not an Object type");
     return nullptr;
@@ -446,7 +448,7 @@ JsonValue_length(
   PyObject* self
 )
 {
-  auto& val = PyJsonValue::Get(self);
+  auto& val = PyJsonValue::_get_ref(self);
   if ( !val.is_object() && !val.is_array() ) {
     PyErr_SetString(PyExc_TypeError, "Neighter an object nor an array type");
     return -1;
@@ -460,7 +462,7 @@ JsonValue_item(
   Py_ssize_t index
 )
 {
-  auto& val = PyJsonValue::Get(self);
+  auto& val = PyJsonValue::_get_ref(self);
   if ( !val.is_array() ) {
     PyErr_SetString(PyExc_TypeError, "Not an array type");
     return nullptr;
@@ -487,7 +489,7 @@ JsonValue_subscript(
   PyObject* key
 )
 {
-  auto& val = PyJsonValue::Get(self);
+  auto& val = PyJsonValue::_get_ref(self);
   if ( PyUnicode_Check(key) ) {
     if ( !val.is_object() ) {
       PyErr_SetString(PyExc_TypeError, "Not an object type");
@@ -538,10 +540,10 @@ JsonValue_richcompfunc(
   int op
 )
 {
-  if ( PyJsonValue::Check(self) &&
-       PyJsonValue::Check(other) ) {
-    auto& val1 = PyJsonValue::Get(self);
-    auto& val2 = PyJsonValue::Get(other);
+  if ( PyJsonValue::_check(self) &&
+       PyJsonValue::_check(other) ) {
+    auto& val1 = PyJsonValue::_get_ref(self);
+    auto& val2 = PyJsonValue::_get_ref(other);
     if ( op == Py_EQ ) {
       return PyBool_FromLong(val1 == val2);
     }
@@ -589,45 +591,28 @@ PyJsonValue::init(
 
 // @brief JsonValue を PyObject に変換する．
 PyObject*
-PyJsonValue::ToPyObject(
+PyJsonValueConv::operator()(
   const JsonValue& val
 )
 {
   auto obj = JsonValue_Type.tp_alloc(&JsonValue_Type, 0);
   auto node_obj = reinterpret_cast<JsonValueObject*>(obj);
-  node_obj->mPtr = new JsonValue{val};
+  new (&node_obj->mVal) JsonValue{val};
   return obj;
-}
-
-// @brief PyObject が JsonValue タイプか調べる．
-bool
-PyJsonValue::Check(
-  PyObject* obj
-)
-{
-  return Py_IS_TYPE(obj, _typeobject());
-}
-
-// @brief JsonValue を表す PyObject から JsonValue を取り出す．
-const JsonValue&
-PyJsonValue::Get(
-  PyObject* obj
-)
-{
-  auto json_obj = reinterpret_cast<JsonValueObject*>(obj);
-  return *(json_obj->mPtr);
 }
 
 // @brief PyObject を JsonValue に変換する．
 bool
-PyJsonValue::ConvToJsonValue(
+PyJsonValueDeconv::operator()(
   PyObject* obj,
   JsonValue& val
 )
 {
+  PyJsonValueDeconv json_dec;
+
   if ( obj == nullptr ) {
     // null
-    val = JsonValue{};
+    val = JsonValue::null();
     return true;
   }
   // ブール型は他の型との変換が行えるので先にチェックする．
@@ -641,17 +626,19 @@ PyJsonValue::ConvToJsonValue(
     val = JsonValue{false};
     return true;
   }
-  if ( PyJsonValue::Check(obj) ) {
+  if ( PyJsonValue::_check(obj) ) {
     // もともと JsonValue 型だった．
-    val = PyJsonValue::Get(obj);
+    val = PyJsonValue::_get_ref(obj);
     return true;
   }
-  if ( PyUnicode_Check(obj) ) {
-    // 文字列型
-    auto obj2 = PyUnicode_EncodeLocale(obj, nullptr);
-    auto arg_val = string{PyBytes_AsString(obj2)};
-    val = JsonValue{arg_val};
-    return true;
+  {
+    PyStringDeconv str_dec;
+    string str_val;
+    if ( str_dec(obj, str_val) ) {
+      // 文字列型
+      val = JsonValue{str_val};
+      return true;
+    }
   }
   if ( PyLong_Check(obj) ) {
     // 整数型
@@ -678,7 +665,7 @@ PyJsonValue::ConvToJsonValue(
 	return false;
       }
       JsonValue item_val;
-      if ( !ConvToJsonValue(item_obj, item_val) ) {
+      if ( !json_dec(item_obj, item_val) ) {
 	return false;
       }
       item_dict.emplace(key, item_val);
@@ -694,7 +681,7 @@ PyJsonValue::ConvToJsonValue(
     for ( SizeType i = 0; i < n; ++ i ) {
       auto elem_obj = PySequence_GetItem(obj, i);
       JsonValue elem_val;
-      if ( !ConvToJsonValue(elem_obj, elem_val) ) {
+      if ( !json_dec(elem_obj, elem_val) ) {
 	return false;
       }
       elem_list[i] = elem_val;
@@ -704,6 +691,25 @@ PyJsonValue::ConvToJsonValue(
   }
 
   return false;
+}
+
+// @brief PyObject が JsonValue タイプか調べる．
+bool
+PyJsonValue::_check(
+  PyObject* obj
+)
+{
+  return Py_IS_TYPE(obj, _typeobject());
+}
+
+// @brief JsonValue を表す PyObject から JsonValue を取り出す．
+const JsonValue&
+PyJsonValue::_get_ref(
+  PyObject* obj
+)
+{
+  auto json_obj = reinterpret_cast<JsonValueObject*>(obj);
+  return json_obj->mVal;
 }
 
 // @brief JsonValue を表すオブジェクトの型定義を返す．
