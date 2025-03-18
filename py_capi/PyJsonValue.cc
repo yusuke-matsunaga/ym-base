@@ -703,7 +703,7 @@ PyJsonValue::_check(
 }
 
 // @brief JsonValue を表す PyObject から JsonValue を取り出す．
-const JsonValue&
+JsonValue&
 PyJsonValue::_get_ref(
   PyObject* obj
 )

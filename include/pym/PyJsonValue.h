@@ -109,7 +109,7 @@ public:
   ///
   /// Check(obj) == true であると仮定している．
   static
-  const JsonValue&
+  JsonValue&
   _get_ref(
     PyObject* obj ///< [in] 変換元の PyObject
   );
