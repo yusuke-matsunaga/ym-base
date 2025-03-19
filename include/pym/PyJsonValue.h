@@ -97,6 +97,19 @@ public:
     return conv(val);
   }
 
+  /// @brief PyObject から JsonValue を取り出す．
+  /// @return 正しく変換できた時に true を返す．
+  static
+  bool
+  FromPyObject(
+    PyObject* obj, ///< [in] Python のオブジェクト
+    JsonValue& val ///< [out] 結果を格納するリスト
+  )
+  {
+    PyJsonValueDeconv deconv;
+    return deconv(obj, val);
+  }
+
   /// @brief PyObject が JsonValue タイプか調べる．
   static
   bool
