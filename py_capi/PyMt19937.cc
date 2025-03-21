@@ -119,7 +119,7 @@ PyMt19937::init(
 
 // @brief PyObject が mt19937 タイプか調べる．
 bool
-PyMt19937::_check(
+PyMt19937::Check(
   PyObject* obj
 )
 {

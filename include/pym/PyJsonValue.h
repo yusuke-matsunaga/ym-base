@@ -17,50 +17,6 @@
 
 BEGIN_NAMESPACE_YM
 
-//////////////////////////////////////////////////////////////////////
-/// @class PyJsonValueConv PyJsonValue.h "PyJsonValue.h"
-/// @brief JsonValue を PyObject* に変換するファンクタクラス
-///
-/// 実はただの関数
-//////////////////////////////////////////////////////////////////////
-class PyJsonValueConv
-{
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief JsonValue を PyObject* に変換する．
-  PyObject*
-  operator()(
-    const JsonValue& val
-  );
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class PyJsonValueDeconv PyJsonValue.h "PyJsonValue.h"
-/// @brief JsonValue を取り出すファンクタクラス
-///
-/// 実はただの関数
-//////////////////////////////////////////////////////////////////////
-class PyJsonValueDeconv
-{
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief PyObject* から JsonValue を取り出す．
-  bool
-  operator()(
-    PyObject* obj,
-    JsonValue& val
-  );
-
-};
-
 
 //////////////////////////////////////////////////////////////////////
 /// @class PyJsonValue PyJsonValue.h "PyJsonValue.h"
@@ -70,6 +26,28 @@ public:
 //////////////////////////////////////////////////////////////////////
 class PyJsonValue
 {
+  using ElemType = JsonValue;
+
+public:
+
+  /// @brief JsonValue を PyObject* に変換するファンクタクラス
+  struct Conv {
+    PyObject*
+    operator()(
+      const ElemType& val
+    );
+  };
+
+  /// @brief PyObject* から JsonValue を取り出すファンクタクラス
+  struct Deconv {
+    bool
+    operator()(
+      PyObject* obj,
+      ElemType& val
+    );
+  };
+
+
 public:
   //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
@@ -90,10 +68,10 @@ public:
   static
   PyObject*
   ToPyObject(
-    const JsonValue& val ///< [in] 値
+    const ElemType& val ///< [in] 値
   )
   {
-    PyJsonValueConv conv;
+    Conv conv;
     return conv(val);
   }
 
@@ -103,17 +81,17 @@ public:
   bool
   FromPyObject(
     PyObject* obj, ///< [in] Python のオブジェクト
-    JsonValue& val ///< [out] 結果を格納するリスト
+    ElemType& val  ///< [out] 結果を格納する変数
   )
   {
-    PyJsonValueDeconv deconv;
+    Deconv deconv;
     return deconv(obj, val);
   }
 
   /// @brief PyObject が JsonValue タイプか調べる．
   static
   bool
-  _check(
+  Check(
     PyObject* obj ///< [in] 対象の PyObject
   );
 
@@ -122,7 +100,7 @@ public:
   ///
   /// Check(obj) == true であると仮定している．
   static
-  JsonValue&
+  ElemType&
   _get_ref(
     PyObject* obj ///< [in] 変換元の PyObject
   );

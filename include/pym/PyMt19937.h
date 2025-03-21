@@ -17,8 +17,6 @@
 
 BEGIN_NAMESPACE_YM
 
-// このクラスは PyMt19937Conv/PyMt19937Deconv を持たない．
-
 //////////////////////////////////////////////////////////////////////
 /// @class PyMt19937 PyMt19937.h "PyMt19937.h"
 /// @brief mt19937 を Python から使用するための拡張
@@ -27,6 +25,12 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 class PyMt19937
 {
+  using ElemType = std::mt19937;
+
+public:
+
+  // このクラスは Conv/Deconv を持たない．
+
 public:
   //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
@@ -43,7 +47,7 @@ public:
   /// @brief PyObject が mt19937 タイプか調べる．
   static
   bool
-  _check(
+  Check(
     PyObject* obj ///< [in] 対象の PyObject
   );
 
@@ -52,7 +56,7 @@ public:
   ///
   /// Check(obj) == true であると仮定している．
   static
-  std::mt19937&
+  ElemType&
   _get_ref(
     PyObject* obj ///< [in] 変換元の PyObject
   );
