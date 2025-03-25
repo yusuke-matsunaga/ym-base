@@ -7,32 +7,28 @@
 :copyright: Copyright (C) 2025 Yusuke Matsunaga, All rights reserved.
 """
 
-from mk_py_capi import MkPyCapi, DeallocGen, MethodGen, NewGen, IfBlock, ArgInfo
+from mk_py_capi import MkPyCapi, DeallocGen, MethodGen, NewGen, IntArg
 
 
 class MyNewGen(NewGen):
     """PyMt19937 用の new 関数生成用のクラス"""
 
     def __init__(self, parent):
-        seed_arg = ArgInfo(parent,
-                           name="seed",
-                           option=True,
-                           pchar='i',
-                           ptype=None,
-                           cvartype='int',
-                           cvarname='seed_val',
-                           cvardefault='-1')
+        seed_arg = IntArg(parent,
+                          name="seed",
+                          option=True,
+                          cvarname='seed_val',
+                          cvardefault='-1')
         arg_list = [seed_arg]
         super().__init__(parent, arg_list=arg_list)
 
     def gen_body(self):
-        self._write_line('auto obj = type->tp_alloc(type, 0);')
-        self._write_line(f'auto obj1 = reinterpret_cast<{self.objectname}*>(obj);')
+        self.gen_auto_assign('obj', 'type->tp_alloc(type, 0)')
+        self.gen_auto_assign('obj1', f'reinterpret_cast<{self.objectname}*>(obj)')
         self._write_line(f'new &(obj1->mVal) std::mt19937;')
-        with IfBlock(self.parent,
-                     condition='seed_val != -1'):
+        with self.gen_if_block('seed_val != -1'):
             self._write_line('obj1->mVal.seed(seed_val);')
-        self._write_line('return obj')
+        self.gen_return('obj')
         
     
 class MyDeallocGen(DeallocGen):
@@ -42,9 +38,10 @@ class MyDeallocGen(DeallocGen):
         super().__init__(parent)
 
     def gen_body(self):
-        self._write_line('// 実は mt19937 はクラス名ではない．')
-        self._write_line('obj->mVal.~mersenne_twister_engine()')
+        self.gen_comment('実は mt19937 はクラス名ではない．')
+        self._write_line('obj->mVal.~mersenne_twister_engine();')
 
+        
 class EvalGen(MethodGen):
     """Mt19937.eval() 関数の実装を行うクラス"""
 
@@ -58,15 +55,16 @@ class EvalGen(MethodGen):
 
     def gen_body(self):
         self.gen_val_conv('randgen')
-        self._write_line('auto val = randgen.operator()();')
-        self._write_line('return PyLong_FromLong(val);')
+        self.gen_auto_assign('val', 'randgen.operator()()')
+        self.gen_return('PyLong_FromLong(val)')
         
 
 gen = MkPyCapi(classname='Mt19937',
                pyclassname='PyMt19937',
                namespace='YM',
                pyname='Mt19937',
-               header_include_files=['ym_config.h', ])
+               header_include_files=['ym_config.h'],
+               source_include_files=['pym/PyMt19937.h'])
 
 gen.dealloc_gen = MyDeallocGen(gen)
 gen.new_gen = MyNewGen(gen)
