@@ -14,17 +14,18 @@ class MyNewGen(NewGen):
     """PyMt19937 用の new 関数生成用のクラス"""
 
     def __init__(self, parent):
-        arg_list = []
-        arg_list.append(ArgInfo(name="seed",
-                                option=True,
-                                pchar='i',
-                                ptype=None,
-                                cvartype='int',
-                                cvarname='seed_val',
-                                cvardefault='-1'))
+        seed_arg = ArgInfo(parent,
+                           name="seed",
+                           option=True,
+                           pchar='i',
+                           ptype=None,
+                           cvartype='int',
+                           cvarname='seed_val',
+                           cvardefault='-1')
+        arg_list = [seed_arg]
         super().__init__(parent, arg_list=arg_list)
 
-    def bodygen(self):
+    def gen_body(self):
         self._write_line('auto obj = type->tp_alloc(type, 0);')
         self._write_line(f'auto obj1 = reinterpret_cast<{self.objectname}*>(obj);')
         self._write_line(f'new &(obj1->mVal) std::mt19937;')
@@ -40,7 +41,7 @@ class MyDeallocGen(DeallocGen):
     def __init__(self, parent):
         super().__init__(parent)
 
-    def bodygen(self):
+    def gen_body(self):
         self._write_line('// 実は mt19937 はクラス名ではない．')
         self._write_line('obj->mVal.~mersenne_twister_engine()')
 
@@ -55,8 +56,8 @@ class EvalGen(MethodGen):
                          is_static=False,
                          doc_str='generate a random number')
 
-    def bodygen(self):
-        self._write_line('auto& randgen = PyMt19937::_get_ref(self);')
+    def gen_body(self):
+        self.gen_val_conv('randgen')
         self._write_line('auto val = randgen.operator()();')
         self._write_line('return PyLong_FromLong(val);')
         

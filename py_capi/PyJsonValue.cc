@@ -58,8 +58,7 @@ JsonValue_new(
     return nullptr;
   }
   JsonValue val;
-  PyJsonValue::Deconv json_dec;
-  if ( !json_dec(obj, val) ) {
+  if ( !PyJsonValue::FromPyObject(obj, val) ) {
     PyErr_SetString(PyExc_TypeError, "cannot convert to JsonValue");
     return nullptr;
   }
