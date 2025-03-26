@@ -66,9 +66,9 @@ gen = MkPyCapi(classname='Mt19937',
                header_include_files=['ym_config.h'],
                source_include_files=['pym/PyMt19937.h'])
 
-gen.dealloc_gen = MyDeallocGen(gen)
-gen.new_gen = MyNewGen(gen)
-gen.add_method(EvalGen(gen))
+MyDeallocGen(gen)
+MyNewGen(gen)
+EvalGen(gen)
 
 gen.make_header()
 

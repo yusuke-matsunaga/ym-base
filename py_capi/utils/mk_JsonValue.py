@@ -9,7 +9,8 @@
 
 from mk_py_capi import MkPyCapi
 from mk_py_capi import ReprGen, DeallocGen, MethodGen, NewGen, ConvGen, DeconvGen
-from mk_py_capi import ObjArg
+from mk_py_capi import StringArg, BoolArg, ObjArg
+from mk_py_capi import PreambleGen
 
 
 class MyReprGen(ReprGen):
@@ -33,10 +34,9 @@ class JsonValueArg(ObjArg):
                          cvartype='JsonValue',
                          cvarname=cvarname)
 
-    def gen_conv(self):
-        self.gen_declaration('JsonValue', f'{self.cvarname}')
-        with self.gen_if_block(f'!PyJsonValue::FromPyObject(obj, {self.cvarname})'):
-            self.gen_type_error("could not convert to JsonValue")
+    def gen_obj_conv(self):
+        with self.gen_if_block(f'!PyJsonValue::FromPyObject({self.tmpname}, {self.cvarname})'):
+            self.gen_type_error('"Could not convert to JsonValue"')
             self.gen_return('nullptr')
             
         
@@ -86,6 +86,305 @@ class IsNullGen(MethodGen):
         self.gen_auto_assign('ans', 'val.is_null()')
         self.gen_return('PyBool_FromLong(ans)')
 
+
+class IsStringGen(MethodGen):
+    """JsonValue.is_string() 関数を生成するクラス"""
+
+    def __init__(self, parent):
+        super().__init__(parent,
+                         name='is_string',
+                         func_name='is_string',
+                         arg_list=[],
+                         is_static=False,
+                         doc_str='check if string-type')
+
+    def gen_body(self):
+        self.gen_val_conv('val')
+        self.gen_auto_assign('ans', 'val.is_string()')
+        self.gen_return('PyBool_FromLong(ans)')
+
+
+class IsNumberGen(MethodGen):
+    """JsonValue.is_number() 関数を生成するクラス"""
+
+    def __init__(self, parent):
+        super().__init__(parent,
+                         name='is_number',
+                         func_name='is_number',
+                         arg_list=[],
+                         is_static=False,
+                         doc_str='check if number-type')
+
+    def gen_body(self):
+        self.gen_val_conv('val')
+        self.gen_auto_assign('ans', 'val.is_number()')
+        self.gen_return('PyBool_FromLong(ans)')
+
+
+class IsIntGen(MethodGen):
+    """JsonValue.is_int() 関数を生成するクラス"""
+
+    def __init__(self, parent):
+        super().__init__(parent,
+                         name='is_int',
+                         func_name='is_int',
+                         arg_list=[],
+                         is_static=False,
+                         doc_str='check if int-type')
+
+    def gen_body(self):
+        self.gen_val_conv('val')
+        self.gen_auto_assign('ans', 'val.is_int()')
+        self.gen_return('PyBool_FromLong(ans)')
+
+
+class IsFloatGen(MethodGen):
+    """JsonValue.is_float() 関数を生成するクラス"""
+
+    def __init__(self, parent):
+        super().__init__(parent,
+                         name='is_float',
+                         func_name='is_float',
+                         arg_list=[],
+                         is_static=False,
+                         doc_str='check if float-type')
+
+    def gen_body(self):
+        self.gen_val_conv('val')
+        self.gen_auto_assign('ans', 'val.is_float()')
+        self.gen_return('PyBool_FromLong(ans)')
+
+
+class IsBoolGen(MethodGen):
+    """JsonValue.is_bool() 関数を生成するクラス"""
+
+    def __init__(self, parent):
+        super().__init__(parent,
+                         name='is_bool',
+                         func_name='is_bool',
+                         arg_list=[],
+                         is_static=False,
+                         doc_str='check if bool-type')
+
+    def gen_body(self):
+        self.gen_val_conv('val')
+        self.gen_auto_assign('ans', 'val.is_bool()')
+        self.gen_return('PyBool_FromLong(ans)')
+
+
+class IsObjectGen(MethodGen):
+    """JsonValue.is_object() 関数を生成するクラス"""
+
+    def __init__(self, parent):
+        super().__init__(parent,
+                         name='is_object',
+                         func_name='is_object',
+                         arg_list=[],
+                         is_static=False,
+                         doc_str='check if object-type')
+
+    def gen_body(self):
+        self.gen_val_conv('val')
+        self.gen_auto_assign('ans', 'val.is_object()')
+        self.gen_return('PyBool_FromLong(ans)')
+
+
+class IsArrayGen(MethodGen):
+    """JsonValue.is_array() 関数を生成するクラス"""
+
+    def __init__(self, parent):
+        super().__init__(parent,
+                         name='is_array',
+                         func_name='is_array',
+                         arg_list=[],
+                         is_static=False,
+                         doc_str='check if array-type')
+
+    def gen_body(self):
+        self.gen_val_conv('val')
+        self.gen_auto_assign('ans', 'val.is_array()')
+        self.gen_return('PyBool_FromLong(ans)')
+
+
+class HasKeyGen(MethodGen):
+    """JsonValue.has_key() 関数を生成するクラス"""
+
+    def __init__(self, parent):
+        arg_list = [StringArg(parent,
+                              name='key',
+                              cvarname='key')]
+        super().__init__(parent,
+                         name='has_key',
+                         func_name='has_key',
+                         arg_list=arg_list,
+                         is_static=False,
+                         doc_str='check if having the key')
+
+    def gen_body(self):
+        self.gen_val_conv('val')
+        with self.gen_if_block('!val.is_object()'):
+            self.gen_type_error('EMSG_NOT_OBJ')
+            self.gen_return('nullptr')
+        self.gen_auto_assign('ans', 'val.has_key()')
+        self.gen_return('PyBool_FromLong(ans)')
+
+
+class GetStringGen(MethodGen):
+    """JsonValue.get_string() 関数を生成するクラス"""
+
+    def __init__(self, parent):
+        super().__init__(parent,
+                         name='get_string',
+                         func_name='get_string',
+                         arg_list=[],
+                         is_static=False,
+                         doc_str='get string value')
+
+    def gen_body(self):
+        self.gen_val_conv('val')
+        with self.gen_if_block('!val.is_string()'):
+            self.gen_type_error('EMSG_NOT_STR')
+            self.gen_return('nullptr')
+        self.gen_auto_assign('ans', 'val.get_string()')
+        self.gen_return('PyString::ToPyObject(ans)')
+
+
+class GetIntGen(MethodGen):
+    """JsonValue.get_int() 関数を生成するクラス"""
+
+    def __init__(self, parent):
+        super().__init__(parent,
+                         name='get_int',
+                         func_name='get_int',
+                         arg_list=[],
+                         is_static=False,
+                         doc_str='get int value')
+
+    def gen_body(self):
+        self.gen_val_conv('val')
+        with self.gen_if_block('!val.is_int()'):
+            self.gen_type_error('EMSG_NOT_INT')
+            self.gen_return('nullptr')
+        self.gen_auto_assign('ans', 'val.get_int()')
+        self.gen_buildvalue_return('i', ['ans'])
+
+
+class GetFloatGen(MethodGen):
+    """JsonValue.get_float() 関数を生成するクラス"""
+
+    def __init__(self, parent):
+        super().__init__(parent,
+                         name='get_float',
+                         func_name='get_float',
+                         arg_list=[],
+                         is_static=False,
+                         doc_str='get float value')
+
+    def gen_body(self):
+        self.gen_val_conv('val')
+        with self.gen_if_block('!val.is_float()'):
+            self.gen_type_error('EMSG_NOT_FLOAT')
+            self.gen_return('nullptr')
+        self.gen_auto_assign('ans', 'val.get_float()')
+        self.gen_buildvalue_return('d', ['ans'])
+
+
+class GetBoolGen(MethodGen):
+    """JsonValue.get_bool() 関数を生成するクラス"""
+
+    def __init__(self, parent):
+        super().__init__(parent,
+                         name='get_bool',
+                         func_name='get_bool',
+                         arg_list=[],
+                         is_static=False,
+                         doc_str='get bool value')
+
+    def gen_body(self):
+        self.gen_val_conv('val')
+        with self.gen_if_block('!val.is_bool()'):
+            self.gen_type_error('EMSG_NOT_BOOL')
+            self.gen_return('nullptr')
+        self.gen_auto_assign('ans', 'val.get_bool()')
+        self.gen_return('PyBool_FromLong(ans)')
+
+
+class ReadGen(MethodGen):
+    """JsonValue.read() 関数を生成するクラス"""
+
+    def __init__(self, parent):
+        arg_list = [StringArg(parent,
+                              name='filename',
+                              cvarname='filename')]
+        super().__init__(parent,
+                         name='read',
+                         func_name='read',
+                         arg_list=arg_list,
+                         is_static=True,
+                         doc_str='read JSON data from file')
+
+    def gen_body(self):
+        with self.gen_try_block():
+            self.gen_auto_assign('val', 'JsonValue::read(filename)')
+            self.gen_return('PyJsonValue::ToPyObject(val)')
+        with self.gen_catch_block('std::invalid_argument err'):
+            self.gen_value_error('err.what()')
+            self.gen_return('nullptr')
+
+
+class ParseGen(MethodGen):
+    """JsonValue.parse() 関数を生成するクラス"""
+
+    def __init__(self, parent):
+        arg_list = [StringArg(parent,
+                              name='json_str',
+                              cvarname='json_str')]
+        super().__init__(parent,
+                         name='parse',
+                         func_name='parse',
+                         arg_list=arg_list,
+                         is_static=True,
+                         doc_str='read JSON data from string')
+
+    def gen_body(self):
+        with self.gen_try_block():
+            self.gen_auto_assign('val', 'JsonValue::parse(json_str)')
+            self.gen_return('PyJsonValue::ToPyObject(val)')
+        with self.gen_catch_block('std::invalid_argument err'):
+            self.gen_value_error('err.what()')
+            self.gen_return('nullptr')
+
+
+class WriteGen(MethodGen):
+    """JsonValue.write() 関数を生成するクラス"""
+
+    def __init__(self, parent):
+        arg_list = [StringArg(parent,
+                              name='filename',
+                              cvarname='filename'),
+                    BoolArg(parent,
+                            name='indent',
+                            option=True,
+                            cvarname='indent',
+                            cvardefault='false')]
+        super().__init__(parent,
+                         name='write',
+                         func_name='write',
+                         arg_list=arg_list,
+                         is_static=True,
+                         doc_str='write JSON data to file')
+
+    def gen_body(self):
+        self.gen_declaration('std::ofstream', 's')
+        with self.gen_if_block('!s'):
+            self.gen_declaration('std:ostringstream', 'buff')
+            self._write_line('buff << filename << ": Could not open.";')
+            self.gen_value_error('buff.str().c_str()')
+            self.gen_return('nullptr')
+        self.gen_val_conv('json_value')
+        self._write_line('json_value.write(s, indent);')
+        self.gen_py_return_none()
+        
         
 class MyDeconvGen(DeconvGen):
 
@@ -176,7 +475,23 @@ class MyDeconvGen(DeconvGen):
 
         self.gen_CRLF()
         self.gen_return('false')
-        
+
+class MyPreambleGen(PreambleGen):
+
+    def __init__(self, parent):
+        super().__init__(parent)
+
+    def __call__(self):
+        self.gen_CRLF()
+        self.gen_comment('エラーメッセージを表す定数')
+        self._write_line('static const char* EMSG_NOT_OBJ = "not an Object type";')
+        self._write_line('static const char* EMSG_NOT_ARRAY = "not an Array type";')
+        self._write_line('static const char* EMSG_NOT_STR = "not a string type";')
+        self._write_line('static const char* EMSG_NOT_INT = "not an integer type";')
+        self._write_line('static const char* EMSG_NOT_FLOAT = "not a float type";')
+        self._write_line('static const char* EMSG_NOT_BOOL = "not a bool type";')
+        self._write_line('static const char* EMSG_NOT_OBJ_ARRAY = "neither an object nor an array type";')
+        self._write_line('static const char* EMSG_OUT_OF_RANGE = "index is out-of-range";')
 
 gen = MkPyCapi(classname='JsonValue',
                pyclassname='PyJsonValue',
@@ -187,14 +502,29 @@ gen = MkPyCapi(classname='JsonValue',
                source_include_files=['pym/PyJsonValue.h',
                                      'pym/PyString.h',
                                      'ym/JsonValue.h'])
-
-gen.repr_gen = MyReprGen(gen)
-gen.dealloc_gen = DeallocGen(gen)
-gen.new_gen = MyNewGen(gen)
-gen.conv_gen = ConvGen(gen)
-gen.deconv_gen = MyDeconvGen(gen)
-gen.add_method(NullGen(gen))
-gen.add_method(IsNullGen(gen))
+MyPreambleGen(gen)
+MyReprGen(gen)
+DeallocGen(gen)
+MyNewGen(gen)
+ConvGen(gen)
+MyDeconvGen(gen)
+NullGen(gen)
+IsNullGen(gen)
+IsStringGen(gen)
+IsNumberGen(gen)
+IsIntGen(gen)
+IsFloatGen(gen)
+IsBoolGen(gen)
+IsObjectGen(gen)
+IsArrayGen(gen)
+HasKeyGen(gen)
+GetStringGen(gen)
+GetIntGen(gen)
+GetFloatGen(gen)
+GetBoolGen(gen)
+ReadGen(gen)
+ParseGen(gen)
+WriteGen(gen)
 
 gen.make_header()
 
