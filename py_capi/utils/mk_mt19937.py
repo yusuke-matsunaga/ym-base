@@ -48,9 +48,6 @@ class EvalGen(MethodGen):
     def __init__(self, parent):
         super().__init__(parent,
                          name='eval',
-                         func_name='eval',
-                         arg_list=[],
-                         is_static=False,
                          doc_str='generate a random number')
 
     def gen_body(self):

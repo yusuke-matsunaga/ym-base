@@ -8,18 +8,14 @@
 """
 
 from mk_py_capi import MkPyCapi
-from mk_py_capi import ReprGen, DeallocGen, MethodGen, NewGen, ConvGen, DeconvGen
+from mk_py_capi import ReprGen, DeallocGen, NewGen, ConvGen, DeconvGen
+from mk_py_capi import MethodGen, GetterGen, SetterGen
 from mk_py_capi import StringArg, BoolArg, ObjArg
 from mk_py_capi import PreambleGen
 
 
-class MyReprGen(ReprGen):
-
-    def __init__(self, parent):
-        super().__init__(parent)
-
-    def gen_body(self, varname, strname):
-        self.gen_auto_assign(f'{strname}', f'{varname}.to_json()')
+def repr_str(varname):
+    return f'{varname}.to_json()'
 
         
 class JsonValueArg(ObjArg):
@@ -37,7 +33,6 @@ class JsonValueArg(ObjArg):
     def gen_obj_conv(self):
         with self.gen_if_block(f'!PyJsonValue::FromPyObject({self.tmpname}, {self.cvarname})'):
             self.gen_type_error('"Could not convert to JsonValue"')
-            self.gen_return('nullptr')
             
         
 class MyNewGen(NewGen):
@@ -61,8 +56,6 @@ class NullGen(MethodGen):
     def __init__(self, parent):
         super().__init__(parent,
                          name='null',
-                         func_name='null',
-                         arg_list=[],
                          is_static=True,
                          doc_str='make null object')
 
@@ -76,15 +69,12 @@ class IsNullGen(MethodGen):
     def __init__(self, parent):
         super().__init__(parent,
                          name='is_null',
-                         func_name='is_null',
-                         arg_list=[],
-                         is_static=False,
                          doc_str='check if null')
 
     def gen_body(self):
         self.gen_val_conv('val')
         self.gen_auto_assign('ans', 'val.is_null()')
-        self.gen_return('PyBool_FromLong(ans)')
+        self.gen_return_py_bool('ans')
 
 
 class IsStringGen(MethodGen):
@@ -93,15 +83,12 @@ class IsStringGen(MethodGen):
     def __init__(self, parent):
         super().__init__(parent,
                          name='is_string',
-                         func_name='is_string',
-                         arg_list=[],
-                         is_static=False,
                          doc_str='check if string-type')
 
     def gen_body(self):
         self.gen_val_conv('val')
         self.gen_auto_assign('ans', 'val.is_string()')
-        self.gen_return('PyBool_FromLong(ans)')
+        self.gen_return_py_bool('ans')
 
 
 class IsNumberGen(MethodGen):
@@ -110,15 +97,12 @@ class IsNumberGen(MethodGen):
     def __init__(self, parent):
         super().__init__(parent,
                          name='is_number',
-                         func_name='is_number',
-                         arg_list=[],
-                         is_static=False,
                          doc_str='check if number-type')
 
     def gen_body(self):
         self.gen_val_conv('val')
         self.gen_auto_assign('ans', 'val.is_number()')
-        self.gen_return('PyBool_FromLong(ans)')
+        self.gen_return_py_bool('ans')
 
 
 class IsIntGen(MethodGen):
@@ -127,15 +111,12 @@ class IsIntGen(MethodGen):
     def __init__(self, parent):
         super().__init__(parent,
                          name='is_int',
-                         func_name='is_int',
-                         arg_list=[],
-                         is_static=False,
                          doc_str='check if int-type')
 
     def gen_body(self):
         self.gen_val_conv('val')
         self.gen_auto_assign('ans', 'val.is_int()')
-        self.gen_return('PyBool_FromLong(ans)')
+        self.gen_return_py_bool('ans')
 
 
 class IsFloatGen(MethodGen):
@@ -144,15 +125,12 @@ class IsFloatGen(MethodGen):
     def __init__(self, parent):
         super().__init__(parent,
                          name='is_float',
-                         func_name='is_float',
-                         arg_list=[],
-                         is_static=False,
                          doc_str='check if float-type')
 
     def gen_body(self):
         self.gen_val_conv('val')
         self.gen_auto_assign('ans', 'val.is_float()')
-        self.gen_return('PyBool_FromLong(ans)')
+        self.gen_return_py_bool('ans')
 
 
 class IsBoolGen(MethodGen):
@@ -161,15 +139,12 @@ class IsBoolGen(MethodGen):
     def __init__(self, parent):
         super().__init__(parent,
                          name='is_bool',
-                         func_name='is_bool',
-                         arg_list=[],
-                         is_static=False,
                          doc_str='check if bool-type')
 
     def gen_body(self):
         self.gen_val_conv('val')
         self.gen_auto_assign('ans', 'val.is_bool()')
-        self.gen_return('PyBool_FromLong(ans)')
+        self.gen_return_py_bool('ans')
 
 
 class IsObjectGen(MethodGen):
@@ -178,15 +153,12 @@ class IsObjectGen(MethodGen):
     def __init__(self, parent):
         super().__init__(parent,
                          name='is_object',
-                         func_name='is_object',
-                         arg_list=[],
-                         is_static=False,
                          doc_str='check if object-type')
 
     def gen_body(self):
         self.gen_val_conv('val')
         self.gen_auto_assign('ans', 'val.is_object()')
-        self.gen_return('PyBool_FromLong(ans)')
+        self.gen_return_py_bool('ans')
 
 
 class IsArrayGen(MethodGen):
@@ -195,15 +167,12 @@ class IsArrayGen(MethodGen):
     def __init__(self, parent):
         super().__init__(parent,
                          name='is_array',
-                         func_name='is_array',
-                         arg_list=[],
-                         is_static=False,
                          doc_str='check if array-type')
 
     def gen_body(self):
         self.gen_val_conv('val')
         self.gen_auto_assign('ans', 'val.is_array()')
-        self.gen_return('PyBool_FromLong(ans)')
+        self.gen_return_py_bool('ans')
 
 
 class HasKeyGen(MethodGen):
@@ -215,18 +184,15 @@ class HasKeyGen(MethodGen):
                               cvarname='key')]
         super().__init__(parent,
                          name='has_key',
-                         func_name='has_key',
                          arg_list=arg_list,
-                         is_static=False,
                          doc_str='check if having the key')
 
     def gen_body(self):
         self.gen_val_conv('val')
         with self.gen_if_block('!val.is_object()'):
             self.gen_type_error('EMSG_NOT_OBJ')
-            self.gen_return('nullptr')
         self.gen_auto_assign('ans', 'val.has_key()')
-        self.gen_return('PyBool_FromLong(ans)')
+        self.gen_return_py_bool('ans')
 
 
 class GetStringGen(MethodGen):
@@ -235,18 +201,14 @@ class GetStringGen(MethodGen):
     def __init__(self, parent):
         super().__init__(parent,
                          name='get_string',
-                         func_name='get_string',
-                         arg_list=[],
-                         is_static=False,
                          doc_str='get string value')
 
     def gen_body(self):
         self.gen_val_conv('val')
         with self.gen_if_block('!val.is_string()'):
             self.gen_type_error('EMSG_NOT_STR')
-            self.gen_return('nullptr')
         self.gen_auto_assign('ans', 'val.get_string()')
-        self.gen_return('PyString::ToPyObject(ans)')
+        self.gen_return_py_string('ans')
 
 
 class GetIntGen(MethodGen):
@@ -255,18 +217,14 @@ class GetIntGen(MethodGen):
     def __init__(self, parent):
         super().__init__(parent,
                          name='get_int',
-                         func_name='get_int',
-                         arg_list=[],
-                         is_static=False,
                          doc_str='get int value')
 
     def gen_body(self):
         self.gen_val_conv('val')
         with self.gen_if_block('!val.is_int()'):
             self.gen_type_error('EMSG_NOT_INT')
-            self.gen_return('nullptr')
         self.gen_auto_assign('ans', 'val.get_int()')
-        self.gen_buildvalue_return('i', ['ans'])
+        self.gen_return_py_int('ans')
 
 
 class GetFloatGen(MethodGen):
@@ -275,18 +233,14 @@ class GetFloatGen(MethodGen):
     def __init__(self, parent):
         super().__init__(parent,
                          name='get_float',
-                         func_name='get_float',
-                         arg_list=[],
-                         is_static=False,
                          doc_str='get float value')
 
     def gen_body(self):
         self.gen_val_conv('val')
         with self.gen_if_block('!val.is_float()'):
             self.gen_type_error('EMSG_NOT_FLOAT')
-            self.gen_return('nullptr')
         self.gen_auto_assign('ans', 'val.get_float()')
-        self.gen_buildvalue_return('d', ['ans'])
+        self.gen_return_py_float('ans')
 
 
 class GetBoolGen(MethodGen):
@@ -295,18 +249,14 @@ class GetBoolGen(MethodGen):
     def __init__(self, parent):
         super().__init__(parent,
                          name='get_bool',
-                         func_name='get_bool',
-                         arg_list=[],
-                         is_static=False,
                          doc_str='get bool value')
 
     def gen_body(self):
         self.gen_val_conv('val')
         with self.gen_if_block('!val.is_bool()'):
             self.gen_type_error('EMSG_NOT_BOOL')
-            self.gen_return('nullptr')
         self.gen_auto_assign('ans', 'val.get_bool()')
-        self.gen_return('PyBool_FromLong(ans)')
+        self.gen_return_py_bool('ans')
 
 
 class ReadGen(MethodGen):
@@ -318,7 +268,6 @@ class ReadGen(MethodGen):
                               cvarname='filename')]
         super().__init__(parent,
                          name='read',
-                         func_name='read',
                          arg_list=arg_list,
                          is_static=True,
                          doc_str='read JSON data from file')
@@ -329,7 +278,6 @@ class ReadGen(MethodGen):
             self.gen_return('PyJsonValue::ToPyObject(val)')
         with self.gen_catch_block('std::invalid_argument err'):
             self.gen_value_error('err.what()')
-            self.gen_return('nullptr')
 
 
 class ParseGen(MethodGen):
@@ -341,7 +289,6 @@ class ParseGen(MethodGen):
                               cvarname='json_str')]
         super().__init__(parent,
                          name='parse',
-                         func_name='parse',
                          arg_list=arg_list,
                          is_static=True,
                          doc_str='read JSON data from string')
@@ -352,7 +299,6 @@ class ParseGen(MethodGen):
             self.gen_return('PyJsonValue::ToPyObject(val)')
         with self.gen_catch_block('std::invalid_argument err'):
             self.gen_value_error('err.what()')
-            self.gen_return('nullptr')
 
 
 class WriteGen(MethodGen):
@@ -369,7 +315,6 @@ class WriteGen(MethodGen):
                             cvardefault='false')]
         super().__init__(parent,
                          name='write',
-                         func_name='write',
                          arg_list=arg_list,
                          is_static=True,
                          doc_str='write JSON data to file')
@@ -380,10 +325,9 @@ class WriteGen(MethodGen):
             self.gen_declaration('std:ostringstream', 'buff')
             self._write_line('buff << filename << ": Could not open.";')
             self.gen_value_error('buff.str().c_str()')
-            self.gen_return('nullptr')
         self.gen_val_conv('json_value')
         self._write_line('json_value.write(s, indent);')
-        self.gen_py_return_none()
+        self.gen_return_py_none()
         
         
 class MyDeconvGen(DeconvGen):
@@ -493,6 +437,50 @@ class MyPreambleGen(PreambleGen):
         self._write_line('static const char* EMSG_NOT_OBJ_ARRAY = "neither an object nor an array type";')
         self._write_line('static const char* EMSG_OUT_OF_RANGE = "index is out-of-range";')
 
+
+class KeyListGen(GetterGen):
+
+    def __init__(self, parent,
+                 func_name='get_key_list'):
+        super().__init__(parent, func_name=func_name)
+
+    def gen_body(self):
+        with self.gen_if_block('!val.is_object()'):
+            self.gen_type_error('EMSG_NOT_OBJ')
+        with self.gen_try_block():
+            self.gen_auto_assign('val_list', 'val.key_list()')
+            self.gen_return('PyString::ToPyList(val_list)')
+        with self.gen_catch_block('std::invalid_argument err'):
+            self.gen_value_error('err.what()')
+
+            
+class ItemListGen(GetterGen):
+
+    def __init__(self, parent,
+                 func_name='get_item_list'):
+        super().__init__(parent, func_name=func_name)
+
+    def gen_body(self):
+        with self.gen_if_block('!val.is_object()'):
+            self.gen_type_error('EMSG_NOT_OBJ')
+        with self.gen_try_block():
+            self.gen_auto_assign('item_list', 'val.item_list()')
+            self.gen_auto_assign('n', 'item_list.size()')
+            self.gen_auto_assign('ans', 'PyList_New(n)')
+            with self.gen_for_block('SizeType i = 0',
+                                    'i < n',
+                                    '++ i'):
+                self.gen_assign('auto& p', 'item_list[i]')
+                self.gen_auto_assign('key', 'p.first')
+                self.gen_auto_assign('value', 'p.second')
+                self.gen_auto_assign('value_obj', 'PyJsonValue::ToPyObject(value)')
+                self.gen_auto_assign('item_obj', 'Py_BuildValue("(sO)", key.c_str(), value_obj)')
+                self._write_line('PyList_SETITEM(ans, i, item_obj)')
+            self.gen_return('ans')
+        with self.gen_catch_block('std::invalid_argument err'):
+            self.gen_value_error('err.what()')
+            
+        
 gen = MkPyCapi(classname='JsonValue',
                pyclassname='PyJsonValue',
                namespace='YM',
@@ -503,7 +491,7 @@ gen = MkPyCapi(classname='JsonValue',
                                      'pym/PyString.h',
                                      'ym/JsonValue.h'])
 MyPreambleGen(gen)
-MyReprGen(gen)
+ReprGen(gen, repr_str)
 DeallocGen(gen)
 MyNewGen(gen)
 ConvGen(gen)
@@ -525,6 +513,14 @@ GetBoolGen(gen)
 ReadGen(gen)
 ParseGen(gen)
 WriteGen(gen)
+get_key_list = KeyListGen(gen)
+gen.add_attr('key_list',
+             getter_name=get_key_list.func_name,
+             doc_str='key list')
+get_item_list = ItemListGen(gen)
+gen.add_attr('item_list',
+             getter_name=get_item_list.func_name,
+             doc_str='item list')
 
 gen.make_header()
 
