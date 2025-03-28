@@ -8,7 +8,6 @@
 """
 
 from mk_py_capi import MkPyCapi, IntArg
-from mk_py_capi import FuncGen
 
 
 gen = MkPyCapi(classname='Mt19937',

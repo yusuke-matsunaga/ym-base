@@ -63,7 +63,7 @@ def gen_sq_length(writer):
         writer.gen_return('-1')
     writer.gen_return('val.size()')
 
-gen.add_sequence(sq_length=FuncDef(func=gen_sq_length))
+gen.add_sequence(sq_length=gen_sq_length)
 
 def gen_null(writer):
     writer.gen_return('PyJsonValue::ToPyObject(JsonValue::null())')
