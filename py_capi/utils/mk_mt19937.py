@@ -26,10 +26,8 @@ class Mt19937Gen(PyObjGen):
                          source_include_files=['pym/PyMt19937.h'])
 
         def dealloc_func(writer):
-            self.gen_obj_conv(writer, varname='obj')
             writer.gen_comment('実は mt19937 はクラス名ではない．')
             writer.write_line('obj->mVal.~mersenne_twister_engine();')
-            writer.write_line('PyTYPE(self)->tp_free(self)')
 
         self.add_dealloc(dealloc_func=dealloc_func)
 
@@ -44,9 +42,8 @@ class Mt19937Gen(PyObjGen):
         self.add_new(arg_list=[seed_arg], func_body=new_func)
 
         def eval_body(writer):
-            self.gen_ref_conv(writer, refname='randgen')
-            writer.gen_auto_assign('val', 'randgen.operator()()')
-            writer.gen_return('PyLong_FromLong(val)')
+            writer.gen_auto_assign('rand_val', 'val.operator()()')
+            writer.gen_return('PyLong_FromLong(rand_val)')
 
         self.add_method('eval',
                         func_body=eval_body,
