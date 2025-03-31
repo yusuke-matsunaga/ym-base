@@ -18,12 +18,6 @@ seed_arg = IntArg(name="seed",
 
 class Mt19937Gen(PyObjGen):
     
-    def __new__(cls):
-        return super().__new__(cls,
-                               classname='Mt19937',
-                               namespace='YM',
-                               pyname='Mt19937')
-    
     def __init__(self):
         super().__init__(classname='Mt19937',
                          namespace='YM',

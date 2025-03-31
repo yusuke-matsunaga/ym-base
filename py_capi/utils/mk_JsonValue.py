@@ -26,12 +26,6 @@ class JsonValueArg(ObjArg):
 
 
 class JsonValueGen(PyObjGen):
-
-    def __new__(cls):
-        return super().__new__(cls,
-                               classname='JsonValue',
-                               namespace='YM',
-                               pyname='JsonValue')
     
     def __init__(self):
         super().__init__(classname='JsonValue',
