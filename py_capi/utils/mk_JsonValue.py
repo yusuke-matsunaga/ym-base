@@ -7,7 +7,7 @@
 :copyright: Copyright (C) 2025 Yusuke Matsunaga, All rights reserved.
 """
 
-from mk_py_capi import MkPyCapi, FuncDef
+from mk_py_capi import PyObjGen, FuncDef
 from mk_py_capi import ObjArg, StringArg, BoolArg
 
         
@@ -23,17 +23,179 @@ class JsonValueArg(ObjArg):
                          cvarname=cvarname,
                          cvardefault=None,
                          pyclassname='PyJsonValue')
+
+
+class JsonValueGen(PyObjGen):
+
+    def __new__(cls):
+        return super().__new__(cls,
+                               classname='JsonValue',
+                               namespace='YM',
+                               pyname='JsonValue')
+    
+    def __init__(self):
+        super().__init__(classname='JsonValue',
+                         namespace='YM',
+                         pyname='JsonValue',
+                         header_include_files=['ymconfig.h'],
+                         source_include_files=['pym/PyJsonValue.h',
+                                               'pym/PyString.h',
+                                               'ym/JsonValue.h'])
+
+        self.add_dealloc() # デフォルト実装
+
+        def gen_sq_length(writer):
+            self.gen_ref_conv(writer, refname='val')
+            with writer.gen_if_block('!val.is_object() && !val.is_array()'):
+                writer.gen_type_error('EMSG_NOT_OBJ_ARRAY', noexit=True)
+                writer.gen_return('-1')
+                writer.gen_return('val.size()')
+
+        self.add_sequence(sq_length=gen_sq_length)
+
+        def gen_check_func(writer, check_func):
+            self.gen_ref_conv(writer, refname='val')
+            writer.gen_auto_assign('ans', f'val.{check_func}()')
+            writer.gen_return_py_bool('ans')
+    
+        def gen_is_null(writer):
+            gen_check_func(writer, 'is_null')
+
+        self.add_method('is_null',
+                        func_body=gen_is_null,
+                        doc_str='check if null')
+
+        def gen_is_string(writer):
+            gen_check_func(writer, 'is_string')
+
+        self.add_method('is_string',
+                        doc_str='check if string-type',
+                        func_body=gen_is_string)
+
+        def gen_is_number(writer):
+            gen_check_func(writer, 'is_number')
+
+        self.add_method('is_number',
+                        doc_str='check if number-type',
+                        func_body=gen_is_number)
+
+        def gen_is_int(writer):
+            gen_check_func(writer, 'is_int')
+
+        self.add_method('is_int',
+                        doc_str='check if int-type',
+                        func_body=gen_is_int)
+
+        def gen_is_float(writer):
+            gen_check_func(writer, 'is_float')
+
+        self.add_method('is_float',
+                        doc_str='check if float-type',
+                        func_body=gen_is_float)
+
+        def gen_is_bool(writer):
+            gen_check_func(writer, 'is_bool')
+
+        self.add_method('is_bool',
+                        doc_str='check if bool-type',
+                        func_body=gen_is_bool)
+
+        def gen_is_object(writer):
+            gen_check_func(writer, 'is_object')
+
+        self.add_method('is_object',
+                        doc_str='check if bool-type',
+                        func_body=gen_is_object)
+
+        def gen_is_array(writer):
+            gen_check_func(writer, 'is_array')
+
+        self.add_method('is_array',
+                        doc_str='check if bool-type',
+                        func_body=gen_is_array)
+
+        def gen_has_key(writer):
+            self.gen_ref_conv(writer, refname='val')
+            with writer.gen_if_block('!val.is_object()'):
+                writer.gen_type_error('EMSG_NOT_OBJ')
+            writer.gen_auto_assign('ans', 'val.has_key(key)')
+            writer.gen_return_py_bool('ans')
+
+        self.add_method('has_key',
+                        arg_list=[StringArg(name='key',
+                                            cvarname='key')],
+                        func_body=gen_has_key,
+                        doc_str='check if having the key')
         
+        def gen_get_string(writer):
+            self.gen_ref_conv(writer, refname='val')
+            with writer.gen_if_block('!val.is_string()'):
+                writer.gen_type_error('EMSG_NOT_STR')
+            writer.gen_auto_assign('ans', 'val.get_string()')
+            writer.gen_return_py_string('ans')
+
+        self.add_method('get_string',
+                        func_body=gen_get_string,
+                        doc_str='get string value')
+
+        def gen_get_int(writer):
+            self.gen_ref_conv(writer, refname='val')
+            with writer.gen_if_block('!val.is_int()'):
+                writer.gen_type_error('EMSG_NOT_INT')
+            writer.gen_auto_assign('ans', 'val.get_int()')
+            writer.gen_return_py_int('ans')
+
+        self.add_method('get_int',
+                        func_body=gen_get_int,
+                        doc_str='get int value')
+
+        def gen_get_float(writer):
+            self.gen_ref_conv(writer, refname='val')
+            with writer.gen_if_block('!val.is_float()'):
+                writer.gen_type_error('EMSG_NOT_FLOAT')
+            writer.gen_auto_assign('ans', 'val.get_float()')
+            writer.gen_return_py_float('ans')
+
+        self.add_method('get_float',
+                        func_body=gen_get_float,
+                        doc_str='get float value')
+
+        def gen_get_bool(writer):
+            self.gen_ref_conv(writer, refname='val')
+            with writer.gen_if_block('!val.is_bool()'):
+                writer.gen_type_error('EMSG_NOT_BOOL')
+            writer.gen_auto_assign('ans', 'val.get_bool()')
+            writer.gen_return_py_bool('ans')
+
+        self.add_method('get_bool',
+                        func_body=gen_get_bool,
+                        doc_str='get bool value')
+
+        def gen_write(writer):
+            writer.gen_vardecl(typename='std::ofstream',
+                               varname='s')
+            with writer.gen_if_block('!s'):
+                writer.gen_vardecl(typename='std:ostringstream',
+                                   varname='buff')
+                writer.write_line('buff << filename << ": Could not open.";')
+                writer.gen_value_error('buff.str().c_str()')
+                self.gen_ref_conv(writer, refname='json_value')
+                writer.write_line('json_value.write(s, indent);')
+            writer.gen_return_py_none()
+
+        self.add_method('write',
+                        arg_list=[StringArg(name='filename',
+                                            cvarname='filename'),
+                                  BoolArg(name='indent',
+                                          option=True,
+                                          cvarname='indent',
+                                          cvardefault='false')],
+                        func_body=gen_write,
+                        doc_str='write JSON data to file')
+
         
-gen = MkPyCapi(classname='JsonValue',
-               pyclassname='PyJsonValue',
-               namespace='YM',
-               pyname='JsonValue',
-               header_include_files=['ym_config.h',
-                                     ],
-               source_include_files=['pym/PyJsonValue.h',
-                                     'pym/PyString.h',
-                                     'ym/JsonValue.h'])
+gen = JsonValueGen()
+        
         
 def gen_preamble(writer):
     writer.gen_CRLF()
@@ -49,175 +211,17 @@ def gen_preamble(writer):
 
 gen.add_preamble(gen_preamble)
 
-gen.add_dealloc()
-
 def repr_func(varname):
     return f'{varname}.to_json()'
 
 gen.add_repr(repr_func=repr_func)
-
-def gen_sq_length(writer):
-    writer.gen_ref_conv(refname='val')
-    with writer.gen_if_block('!val.is_object() && !val.is_array()'):
-        writer.gen_type_error('EMSG_NOT_OBJ_ARRAY', noexit=True)
-        writer.gen_return('-1')
-    writer.gen_return('val.size()')
-
-gen.add_sequence(sq_length=gen_sq_length)
 
 def gen_null(writer):
     writer.gen_return('PyJsonValue::ToPyObject(JsonValue::null())')
 
 gen.add_method('null',
                doc_str='make null object',
-               gen_body=gen_null)
-
-
-def gen_check_func(writer, check_func):
-    writer.gen_ref_conv(refname='val')
-    writer.gen_auto_assign('ans', f'val.{check_func}()')
-    writer.gen_return_py_bool('ans')
-    
-def gen_is_null(writer):
-    gen_check_func(writer, 'is_null')
-
-gen.add_method('is_null',
-               gen_body=gen_is_null,
-               doc_str='check if null')
-
-
-def gen_is_string(writer):
-    gen_check_func(writer, 'is_string')
-
-gen.add_method('is_string',
-               doc_str='check if string-type',
-               gen_body=gen_is_string)
-
-
-def gen_is_number(writer):
-    gen_check_func(writer, 'is_number')
-
-gen.add_method('is_number',
-               doc_str='check if number-type',
-               gen_body=gen_is_number)
-
-
-def gen_is_int(writer):
-    gen_check_func(writer, 'is_int')
-
-gen.add_method('is_int',
-               doc_str='check if int-type',
-               gen_body=gen_is_int)
-
-
-def gen_is_float(writer):
-    gen_check_func(writer, 'is_float')
-
-gen.add_method('is_float',
-               doc_str='check if float-type',
-               gen_body=gen_is_float)
-
-
-def gen_is_bool(writer):
-    gen_check_func(writer, 'is_bool')
-
-gen.add_method('is_bool',
-               doc_str='check if bool-type',
-               gen_body=gen_is_bool)
-
-
-def gen_is_object(writer):
-    gen_check_func(writer, 'is_object')
-
-gen.add_method('is_object',
-               doc_str='check if bool-type',
-               gen_body=gen_is_object)
-
-
-def gen_is_array(writer):
-    gen_check_func(writer, 'is_array')
-
-gen.add_method('is_array',
-               doc_str='check if bool-type',
-               gen_body=gen_is_array)
-
-
-def gen_has_key(writer):
-    writer.gen_ref_conv(refname='val')
-    with writer.gen_if_block('!val.is_object()'):
-        writer.gen_type_error('EMSG_NOT_OBJ')
-    writer.gen_auto_assign('ans', 'val.has_key(key)')
-    writer.gen_return_py_bool('ans')
-
-gen.add_method('has_key',
-               arg_list=[StringArg(name='key',
-                                   cvarname='key')],
-               gen_body=gen_has_key,
-               doc_str='check if having the key')
-
-
-def gen_get_string(writer):
-    writer.gen_ref_conv(refname='val')
-    with writer.gen_if_block('!val.is_string()'):
-        writer.gen_type_error('EMSG_NOT_STR')
-    writer.gen_auto_assign('ans', 'val.get_string()')
-    writer.gen_return_py_string('ans')
-
-gen.add_method('get_string',
-               gen_body=gen_get_string,
-               doc_str='get string value')
-
-
-def gen_get_int(writer):
-    writer.gen_ref_conv(refname='val')
-    with writer.gen_if_block('!val.is_int()'):
-        writer.gen_type_error('EMSG_NOT_INT')
-    writer.gen_auto_assign('ans', 'val.get_int()')
-    writer.gen_return_py_int('ans')
-
-gen.add_method('get_int',
-               gen_body=gen_get_int,
-               doc_str='get int value')
-
-
-def gen_get_float(writer):
-    writer.gen_ref_conv(refname='val')
-    with writer.gen_if_block('!val.is_float()'):
-        writer.gen_type_error('EMSG_NOT_FLOAT')
-    writer.gen_auto_assign('ans', 'val.get_float()')
-    writer.gen_return_py_float('ans')
-
-gen.add_method('get_float',
-               gen_body=gen_get_float,
-               doc_str='get float value')
-
-
-def gen_get_bool(writer):
-    writer.gen_ref_conv(refname='val')
-    with writer.gen_if_block('!val.is_bool()'):
-        writer.gen_type_error('EMSG_NOT_BOOL')
-    writer.gen_auto_assign('ans', 'val.get_bool()')
-    writer.gen_return_py_bool('ans')
-
-gen.add_method('get_bool',
-               gen_body=gen_get_bool,
-               doc_str='get bool value')
-
-
-def gen_read(writer):
-    with writer.gen_try_block():
-        writer.gen_auto_assign('val', 'JsonValue::read(filename)')
-        writer.gen_return('PyJsonValue::ToPyObject(val)')
-    with writer.gen_catch_block('std::invalid_argument err'):
-        writer.gen_value_error('err.what()')
-
-gen.add_method('read',
-               arg_list=[StringArg(name='filename',
-                                   cvarname='filename')],
-               is_static=True,
-               gen_body=gen_read,
-               doc_str='read JSON data from file')
-
+               func_body=gen_null)
 
 def gen_parse(writer):
     with writer.gen_try_block():
@@ -230,32 +234,22 @@ gen.add_method('parse',
                arg_list=[StringArg(name='json_str',
                                    cvarname='json_str')],
                is_static=True,
-               gen_body=gen_parse,
+               func_body=gen_parse,
                doc_str='read JSON data from string')
 
+def gen_read(writer):
+    with writer.gen_try_block():
+        writer.gen_auto_assign('val', 'JsonValue::read(filename)')
+        writer.gen_return('PyJsonValue::ToPyObject(val)')
+    with writer.gen_catch_block('std::invalid_argument err'):
+        writer.gen_value_error('err.what()')
 
-
-def gen_write(writer):
-    writer.gen_vardecl(typename='std::ofstream',
-                       varname='s')
-    with writer.gen_if_block('!s'):
-        writer.gen_vardecl(typename='std:ostringstream',
-                           varname='buff')
-        writer.write_line('buff << filename << ": Could not open.";')
-        writer.gen_value_error('buff.str().c_str()')
-    writer.gen_ref_conv(refname='json_value')
-    writer.write_line('json_value.write(s, indent);')
-    writer.gen_return_py_none()
-
-gen.add_method('write',
+gen.add_method('read',
                arg_list=[StringArg(name='filename',
-                                   cvarname='filename'),
-                         BoolArg(name='indent',
-                                 option=True,
-                                 cvarname='indent',
-                                 cvardefault='false')],
-               gen_body=gen_write,
-               doc_str='write JSON data to file')
+                                   cvarname='filename')],
+               is_static=True,
+               func_body=gen_read,
+               doc_str='read JSON data from file')
 
 def key_list_gen(writer):
     with writer.gen_if_block('!val.is_object()'):
@@ -376,7 +370,7 @@ def deconv_gen(writer):
     writer.gen_CRLF()
     writer.gen_return('false')
     
-gen.add_deconv(gen_body=deconv_gen)
+gen.add_deconv(func_body=deconv_gen)
 
 
 def new_gen(writer):
@@ -385,16 +379,16 @@ def new_gen(writer):
 gen.add_new(arg_list=[JsonValueArg(name='value',
                                    option=True,
                                    cvarname='val')],
-            gen_body=new_gen)
+            func_body=new_gen)
 
 gen.add_getter('get_key_list',
-               gen_body=key_list_gen)
+               func_body=key_list_gen)
 
 gen.add_attr('key_list',
              getter_name='get_key_list',
              doc_str='key list')
 
-gen.add_getter('get_item_list', gen_body=item_list_gen)
+gen.add_getter('get_item_list', func_body=item_list_gen)
 
 gen.add_attr('item_list',
              getter_name='get_item_list',
