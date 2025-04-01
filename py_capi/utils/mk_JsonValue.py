@@ -269,7 +269,7 @@ def item_list_gen(writer):
     with writer.gen_catch_block('std::invalid_argument err'):
         writer.gen_value_error('err.what()')
 
-gen.add_conv()
+gen.add_conv('default')
 
 def deconv_gen(writer):
     with writer.gen_if_block('obj == nullptr'):
@@ -359,7 +359,7 @@ def deconv_gen(writer):
     writer.gen_CRLF()
     writer.gen_return('false')
     
-gen.add_deconv(func_body=deconv_gen)
+gen.add_deconv(deconv_gen)
 
 
 def new_gen(writer):
