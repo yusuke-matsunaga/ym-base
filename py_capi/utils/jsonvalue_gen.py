@@ -201,7 +201,7 @@ def item_list_gen(writer):
     
 def new_gen(writer):
     writer.gen_return('PyJsonValue::ToPyObject(val)')
-
+    
 
 class JsonValueGen(PyObjGen):
     
@@ -309,7 +309,33 @@ class JsonValueGen(PyObjGen):
                       doc_str='item list')
 
         self.add_conv('default')
-        self.add_deconv('default', extra_func='extra_json_devon')
+
+        def deconv_gen(writer):
+            # PyObject* の特殊な値の場合の処理
+            val_map_list = [('nullptr', 'JsonValue::null()', '"null オブジェクト"'),
+                            ('Py_True', 'JsonValue(true)', '"true オブジェクト"'),
+                            ('Py_False', 'JsonValue(false)', '"false オブジェクト"')]
+            for obj_val, val, comment in val_map_list:
+                with writer.gen_if_block(f'obj == {obj_val}'):
+                    writer.gen_comment(comment)
+                    writer.gen_assign('val', val)
+                    writer.gen_return('true')
+            # PyObject* の拡張型に対する処理
+            pytype_list = [('PyString', '"文字列型"'),
+                           ('PyLong', '"整数型"'),
+                           ('PyFloat', '"浮動小数点型"'),
+                           ('PyDict<JsonValue, PyJsonValue>', '"辞書型"'),
+                           ('PyList<JsonValue, PyJsonValue>', '"シーケンス(リスト)型"')]
+            for pytype, comment in pytype_list:
+                with writer.gen_if_block(f'{pytype}::Check(obj)'):
+                    writer.gen_comment(comment)
+                    writer.gen_auto_assign('val1', f'{pytype}::Get(obj)')
+                    writer.gen_assign('val', 'JsonValue(val1)')
+                    writer.gen_return('true')
+            # PyJsonValue の変換
+            self.gen_raw_conv(writer)
+            writer.gen_return('false')
+        self.add_deconv(deconv_gen)
 
 
 if __name__ == '__main__':
