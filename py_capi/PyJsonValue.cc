@@ -9,6 +9,10 @@
 #include "pym/PyJsonValue.h"
 #include "pym/PyModule.h"
 #include "pym/PyString.h"
+#include "pym/PyLong.h"
+#include "pym/PyFloat.h"
+#include "pym/PyDict.h"
+#include "pym/PyList.h"
 #include "ym/JsonValue.h"
 
 
@@ -671,54 +675,32 @@ PyJsonValue::Deconv::operator()(
       return true;
     }
   }
-  if ( PyLong_Check(obj) ) {
+  if ( PyLong::Check(obj) ) {
     // 整数型
-    int arg_val = PyLong_AsLong(obj);
+    int arg_val = PyLong::AsLong(obj);
     val = JsonValue(arg_val);
     return true;
   }
-  if ( PyFloat_Check(obj) ) {
+  if ( PyFloat::Check(obj) ) {
     // 浮動小数点型
-    auto arg_val = PyFloat_AsDouble(obj);
+    auto arg_val = PyFloat::AsDouble(obj);
     val = JsonValue(arg_val);
     return true;
   }
-  if ( PyDict_Check(obj) ) {
+  if ( PyDict<JsonValue, PyJsonValue>::Check(obj) ) {
     // 辞書(オブジェクト)
-    auto item_list = PyDict_Items(obj);
-    SizeType n = PyList_Size(item_list);
-    unordered_map<string, JsonValue> item_dict;
-    for ( SizeType i = 0; i < n; ++ i ) {
-      auto pair = PyList_GetItem(item_list, i);
-      char* key = nullptr;
-      PyObject* item_obj = nullptr;
-      if ( !PyArg_ParseTuple(pair, "sO", &key, &item_obj) ) {
-	return false;
-      }
-      JsonValue item_val;
-      if ( !operator()(item_obj, item_val) ) {
-	return false;
-      }
-      item_dict.emplace(key, item_val);
+    std::unordered_map<std::string, JsonValue> item_dict;
+    if ( PyDict<JsonValue, PyJsonValue>::FromPyObject(obj, item_dict) ) {
+      val = JsonValue(item_dict);
+      return true;
     }
-    Py_DECREF(item_list);
-    val = JsonValue(item_dict);
-    return true;
   }
-  if ( PySequence_Check(obj) ) {
-    // リスト
-    SizeType n = PySequence_Size(obj);
-    vector<JsonValue> elem_list(n);
-    for ( SizeType i = 0; i < n; ++ i ) {
-      auto elem_obj = PySequence_GetItem(obj, i);
-      JsonValue elem_val;
-      if ( !operator()(elem_obj, elem_val) ) {
-	return false;
-      }
-      elem_list[i] = elem_val;
+  if ( PyList<JsonValue, PyJsonValue>::Check(obj) ) {
+    vector<JsonValue> elem_list;
+    if ( PyList<JsonValue, PyJsonValue>::FromPyObject(obj, elem_list) ) {
+      val = JsonValue(elem_list);
+      return true;
     }
-    val = JsonValue(elem_list);
-    return true;
   }
 
   return false;
