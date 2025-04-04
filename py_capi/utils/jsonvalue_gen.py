@@ -198,94 +198,6 @@ def item_list_gen(writer):
         writer.gen_return('ans')
     with writer.gen_catch_block('std::invalid_argument err'):
         writer.gen_value_error('err.what()')
-
-def deconv_gen(writer):
-    with writer.gen_if_block('obj == nullptr'):
-        writer.gen_comment('null')
-        writer.gen_assign('val', 'JsonValue:null()')
-        writer.gen_return('true')
-
-    writer.gen_CRLF()
-    writer.gen_comment('ブール型は他の型からの変換が常に成功するので先にチェックする．')
-    with writer.gen_if_block('obj == Py_True'):
-        writer.gen_comment('true')
-        writer.gen_assign('val', 'JsonValue(true)')
-        writer.gen_return('true')
-    with writer.gen_if_block('obj == Py_False'):
-        writer.gen_comment('false')
-        writer.gen_assign('val', 'JsonValue(false)')
-        writer.gen_return('true')
-
-    writer.gen_CRLF()
-    writer.gen_comment('文字列型からの変換')
-    with writer.gen_if_block('PyString::Check(obj)'):
-        writer.gen_auto_assign('str_val', 'PyString::AsString(obj)')
-        writer.gen_assign('val', 'JsonValue(str_val)')
-        writer.gen_return('true')
-
-    writer.gen_CRLF()
-    writer.gen_comment('整数型からの変換')
-    with writer.gen_if_block('PyLong_Check(obj)'):
-        writer.gen_auto_assign('int_val', 'PyLong_AsLong(obj)')
-        writer.gen_assign('val', 'JsonValue(int_val)')
-        writer.gen_return('true')
-
-    writer.gen_CRLF()
-    writer.gen_comment('浮動小数点型からの変換')
-    with writer.gen_if_block('PyFloat_Check(obj)'):
-        writer.gen_auto_assign('double_val', 'PyFloat_AsDouble(obj)')
-        writer.gen_assign('val', 'JsonValue(double_val)')
-
-    writer.gen_CRLF()
-    writer.gen_comment('シーケンス型からの変換')
-    with writer.gen_if_block('PySequence_Check(obj)'):
-        writer.gen_auto_assign('n', 'PySequence_Size(obj)')
-        writer.gen_vardecl(typename='std::vector<JsonValue>',
-                           varname='elem_list(n)')
-        with writer.gen_for_block('SizeType i = 0',
-                                'i < n',
-                                '++ i'):
-            writer.gen_auto_assign('elem_obj', 'PySequence_GetItem(obj, i)')
-            writer.gen_vardecl(typename='JsonValue',
-                               varname='elem_val')
-            with writer.gen_if_block('!operator()(elem_obj, elem_val)'):
-                writer.gen_return('false')
-            writer.gen_assign('elem_list[i]', 'elem_val')
-        writer.gen_assign('val', 'JsonValue(elem_list)')
-        writer.gen_return('true')
-            
-    writer.gen_CRLF()
-    writer.gen_comment('辞書型からの変換')
-    with writer.gen_if_block('PyDict_Check(obj)'):
-        writer.gen_auto_assign('item_list', 'PyDict_Items(obj)')
-        writer.gen_auto_assign('n', 'PyList_Size(item_list)')
-        writer.gen_vardecl(typename='std::unordered_map<std::string, JsonValue>',
-                           varname='item_dict')
-        with writer.gen_for_block('SizeType i = 0',
-                                'i < n',
-                                '++ i'):
-            writer.gen_auto_assign('pair', 'PyList_GetItem(item_list, i)')
-            writer.gen_assign('char* key', 'nullptr')
-            writer.gen_assign('PyObject* item_obj', 'nullptr')
-            with writer.gen_if_block('!PyArg_ParseTuple(pair, "sO", &key, &item_obj)'):
-                writer.gen_return('false')
-            writer.gen_vardecl(typename='JsonValue',
-                               varname='item_val')
-            with writer.gen_if_block('!operator()(item_obj, item_val)'):
-                writer.gen_return('false')
-            writer.write_line('item_dict.emplace(key, item_val);')
-        writer.write_line('Py_DECREF(item_list)')
-        writer.gen_assign('val', 'JsonValue(item_list)')
-        writer.gen_return('true')
-
-    writer.gen_CRLF()
-    writer.gen_comment('PyJsonValue 型からの変換')
-    with writer.gen_if_block('PyJsonValue::Check(obj)'):
-        writer.gen_assign('val', 'PyJsonValue::_get_ref(obj)')
-        writer.gen_return('true')
-
-    writer.gen_CRLF()
-    writer.gen_return('false')
     
 def new_gen(writer):
     writer.gen_return('PyJsonValue::ToPyObject(val)')
@@ -397,7 +309,7 @@ class JsonValueGen(PyObjGen):
                       doc_str='item list')
 
         self.add_conv('default')
-        self.add_deconv(deconv_gen)
+        self.add_deconv('default', extra_func='extra_json_devon')
 
 
 if __name__ == '__main__':
