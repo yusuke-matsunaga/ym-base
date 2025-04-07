@@ -39,7 +39,6 @@ def gen_preamble(writer):
 def repr_func(writer):
     writer.gen_auto_assign('str_val', 'val.to_json()')
 
-
 def gen_null(writer):
     writer.gen_return('PyJsonValue::ToPyObject(JsonValue::null())')
 
@@ -74,14 +73,14 @@ def gen_is_array(writer):
 def gen_has_key(writer):
     with writer.gen_if_block('!val.is_object()'):
         writer.gen_type_error('EMSG_NOT_OBJ')
-        writer.gen_auto_assign('ans', 'val.has_key(key)')
-        writer.gen_return_py_bool('ans')
+    writer.gen_auto_assign('ans', 'val.has_key(key)')
+    writer.gen_return_py_bool('ans')
         
 def gen_get_string(writer):
     with writer.gen_if_block('!val.is_string()'):
         writer.gen_type_error('EMSG_NOT_STR')
-        writer.gen_auto_assign('ans', 'val.get_string()')
-        writer.gen_return_py_string('ans')
+    writer.gen_auto_assign('ans', 'val.get_string()')
+    writer.gen_return_py_string('ans')
         
 def gen_get_int(writer):
     with writer.gen_if_block('!val.is_int()'):
@@ -109,7 +108,7 @@ def gen_write(writer):
                            varname='buff')
         writer.write_line('buff << filename << ": Could not open.";')
         writer.gen_value_error('buff.str().c_str()')
-        writer.write_line('json_value.write(s, indent);')
+        writer.write_line('val.write(s, indent);')
     writer.gen_return_py_none()
 
 def gen_parse(writer):
@@ -137,19 +136,16 @@ def gen_sq_item(writer):
         writer.gen_type_error('EMSG_NOT_ARRAY')
     with writer.gen_try_block():
         writer.gen_auto_assign('index1', '( index >= 0 ) ? index : val.size() + index')
-        writer.gen_auto_assign('ans', 'val.at(index1')
+        writer.gen_auto_assign('ans', 'val.at(index1)')
         writer.gen_return('PyJsonValue::ToPyObject(ans)')
-    with writer.gen_catch_block('std::invalid_argument'):
-        writer.gen_vardecl(typename='std::ostringstream',
-                           varname='buf')
-        writer.write_line('buf << key_str << ": invalid key";')
-        writer.gen_value_error('buf.str().c_str()')
+    with writer.gen_catch_block('std::invalid_argument error'):
+        writer.gen_value_error('error.what()')
 
 def gen_mp_subscript(writer):
     with writer.gen_if_block('PyString::Check(key)'):
         with writer.gen_if_block('!val.is_object()'):
             writer.gen_type_error('EMSG_NOT_OBJ')
-        writer.gen_auto_assign('key_str', 'PyString::FromPyObject(key)')
+        writer.gen_auto_assign('key_str', 'PyString::Get(key)')
         with writer.gen_try_block():
             writer.gen_auto_assign('ans', 'val.at(key_str)')
             writer.gen_return('PyJsonValue::ToPyObject(ans)')
@@ -193,8 +189,8 @@ def item_list_gen(writer):
             writer.gen_auto_assign('key', 'p.first')
             writer.gen_auto_assign('value', 'p.second')
             writer.gen_auto_assign('value_obj', 'PyJsonValue::ToPyObject(value)')
-            writer.gen_auto_assign('item_obj', 'Py_BuildValue("(sO)", key.c_str(), value_obj)')
-            writer.write_line('PyList_SETITEM(ans, i, item_obj)')
+            writer.gen_auto_assign('item_obj', 'Py_BuildValue("sO", key.c_str(), value_obj)')
+            writer.write_line('PyList_SET_ITEM(ans, i, item_obj);')
         writer.gen_return('ans')
     with writer.gen_catch_block('std::invalid_argument err'):
         writer.gen_value_error('err.what()')
@@ -209,9 +205,14 @@ class JsonValueGen(PyObjGen):
         super().__init__(classname='JsonValue',
                          namespace='YM',
                          pyname='JsonValue',
-                         header_include_files=['ymconfig.h'],
+                         header_include_files=['ym_config.h',
+                                               'ym/JsonValue.h'],
                          source_include_files=['pym/PyJsonValue.h',
                                                'pym/PyString.h',
+                                               'pym/PyLong.h',
+                                               'pym/PyFloat.h',
+                                               'pym/PyDict.h',
+                                               'pym/PyList.h',
                                                'ym/JsonValue.h'])
 
         self.add_preamble(gen_preamble)
@@ -220,6 +221,18 @@ class JsonValueGen(PyObjGen):
 
         self.add_repr(repr_func=repr_func)
 
+
+        def richcmp_func(writer):
+            with writer.gen_if_block('PyJsonValue::Check(self) && PyJsonValue::Check(other)'):
+                self.gen_ref_conv(writer, objname='self', refname='val1')
+                self.gen_ref_conv(writer, objname='other', refname='val2')
+                with writer.gen_if_block('op == Py_EQ'):
+                    writer.gen_return_py_bool('val1 == val2')
+                with writer.gen_if_block('op == Py_NE'):
+                    writer.gen_return_py_bool('val1 != val2')
+            writer.write_line('Py_RETURN_NOTIMPLEMENTED;')
+        self.add_richcompare(cmp_func=richcmp_func)
+        
         self.add_method('null',
                         is_static=True,
                         doc_str='make null object',
@@ -292,7 +305,7 @@ class JsonValueGen(PyObjGen):
 
         self.add_mapping(mp_subscript=gen_mp_subscript)
         
-        self.add_new(arg_list=[JsonValueArg(name='value',
+        self.add_new(arg_list=[JsonValueArg(name=None,
                                             option=True,
                                             cvarname='val')],
                      func_body=new_gen)
@@ -320,20 +333,20 @@ class JsonValueGen(PyObjGen):
                     writer.gen_comment(comment)
                     writer.gen_assign('val', val)
                     writer.gen_return('true')
-            # PyObject* の拡張型に対する処理
-            pytype_list = [('PyString', '"文字列型"'),
-                           ('PyLong', '"整数型"'),
-                           ('PyFloat', '"浮動小数点型"'),
-                           ('PyDict<JsonValue, PyJsonValue>', '"辞書型"'),
-                           ('PyList<JsonValue, PyJsonValue>', '"シーケンス(リスト)型"')]
-            for pytype, comment in pytype_list:
-                with writer.gen_if_block(f'{pytype}::Check(obj)'):
-                    writer.gen_comment(comment)
-                    writer.gen_auto_assign('val1', f'{pytype}::Get(obj)')
-                    writer.gen_assign('val', 'JsonValue(val1)')
-                    writer.gen_return('true')
             # PyJsonValue の変換
             self.gen_raw_conv(writer)
+            # PyObject* の拡張型に対する処理
+            pytype_list = [('PyString', 'auto', '"文字列型"'),
+                           ('PyLong', 'int', '"整数型"'),
+                           ('PyFloat', 'auto', '"浮動小数点型"'),
+                           ('PyDict<JsonValue, PyJsonValue>', 'auto', '"辞書型"'),
+                           ('PyList<JsonValue, PyJsonValue>', 'auto', '"シーケンス(リスト)型"')]
+            for pytype, ctype, comment in pytype_list:
+                with writer.gen_if_block(f'{pytype}::Check(obj)'):
+                    writer.gen_comment(comment)
+                    writer.gen_assign(f'{ctype} val1', f'{pytype}::Get(obj)')
+                    writer.gen_assign('val', 'JsonValue(val1)')
+                    writer.gen_return('true')
             writer.gen_return('false')
         self.add_deconv(deconv_gen)
 

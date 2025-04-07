@@ -5,7 +5,7 @@
 /// @brief PyJsonValue のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2022 Yusuke Matsunaga
+/// Copyright (C) 2025 Yusuke Matsunaga
 /// All rights reserved.
 
 #define PY_SSIZE_T_CLEAN
@@ -16,7 +16,6 @@
 
 
 BEGIN_NAMESPACE_YM
-
 
 //////////////////////////////////////////////////////////////////////
 /// @class PyJsonValue PyJsonValue.h "PyJsonValue.h"
@@ -29,7 +28,7 @@ class PyJsonValue
   using ElemType = JsonValue;
 
 public:
-
+  
   /// @brief JsonValue を PyObject* に変換するファンクタクラス
   struct Conv {
     PyObject*
@@ -37,7 +36,7 @@ public:
       const ElemType& val
     );
   };
-
+  
   /// @brief PyObject* から JsonValue を取り出すファンクタクラス
   struct Deconv {
     bool
@@ -60,10 +59,10 @@ public:
   init(
     PyObject* m ///< [in] 親のモジュールを表す PyObject
   );
-
+  
   /// @brief JsonValue を表す PyObject を作る．
   /// @return 生成した PyObject を返す．
-  ///
+  /// 
   /// 返り値は新しい参照が返される．
   static
   PyObject*
@@ -74,13 +73,13 @@ public:
     Conv conv;
     return conv(val);
   }
-
+  
   /// @brief PyObject から JsonValue を取り出す．
   /// @return 正しく変換できた時に true を返す．
   static
   bool
   FromPyObject(
-    PyObject* obj, ///< [in] Python のオブジェクト
+    PyObject* obj, ///< [in] Python のオブジェクト,
     ElemType& val  ///< [out] 結果を格納する変数
   )
   {
@@ -94,6 +93,21 @@ public:
   Check(
     PyObject* obj ///< [in] 対象の PyObject
   );
+  
+  /// @brief PyObject から JsonValue を取り出す．
+  static
+  ElemType
+  Get(
+    PyObject* obj ///< [in] 対象の Python オブジェクト
+  )
+  {
+    ElemType val;
+    if ( PyJsonValue::FromPyObject(obj, val) ) {
+      return val;
+    }
+    PyErr_SetString(PyExc_TypeError, "Could not convert to JsonValue");
+    return val;
+  }
 
   /// @brief JsonValue を表す PyObject から JsonValue を取り出す．
   /// @return JsonValue を返す．

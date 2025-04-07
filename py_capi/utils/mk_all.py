@@ -38,7 +38,7 @@ else:
     source_dir = args.source_dir
 
 from ymbase_gen import YmbaseGen
-ymbase_gen = YmbaseGen(['PyMt19937', 'PyJsonValue'])
+ymbase_gen = YmbaseGen()
 filename = os.path.join(include_dir, 'ymbase.h')
 with open(filename, 'wt') as fout:
     ymbase_gen.make_header(fout=fout)

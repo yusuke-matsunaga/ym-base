@@ -5,7 +5,7 @@
 /// @brief PyMt19937 のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2022 Yusuke Matsunaga
+/// Copyright (C) 2025 Yusuke Matsunaga
 /// All rights reserved.
 
 #define PY_SSIZE_T_CLEAN
@@ -19,7 +19,7 @@ BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
 /// @class PyMt19937 PyMt19937.h "PyMt19937.h"
-/// @brief mt19937 を Python から使用するための拡張
+/// @brief std::mt19937 を Python から使用するための拡張
 ///
 /// 実際には static メンバ関数しか持たないのでクラスではない．
 //////////////////////////////////////////////////////////////////////
@@ -28,8 +28,9 @@ class PyMt19937
   using ElemType = std::mt19937;
 
 public:
-
+  
   // このクラスは Conv/Deconv を持たない．
+
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -44,15 +45,15 @@ public:
     PyObject* m ///< [in] 親のモジュールを表す PyObject
   );
 
-  /// @brief PyObject が mt19937 タイプか調べる．
+  /// @brief PyObject が std::mt19937 タイプか調べる．
   static
   bool
   Check(
     PyObject* obj ///< [in] 対象の PyObject
   );
 
-  /// @brief mt19937 を表す PyObject から mt19937 を取り出す．
-  /// @return mt19937 を返す．
+  /// @brief std::mt19937 を表す PyObject から std::mt19937 を取り出す．
+  /// @return std::mt19937 を返す．
   ///
   /// Check(obj) == true であると仮定している．
   static
@@ -61,7 +62,7 @@ public:
     PyObject* obj ///< [in] 変換元の PyObject
   );
 
-  /// @brief mt19937 を表すオブジェクトの型定義を返す．
+  /// @brief std::mt19937 を表すオブジェクトの型定義を返す．
   static
   PyTypeObject*
   _typeobject();

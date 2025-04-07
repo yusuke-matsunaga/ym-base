@@ -383,5 +383,3 @@ def test_object1():
     assert e.type == ValueError
     assert str(e.value) == "abc: invalid key"
     
-    
-    

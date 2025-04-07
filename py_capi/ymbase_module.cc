@@ -3,7 +3,7 @@
 /// @brief Python 用の ymbase モジュールを定義する．
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2022 Yusuke Matsunaga
+/// Copyright (C) 2025 Yusuke Matsunaga
 /// All rights reserved.
 
 #define PY_SSIZE_T_CLEAN
@@ -18,18 +18,19 @@ BEGIN_NAMESPACE_YM
 
 BEGIN_NONAMESPACE
 
-// メソッド定義構造体
-PyMethodDef ymbase_methods[] = {
-  {nullptr, nullptr, 0, nullptr},
+// メソッド定義
+PyMethodDef methods[] = {
+  // end-marker
+  {nullptr, nullptr, 0, nullptr}
 };
 
 // モジュール定義構造体
 PyModuleDef ymbase_module = {
   PyModuleDef_HEAD_INIT,
   "ymbase",
-  PyDoc_STR("ymbase: Extension module for ym-base"),
+  PyDoc_STR(""),
   -1,
-  ymbase_methods,
+  methods,
 };
 
 END_NONAMESPACE
@@ -41,11 +42,10 @@ PyInit_ymbase()
   if ( m == nullptr ) {
     return nullptr;
   }
-
+  
   if ( !PyMt19937::init(m) ) {
     goto error;
   }
-
   if ( !PyJsonValue::init(m) ) {
     goto error;
   }
