@@ -219,7 +219,7 @@ class JsonValueGen(PyObjGen):
 
         self.add_dealloc() # デフォルト実装
 
-        self.add_repr(repr_func=repr_func)
+        self.add_repr(func_body=repr_func)
 
 
         def richcmp_func(writer):
@@ -231,7 +231,7 @@ class JsonValueGen(PyObjGen):
                 with writer.gen_if_block('op == Py_NE'):
                     writer.gen_return_py_bool('val1 != val2')
             writer.write_line('Py_RETURN_NOTIMPLEMENTED;')
-        self.add_richcompare(cmp_func=richcmp_func)
+        self.add_richcompare(func_body=richcmp_func)
         
         self.add_method('null',
                         is_static=True,

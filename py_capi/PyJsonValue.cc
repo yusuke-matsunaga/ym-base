@@ -295,7 +295,6 @@ has_key(
   PyObject* kwds
 )
 {
-
   static const char* kwlist[] = {
     "key",
     nullptr
@@ -391,7 +390,6 @@ write(
   PyObject* kwds
 )
 {
-
   static const char* kwlist[] = {
     "filename",
     "indent",
@@ -433,7 +431,6 @@ parse(
   PyObject* kwds
 )
 {
-
   static const char* kwlist[] = {
     "json_str",
     nullptr
@@ -466,7 +463,6 @@ read(
   PyObject* kwds
 )
 {
-
   static const char* kwlist[] = {
     "filename",
     nullptr
@@ -633,7 +629,6 @@ new_func(
   PyObject* kwds
 )
 {
-
   static const char* kwlist[] = {
     "",
     nullptr

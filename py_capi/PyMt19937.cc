@@ -79,7 +79,6 @@ new_func(
   PyObject* kwds
 )
 {
-  
   static const char* kwlist[] = {
     "seed",
     nullptr

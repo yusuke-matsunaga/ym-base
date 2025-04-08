@@ -30,7 +30,7 @@ class Mt19937Gen(PyObjGen):
             writer.gen_comment('実は mt19937 はクラス名ではない．')
             writer.write_line('obj->mVal.~mersenne_twister_engine();')
 
-        self.add_dealloc(dealloc_func=dealloc_func)
+        self.add_dealloc(func_body=dealloc_func)
 
         def new_func(writer):
             writer.gen_auto_assign('obj', 'type->tp_alloc(type, 0)')
