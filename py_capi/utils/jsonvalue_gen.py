@@ -8,17 +8,15 @@
 """
 
 from mk_py_capi import PyObjGen
-from mk_py_capi import ObjArg, StringArg, BoolArg
+from mk_py_capi import OptArg, KwdArg, ObjConvArg, StringArg, BoolArg
 
         
-class JsonValueArg(ObjArg):
+class JsonValueArg(ObjConvArg):
 
     def __init__(self, *,
                  name=None,
-                 option=False,
                  cvarname):
         super().__init__(name=name,
-                         option=option,
                          cvartype='JsonValue',
                          cvarname=cvarname,
                          cvardefault=None,
@@ -281,8 +279,9 @@ class JsonValueGen(PyObjGen):
         self.add_method('write',
                         arg_list=[StringArg(name='filename',
                                             cvarname='filename'),
+                                  OptArg(),
+                                  KwdArg(),
                                   BoolArg(name='indent',
-                                          option=True,
                                           cvarname='indent',
                                           cvardefault='false')],
                         func_body=gen_write,
@@ -305,8 +304,8 @@ class JsonValueGen(PyObjGen):
 
         self.add_mapping(mp_subscript=gen_mp_subscript)
         
-        self.add_new(arg_list=[JsonValueArg(name=None,
-                                            option=True,
+        self.add_new(arg_list=[OptArg(),
+                               JsonValueArg(name=None,
                                             cvarname='val')],
                      func_body=new_gen)
 

@@ -7,7 +7,7 @@
 :copyright: Copyright (C) 2025 Yusuke Matsunaga, All rights reserved.
 """
 
-from mk_py_capi import PyObjGen, IntArg
+from mk_py_capi import PyObjGen, OptArg, KwdArg, IntArg
 
 
 class Mt19937Gen(PyObjGen):
@@ -20,11 +20,6 @@ class Mt19937Gen(PyObjGen):
                          header_include_files=['ym_config.h',
                                                '<random>'],
                          source_include_files=['pym/PyMt19937.h'])
-
-        seed_arg = IntArg(name="seed",
-                          option=True,
-                          cvarname='seed_val',
-                          cvardefault='-1')
 
         def dealloc_func(writer):
             writer.gen_comment('実は mt19937 はクラス名ではない．')
@@ -39,8 +34,11 @@ class Mt19937Gen(PyObjGen):
             with writer.gen_if_block('seed_val != -1'):
                 writer.write_line('obj1->mVal.seed(seed_val);')
             writer.gen_return('obj')
-                         
-        self.add_new(arg_list=[seed_arg], func_body=new_func)
+
+        seed_arg = IntArg(name="seed",
+                          cvarname='seed_val',
+                          cvardefault='-1')
+        self.add_new(arg_list=[OptArg(), KwdArg(), seed_arg], func_body=new_func)
 
         def eval_body(writer):
             writer.gen_auto_assign('rand_val', 'val.operator()()')
