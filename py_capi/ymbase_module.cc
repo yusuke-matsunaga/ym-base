@@ -42,7 +42,7 @@ PyInit_ymbase()
   if ( m == nullptr ) {
     return nullptr;
   }
-  
+
   if ( !PyMt19937::init(m) ) {
     goto error;
   }

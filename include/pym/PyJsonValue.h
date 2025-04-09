@@ -25,10 +25,12 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 class PyJsonValue
 {
+public:
+
   using ElemType = JsonValue;
 
 public:
-  
+
   /// @brief JsonValue を PyObject* に変換するファンクタクラス
   struct Conv {
     PyObject*
@@ -36,7 +38,7 @@ public:
       const ElemType& val
     );
   };
-  
+
   /// @brief PyObject* から JsonValue を取り出すファンクタクラス
   struct Deconv {
     bool
@@ -59,7 +61,7 @@ public:
   init(
     PyObject* m ///< [in] 親のモジュールを表す PyObject
   );
-  
+
   /// @brief JsonValue を表す PyObject を作る．
   /// @return 生成した PyObject を返す．
   /// 
@@ -73,7 +75,7 @@ public:
     Conv conv;
     return conv(val);
   }
-  
+
   /// @brief PyObject から JsonValue を取り出す．
   /// @return 正しく変換できた時に true を返す．
   static
@@ -93,7 +95,7 @@ public:
   Check(
     PyObject* obj ///< [in] 対象の PyObject
   );
-  
+
   /// @brief PyObject から JsonValue を取り出す．
   static
   ElemType

@@ -25,10 +25,12 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 class PyMt19937
 {
+public:
+
   using ElemType = std::mt19937;
 
 public:
-  
+
   // このクラスは Conv/Deconv を持たない．
 
 

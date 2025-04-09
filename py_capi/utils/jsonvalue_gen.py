@@ -207,7 +207,7 @@ class JsonValueGen(PyObjGen):
                                                'ym/JsonValue.h'],
                          source_include_files=['pym/PyJsonValue.h',
                                                'pym/PyString.h',
-                                               'pym/PyLong.h',
+                                               'pym/PyInt.h',
                                                'pym/PyFloat.h',
                                                'pym/PyDict.h',
                                                'pym/PyList.h',
@@ -335,17 +335,23 @@ class JsonValueGen(PyObjGen):
             # PyJsonValue の変換
             self.gen_raw_conv(writer)
             # PyObject* の拡張型に対する処理
-            pytype_list = [('PyString', 'auto', '"文字列型"'),
-                           ('PyLong', 'int', '"整数型"'),
-                           ('PyFloat', 'auto', '"浮動小数点型"'),
-                           ('PyDict<JsonValue, PyJsonValue>', 'auto', '"辞書型"'),
-                           ('PyList<JsonValue, PyJsonValue>', 'auto', '"シーケンス(リスト)型"')]
+            pytype_list = [('PyString', 'std::string', '"文字列型"'),
+                           ('PyInt', 'int', '"整数型"'),
+                           ('PyFloat', 'double', '"浮動小数点型"'),
+                           ('PyDict<JsonValue, PyJsonValue>',
+                            'std::unordered_map<std::string, JsonValue>',
+                            '"辞書型"'),
+                           ('PyList<JsonValue, PyJsonValue>',
+                            'std::vector<JsonValue>',
+                            '"シーケンス(リスト)型"')]
             for pytype, ctype, comment in pytype_list:
-                with writer.gen_if_block(f'{pytype}::Check(obj)'):
-                    writer.gen_comment(comment)
-                    writer.gen_assign(f'{ctype} val1', f'{pytype}::Get(obj)')
-                    writer.gen_assign('val', 'JsonValue(val1)')
-                    writer.gen_return('true')
+                with writer.gen_block():
+                    writer.gen_vardecl(typename=f'{ctype}',
+                                       varname='val1')
+                    with writer.gen_if_block(f'{pytype}::FromPyObject(obj, val1)'):
+                        writer.gen_comment(comment)
+                        writer.gen_assign('val', 'JsonValue(val1)')
+                        writer.gen_return('true')
             writer.gen_return('false')
         self.add_deconv(deconv_gen)
 

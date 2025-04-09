@@ -8,7 +8,7 @@
 
 #include "pym/PyJsonValue.h"
 #include "pym/PyString.h"
-#include "pym/PyLong.h"
+#include "pym/PyInt.h"
 #include "pym/PyFloat.h"
 #include "pym/PyDict.h"
 #include "pym/PyList.h"
@@ -721,35 +721,50 @@ PyJsonValue::Deconv::operator()(
     val = PyJsonValue::_get_ref(obj);
     return true;
   }
-  if ( PyString::Check(obj) ) {
-    // "文字列型"
-    auto val1 = PyString::Get(obj);
-    val = JsonValue(val1);
-    return true;
+
+  {
+    std::string val1;
+    if ( PyString::FromPyObject(obj, val1) ) {
+      // "文字列型"
+      val = JsonValue(val1);
+      return true;
+    }
   }
-  if ( PyLong::Check(obj) ) {
-    // "整数型"
-    int val1 = PyLong::Get(obj);
-    val = JsonValue(val1);
-    return true;
+
+  {
+    int val1;
+    if ( PyInt::FromPyObject(obj, val1) ) {
+      // "整数型"
+      val = JsonValue(val1);
+      return true;
+    }
   }
-  if ( PyFloat::Check(obj) ) {
-    // "浮動小数点型"
-    auto val1 = PyFloat::Get(obj);
-    val = JsonValue(val1);
-    return true;
+
+  {
+    double val1;
+    if ( PyFloat::FromPyObject(obj, val1) ) {
+      // "浮動小数点型"
+      val = JsonValue(val1);
+      return true;
+    }
   }
-  if ( PyDict<JsonValue, PyJsonValue>::Check(obj) ) {
-    // "辞書型"
-    auto val1 = PyDict<JsonValue, PyJsonValue>::Get(obj);
-    val = JsonValue(val1);
-    return true;
+
+  {
+    std::unordered_map<std::string, JsonValue> val1;
+    if ( PyDict<JsonValue, PyJsonValue>::FromPyObject(obj, val1) ) {
+      // "辞書型"
+      val = JsonValue(val1);
+      return true;
+    }
   }
-  if ( PyList<JsonValue, PyJsonValue>::Check(obj) ) {
-    // "シーケンス(リスト)型"
-    auto val1 = PyList<JsonValue, PyJsonValue>::Get(obj);
-    val = JsonValue(val1);
-    return true;
+
+  {
+    std::vector<JsonValue> val1;
+    if ( PyList<JsonValue, PyJsonValue>::FromPyObject(obj, val1) ) {
+      // "シーケンス(リスト)型"
+      val = JsonValue(val1);
+      return true;
+    }
   }
   return false;
 }

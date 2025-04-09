@@ -382,4 +382,6 @@ def test_object1():
         js_obj["abc"]
     assert e.type == ValueError
     assert str(e.value) == "abc: invalid key"
-    
+
+def test_object2():
+    js_obj = JsonValue({"key1": "value1"})
