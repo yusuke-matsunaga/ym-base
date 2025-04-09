@@ -642,7 +642,7 @@ new_func(
   JsonValue val;
   if ( val_obj != nullptr ) {
     if ( !PyJsonValue::FromPyObject(val_obj, val) ) {
-      PyErr_SetString(PyExc_TypeError, "could not convert to JsonValue");
+      PyErr_SetString(PyExc_ValueError, "could not convert to JsonValue");
       return nullptr;
     }
   }
@@ -784,8 +784,8 @@ PyJsonValue::_get_ref(
   PyObject* obj
 )
 {
-  auto mt_obj = reinterpret_cast<JsonValue_Object*>(obj);
-  return mt_obj->mVal;
+  auto my_obj = reinterpret_cast<JsonValue_Object*>(obj);
+  return my_obj->mVal;
 }
 
 // @brief JsonValue を表すオブジェクトの型定義を返す．

@@ -142,8 +142,8 @@ PyMt19937::_get_ref(
   PyObject* obj
 )
 {
-  auto mt_obj = reinterpret_cast<Mt19937_Object*>(obj);
-  return mt_obj->mVal;
+  auto my_obj = reinterpret_cast<Mt19937_Object*>(obj);
+  return my_obj->mVal;
 }
 
 // @brief std::mt19937 を表すオブジェクトの型定義を返す．

@@ -228,7 +228,7 @@ class JsonValueGen(PyObjGen):
                     writer.gen_return_py_bool('val1 == val2')
                 with writer.gen_if_block('op == Py_NE'):
                     writer.gen_return_py_bool('val1 != val2')
-            writer.write_line('Py_RETURN_NOTIMPLEMENTED;')
+            writer.gen_return_py_notimplemented()
         self.add_richcompare(func_body=richcmp_func)
         
         self.add_method('null',
