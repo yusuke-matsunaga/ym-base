@@ -145,8 +145,10 @@ mp_subscript(
     try {
       return PyJsonValue::ToPyObject(val.at(index1));
     }
-    catch ( std::out_of_range ) {
-      PyErr_SetString(PyExc_ValueError, EMSG_OUT_OF_RANGE);
+    catch ( std::out_of_range err ) {
+      std::ostringstream buf;
+      buf << EMSG_OUT_OF_RANGE << ": " << err.what();
+      PyErr_SetString(PyExc_ValueError, buf.str().c_str());
       return nullptr;
     }
   }

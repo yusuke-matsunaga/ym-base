@@ -150,8 +150,7 @@ def gen_mp_subscript(writer):
         writer.gen_auto_assign('index1', '( index >= 0 ) ? index : val.size() + index')
         with writer.gen_try_block():
             writer.gen_return_pyobject('PyJsonValue', 'val.at(index1)')
-        with writer.gen_catch_block('std::out_of_range'):
-            writer.gen_value_error('EMSG_OUT_OF_RANGE')
+        writer.gen_catch_out_of_range('EMSG_OUT_OF_RANGE')
     writer.gen_type_error('EMSG_NOT_OBJ_ARRAY')
     
 def key_list_gen(writer):
