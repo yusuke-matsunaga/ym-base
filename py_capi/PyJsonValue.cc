@@ -96,11 +96,12 @@ sq_item(
   }
   try {
     auto index1 = ( index >= 0 ) ? index : val.size() + index;
-    auto ans = val.at(index1);
-    return PyJsonValue::ToPyObject(ans);
+    return PyJsonValue::ToPyObject(val.at(index1));
   }
-  catch ( std::invalid_argument error ) {
-    PyErr_SetString(PyExc_ValueError, error.what());
+  catch ( std::invalid_argument err ) {
+    std::ostringstream buf;
+    buf << "invalid argument" << ": " << err.what();
+    PyErr_SetString(PyExc_ValueError, buf.str().c_str());
     return nullptr;
   }
 }
@@ -125,12 +126,11 @@ mp_subscript(
     }
     auto key_str = PyString::Get(key);
     try {
-      auto ans = val.at(key_str);
-      return PyJsonValue::ToPyObject(ans);
+      return PyJsonValue::ToPyObject(val.at(key_str));
     }
-    catch ( std::invalid_argument ) {
+    catch ( std::invalid_argument err ) {
       std::ostringstream buf;
-      buf << key_str << ": invalid key";
+      buf << "invalid argument" << ": " << err.what();
       PyErr_SetString(PyExc_ValueError, buf.str().c_str());
       return nullptr;
     }
@@ -143,8 +143,7 @@ mp_subscript(
     auto index = PyLong_AsLong(key);
     auto index1 = ( index >= 0 ) ? index : val.size() + index;
     try {
-      auto ans = val.at(index1);
-      return PyJsonValue::ToPyObject(ans);
+      return PyJsonValue::ToPyObject(val.at(index1));
     }
     catch ( std::out_of_range ) {
       PyErr_SetString(PyExc_ValueError, EMSG_OUT_OF_RANGE);
@@ -168,6 +167,7 @@ richcompare_func(
   int op
 )
 {
+  auto& val = PyJsonValue::_get_ref(self);
   if ( PyJsonValue::Check(self) && PyJsonValue::Check(other) ) {
     auto& val1 = PyJsonValue::_get_ref(self);
     auto& val2 = PyJsonValue::_get_ref(other);
@@ -347,7 +347,7 @@ get_int(
     return nullptr;
   }
   auto ans = val.get_int();
-  return Py_BuildValue("i", ans);
+  return PyInt::ToPyObject(ans);
 }
 
 // get float value
@@ -363,7 +363,7 @@ get_float(
     return nullptr;
   }
   auto ans = val.get_float();
-  return Py_BuildValue("d", ans);
+  return PyFloat::ToPyObject(ans);
 }
 
 // get bool value
@@ -450,7 +450,9 @@ parse(
     return PyJsonValue::ToPyObject(val);
   }
   catch ( std::invalid_argument err ) {
-    PyErr_SetString(PyExc_ValueError, err.what());
+    std::ostringstream buf;
+    buf << "invalid argument" << ": " << err.what();
+    PyErr_SetString(PyExc_ValueError, buf.str().c_str());
     return nullptr;
   }
 }
@@ -482,7 +484,9 @@ read(
     return PyJsonValue::ToPyObject(val);
   }
   catch ( std::invalid_argument err ) {
-    PyErr_SetString(PyExc_ValueError, err.what());
+    std::ostringstream buf;
+    buf << "invalid argument" << ": " << err.what();
+    PyErr_SetString(PyExc_ValueError, buf.str().c_str());
     return nullptr;
   }
 }
@@ -577,7 +581,9 @@ get_key_list(
     return PyString::ToPyList(val_list);
   }
   catch ( std::invalid_argument err ) {
-    PyErr_SetString(PyExc_ValueError, err.what());
+    std::ostringstream buf;
+    buf << "invalid argument" << ": " << err.what();
+    PyErr_SetString(PyExc_ValueError, buf.str().c_str());
     return nullptr;
   }
 }
@@ -608,7 +614,9 @@ get_item_list(
     return ans;
   }
   catch ( std::invalid_argument err ) {
-    PyErr_SetString(PyExc_ValueError, err.what());
+    std::ostringstream buf;
+    buf << "invalid argument" << ": " << err.what();
+    PyErr_SetString(PyExc_ValueError, buf.str().c_str());
     return nullptr;
   }
 }

@@ -38,7 +38,7 @@ def repr_func(writer):
     writer.gen_auto_assign('str_val', 'val.to_json()')
 
 def gen_null(writer):
-    writer.gen_return('PyJsonValue::ToPyObject(JsonValue::null())')
+    writer.gen_return_pyobject('PyJsonValue', 'JsonValue::null()')
 
 def gen_check_func(writer, check_func):
     writer.gen_auto_assign('ans', f'val.{check_func}()')
@@ -112,16 +112,14 @@ def gen_write(writer):
 def gen_parse(writer):
     with writer.gen_try_block():
         writer.gen_auto_assign('val', 'JsonValue::parse(json_str)')
-        writer.gen_return('PyJsonValue::ToPyObject(val)')
-    with writer.gen_catch_block('std::invalid_argument err'):
-        writer.gen_value_error('err.what()')
+        writer.gen_return_pyobject('PyJsonValue', 'val')
+    writer.gen_catch_invalid_argument()
 
 def gen_read(writer):
     with writer.gen_try_block():
         writer.gen_auto_assign('val', 'JsonValue::read(filename)')
-        writer.gen_return('PyJsonValue::ToPyObject(val)')
-    with writer.gen_catch_block('std::invalid_argument err'):
-        writer.gen_value_error('err.what()')
+        writer.gen_return_pyobject('PyJsonValue', 'val')
+    writer.gen_catch_invalid_argument()
 
 def gen_sq_length(writer):
     with writer.gen_if_block('!val.is_object() && !val.is_array()'):
@@ -134,10 +132,8 @@ def gen_sq_item(writer):
         writer.gen_type_error('EMSG_NOT_ARRAY')
     with writer.gen_try_block():
         writer.gen_auto_assign('index1', '( index >= 0 ) ? index : val.size() + index')
-        writer.gen_auto_assign('ans', 'val.at(index1)')
-        writer.gen_return('PyJsonValue::ToPyObject(ans)')
-    with writer.gen_catch_block('std::invalid_argument error'):
-        writer.gen_value_error('error.what()')
+        writer.gen_return_pyobject('PyJsonValue', 'val.at(index1)')
+    writer.gen_catch_invalid_argument()
 
 def gen_mp_subscript(writer):
     with writer.gen_if_block('PyString::Check(key)'):
@@ -145,21 +141,15 @@ def gen_mp_subscript(writer):
             writer.gen_type_error('EMSG_NOT_OBJ')
         writer.gen_auto_assign('key_str', 'PyString::Get(key)')
         with writer.gen_try_block():
-            writer.gen_auto_assign('ans', 'val.at(key_str)')
-            writer.gen_return('PyJsonValue::ToPyObject(ans)')
-        with writer.gen_catch_block('std::invalid_argument'):
-            writer.gen_vardecl(typename='std::ostringstream',
-                               varname='buf')
-            writer.write_line('buf << key_str << ": invalid key";')
-            writer.gen_value_error('buf.str().c_str()')
+            writer.gen_return_pyobject('PyJsonValue', 'val.at(key_str)')
+        writer.gen_catch_invalid_argument()
     with writer.gen_if_block('PyLong_Check(key)'):
         with writer.gen_if_block('!val.is_array()'):
             writer.gen_type_error('EMSG_NOT_ARRAY')
         writer.gen_auto_assign('index', 'PyLong_AsLong(key)')
         writer.gen_auto_assign('index1', '( index >= 0 ) ? index : val.size() + index')
         with writer.gen_try_block():
-            writer.gen_auto_assign('ans', 'val.at(index1)')
-            writer.gen_return('PyJsonValue::ToPyObject(ans)')
+            writer.gen_return_pyobject('PyJsonValue', 'val.at(index1)')
         with writer.gen_catch_block('std::out_of_range'):
             writer.gen_value_error('EMSG_OUT_OF_RANGE')
     writer.gen_type_error('EMSG_NOT_OBJ_ARRAY')
@@ -170,8 +160,7 @@ def key_list_gen(writer):
     with writer.gen_try_block():
         writer.gen_auto_assign('val_list', 'val.key_list()')
         writer.gen_return('PyString::ToPyList(val_list)')
-    with writer.gen_catch_block('std::invalid_argument err'):
-        writer.gen_value_error('err.what()')
+    writer.gen_catch_invalid_argument()
 
 def item_list_gen(writer):
     with writer.gen_if_block('!val.is_object()'):
@@ -190,11 +179,10 @@ def item_list_gen(writer):
             writer.gen_auto_assign('item_obj', 'Py_BuildValue("sO", key.c_str(), value_obj)')
             writer.write_line('PyList_SET_ITEM(ans, i, item_obj);')
         writer.gen_return('ans')
-    with writer.gen_catch_block('std::invalid_argument err'):
-        writer.gen_value_error('err.what()')
+    writer.gen_catch_invalid_argument()
     
 def new_gen(writer):
-    writer.gen_return('PyJsonValue::ToPyObject(val)')
+    writer.gen_return_pyobject('PyJsonValue', 'val')
     
 
 class JsonValueGen(PyObjGen):
@@ -231,10 +219,9 @@ class JsonValueGen(PyObjGen):
             writer.gen_return_py_notimplemented()
         self.add_richcompare(func_body=richcmp_func)
         
-        self.add_method('null',
-                        is_static=True,
-                        doc_str='make null object',
-                        func_body=gen_null)
+        self.add_static_method('null',
+                               doc_str='make null object',
+                               func_body=gen_null)
         self.add_method('is_null',
                         func_body=gen_is_null,
                         doc_str='check if null')
@@ -286,17 +273,15 @@ class JsonValueGen(PyObjGen):
                                           cvardefault='false')],
                         func_body=gen_write,
                         doc_str='write JSON data to file')
-        self.add_method('parse',
-                        arg_list=[StringArg(name='json_str',
-                                            cvarname='json_str')],
-                        is_static=True,
-                        func_body=gen_parse,
-                        doc_str='read JSON data from string')
-        self.add_method('read',
-                        arg_list=[StringArg(name='filename',
-                                            cvarname='filename')],
-                        is_static=True,
-                        func_body=gen_read,
+        self.add_static_method('parse',
+                               arg_list=[StringArg(name='json_str',
+                                                   cvarname='json_str')],
+                               func_body=gen_parse,
+                               doc_str='read JSON data from string')
+        self.add_static_method('read',
+                               arg_list=[StringArg(name='filename',
+                                                   cvarname='filename')],
+                               func_body=gen_read,
                doc_str='read JSON data from file')
 
         self.add_sequence(sq_length=gen_sq_length,
