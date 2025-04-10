@@ -347,7 +347,7 @@ def test_array1():
     with pytest.raises(Exception) as e:
         js_obj[3]
     assert e.type == ValueError
-    assert str(e.value) == "index is out-of-range"
+    assert str(e.value) == "index is out-of-range: pos is out of range"
 
 def test_object1():
     value1 = "xyz"
@@ -381,7 +381,7 @@ def test_object1():
     with pytest.raises(Exception) as e:
         js_obj["abc"]
     assert e.type == ValueError
-    assert str(e.value) == "abc: invalid key"
+    assert str(e.value) == "invalid argument: abc: invalid key"
 
 def test_object2():
     js_obj = JsonValue({"key1": "value1"})
