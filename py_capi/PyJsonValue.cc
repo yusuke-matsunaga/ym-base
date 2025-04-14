@@ -90,13 +90,21 @@ sq_item(
 )
 {
   auto& val = PyJsonValue::_get_ref(self);
-  if ( !val.is_array() ) {
-    PyErr_SetString(PyExc_TypeError, EMSG_NOT_ARRAY);
-    return nullptr;
-  }
   try {
-    auto index1 = ( index >= 0 ) ? index : val.size() + index;
-    return PyJsonValue::ToPyObject(val.at(index1));
+    if ( !val.is_array() ) {
+      PyErr_SetString(PyExc_TypeError, EMSG_NOT_ARRAY);
+      return nullptr;
+    }
+    try {
+      auto index1 = ( index >= 0 ) ? index : val.size() + index;
+      return PyJsonValue::ToPyObject(val.at(index1));
+    }
+    catch ( std::invalid_argument err ) {
+      std::ostringstream buf;
+      buf << "invalid argument" << ": " << err.what();
+      PyErr_SetString(PyExc_ValueError, buf.str().c_str());
+      return nullptr;
+    }
   }
   catch ( std::invalid_argument err ) {
     std::ostringstream buf;
@@ -119,41 +127,49 @@ mp_subscript(
 )
 {
   auto& val = PyJsonValue::_get_ref(self);
-  if ( PyString::Check(key) ) {
-    if ( !val.is_object() ) {
-      PyErr_SetString(PyExc_TypeError, EMSG_NOT_OBJ);
-      return nullptr;
+  try {
+    if ( PyString::Check(key) ) {
+      if ( !val.is_object() ) {
+        PyErr_SetString(PyExc_TypeError, EMSG_NOT_OBJ);
+        return nullptr;
+      }
+      auto key_str = PyString::Get(key);
+      try {
+        return PyJsonValue::ToPyObject(val.at(key_str));
+      }
+      catch ( std::invalid_argument err ) {
+        std::ostringstream buf;
+        buf << "invalid argument" << ": " << err.what();
+        PyErr_SetString(PyExc_ValueError, buf.str().c_str());
+        return nullptr;
+      }
     }
-    auto key_str = PyString::Get(key);
-    try {
-      return PyJsonValue::ToPyObject(val.at(key_str));
+    if ( PyLong_Check(key) ) {
+      if ( !val.is_array() ) {
+        PyErr_SetString(PyExc_TypeError, EMSG_NOT_ARRAY);
+        return nullptr;
+      }
+      auto index = PyLong_AsLong(key);
+      auto index1 = ( index >= 0 ) ? index : val.size() + index;
+      try {
+        return PyJsonValue::ToPyObject(val.at(index1));
+      }
+      catch ( std::out_of_range err ) {
+        std::ostringstream buf;
+        buf << EMSG_OUT_OF_RANGE << ": " << err.what();
+        PyErr_SetString(PyExc_ValueError, buf.str().c_str());
+        return nullptr;
+      }
     }
-    catch ( std::invalid_argument err ) {
-      std::ostringstream buf;
-      buf << "invalid argument" << ": " << err.what();
-      PyErr_SetString(PyExc_ValueError, buf.str().c_str());
-      return nullptr;
-    }
+    PyErr_SetString(PyExc_TypeError, EMSG_NOT_OBJ_ARRAY);
+    return nullptr;
   }
-  if ( PyLong_Check(key) ) {
-    if ( !val.is_array() ) {
-      PyErr_SetString(PyExc_TypeError, EMSG_NOT_ARRAY);
-      return nullptr;
-    }
-    auto index = PyLong_AsLong(key);
-    auto index1 = ( index >= 0 ) ? index : val.size() + index;
-    try {
-      return PyJsonValue::ToPyObject(val.at(index1));
-    }
-    catch ( std::out_of_range err ) {
-      std::ostringstream buf;
-      buf << EMSG_OUT_OF_RANGE << ": " << err.what();
-      PyErr_SetString(PyExc_ValueError, buf.str().c_str());
-      return nullptr;
-    }
+  catch ( std::invalid_argument err ) {
+    std::ostringstream buf;
+    buf << "invalid argument" << ": " << err.what();
+    PyErr_SetString(PyExc_ValueError, buf.str().c_str());
+    return nullptr;
   }
-  PyErr_SetString(PyExc_TypeError, EMSG_NOT_OBJ_ARRAY);
-  return nullptr;
 }
 
 // Mapping オブジェクト構造体
