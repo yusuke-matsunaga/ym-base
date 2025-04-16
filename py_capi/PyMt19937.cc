@@ -65,12 +65,6 @@ PyMethodDef methods[] = {
   {nullptr, nullptr, 0, nullptr}
 };
 
-// getter/setter定義
-PyGetSetDef getsets[] = {
-  // end-marker
-  {nullptr, nullptr, nullptr, nullptr}
-};
-
 // new 関数
 PyObject*
 new_func(
@@ -114,7 +108,6 @@ PyMt19937::init(
   Mt19937_Type.tp_flags = Py_TPFLAGS_DEFAULT;
   Mt19937_Type.tp_doc = PyDoc_STR("Python extended object for std::mt19937");
   Mt19937_Type.tp_methods = methods;
-  Mt19937_Type.tp_getset = getsets;
   Mt19937_Type.tp_new = new_func;
   if ( !PyModule::reg_type(m, "Mt19937", &Mt19937_Type) ) {
     goto error;
