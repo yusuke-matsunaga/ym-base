@@ -65,8 +65,16 @@ repr_func(
 )
 {
   auto& val = PyJsonValue::_get_ref(self);
-  auto str_val = val.to_json();
-  return PyString::ToPyObject(str_val);
+  try {
+    auto str_val = val.to_json();
+    return PyString::ToPyObject(str_val);
+  }
+  catch ( std::invalid_argument err ) {
+    std::ostringstream buf;
+    buf << "invalid argument" << ": " << err.what();
+    PyErr_SetString(PyExc_ValueError, buf.str().c_str());
+    return nullptr;
+  }
 }
 
 Py_ssize_t
@@ -75,12 +83,20 @@ sq_length(
 )
 {
   auto& val = PyJsonValue::_get_ref(self);
-  if ( !val.is_object() && !val.is_array() ) {
-    PyErr_SetString(PyExc_TypeError, EMSG_NOT_OBJ_ARRAY);
+  try {
+    if ( !val.is_object() && !val.is_array() ) {
+      PyErr_SetString(PyExc_TypeError, EMSG_NOT_OBJ_ARRAY);
+      return -1;
+    }
+    auto len_val = val.size();
+    return len_val;
+  }
+  catch ( std::invalid_argument err ) {
+    std::ostringstream buf;
+    buf << "invalid argument" << ": " << err.what();
+    PyErr_SetString(PyExc_ValueError, buf.str().c_str());
     return -1;
   }
-  auto len_val = val.size();
-  return len_val;
 }
 
 PyObject*
@@ -186,17 +202,25 @@ richcompare_func(
 )
 {
   auto& val = PyJsonValue::_get_ref(self);
-  if ( PyJsonValue::Check(self) && PyJsonValue::Check(other) ) {
-    auto& val1 = PyJsonValue::_get_ref(self);
-    auto& val2 = PyJsonValue::_get_ref(other);
-    if ( op == Py_EQ ) {
-      return PyBool_FromLong(val1 == val2);
+  try {
+    if ( PyJsonValue::Check(self) && PyJsonValue::Check(other) ) {
+      auto& val1 = PyJsonValue::_get_ref(self);
+      auto& val2 = PyJsonValue::_get_ref(other);
+      if ( op == Py_EQ ) {
+        return PyBool_FromLong(val1 == val2);
+      }
+      if ( op == Py_NE ) {
+        return PyBool_FromLong(val1 != val2);
+      }
     }
-    if ( op == Py_NE ) {
-      return PyBool_FromLong(val1 != val2);
-    }
+    Py_RETURN_NOTIMPLEMENTED;
   }
-  Py_RETURN_NOTIMPLEMENTED;
+  catch ( std::invalid_argument err ) {
+    std::ostringstream buf;
+    buf << "invalid argument" << ": " << err.what();
+    PyErr_SetString(PyExc_ValueError, buf.str().c_str());
+    return nullptr;
+  }
 }
 
 // make null object
@@ -672,7 +696,15 @@ new_func(
       return nullptr;
     }
   }
-  return PyJsonValue::ToPyObject(val);
+  try {
+    return PyJsonValue::ToPyObject(val);
+  }
+  catch ( std::invalid_argument err ) {
+    std::ostringstream buf;
+    buf << "invalid argument" << ": " << err.what();
+    PyErr_SetString(PyExc_ValueError, buf.str().c_str());
+    return nullptr;
+  }
 }
 
 END_NONAMESPACE
@@ -711,7 +743,7 @@ PyJsonValue::init(
 // JsonValue を PyObject に変換する．
 PyObject*
 PyJsonValue::Conv::operator()(
-  const JsonValue& val
+  const ElemType& val ///< [in] 元の値
 )
 {
   auto type = PyJsonValue::_typeobject();
@@ -724,8 +756,8 @@ PyJsonValue::Conv::operator()(
 // PyObject を JsonValue に変換する．
 bool
 PyJsonValue::Deconv::operator()(
-  PyObject* obj,
-  JsonValue& val
+  PyObject* obj, ///< [in] Python のオブジェクト
+  ElemType& val  ///< [out] 結果を格納する変数
 )
 {
   if ( obj == nullptr ) {

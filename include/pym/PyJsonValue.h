@@ -35,7 +35,7 @@ public:
   struct Conv {
     PyObject*
     operator()(
-      const ElemType& val
+      const ElemType& val ///< [in] 元の値
     );
   };
 
@@ -43,8 +43,8 @@ public:
   struct Deconv {
     bool
     operator()(
-      PyObject* obj,
-      ElemType& val
+      PyObject* obj, ///< [in] Python のオブジェクト
+      ElemType& val  ///< [out] 結果を格納する変数
     );
   };
 
@@ -64,12 +64,12 @@ public:
 
   /// @brief JsonValue を表す PyObject を作る．
   /// @return 生成した PyObject を返す．
-  /// 
+  ///
   /// 返り値は新しい参照が返される．
   static
   PyObject*
   ToPyObject(
-    const ElemType& val ///< [in] 値
+    const ElemType& val ///< [in] 元の値
   )
   {
     Conv conv;
@@ -81,7 +81,7 @@ public:
   static
   bool
   FromPyObject(
-    PyObject* obj, ///< [in] Python のオブジェクト,
+    PyObject* obj, ///< [in] Python のオブジェクト
     ElemType& val  ///< [out] 結果を格納する変数
   )
   {

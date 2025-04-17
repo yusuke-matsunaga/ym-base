@@ -83,13 +83,21 @@ new_func(
                                     &seed_val) ) {
     return nullptr;
   }
-  auto obj = type->tp_alloc(type, 0);
-  auto obj1 = reinterpret_cast<Mt19937_Object*>(obj);
-  new (&obj1->mVal) std::mt19937;
-  if ( seed_val != -1 ) {
-    obj1->mVal.seed(seed_val);
+  try {
+    auto obj = type->tp_alloc(type, 0);
+    auto obj1 = reinterpret_cast<Mt19937_Object*>(obj);
+    new (&obj1->mVal) std::mt19937;
+    if ( seed_val != -1 ) {
+      obj1->mVal.seed(seed_val);
+    }
+    return obj;
   }
-  return obj;
+  catch ( std::invalid_argument err ) {
+    std::ostringstream buf;
+    buf << "invalid argument" << ": " << err.what();
+    PyErr_SetString(PyExc_ValueError, buf.str().c_str());
+    return nullptr;
+  }
 }
 
 END_NONAMESPACE
