@@ -10,7 +10,7 @@
 from mk_py_capi import PyObjGen
 from mk_py_capi import OptArg, KwdArg, ObjConvArg, StringArg, BoolArg
 
-        
+
 class JsonValueArg(ObjConvArg):
 
     def __init__(self, *,
@@ -21,7 +21,7 @@ class JsonValueArg(ObjConvArg):
                          cvarname=cvarname,
                          cvardefault=None,
                          pyclassname='PyJsonValue')
-        
+
 def gen_preamble(writer):
     writer.gen_CRLF()
     writer.gen_comment('エラーメッセージを表す定数')
@@ -43,7 +43,7 @@ def gen_null(writer):
 def gen_check_func(writer, check_func):
     writer.gen_auto_assign('ans', f'val.{check_func}()')
     writer.gen_return_py_bool('ans')
-    
+
 def gen_is_null(writer):
     gen_check_func(writer, 'is_null')
 
@@ -73,13 +73,13 @@ def gen_has_key(writer):
         writer.gen_type_error('EMSG_NOT_OBJ')
     writer.gen_auto_assign('ans', 'val.has_key(key)')
     writer.gen_return_py_bool('ans')
-        
+
 def gen_get_string(writer):
     with writer.gen_if_block('!val.is_string()'):
         writer.gen_type_error('EMSG_NOT_STR')
     writer.gen_auto_assign('ans', 'val.get_string()')
     writer.gen_return_py_string('ans')
-        
+
 def gen_get_int(writer):
     with writer.gen_if_block('!val.is_int()'):
         writer.gen_type_error('EMSG_NOT_INT')
@@ -152,7 +152,7 @@ def gen_mp_subscript(writer):
             writer.gen_return_pyobject('PyJsonValue', 'val.at(index1)')
         writer.gen_catch_out_of_range('EMSG_OUT_OF_RANGE')
     writer.gen_type_error('EMSG_NOT_OBJ_ARRAY')
-    
+
 def key_list_gen(writer):
     with writer.gen_if_block('!val.is_object()'):
         writer.gen_type_error('EMSG_NOT_OBJ')
@@ -179,13 +179,13 @@ def item_list_gen(writer):
             writer.write_line('PyList_SET_ITEM(ans, i, item_obj);')
         writer.gen_return('ans')
     writer.gen_catch_invalid_argument()
-    
+
 def new_gen(writer):
     writer.gen_return_pyobject('PyJsonValue', 'val')
-    
+
 
 class JsonValueGen(PyObjGen):
-    
+
     def __init__(self):
         super().__init__(classname='JsonValue',
                          namespace='YM',
@@ -217,7 +217,7 @@ class JsonValueGen(PyObjGen):
                     writer.gen_return_py_bool('val1 != val2')
             writer.gen_return_py_notimplemented()
         self.add_richcompare(func_body=richcmp_func)
-        
+
         self.add_static_method('null',
                                doc_str='make null object',
                                func_body=gen_null)
@@ -287,7 +287,7 @@ class JsonValueGen(PyObjGen):
                           sq_item=gen_sq_item)
 
         self.add_mapping(mp_subscript=gen_mp_subscript)
-        
+
         self.add_new(arg_list=[OptArg(),
                                JsonValueArg(name=None,
                                             cvarname='val')],

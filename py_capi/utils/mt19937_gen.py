@@ -11,7 +11,7 @@ from mk_py_capi import PyObjGen, OptArg, KwdArg, IntArg
 
 
 class Mt19937Gen(PyObjGen):
-    
+
     def __init__(self):
         super().__init__(classname='std::mt19937',
                          pyclassname='PyMt19937',
@@ -48,7 +48,7 @@ class Mt19937Gen(PyObjGen):
                         func_body=eval_body,
                         doc_str='generate a random number')
 
-        
+
 if __name__ == '__main__':
     gen = Mt19937Gen()
     gen.make_header()
