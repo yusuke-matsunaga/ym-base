@@ -35,7 +35,7 @@ def gen_preamble(writer):
     writer.write_line('static const char* EMSG_OUT_OF_RANGE = "index is out-of-range";')
 
 def repr_func(writer):
-    writer.gen_auto_assign('str_val', 'val.to_json()')
+    writer.gen_return_py_string('val.to_json()')
 
 def gen_null(writer):
     writer.gen_return_pyobject('PyJsonValue', 'JsonValue::null()')

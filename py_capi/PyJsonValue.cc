@@ -66,8 +66,7 @@ repr_func(
 {
   auto& val = PyJsonValue::_get_ref(self);
   try {
-    auto str_val = val.to_json();
-    return PyString::ToPyObject(str_val);
+    return PyString::ToPyObject(val.to_json());
   }
   catch ( std::invalid_argument err ) {
     std::ostringstream buf;
