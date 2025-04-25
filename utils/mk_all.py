@@ -14,7 +14,7 @@ from pathlib import Path
 
 
 # 引数の解釈
-parser = ArgumentParser(prog='mk_ymbase',
+parser = ArgumentParser(prog='mk_all',
                         description="make 'ymbase' module")
 
 parser.add_argument('-i', '--include_dir', type=str)
@@ -25,21 +25,20 @@ args = parser.parse_args()
 
 # このファイルのあるディレクトリ
 curdir = os.path.dirname(__file__)
-rootdir = os.path.join(curdir, '..', '..', '..')
+rootdir = os.path.join(curdir, '..', '..')
 module_path = os.path.join(rootdir, 'ym-common', 'utils')
 
 if args.include_dir is None:
-    include_dir = os.path.join(curdir, '..', '..', 'include', 'pym')
+    include_dir = os.path.join(curdir, '..', 'include', 'pym')
 else:
     include_dir = args.include_dir
 if args.source_dir is None:
-    source_dir = os.path.join(curdir, '..')
+    source_dir = os.path.join(curdir, '..', 'py_capi')
 else:
     source_dir = args.source_dir
 
 sys.path.append(module_path)
 
-from mk_py_capi import ModuleGen
 
 from mt19937_gen import Mt19937Gen
 mt19937_gen = Mt19937Gen()
@@ -49,6 +48,7 @@ jsonvalue_gen = JsonValueGen()
 
 gen_list = [mt19937_gen, jsonvalue_gen]
 
+from mk_py_capi import ModuleGen
 module_gen = ModuleGen(modulename='ymbase',
                        pyclass_gen_list=gen_list,
                        namespace='YM')
