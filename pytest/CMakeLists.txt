@@ -33,7 +33,6 @@ set ( py_ymbase_SOURCES
 add_executable( py_ymbase
   ${py_ymbase_SOURCES}
   $<TARGET_OBJECTS:py_ymbase_obj>
-  $<TARGET_OBJECTS:ym_logic_obj>
   $<TARGET_OBJECTS:ym_base_obj>
   )
 
@@ -53,7 +52,6 @@ target_link_libraries ( py_ymbase
 add_executable( py_ymbase_d
   ${py_ymbase_SOURCES}
   $<TARGET_OBJECTS:py_ymbase_obj_d>
-  $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_base_obj_d>
   )
 
