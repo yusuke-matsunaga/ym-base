@@ -33,8 +33,8 @@ public:
 
   /// @brief コンストラクタ
   NameMgr(
-    const string& prefix, ///< [in] 接頭語
-    const string& suffix  ///< [in] 接尾語
+    const std::string& prefix, ///< [in] 接頭語
+    const std::string& suffix  ///< [in] 接尾語
   );
 
   /// @brief デストラクタ
@@ -57,8 +57,8 @@ public:
   /// 既に登録されている名前はクリアされる．
   void
   change(
-    const string& prefix, ///< [in] 接頭語
-    const string& suffix  ///< [in] 接尾語
+    const std::string& prefix, ///< [in] 接頭語
+    const std::string& suffix  ///< [in] 接尾語
   );
 
   /// @brief 登録している名前を全てクリアする．
@@ -66,15 +66,15 @@ public:
   clear();
 
   /// @brief 接頭語を返す．
-  string
+  std::string
   prefix() const { return mPrefix; }
 
   /// @brief 接尾語を返す．
-  string
+  std::string
   suffix() const { return mSuffix; }
 
   /// @brief 次に使用可能な名前を接頭語，接尾語を連結して返す．
-  string
+  std::string
   new_name(
     bool add_name ///< [in] true の時，名前の登録も行う．
   );
@@ -92,7 +92,7 @@ public:
   /// 名前が \<prefix\>ddd\<suffix\> の形でない場合には何もしない．
   void
   add(
-    const string& name ///< [in] 登録する名前
+    const std::string& name ///< [in] 登録する名前
   )
   {
     add(name.c_str());
@@ -111,7 +111,7 @@ public:
   /// 名前が \<prefix\>ddd\<suffix\> の形でない場合には何もしない．
   void
   erase(
-    const string& name ///< [in] 削除する名前
+    const std::string& name ///< [in] 削除する名前
   )
   {
     erase(name.c_str());
@@ -122,7 +122,7 @@ public:
   /// 主にデバッグ用
   void
   print(
-    ostream& s ///< [in] 出力先のストリーム
+    std::ostream& s ///< [in] 出力先のストリーム
   ) const;
 
 
@@ -146,17 +146,17 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 接頭語
-  string mPrefix;
+  std::string mPrefix;
 
   // 接尾語
-  string mSuffix;
+  std::string mSuffix;
 
   // 使用中の数字を表す区間(interval)リスト
-  unique_ptr<ItvlTree> mInterval;
+  std::unique_ptr<ItvlTree> mInterval;
 
   // new_name() で用いる作業領域
   mutable
-  string mTmpString;
+  std::string mTmpString;
 
   // 最後の new_name() で得られた番号
   mutable

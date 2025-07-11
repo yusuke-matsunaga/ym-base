@@ -19,11 +19,14 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 class DotWriter
 {
+  // 属性リストを表す型
+  using AttrList = std::unordered_map<std::string, std::string>;
+
 public:
 
   /// @brief コンストラクタ
   DotWriter(
-    ostream& s ///< [in] 出力ストリーム
+    std::ostream& s ///< [in] 出力ストリーム
   ) : mS{s}
   {
   }
@@ -40,9 +43,9 @@ public:
   /// @brief グラフの定義の開始
   void
   graph_begin(
-    const string& graph_type,                      ///< [in] グラフの種類
-    const string& graph_name,                      ///< [in] グラフ名
-    const unordered_map<string, string>& attr_list ///< [in] 属性リスト
+    const std::string& graph_type, ///< [in] グラフの種類
+    const std::string& graph_name, ///< [in] グラフ名
+    const AttrList& attr_list      ///< [in] 属性リスト
   );
 
   /// @brief グラフの定義の終了
@@ -52,23 +55,23 @@ public:
   /// @brief ノードの定義
   void
   write_node(
-    const string& node,                            ///< [in] ノード名
-    const unordered_map<string, string>& attr_list ///< [in] 属性リスト
+    const std::string& node,  ///< [in] ノード名
+    const AttrList& attr_list ///< [in] 属性リスト
   );
 
   /// @brief 枝の定義
   void
   write_edge(
-    string from_node,                              ///< [in] 始点のノード名
-    string to_node,                                ///< [in] 終点のノード名
-    const unordered_map<string, string>& attr_list ///< [in] 属性リスト
+    std::string from_node,    ///< [in] 始点のノード名
+    std::string to_node,      ///< [in] 終点のノード名
+    const AttrList& attr_list ///< [in] 属性リスト
   );
 
   /// @brief ランクグループの定義
   void
   write_rank_group(
-    const vector<string>& node_list, ///< [in] 同一グループのノードリスト
-    const string& rank = "same"      ///< [in] ランク属性
+    const std::vector<std::string>& node_list, ///< [in] 同一グループのノードリスト
+    const std::string& rank = "same"           ///< [in] ランク属性
   );
 
 
@@ -80,7 +83,7 @@ private:
   /// @brief 属性リストを出力する．
   void
   write_attr(
-    const unordered_map<string, string>& attr_list ///< [in] 属性リスト
+    const AttrList& attr_list ///< [in] 属性リスト
   );
 
 
@@ -90,7 +93,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 出力ストリーム
-  ostream& mS;
+  std::ostream& mS;
 
 };
 

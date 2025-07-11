@@ -31,19 +31,13 @@ BEGIN_NAMESPACE_YM
 // パス名を表すクラス
 //////////////////////////////////////////////////////////////////////
 
-// 空のコンストラクタ
-PathName::PathName() :
-  mType(PathType::Relative)
-{
-}
-
 // 文字列からの変換コンストラクタ
-PathName::PathName(const string& path_str)
+PathName::PathName(
+  const std::string& path_str
+)
 {
-  mType = PathType::Relative; // デフォルト
-
   if ( path_str.size() > 0 ) {
-    string::size_type pos = 0;
+    std::string::size_type pos = 0;
     if ( path_str[0] == '/' ) {
       mType = PathType::Absolute;
       pos = 1;
@@ -56,8 +50,8 @@ PathName::PathName(const string& path_str)
       mType = PathType::Relative;
     }
     for ( ; ; ) {
-      string::size_type pos2 = path_str.find('/', pos);
-      if ( pos2 != string::npos ) {
+      std::string::size_type pos2 = path_str.find('/', pos);
+      if ( pos2 != std::string::npos ) {
 	mPathList.push_back(path_str.substr(pos, pos2 - pos));
 	pos = pos2 + 1;
       }
@@ -70,47 +64,17 @@ PathName::PathName(const string& path_str)
 }
 
 // 文字列からの変換コンストラクタ
-PathName::PathName(const char* path_str)
+PathName::PathName(
+  const char* path_str
+) : PathName(std::string{path_str})
 {
-  mType = PathType::Relative; // デフォルト
-
-  if ( path_str && strlen(path_str) > 0 ) {
-    size_t pos = 0;
-    if ( path_str[0] == '/' ) {
-      mType = PathType::Absolute;
-      pos = 1;
-    }
-    else if ( path_str[0] == '~' ) {
-      mType = PathType::Home;
-      pos = 1;
-    }
-    else {
-      mType = PathType::Relative;
-    }
-    for ( ; ; ) {
-      char c;
-      size_t pos2 = pos;
-      string buf;
-      for ( ; (c = path_str[pos2]); ++ pos2) {
-	if ( c == '/' ) {
-	  break;
-	}
-	buf += c;
-      }
-      mPathList.push_back(buf);
-      if ( c == '\0' ) {
-	break;
-      }
-      pos = pos2 + 1;
-    }
-  }
 }
 
 // パス名の文字列表現を返す．
-string
+std::string
 PathName::str() const
 {
-  string ans;
+  std::string ans;
   switch ( type() ) {
   case PathType::Absolute:
     ans += '/';
@@ -134,7 +98,7 @@ PathName::str() const
 PathName
 PathName::head() const
 {
-  vector<string> new_list{mPathList};
+  std::vector<std::string> new_list{mPathList};
   if ( !new_list.empty() ) {
     new_list.pop_back();
   }
@@ -142,53 +106,51 @@ PathName::head() const
 }
 
 // パス名のテイル(ヘッダを含まないもの)を返す．
-string
+std::string
 PathName::tail() const
 {
   if ( mPathList.empty() ) {
-    return string();
+    return std::string{};
   }
-  else {
-    return mPathList.back();
-  }
+  return mPathList.back();
 }
 
 // 拡張子の直前のドットの位置を返す．
-string::size_type
-PathName::dot_pos(const string& path)
+std::string::size_type
+PathName::dot_pos(
+  const std::string& path
+)
 {
   if ( path == ".." ) {
-    return string::npos;
+    return std::string::npos;
   }
-  string::size_type p = path.rfind('.');
+  std::string::size_type p = path.rfind('.');
   if ( p == 0 ) {
     // path == "." の場合もここではじかれる．
-    return string::npos;
+    return std::string::npos;
   }
   return p;
 }
 
 // パス名の本体(テイルから "." と拡張子を除いた物)を返す．
-string
+std::string
 PathName::body() const
 {
-  string tmp = tail();
-  string::size_type p = dot_pos(tmp);
+  std::string tmp = tail();
+  std::string::size_type p = dot_pos(tmp);
   return tmp.substr(0, p);
 }
 
 // パス名の拡張子を返す．
-string
+std::string
 PathName::ext() const
 {
-  string tmp = tail();
-  string::size_type p = dot_pos(tmp);
-  if ( p == string::npos ) {
-    return string();
+  std::string tmp = tail();
+  std::string::size_type p = dot_pos(tmp);
+  if ( p == std::string::npos ) {
+    return std::string{};
   }
-  else {
-    return tmp.substr(p + 1, string::npos);
-  }
+  return tmp.substr(p + 1, std::string::npos);
 }
 
 // パスタイプが PathType::Home と PathType::Relative の時にフルパス形式に展開する．
@@ -203,7 +165,7 @@ PathName::expand() const
     {
       auto p1 = mPathList.begin();
       ++ p1;
-      vector<string> new_list{p1, mPathList.end()};
+      std::vector<std::string> new_list{p1, mPathList.end()};
       return user_home(mPathList.front()) + PathName( PathType::Relative, new_list);
     }
 
@@ -260,11 +222,13 @@ PathName::stat() const
 
 // 末尾にパスをつなげる．
 const PathName&
-PathName::operator+=(const PathName& src)
+PathName::operator+=(
+  const PathName& src
+)
 {
   if ( is_valid() ) {
     if ( src.is_valid() && src.type() == PathType::Relative ) {
-      if ( mPathList.back() == string() ) {
+      if ( mPathList.back() == std::string() ) {
 	// 最後が空('/'で終わっている)の場合にはその空要素を取り除く
 	mPathList.pop_back();
       }
@@ -282,8 +246,10 @@ PathName::operator+=(const PathName& src)
 
 // 2つのパス名を連結する．
 PathName
-operator+(const PathName& opr1,
-	  const PathName& opr2)
+operator+(
+  const PathName& opr1,
+  const PathName& opr2
+)
 {
   // ほとんど C++ の定石のコード
   return PathName(opr1) += opr2;
@@ -294,21 +260,24 @@ operator+(const PathName& opr1,
 // サーチパス(のリスト)を表すクラス
 //////////////////////////////////////////////////////////////////////
 
+#if 0
 // コンストラクタ
 SearchPathList::SearchPathList()
 {
 }
 
 // 文字列からの変換コンストラクタ
-SearchPathList::SearchPathList(const string& str)
+SearchPathList::SearchPathList(
+  const std::string& str
+)
 {
   to_list(str, mList);
 }
 
 // @brief コピーコンストラクタ
-// @param[in] src 代入元のオブジェクト
-SearchPathList::SearchPathList(const SearchPathList& src) :
-  mList(src.mList)
+SearchPathList::SearchPathList(
+  const SearchPathList& src
+) : mList(src.mList)
 {
 }
 
@@ -351,10 +320,13 @@ SearchPathList::add_end(const string& path)
 {
   to_list(path, mList);
 }
+#endif
 
 // サーチパスを考慮して filename を探す
 PathName
-SearchPathList::search(const PathName& filename) const
+SearchPathList::search(
+  const PathName& filename
+) const
 {
   switch ( filename.type() ) {
   case PathType::Absolute:
@@ -394,11 +366,13 @@ SearchPathList::search(const PathName& filename) const
 }
 
 // 現在のサーチパスを取り出す．
-string
-SearchPathList::to_string(const string& separator) const
+std::string
+SearchPathList::to_string(
+  const std::string& separator
+) const
 {
-  string ans;
-  string sep = "";
+  std::string ans;
+  std::string sep = "";
   for ( auto path: mList ) {
     ans += sep;
     ans += path.str();
@@ -409,15 +383,17 @@ SearchPathList::to_string(const string& separator) const
 
 // 文字列を PathName のリストに変換する
 void
-SearchPathList::to_list(const string& str,
-			vector<PathName>& pathname_list)
+SearchPathList::to_list(
+  const std::string& str,
+  std::vector<PathName>& pathname_list
+)
 {
-  string::size_type pos1 = 0;
-  string::size_type pos2;
-  for ( ; (pos2 = str.find(':', pos1)) != string::npos; pos1 = pos2 + 1) {
+  std::string::size_type pos1 = 0;
+  std::string::size_type pos2;
+  for ( ; (pos2 = str.find(':', pos1)) != std::string::npos; pos1 = pos2 + 1) {
     pathname_list.push_back(PathName(str.substr(pos1, pos2)));
   }
-  pathname_list.push_back(PathName(str.substr(pos1, string::npos)));
+  pathname_list.push_back(PathName(str.substr(pos1, std::string::npos)));
 }
 
 
@@ -446,10 +422,12 @@ cur_work_dir()
 
 // ユーザのホームディレクトリの取得
 PathName
-user_home(const string& login)
+user_home(
+  const std::string& login
+)
 {
-  string hdir;
-  if ( login == string() ) {
+  std::string hdir;
+  if ( login == std::string() ) {
 #if defined(YM_WIN32)
     char* buffer;
     size_t num;

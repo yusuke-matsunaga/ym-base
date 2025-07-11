@@ -17,8 +17,8 @@ BEGIN_NAMESPACE_YM
 
 bool
 ReadLine::get_line(
-  const string& prompt,
-  string& linebuf
+  const std::string& prompt,
+  std::string& linebuf
 )
 {
 #ifdef HAS_READLINE
@@ -34,9 +34,9 @@ ReadLine::get_line(
   free(line_read);
   return true;
 #else
-  cerr << prompt;
-  cerr.flush();
-  if ( getline(cin, linebuf) ) {
+  std::cerr << prompt;
+  std::cerr.flush();
+  if ( getline(std::cin, linebuf) ) {
     return true;
   }
   else {

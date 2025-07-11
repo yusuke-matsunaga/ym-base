@@ -81,13 +81,12 @@ public:
     SizeType pos ///< [in] 取り出す要素の位置 (最初の位置は 0)
   ) const
   {
-    ASSERT_COND( 0 <= pos && pos < mElemList.size() );
-
+    _check_pos(pos);
     return mElemList[pos];
   }
 
   /// @brief 要素リストの取得
-  vector<int>
+  std::vector<int>
   elem_list() const { return mElemList; }
 
   /// @brief 末尾のチェック
@@ -115,9 +114,19 @@ protected:
     SizeType pos ///< [in] 取り出す要素の位置 (最初の位置は 0)
   )
   {
-    ASSERT_COND( 0 <= pos && pos < mElemList.size() );
-
+    _check_pos(pos);
     return mElemList[pos];
+  }
+
+  /// @brief pos が適正かチェックする．
+  void
+  _check_pos(
+    SizeType pos
+  ) const
+  {
+    if ( pos >= mElemList.size() ) {
+      throw std::out_of_range{"pos is out of range"};
+    }
   }
 
 
@@ -131,7 +140,7 @@ private:
 
   // 現在の要素を持つ配列
   // サイズは mK;
-  vector<int> mElemList;
+  std::vector<int> mElemList;
 
 };
 

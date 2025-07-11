@@ -44,7 +44,7 @@ public:
 
   /// @brief コンストラクタ
   JsonScanner(
-    istream& s ///< [in] 入力ストリーム
+    std::istream& s ///< [in] 入力ストリーム
   );
 
   /// @brief デストラクタ
@@ -67,7 +67,7 @@ public:
   );
 
   /// @brief 直前の read_token() で読み出した字句の文字列を返す．
-  string
+  std::string
   cur_string()
   {
     return mCurString;
@@ -174,7 +174,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 入力ストリーム
-  istream& mS;
+  std::istream& mS;
 
   // 現在の行番号
   int mCurLine;
@@ -201,7 +201,7 @@ private:
   bool mNeedUpdate;
 
   // 文字列バッファ
-  string mCurString;
+  std::string mCurString;
 
   // 直前に読み出した字句の位置
   Region mCurLoc;

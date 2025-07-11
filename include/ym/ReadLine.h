@@ -32,8 +32,8 @@ public:
   static
   bool
   get_line(
-    const string& prompt, ///< [in] プロンプト文字列
-    string& linebuf       ///< [out] 読み込んだ文字列を格納する変数
+    const std::string& prompt, ///< [in] プロンプト文字列
+    std::string& linebuf       ///< [out] 読み込んだ文字列を格納する変数
   );
 
 };

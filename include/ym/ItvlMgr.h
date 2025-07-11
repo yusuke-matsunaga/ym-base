@@ -75,7 +75,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 実装クラス
-  unique_ptr<ItvlTree> mImpl;
+  std::unique_ptr<ItvlTree> mImpl;
 
 };
 

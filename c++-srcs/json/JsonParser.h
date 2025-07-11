@@ -27,7 +27,7 @@ public:
 
   /// @brief コンストラクタ
   JsonParser(
-    istream& s ///< [in] 入力ストリーム
+    std::istream& s ///< [in] 入力ストリーム
   );
 
   /// @brief デストラクタ
@@ -64,7 +64,7 @@ private:
   /// @brief エラーを出力する．
   void
   error(
-    const string& msg ///< [in] メッセージ
+    const std::string& msg ///< [in] メッセージ
   );
 
 

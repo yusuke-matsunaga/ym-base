@@ -13,7 +13,7 @@ BEGIN_NAMESPACE_YM_JSON
 
 // @brief コンストラクタ
 JsonScanner::JsonScanner(
-  istream& s
+  std::istream& s
 ) : mS{s},
     mCurLine{1},
     mCurColumn{1},

@@ -46,14 +46,14 @@ public:
 
   /// @brief コンストラクタ
   MultiPermGen(
-    const vector<pair<int, int>>& nk_array ///< [in] 要素数 n と選択する要素数 k のベクタ
+    const std::vector<std::pair<int, int>>& nk_array ///< [in] 要素数 n と選択する要素数 k のベクタ
   ) : MultiGenBase{nk_array}
   {
   }
 
   /// @brief コンストラクタ
   MultiPermGen(
-    initializer_list<pair<int, int>>& nk_array ///< [in] 要素数 n と選択する要素数 k の初期化リスト
+    std::initializer_list<std::pair<int, int>>& nk_array ///< [in] 要素数 n と選択する要素数 k の初期化リスト
   ) : MultiGenBase{nk_array}
   {
   }

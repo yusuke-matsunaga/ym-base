@@ -9,6 +9,8 @@
 #include "ym/JsonValue.h"
 #include "JsonObj.h"
 #include "JsonParser.h"
+#include <fstream>
+#include <sstream>
 
 
 BEGIN_NAMESPACE_YM_JSON
@@ -27,7 +29,7 @@ JsonValue::JsonValue(
 
 // @brief 文字列型のコンストラクタ
 JsonValue::JsonValue(
-  const string& value
+  const std::string& value
 ) : mPtr{new JsonString{value}}
 {
 }
@@ -73,14 +75,14 @@ JsonValue::JsonValue(
 
 // @brief 配列型のコンストラクタ
 JsonValue::JsonValue(
-  const vector<JsonValue>& value
+  const std::vector<JsonValue>& value
 ) : mPtr{new JsonArray{value}}
 {
 }
 
 // @brief オブジェクト型のコンストラクタ
 JsonValue::JsonValue(
-  const unordered_map<string, JsonValue>& value
+  const std::unordered_map<std::string, JsonValue>& value
 ) : mPtr{new JsonDict{value}}
 {
 }
@@ -88,7 +90,7 @@ JsonValue::JsonValue(
 // @brief 値を指定したコンストラクタ
 JsonValue::JsonValue(
   JsonObj* value
-) : mPtr{shared_ptr<JsonObj>{value}}
+) : mPtr{std::shared_ptr<JsonObj>{value}}
 {
 }
 
@@ -185,7 +187,7 @@ JsonValue::size() const
 // @brief オブジェクトがキーを持つか調べる．
 bool
 JsonValue::has_key(
-  const string& key
+  const std::string& key
 ) const
 {
   _check_object();
@@ -193,7 +195,7 @@ JsonValue::has_key(
 }
 
 // @brief キーのリストを返す．
-vector<string>
+std::vector<std::string>
 JsonValue::key_list() const
 {
   _check_object();
@@ -201,7 +203,7 @@ JsonValue::key_list() const
 }
 
 // @brief キーと値のリストを返す．
-vector<pair<string, JsonValue>>
+std::vector<std::pair<std::string, JsonValue>>
 JsonValue::item_list() const
 {
   _check_object();
@@ -211,7 +213,7 @@ JsonValue::item_list() const
 // @brief オブジェクトの要素を得る．
 JsonValue
 JsonValue::at(
-  const string& key
+  const std::string& key
 ) const
 {
   _check_object();
@@ -221,7 +223,7 @@ JsonValue::at(
 // @brief キーに対応する要素を取り出す．
 JsonValue
 JsonValue::get(
-  const string& key
+  const std::string& key
 ) const
 {
   _check_object();
@@ -242,7 +244,7 @@ JsonValue::at(
 }
 
 // @brief 文字列を得る．
-string
+std::string
 JsonValue::get_string() const
 {
   _check_string();
@@ -276,12 +278,12 @@ JsonValue::get_bool() const
 // @brief 読み込む．
 JsonValue
 JsonValue::read(
-  const string& filename
+  const std::string& filename
 )
 {
-  ifstream s{filename};
+  std::ifstream s{filename};
   if ( !s ) {
-    ostringstream buf;
+    std::ostringstream buf;
     buf << filename << ": No such file";
     throw std::invalid_argument{buf.str()};
   }
@@ -293,22 +295,22 @@ JsonValue::read(
 // @brief JSON文字列をパースする．
 JsonValue
 JsonValue::parse(
-  const string& json_str
+  const std::string& json_str
 )
 {
-  istringstream s{json_str};
+  std::istringstream s{json_str};
   JsonParser parser{s};
   return parser.read();
 }
 
 // @brief 内容を JSON 文字列に変換する．
-string
+std::string
 JsonValue::to_json(
   bool indent
 ) const
 {
   if ( is_null() ) {
-    return string{"null"};
+    return std::string{"null"};
   }
   int indent_val = -1;
   if ( indent ) {
@@ -340,21 +342,21 @@ JsonValue::operator==(
 }
 
 // @brief ストリーム入力演算子
-istream&
+std::istream&
 operator>>(
-  istream& s,
+  std::istream& s,
   JsonValue& json_obj
 )
 {
-  nsJson::JsonParser parser{s};
+  JsonParser parser{s};
   json_obj = parser.read();
   return s;
 }
 
 // @brief ストリーム出力演算子
-ostream&
+std::ostream&
 operator<<(
-  ostream& s,
+  std::ostream& s,
   const JsonValue& json_obj
 )
 {

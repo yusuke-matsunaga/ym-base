@@ -12,9 +12,10 @@
 BEGIN_NAMESPACE_YM
 
 // @brief コンストラクタ
-Scanner::Scanner(istream& s,
-		 const FileInfo& file_info)
-  : mS{s},
+Scanner::Scanner(
+  std::istream& s,
+  const FileInfo& file_info
+) : mS{s},
     mFileInfo{file_info},
     mCurLine{1},
     mCurColumn{1},

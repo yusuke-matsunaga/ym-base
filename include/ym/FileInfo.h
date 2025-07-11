@@ -38,18 +38,26 @@ public:
   FileInfo() = default;
 
   /// @brief ファイル名を指定したコンストラクタ
-  FileInfo(const char* filename); ///< [in] ファイル名
+  FileInfo(
+    const char* filename ///< [in] ファイル名
+  );
 
   /// @brief ファイル名を指定したコンストラクタ
-  FileInfo(const string& filename); ///< [in] ファイル名
+  FileInfo(
+    const std::string& filename ///< [in] ファイル名
+  );
 
   /// @brief ファイル名とインクルード元の親ファイルの情報
-  FileInfo(const char* filename,       ///< [in] ファイル名
-	   const FileLoc& parent_loc); ///< [in] インクルード元の親ファイルの情報
+  FileInfo(
+    const char* filename,     ///< [in] ファイル名
+    const FileLoc& parent_loc ///< [in] インクルード元の親ファイルの情報
+  );
 
   /// @brief ファイル名とインクルード元の親ファイルの情報
-  FileInfo(const string& filename,     ///< [in] ファイル名
-	   const FileLoc& parent_loc); ///< [in] インクルード元の親ファイルの情報
+  FileInfo(
+    const std::string& filename, ///< [in] ファイル名
+    const FileLoc& parent_loc    ///< [in] インクルード元の親ファイルの情報
+  );
 
   /// @brief デストラクタ
   ~FileInfo() = default;
@@ -77,7 +85,7 @@ public:
   }
 
   /// @brief ファイル名を返す．
-  string
+  std::string
   filename() const;
 
   /// @brief インクルード元のファイル位置を返す．
@@ -89,13 +97,36 @@ public:
   /// @brief インクルード元のファイル位置の情報のリスト(vector)を返す．
   ///
   /// トップレベルのファイルが先頭になる．
-  vector<FileLoc>
+  std::vector<FileLoc>
   parent_loc_list() const;
 
   /// @brief 内部の静的なデータをクリアする．
   static
   void
   clear();
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 演算子
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 等価比較演算子
+  bool
+  operator==(
+    const FileInfo& right ///< [in] 右のオペランド
+  ) const
+  {
+    return id() == right.id();
+  }
+
+  /// @brief 非等価比較演算子
+  bool
+  operator!=(
+    const FileInfo& right ///< [in] 右のオペランド
+  )
+  {
+    return !operator==(right);
+  }
 
 
 private:
@@ -114,31 +145,13 @@ private:
 /// @{
 
 /// @relates FileInfo
-/// @brief 等価比較演算子
-inline
-bool
-operator==(const FileInfo& left,  ///< [in] 左のオペランド
-	   const FileInfo& right) ///< [in] 右のオペランド
-{
-  return left.id() == right.id();
-}
-
-/// @relates FileInfo
-/// @brief 非等価比較演算子
-inline
-bool
-operator!=(const FileInfo& left,  ///< [in] 左のオペランド
-	   const FileInfo& right) ///< [in] 右のオペランド
-{
-  return !operator==(left, right);
-}
-
-/// @relates FileInfo
 /// @brief FileInfo 用のストリーム出力演算子
 /// @return s をそのまま返す
-ostream&
-operator<<(ostream& s,                 ///< [in] 出力ストリーム
-	   const FileInfo& file_info); ///< [in] ファイル情報
+std::ostream&
+operator<<(
+  std::ostream& s,          ///< [in] 出力ストリーム
+  const FileInfo& file_info ///< [in] ファイル情報
+);
 
 /// @}
 //////////////////////////////////////////////////////////////////////

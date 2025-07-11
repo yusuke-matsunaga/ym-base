@@ -60,7 +60,7 @@ public:
   /// @brief 内容を出力する．
   void
   print(
-    ostream& s ///< [in] 出力先のストリーム
+    std::ostream& s ///< [in] 出力先のストリーム
   ) const;
 
 
@@ -161,9 +161,9 @@ private:
   static
   bool
   print_sub(
-    Node* node, ///< [in] 対象のノード
-    ostream& s, ///< [in] 出力ストリーム
-    bool first  ///< [in] 最初の要素の時 true にするフラグ
+    Node* node,      ///< [in] 対象のノード
+    std::ostream& s, ///< [in] 出力ストリーム
+    bool first       ///< [in] 最初の要素の時 true にするフラグ
   );
 
 

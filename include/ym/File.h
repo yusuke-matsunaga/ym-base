@@ -39,11 +39,11 @@ public:
   /// @brief 空のコンストラクタ
   ///
   /// 結果は相対パスのカレントディレクトリを表すオブジェクトとなる
-  PathName();
+  PathName() = default;
 
   /// @brief 文字列からの変換コンストラクタ
   PathName(
-    const string& path_str ///< [in] パスを表す文字列
+    const std::string& path_str ///< [in] パスを表す文字列
   );
 
   /// @brief 文字列からの変換コンストラクタ
@@ -76,7 +76,7 @@ public:
 
   /// @brief パス名の文字列表現を返す．
   /// @return パス名の文字列表現
-  string
+  std::string
   str() const;
 
   /// @brief パス名のヘッダを返す．
@@ -90,19 +90,19 @@ public:
   /// @return パス名のテイル (ヘッダを含まないもの)
   ///
   /// パス名が '/' で終わっていたらテイルは空となる．
-  string
+  std::string
   tail() const;
 
   /// @brief パス名の本体(tail から "."と拡張子を除いた物)を返す
   /// @return パス名の本体(tail から "."と拡張子を除いた物)を返す．
-  string
+  std::string
   body() const;
 
   /// @brief パス名の拡張子を返す．
   /// @return パス名の拡張子
   ///
   /// "." を含まない場合には空になる．
-  string
+  std::string
   ext() const;
 
   /// @brief パス名の展開
@@ -159,8 +159,8 @@ private:
 
   /// @brief 内容を直接指定したコンストラクタ
   PathName(
-    PathType type,                  ///< [in] パスタイプ
-    const vector<string>& path_list ///< [in] パスリスト
+    PathType type,                            ///< [in] パスタイプ
+    const std::vector<std::string>& path_list ///< [in] パスリスト
   ) : mType{type},
       mPathList{path_list}
   {
@@ -172,9 +172,9 @@ private:
   /// ただし，"." や ".." の場合や先頭がドットで始まっていて，
   /// それが唯一のドットの場合には拡張子はなしと見なす．
   static
-  string::size_type
+  std::string::size_type
   dot_pos(
-    const string& path ///< [in] 対象のパス文字列
+    const std::string& path ///< [in] 対象のパス文字列
   );
 
 
@@ -184,10 +184,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // タイプ
-  PathType mType;
+  PathType mType{PathType::Relative};
 
   // パス名を表す本体
-  vector<string> mPathList;
+  std::vector<std::string> mPathList;
 
 };
 
@@ -217,7 +217,7 @@ cur_work_dir();
 /// @return login のホームディレクトリ
 PathName
 user_home(
-  const string& login ///< [in] ユーザーアカウント名
+  const std::string& login ///< [in] ユーザーアカウント名
 );
 
 /// @}
@@ -236,7 +236,7 @@ public:
   /// @brief コンストラクタ
   ///
   /// 空のリストを作る．
-  SearchPathList();
+  SearchPathList() = default;
 
   /// @brief 文字列からの変換コンストラクタ
   ///
@@ -245,22 +245,25 @@ public:
   /// また，末尾が '/' で終わっている場合にはそのサブディレクトリ
   /// も探索する．
   SearchPathList(
-    const string& str ///< [in] サーチパスを表す文字列
-  );
+    const std::string& str ///< [in] サーチパスを表す文字列
+  )
+  {
+    to_list(str, mList);
+  }
 
   /// @brief コピーコンストラクタ
   SearchPathList(
     const SearchPathList& src ///< [in] 代入元のオブジェクト
-  );
+  ) = default;
 
   /// @brief 代入演算子
-  const SearchPathList&
+  SearchPathList&
   operator=(
     const SearchPathList& src ///< [in] 代入元のオブジェクト
-  );
+  ) = default;
 
   /// @brief デストラクタ
-  ~SearchPathList();
+  ~SearchPathList() = default;
 
 
 public:
@@ -276,24 +279,36 @@ public:
   /// も探索する．
   void
   set(
-    const string& str ///< [in] セットするサーチパスを表す文字列
-  );
+    const std::string& str ///< [in] セットするサーチパスを表す文字列
+  )
+  {
+    mList.clear();
+    to_list(str, mList);
+  }
 
   /// @brief サーチパスの先頭に path を追加する．
   ///
   /// path は ':' を含んでいても良い
   void
   add_top(
-    const string& path ///< [in] 追加するパス
-  );
+    const std::string& path ///< [in] 追加するパス
+  )
+  {
+    std::vector<PathName> tmp_list;
+    to_list(path, tmp_list);
+    mList.insert(mList.begin(), tmp_list.begin(), tmp_list.end());
+  }
 
   /// @brief サーチパスの末尾に path を追加する．
   ///
   /// path は ':' を含んでいても良い
   void
   add_end(
-    const string& path ///< [in] 追加するパス
-  );
+    const std::string& path ///< [in] 追加するパス
+  )
+  {
+    to_list(path, mList);
+  }
 
   /// @brief サーチパスを考慮して filename を探す
   /// @retval 最初に見つかったファイルの full-path
@@ -307,9 +322,9 @@ public:
 
   /// @brief 現在のサーチパスを取り出す．
   /// @return サーチパスを文字列に変換したもの
-  string
+  std::string
   to_string(
-    const string& separator = ":" ///< [in] 区切り文字
+    const std::string& separator = ":" ///< [in] 区切り文字
   ) const;
 
 
@@ -322,8 +337,8 @@ private:
   static
   void
   to_list(
-    const string& str,
-    vector<PathName>& pathname_list
+    const std::string& str,
+    std::vector<PathName>& pathname_list
   );
 
 
@@ -333,7 +348,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 実際のサーチパスのリスト
-  vector<PathName> mList;
+  std::vector<PathName> mList;
 
 };
 

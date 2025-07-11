@@ -628,7 +628,7 @@ END_NONAMESPACE
 // @brief 内容を出力する．
 void
 ItvlTree::print(
-  ostream& s ///< [in] 出力先のストリーム
+  std::ostream& s
 ) const
 {
   print_sub(mRoot, s, true);
@@ -637,7 +637,7 @@ ItvlTree::print(
 bool
 ItvlTree::print_sub(
   Node* node,
-  ostream& s,
+  std::ostream& s,
   bool first
 )
 {

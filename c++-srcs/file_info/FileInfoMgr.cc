@@ -17,9 +17,10 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 
 // @brief ファイル名を返す．
-// @param[in] id _FileInfo の ID 番号
-string
-FileInfoMgr::filename(int id)
+std::string
+FileInfoMgr::filename(
+  int id
+)
 {
   ASSERT_COND( id >= 0 && id < mFiArray.size() );
 
@@ -28,10 +29,10 @@ FileInfoMgr::filename(int id)
 }
 
 // @brief インクルード元のファイル位置を返す．
-// @param[in] id _FileInfo の ID 番号
-// @note インクルードされていないファイルの場合には無効なデータが返される．
 FileLoc
-FileInfoMgr::parent_loc(int id)
+FileInfoMgr::parent_loc(
+  int id
+)
 {
   ASSERT_COND( id >= 0 && id < mFiArray.size() );
 
@@ -40,10 +41,10 @@ FileInfoMgr::parent_loc(int id)
 }
 
 // @brief 新しい _FileInfo を生成する．
-// @param[in] filename ファイル名
-// @return 生成された _FileInfo の ID 番号
 int
-FileInfoMgr::new_file_info(const char* filename)
+FileInfoMgr::new_file_info(
+  const char* filename
+)
 {
   int id = mFiArray.size();
   mFiArray.push_back(_FileInfo(filename));
@@ -51,12 +52,11 @@ FileInfoMgr::new_file_info(const char* filename)
 }
 
 // @brief 新しい _FileInfo を生成する．
-// @param[in] filename ファイル名
-// @param[in] parent_loc インクルード元の親ファイルの情報
-// @return 生成された _FileInfo の ID 番号
 int
-FileInfoMgr::new_file_info(const char* filename,
-			   const FileLoc& parent_loc)
+FileInfoMgr::new_file_info(
+  const char* filename,
+  const FileLoc& parent_loc
+)
 {
   int id = mFiArray.size();
   mFiArray.push_back(_FileInfo(filename, parent_loc));

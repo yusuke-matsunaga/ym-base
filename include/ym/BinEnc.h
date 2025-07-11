@@ -26,7 +26,7 @@ public:
 
   /// @brief コンストラクタ
   BinEnc(
-    ostream& s ///< [in] 出力先のストリーム
+    std::ostream& s ///< [in] 出力先のストリーム
   ) : mS{s}
   {
     // fail|bad の時に例外を送出するようにする．
@@ -105,7 +105,7 @@ public:
   /// @brief 文字列の書き込み
   void
   write_string(
-    const string& val ///< [in] 値
+    const std::string& val ///< [in] 値
   )
   {
     auto l = val.size();
@@ -128,7 +128,7 @@ public:
   /// write_string() と異なり文字数を書き込まない．
   void
   write_signature(
-    const string& signature ///< [in] シグネチャ文字列
+    const std::string& signature ///< [in] シグネチャ文字列
   )
   {
     auto l = signature.size();
@@ -158,7 +158,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 出力先のストリーム
-  ostream& mS;
+  std::ostream& mS;
 
 };
 
@@ -315,8 +315,8 @@ operator<<(
 inline
 BinEnc&
 operator<<(
-  BinEnc& s,        ///< [in] 出力先のストリーム
-  const string& val ///< [in] 値
+  BinEnc& s,             ///< [in] 出力先のストリーム
+  const std::string& val ///< [in] 値
 )
 {
   s.write_string(val);

@@ -39,7 +39,7 @@ PermGen::operator++()
   SizeType k = this->k();
 
   // 各値の使用回数(0/1)を数える．
-  vector<bool> used(n, false);
+  std::vector<bool> used(n, false);
   for ( int pos = 0; pos < k; ++ pos ) {
     used[elem(pos)] = true;
   }

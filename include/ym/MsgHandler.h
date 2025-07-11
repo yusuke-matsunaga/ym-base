@@ -122,7 +122,7 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief メッセージを文字列にまとめる．
-  string
+  std::string
   msg_to_string(
     const char* src_file,  ///< [in] この関数を呼んでいるソースファイル名
     int src_line,	   ///< [in] この関数を呼んでいるソースの行番号
@@ -133,7 +133,7 @@ protected:
   );
 
   /// @brief メッセージを文字列にまとめる．
-  string
+  std::string
   msg_to_string(
     const char* src_file, ///< [in] この関数を呼んでいるソースファイル名
     int src_line,         ///< [in] この関数を呼んでいるソースの行番号

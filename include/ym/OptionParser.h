@@ -56,9 +56,9 @@ public:
 
   /// @brief パースする．
   /// @return パース結果の<キー，値>のペアのリストを返す．
-  vector<pair<string, string>>
+  std::vector<std::pair<std::string, std::string>>
   parse(
-    const string& input ///< [in] 入力文字列
+    const std::string& input ///< [in] 入力文字列
   );
 
 

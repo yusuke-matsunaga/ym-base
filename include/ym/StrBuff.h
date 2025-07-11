@@ -69,7 +69,7 @@ public:
 
   /// @brief コピーコンストラクタもどき (string)
   StrBuff(
-    const string& src ///< [in] コピー元のオブジェクト (string)
+    const std::string& src ///< [in] コピー元のオブジェクト (string)
   ) : mSize(src.size() + 1),
       mEnd(mSize - 1),
       mBuffer(new char[mSize])
@@ -105,7 +105,7 @@ public:
   /// @return 自分自身
   const StrBuff&
   operator=(
-    const string& src ///< [in] コピー元の文字列 (string)
+    const std::string& src ///< [in] コピー元の文字列 (string)
   )
   {
     clear();
@@ -185,7 +185,7 @@ public:
   /// @brief 文字列の追加 (string)
   void
   put_str(
-    const string& str ///< [in] 追加する文字列 (string)
+    const std::string& str ///< [in] 追加する文字列 (string)
   )
   {
     put_str(str.c_str());
@@ -251,7 +251,7 @@ public:
   c_str() const { return mBuffer; }
 
   /// @brief string への変換
-  operator string() const { return string(c_str()); }
+  operator std::string() const { return std::string(c_str()); }
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -334,9 +334,9 @@ operator!=(
 /// @brief StrBuff の内容を出力する
 /// @return 出力ストリームを返す．
 inline
-ostream&
+std::ostream&
 operator<<(
-  ostream& s,           ///< [in] 出力ストリーム
+  std::ostream& s,      ///< [in] 出力ストリーム
   const StrBuff& strbuf ///< [in] 出力対象のオブジェクト
 )
 {

@@ -75,21 +75,21 @@ public:
   virtual
   bool
   has_key(
-    const string& key ///< [in] キー
+    const std::string& key ///< [in] キー
   ) const;
 
   /// @brief キーのリストを返す．
   ///
   /// - オブジェクト型でない場合は無効
   virtual
-  vector<string>
+  std::vector<std::string>
   key_list() const;
 
   /// @brief キーと値のリストを返す．
   ///
   /// - オブジェクト型でない場合は無効
   virtual
-  vector<pair<string, JsonValue>>
+  std::vector<std::pair<std::string, JsonValue>>
   item_list() const;
 
   /// @brief オブジェクトの要素を得る．
@@ -99,7 +99,7 @@ public:
   virtual
   JsonValue
   get_value(
-    const string& key ///< [in] キー
+    const std::string& key ///< [in] キー
   ) const;
 
   /// @brief 配列の要素を得る．
@@ -116,7 +116,7 @@ public:
   ///
   /// - 文字列型でない場合は無効
   virtual
-  string
+  std::string
   get_string() const;
 
   /// @brief 整数値を得る．
@@ -142,7 +142,7 @@ public:
 
   /// @brief 内容を JSON 文字列に変換する．
   virtual
-  string
+  std::string
   to_json(
     int indent
   ) const = 0;
@@ -181,7 +181,7 @@ public:
 
   /// @brief コンストラクタ
   JsonDict(
-    const unordered_map<string, JsonValue>& dict ///< [in] 本体の辞書
+    const std::unordered_map<std::string, JsonValue>& dict ///< [in] 本体の辞書
   );
 
   /// @brief デストラクタ
@@ -206,19 +206,19 @@ public:
   /// - オブジェクト型でない場合は無効
   bool
   has_key(
-    const string& key ///< [in] キー
+    const std::string& key ///< [in] キー
   ) const override;
 
   /// @brief キーのリストを返す．
   ///
   /// - オブジェクト型でない場合は無効
-  vector<string>
+  std::vector<std::string>
   key_list() const override;
 
   /// @brief キーと値のリストを返す．
   ///
   /// - オブジェクト型でない場合は無効
-  vector<pair<string, JsonValue>>
+  std::vector<std::pair<std::string, JsonValue>>
   item_list() const override;
 
   /// @brief オブジェクトの要素を得る．
@@ -227,11 +227,11 @@ public:
   /// - key に対応する値がない場合は null を返す．
   JsonValue
   get_value(
-    const string& key ///< [in] キー
+    const std::string& key ///< [in] キー
   ) const override;
 
   /// @brief 内容を JSON 文字列に変換する．
-  string
+  std::string
   to_json(
     int indent
   ) const override;
@@ -249,7 +249,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 本体
-  unordered_map<string, JsonValue> mDict;
+  std::unordered_map<std::string, JsonValue> mDict;
 
 };
 
@@ -265,7 +265,7 @@ public:
 
   /// @brief コンストラクタ
   JsonArray(
-    const vector<JsonValue>& array ///< [in] 配列の本体
+    const std::vector<JsonValue>& array ///< [in] 配列の本体
   );
 
   /// @brief デストラクタ
@@ -295,7 +295,7 @@ public:
   ) const override;
 
   /// @brief 内容を JSON 文字列に変換する．
-  string
+  std::string
   to_json(
     int indent
   ) const override;
@@ -313,7 +313,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 配列の実体
-  vector<JsonValue> mArray;
+  std::vector<JsonValue> mArray;
 
 };
 
@@ -329,7 +329,7 @@ public:
 
   /// @brief コンストラクタ
   JsonString(
-    const string& value ///< [in] 文字列の値
+    const std::string& value ///< [in] 文字列の値
   );
 
   /// @brief デストラクタ
@@ -348,11 +348,11 @@ public:
   /// @brief 文字列を得る．
   ///
   /// - 文字列型でない場合は無効
-  string
+  std::string
   get_string() const override;
 
   /// @brief 内容を JSON 文字列に変換する．
-  string
+  std::string
   to_json(
     int indent
   ) const override;
@@ -370,7 +370,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 文字列の本体
-  string mValue;
+  std::string mValue;
 
 };
 
@@ -409,7 +409,7 @@ public:
   get_int() const override;
 
   /// @brief 内容を JSON 文字列に変換する．
-  string
+  std::string
   to_json(
     int indent
   ) const override;
@@ -466,7 +466,7 @@ public:
   get_float() const override;
 
   /// @brief 内容を JSON 文字列に変換する．
-  string
+  std::string
   to_json(
     int indent
   ) const override;
@@ -521,7 +521,7 @@ public:
   get_bool() const override;
 
   /// @brief 内容を JSON 文字列に変換する．
-  string
+  std::string
   to_json(
     int indent
   ) const override;
@@ -567,7 +567,7 @@ public:
   get_bool() const override;
 
   /// @brief 内容を JSON 文字列に変換する．
-  string
+  std::string
   to_json(
     int indent
   ) const override;

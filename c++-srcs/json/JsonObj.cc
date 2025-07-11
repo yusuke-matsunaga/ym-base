@@ -8,15 +8,16 @@
 
 #include "JsonObj.h"
 #include "ym/JsonValue.h"
+#include <sstream>
 
 
 BEGIN_NAMESPACE_YM_JSON
 
 BEGIN_NONAMESPACE
 
-string
+std::string
 escaped_string(
-  const string& src_string
+  const std::string& src_string
 )
 {
   bool has_dq = false;
@@ -29,7 +30,7 @@ escaped_string(
       has_sq = true;
     }
   }
-  string ans;
+  std::string ans;
   if ( !has_dq ) {
     ans += '"';
     ans += src_string;
@@ -54,12 +55,12 @@ escaped_string(
   return ans;
 }
 
-string
+std::string
 tab(
   SizeType n
 )
 {
-  string ans;
+  std::string ans;
   for ( SizeType i = 0; i < n; ++ i ) {
     ans += "    ";
   }
@@ -125,7 +126,7 @@ JsonObj::size() const
 // @brief オブジェクトがキーを持つか調べる．
 bool
 JsonObj::has_key(
-  const string& key ///< [in] キー
+  const std::string& key ///< [in] キー
 ) const
 {
   ASSERT_NOT_REACHED;
@@ -133,7 +134,7 @@ JsonObj::has_key(
 }
 
 // @brief キーのリストを返す．
-vector<string>
+std::vector<std::string>
 JsonObj::key_list() const
 {
   ASSERT_NOT_REACHED;
@@ -141,7 +142,7 @@ JsonObj::key_list() const
 }
 
 // @brief キーと値のリストを返す．
-vector<pair<string, JsonValue>>
+std::vector<std::pair<std::string, JsonValue>>
 JsonObj::item_list() const
 {
   ASSERT_NOT_REACHED;
@@ -151,7 +152,7 @@ JsonObj::item_list() const
 // @brief オブジェクトの要素を得る．
 JsonValue
 JsonObj::get_value(
-  const string& key
+  const std::string& key
 ) const
 {
   ASSERT_NOT_REACHED;
@@ -169,11 +170,11 @@ JsonObj::get_value(
 }
 
 // @brief 文字列を得る．
-string
+std::string
 JsonObj::get_string() const
 {
   ASSERT_NOT_REACHED;
-  return string{};
+  return std::string{};
 }
 
 // @brief 整数値を得る．
@@ -216,7 +217,7 @@ JsonObj::obj_ptr(
 
 // @brief コンストラクタ
 JsonDict::JsonDict(
-  const unordered_map<string, JsonValue>& dict
+  const std::unordered_map<std::string, JsonValue>& dict
 ) : mDict{dict}
 {
 }
@@ -243,17 +244,17 @@ JsonDict::size() const
 // @brief オブジェクトがキーを持つか調べる．
 bool
 JsonDict::has_key(
-  const string& key
+  const std::string& key
 ) const
 {
   return mDict.count(key) > 0;
 }
 
 // @brief キーのリストを返す．
-vector<string>
+std::vector<std::string>
 JsonDict::key_list() const
 {
-  vector<string> ans_list;
+  std::vector<std::string> ans_list;
   for ( auto& p: mDict ) {
     ans_list.push_back(p.first);
   }
@@ -263,17 +264,17 @@ JsonDict::key_list() const
 }
 
 // @brief キーと値のリストを返す．
-vector<pair<string, JsonValue>>
+std::vector<std::pair<std::string, JsonValue>>
 JsonDict::item_list() const
 {
-  vector<pair<string, JsonValue>> ans_list;
+  std::vector<std::pair<std::string, JsonValue>> ans_list;
   for ( auto& p: mDict ) {
     ans_list.push_back(p);
   }
   // キーでソートしておく
   sort(ans_list.begin(), ans_list.end(),
-       [](const pair<string, JsonValue>& a,
-	  const pair<string, JsonValue>& b){
+       [](const std::pair<std::string, JsonValue>& a,
+	  const std::pair<std::string, JsonValue>& b){
 	 return a.first < b.first;
        });
   return ans_list;
@@ -282,11 +283,11 @@ JsonDict::item_list() const
 // @brief オブジェクトの要素を得る．
 JsonValue
 JsonDict::get_value(
-  const string& key
+  const std::string& key
 ) const
 {
   if ( mDict.count(key) == 0 ) {
-    ostringstream buf;
+    std::ostringstream buf;
     buf << key << ": invalid key";
     throw std::invalid_argument{buf.str()};
   }
@@ -294,14 +295,14 @@ JsonDict::get_value(
 }
 
 // @brief 内容を JSON 文字列に変換する．
-string
+std::string
 JsonDict::to_json(
   int indent
 ) const
 {
   bool first = true;
   int indent1 = indent;
-  string ans;
+  std::string ans;
   ans = "{";
   if ( indent >= 0 ) {
     ans += '\n';
@@ -354,7 +355,7 @@ JsonDict::is_eq(
 
 // @brief コンストラクタ
 JsonArray::JsonArray(
-  const vector<JsonValue>& array
+  const std::vector<JsonValue>& array
 ) : mArray{array}
 {
 }
@@ -391,12 +392,12 @@ JsonArray::get_value(
 }
 
 // @brief 内容を JSON 文字列に変換する．
-string
+std::string
 JsonArray::to_json(
   int indent
 ) const
 {
-  string ans;
+  std::string ans;
   ans = "[";
   if ( indent >= 0 ) {
     ans += '\n';
@@ -449,7 +450,7 @@ JsonArray::is_eq(
 
 // @brief コンストラクタ
 JsonString::JsonString(
-  const string& value
+  const std::string& value
 ) : mValue{value}
 {
 }
@@ -467,14 +468,14 @@ JsonString::is_string() const
 }
 
 // @brief 文字列を得る．
-string
+std::string
 JsonString::get_string() const
 {
   return mValue;
 }
 
 // @brief 内容を JSON 文字列に変換する．
-string
+std::string
 JsonString::to_json(
   int indent
 ) const
@@ -526,12 +527,12 @@ JsonInt::get_int() const
 }
 
 // @brief 内容を JSON 文字列に変換する．
-string
+std::string
 JsonInt::to_json(
   int indent
 ) const
 {
-  ostringstream buf;
+  std::ostringstream buf;
   buf << get_int();
   return buf.str();
 }
@@ -580,12 +581,12 @@ JsonFloat::get_float() const
 }
 
 // @brief 内容を JSON 文字列に変換する．
-string
+std::string
 JsonFloat::to_json(
   int indent
 ) const
 {
-  ostringstream buf;
+  std::ostringstream buf;
   buf << get_float();
   return buf.str();
 }
@@ -632,7 +633,7 @@ JsonTrue::get_bool() const
 }
 
 // @brief 内容を JSON 文字列に変換する．
-string
+std::string
 JsonTrue::to_json(
   int indent
 ) const
@@ -682,7 +683,7 @@ JsonFalse::get_bool() const
 }
 
 // @brief 内容を JSON 文字列に変換する．
-string
+std::string
 JsonFalse::to_json(
   int indent
 ) const

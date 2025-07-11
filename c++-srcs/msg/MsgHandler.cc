@@ -10,6 +10,7 @@
 #include "ym/StreamMsgHandler.h"
 #include "ym/StrListMsgHandler.h"
 #include "ym/FileRegion.h"
+#include <sstream>
 
 
 BEGIN_NAMESPACE_YM
@@ -20,11 +21,13 @@ BEGIN_NAMESPACE_YM
 
 // @brief メッセージが登録されるたびに呼ばれる仮想関数
 void
-MsgHandler::put_msg(const char* src_file,
-		    int src_line,
-		    MsgType type,
-		    const char* label,
-		    const char* body)
+MsgHandler::put_msg(
+  const char* src_file,
+  int src_line,
+  MsgType type,
+  const char* label,
+  const char* body
+)
 {
   // 継承クラスが定義しなかった時のデフォルトフォールバック
   // 結局，event_proc() 中の条件分岐はなんなんだよ！，というコード
@@ -32,40 +35,46 @@ MsgHandler::put_msg(const char* src_file,
 }
 
 // @brief メッセージを文字列にまとめる．
-string
-MsgHandler::msg_to_string(const char* src_file,
-			  int src_line,
-			  const FileRegion& loc,
-			  MsgType type,
-			  const char* label,
-			  const char* body)
+std::string
+MsgHandler::msg_to_string(
+  const char* src_file,
+  int src_line,
+  const FileRegion& loc,
+  MsgType type,
+  const char* label,
+  const char* body
+)
 {
-  ostringstream buf;
-  buf << loc << ": " << type << " [" << label << "]: " << body << endl;
+  std::ostringstream buf;
+  buf << loc << ": " << type << " [" << label << "]: " << body << std::endl;
   return buf.str();
 }
 
 // @brief メッセージを文字列にまとめる．
-string
-MsgHandler::msg_to_string(const char* src_file,
-			  int src_line,
-			  MsgType type,
-			  const char* label,
-			  const char* body)
+std::string
+MsgHandler::msg_to_string(
+  const char* src_file,
+  int src_line,
+  MsgType type,
+  const char* label,
+  const char* body
+)
 {
-  ostringstream buf;
-  buf << type << " [" << label << "]: " << body << endl;
+  std::ostringstream buf;
+  buf << type << " [" << label << "]: " << body << std::endl;
   return buf.str();
 }
 
 // @brief メッセージが登録されるたびに呼ばれる仮想関数
 void
-MsgHandler::event_proc(const char* src_file,
-		       int src_line,
-		       const FileRegion& loc,
-		       MsgType type,
-		       const char* label,
-		       const char* body)
+MsgHandler::event_proc(
+  const char* src_file,
+  int src_line,
+  const FileRegion& loc,
+  MsgType type,
+  const char* label,
+  const char* body
+)
 {
   MsgBitMask bit = conv2bitmask(type);
   auto tmp = mMask & bit;
@@ -86,23 +95,27 @@ MsgHandler::event_proc(const char* src_file,
 
 // @brief メッセージが登録されるたびに呼ばれる仮想関数
 void
-StreamMsgHandler::put_msg(const char* src_file,
-			  int src_line,
-			  const FileRegion& loc,
-			  MsgType type,
-			  const char* label,
-			  const char* body)
+StreamMsgHandler::put_msg(
+  const char* src_file,
+  int src_line,
+  const FileRegion& loc,
+  MsgType type,
+  const char* label,
+  const char* body
+)
 {
   mStream << msg_to_string(src_file, src_line, loc, type, label, body);
 }
 
 // @brief メッセージが登録されるたびに呼ばれる仮想関数
 void
-StreamMsgHandler::put_msg(const char* src_file,
-			  int src_line,
-			  MsgType type,
-			  const char* label,
-			  const char* body)
+StreamMsgHandler::put_msg(
+  const char* src_file,
+  int src_line,
+  MsgType type,
+  const char* label,
+  const char* body
+)
 {
   mStream << msg_to_string(src_file, src_line, type, label, body);
 }
@@ -114,23 +127,27 @@ StreamMsgHandler::put_msg(const char* src_file,
 
 // @brief メッセージが登録されるたびに呼ばれる仮想関数
 void
-StrListMsgHandler::put_msg(const char* src_file,
-			  int src_line,
-			  const FileRegion& loc,
-			  MsgType type,
-			  const char* label,
-			  const char* body)
+StrListMsgHandler::put_msg(
+  const char* src_file,
+  int src_line,
+  const FileRegion& loc,
+  MsgType type,
+  const char* label,
+  const char* body
+)
 {
   mMsgList.push_back(msg_to_string(src_file, src_line, loc, type, label, body));
 }
 
 // @brief メッセージが登録されるたびに呼ばれる仮想関数
 void
-StrListMsgHandler::put_msg(const char* src_file,
-			  int src_line,
-			  MsgType type,
-			  const char* label,
-			  const char* body)
+StrListMsgHandler::put_msg(
+  const char* src_file,
+  int src_line,
+  MsgType type,
+  const char* label,
+  const char* body
+)
 {
   mMsgList.push_back(msg_to_string(src_file, src_line, type, label, body));
 }

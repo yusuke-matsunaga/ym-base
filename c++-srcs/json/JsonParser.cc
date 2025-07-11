@@ -10,13 +10,14 @@
 #include "JsonScanner.h"
 #include "JsonObj.h"
 #include "ym/JsonValue.h"
+#include <sstream>
 
 
 BEGIN_NAMESPACE_YM_JSON
 
 // @brief コンストラクタ
 JsonParser::JsonParser(
-  istream& s
+  std::istream& s
 ) : mScanner{s}
 {
 }
@@ -71,7 +72,7 @@ JsonParser::read_value()
   default:
     // シンタックスエラー
     {
-      ostringstream buf;
+      std::ostringstream buf;
       buf << "'" << mScanner.cur_string() << "': unexpected token";
       error(buf.str());
     }
@@ -84,7 +85,7 @@ JsonParser::read_value()
 JsonObj*
 JsonParser::read_object()
 {
-  unordered_map<string, JsonValue> dict;
+  std::unordered_map<std::string, JsonValue> dict;
   auto tk = mScanner.read_token();
   if ( tk == JsonToken::RCB ) {
     // 空のオブジェクト
@@ -106,7 +107,7 @@ JsonParser::read_object()
     }
     else {
       // シンタックスエラー
-      ostringstream buf;
+      std::ostringstream buf;
       buf << mScanner.cur_string()
 	  << ": illegal token, string is expected";
       error(buf.str());
@@ -119,7 +120,7 @@ JsonParser::read_object()
 
     if ( tk != JsonToken::Comma ) {
       // シンタックスエラー
-      ostringstream buf;
+      std::ostringstream buf;
       buf << mScanner.cur_string()
 	  << ": illegal token, ',' is expected";
       error(buf.str());
@@ -145,7 +146,7 @@ JsonParser::read_array()
   }
 
   mScanner.unget_token(tk);
-  vector<JsonValue> array;
+  std::vector<JsonValue> array;
   for ( ; ; ) {
     auto value = read_value();
     array.push_back(JsonValue{value});
@@ -155,7 +156,7 @@ JsonParser::read_array()
     }
     if ( tk != JsonToken::Comma ) {
       // シンタックスエラー
-      ostringstream buf;
+      std::ostringstream buf;
       buf << mScanner.cur_string()
 	  << ": illegal token, ',' is expected";
       error(buf.str());
@@ -168,10 +169,10 @@ JsonParser::read_array()
 // @brief エラーを出力する．
 void
 JsonParser::error(
-  const string& msg
+  const std::string& msg
 )
 {
-  ostringstream buf;
+  std::ostringstream buf;
   buf << mScanner.cur_loc()
       << ": " << msg;
   throw std::invalid_argument(buf.str());

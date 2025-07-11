@@ -47,8 +47,8 @@ void
 MultiSetPermGen::operator++()
 {
   // 各要素の使用数を求める．
-  SizeType ng = group_num();
-  vector<int> count(ng, 0);
+  auto ng = group_num();
+  std::vector<int> count(ng, 0);
   for ( int i = 0; i < k(); ++ i ) {
     int v = elem(i);
     ++ count[v];
@@ -101,8 +101,8 @@ MultiSetPermGen::operator++()
 void
 MultiSetCombiGen::operator++()
 {
-  SizeType ng = group_num();
-  vector<int> count(ng, 0);
+  auto ng = group_num();
+  std::vector<int> count(ng, 0);
   for ( int i = 0; i < k(); ++ i ) {
     int v = elem(i);
     ++ count[v];
@@ -120,7 +120,7 @@ MultiSetCombiGen::operator++()
       }
     }
     if ( found ) {
-      int g = elem(pos);
+      auto g = elem(pos);
       for ( int pos1 = pos + 1; pos1 < k(); ++ pos1 ) {
 	for ( ; g < ng; ++ g) {
 	  if ( count[g] < n(g) ) {

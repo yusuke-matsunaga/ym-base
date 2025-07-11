@@ -9,6 +9,7 @@
 /// All rights reserved.
 
 #include "ym_config.h"
+#include <unordered_set>
 
 
 BEGIN_NAMESPACE_YM
@@ -51,7 +52,9 @@ public:
   /// @brief 文字列を登録する．
   /// @return カノニカライズされた文字列を返す．
   const char*
-  reg(const char* str) ///< [in] 入力となる文字列
+  reg(
+    const char* str ///< [in] 入力となる文字列
+  )
   {
     // まず str と同一の文字列が登録されていないか調べる．
     auto p = mStrHash.find(str);
@@ -124,8 +127,10 @@ private:
     ~Eq() = default;
 
     bool
-    operator()(const char* s1,
-	       const char* s2) const
+    operator()(
+      const char* s1,
+      const char* s2
+    ) const
     {
       return strcmp(s1, s2) == 0;
     }
@@ -145,13 +150,13 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 文字列のハッシュ表
-  unordered_set<const char*, Hash, Eq> mStrHash;
+  std::unordered_set<const char*, Hash, Eq> mStrHash;
 
   // 文字列用に確保されたメモリサイズの総和
   SizeType mTotalAllocSize;
 
   // 文字列のリスト
-  vector<const char*> mBlockList;
+  std::vector<const char*> mBlockList;
 
 };
 

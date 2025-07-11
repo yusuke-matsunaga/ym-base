@@ -67,7 +67,7 @@ public:
   clear() { mMsgList.clear(); }
 
   /// @brief メッセージリストを返す．
-  vector<string>
+  std::vector<std::string>
   message_list() const { return mMsgList; }
 
 
@@ -77,7 +77,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // メッセージリスト
-  vector<string> mMsgList;
+  std::vector<std::string> mMsgList;
 
 };
 

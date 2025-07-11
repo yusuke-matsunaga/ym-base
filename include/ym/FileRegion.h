@@ -22,59 +22,82 @@ BEGIN_NAMESPACE_YM
 /// @ingroup ym
 /// @brief ファイル上の領域を表すクラス
 /// @sa FileLoc FileInfo FileInfoMgr
+///
+/// 意味的には先頭位置を表す FileLoc と末尾位置を表す FileLoc の組だが
+/// 内部では効率的に表している．
 //////////////////////////////////////////////////////////////////////
 class FileRegion
 {
 public:
 
   /// @brief 空のデフォルトコンストラクタ
-  /// @note 結果は invalid な情報を持つオブジェクトとなる．
-  FileRegion();
+  ///
+  /// 結果は不正な情報を持つオブジェクトとなる．
+  FileRegion() = default;
 
   /// @brief 内容を指定したコンストラクタ
-  /// @param[in] file_info ファイル情報
-  /// @param[in] start_line 先頭の行番号
-  /// @param[in] start_column 先頭のコラム番号
-  /// @param[in] end_line 末尾の行番号
-  /// @param[in] end_column 末尾のコラム番号
-  FileRegion(FileInfo file_info,
-	     int start_line,
-	     int start_column,
-	     int end_line,
-	     int end_column);
+  FileRegion(
+    FileInfo file_info, ///< [in] ファイル情報
+    int start_line,     ///< [in] 先頭の行番号
+    int start_column,   ///< [in] 先頭のコラム番号
+    int end_line,       ///< [in] 末尾の行番号
+    int end_column      ///< [in] 末尾のコラム番号
+  ) : mStartFileInfo(file_info),
+      mEndFileInfo(file_info),
+      mStartLineColumn(start_line, start_column),
+      mEndLineColumn(end_line, end_column)
+  {
+  }
 
   /// @brief 内容を指定したコンストラクタ
-  /// @param[in] start_file_info 先頭のファイル情報
-  /// @param[in] start_line 先頭の行番号
-  /// @param[in] start_column 先頭のコラム番号
-  /// @param[in] end_file_info 末尾のファイル情報
-  /// @param[in] end_line 末尾の行番号
-  /// @param[in] end_column 末尾のコラム番号
-  FileRegion(FileInfo start_file_info,
-	     int start_line,
-	     int start_column,
-	     FileInfo end_file_info,
-	     int end_line,
-	     int end_column);
+  FileRegion(
+    FileInfo start_file_info, ///< [in] 先頭のファイル情報
+    int start_line,	      ///< [in] 先頭の行番号
+    int start_column,	      ///< [in] 先頭のコラム番号
+    FileInfo end_file_info,   ///< [in] 末尾のファイル情報
+    int end_line,             ///< [in] 末尾の行番号
+    int end_column  	      ///< [in] 末尾のコラム番号
+  ) : mStartFileInfo(start_file_info),
+      mEndFileInfo(end_file_info),
+      mStartLineColumn(start_line, start_column),
+      mEndLineColumn(end_line, end_column)
+  {
+  }
 
   /// @brief 内容を指定したコンストラクタ
-  /// @param[in] file_loc ファイル上の位置
-  FileRegion(const FileLoc& file_loc);
+  FileRegion(
+    const FileLoc& file_loc ///< [in] ファイル上の位置
+  ) : mStartFileInfo(file_loc.file_info()),
+      mEndFileInfo(file_loc.file_info()),
+      mStartLineColumn(file_loc.mLineColumn),
+      mEndLineColumn(file_loc.mLineColumn)
+  {
+  }
 
   /// @brief 内容を指定したコンストラクタ
-  /// @param[in] start_file_loc 先頭のファイル上の位置
-  /// @param[in] end_file_loc 末尾ののファイル上の位置
-  FileRegion(const FileLoc& start_file_loc,
-	     const FileLoc& end_file_loc);
+  FileRegion(
+    const FileLoc& start_file_loc, ///< [in] 先頭のファイル上の位置
+    const FileLoc& end_file_loc    ///< [in] 末尾のファイル上の位置
+  ) : mStartFileInfo(start_file_loc.file_info()),
+      mEndFileInfo(end_file_loc.file_info()),
+      mStartLineColumn(start_file_loc.mLineColumn),
+      mEndLineColumn(end_file_loc.mLineColumn)
+  {
+  }
 
   /// @brief 内容を指定したコンストラクタ
-  /// @param[in] start_file_region 先頭のファイル上の位置
-  /// @param[in] end_file_region 末尾ののファイル上の位置
-  FileRegion(const FileRegion& start_file_region,
-	     const FileRegion& end_file_region);
+  FileRegion(
+    const FileRegion& start_file_region, ///< [in] 先頭のファイル上の位置
+    const FileRegion& end_file_region    ///< [in] 末尾のファイル上の位置
+  ) : mStartFileInfo(start_file_region.mStartFileInfo),
+      mEndFileInfo(end_file_region.mEndFileInfo),
+      mStartLineColumn(start_file_region.mStartLineColumn),
+      mEndLineColumn(end_file_region.mEndLineColumn)
+  {
+  }
 
   /// @brief デストラクタ
-  ~FileRegion();
+  ~FileRegion() = default;
 
 
 public:
@@ -85,46 +108,73 @@ public:
   /// @brief データの妥当性のチェック
   /// @return 意味のある値を持っているとき true を返す．
   bool
-  is_valid() const;
+  is_valid() const
+  {
+    return mStartFileInfo.is_valid();
+  }
 
   /// @brief 先頭のファイル位置の取得
   /// @return ファイル位置
   FileLoc
-  start_loc() const;
+  start_loc() const
+  {
+    return FileLoc(mStartFileInfo, start_line(), start_column());
+  }
 
   /// @brief 先頭のファイル情報の取得
   /// @return ファイル情報を返す．
   FileInfo
-  start_file_info() const;
+  start_file_info() const
+  {
+    return mStartFileInfo;
+  }
 
   /// @brief 先頭の行番号の取得
   /// @return 行番号
   int
-  start_line() const;
+  start_line() const
+  {
+    return mStartLineColumn.line();
+  }
 
   /// @brief 先頭のコラム位置の取得
   /// @return コラム位置
   int
-  start_column() const;
+  start_column() const
+  {
+    return mStartLineColumn.column();
+  }
 
   /// @brief 末尾のファイル位置の取得
   /// @return ファイル位置
   FileLoc
-  end_loc() const;
+  end_loc() const
+  {
+    return FileLoc(mEndFileInfo, end_line(), end_column());
+  }
 
   /// @brief 末尾のファイル情報の取得
   FileInfo
-  end_file_info() const;
+  end_file_info() const
+  {
+    return mEndFileInfo;
+  }
 
   /// @brief 末尾の行番号の取得
   /// @return 行番号
   int
-  end_line() const;
+  end_line() const
+  {
+    return mEndLineColumn.line();
+  }
 
   /// @brief 末尾のコラム位置の取得
   /// @return コラム位置
   int
-  end_column() const;
+  end_column() const
+  {
+    return mEndLineColumn.column();
+  }
 
 
 private:
@@ -153,191 +203,15 @@ private:
 
 /// @relates FileRegion
 /// @brief FileRegion を表示するための関数
-/// @param[in] s 出力ストリーム
-/// @param[in] file_region ファイル領域の情報
 /// @return s をそのまま返す
-ostream&
-operator<<(ostream& s,
-	   const FileRegion& file_region);
+std::ostream&
+operator<<(
+  std::ostream& s,              ///< [in] 出力ストリーム
+  const FileRegion& file_region ///< [in] ファイル領域の情報
+);
 
 /// @}
 //////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 空のデフォルトコンストラクタ
-// @note 結果は invalid な情報を持つオブジェクトとなる．
-inline
-FileRegion::FileRegion()
-{
-  // FileInfo のデフォルトコンストラクタは無効なIDで初期化する．
-}
-
-// @brief 内容を指定したコンストラクタ
-// @param[in] file_info ファイル情報
-// @param[in] start_line 先頭の行番号
-// @param[in] start_column 先頭のコラム番号
-// @param[in] end_line 末尾の行番号
-// @param[in] end_column 末尾のコラム番号
-inline
-FileRegion::FileRegion(FileInfo file_info,
-		       int start_line,
-		       int start_column,
-		       int end_line,
-		       int end_column) :
-  mStartFileInfo(file_info),
-  mEndFileInfo(file_info),
-  mStartLineColumn(start_line, start_column),
-  mEndLineColumn(end_line, end_column)
-{
-}
-
-// @brief 内容を指定したコンストラクタ
-// @param[in] start_file_info 先頭のファイル情報
-// @param[in] start_line 先頭の行番号
-// @param[in] start_column 先頭のコラム番号
-// @param[in] end_file_info 末尾のファイル情報
-// @param[in] end_line 末尾の行番号
-// @param[in] end_column 末尾のコラム番号
-inline
-FileRegion::FileRegion(FileInfo start_file_info,
-		       int start_line,
-		       int start_column,
-		       FileInfo end_file_info,
-		       int end_line,
-		       int end_column) :
-  mStartFileInfo(start_file_info),
-  mEndFileInfo(end_file_info),
-  mStartLineColumn(start_line, start_column),
-  mEndLineColumn(end_line, end_column)
-{
-}
-
-// @brief 内容を指定したコンストラクタ
-// @param[in] file_loc ファイル上の位置
-inline
-FileRegion::FileRegion(const FileLoc& file_loc) :
-  mStartFileInfo(file_loc.file_info()),
-  mEndFileInfo(file_loc.file_info()),
-  mStartLineColumn(file_loc.mLineColumn),
-  mEndLineColumn(file_loc.mLineColumn)
-{
-}
-
-// @brief 内容を指定したコンストラクタ
-// @param[in] start_file_loc 先頭のファイル上の位置
-// @param[in] end_file_loc 末尾ののファイル上の位置
-inline
-FileRegion::FileRegion(const FileLoc& start_file_loc,
-		       const FileLoc& end_file_loc) :
-  mStartFileInfo(start_file_loc.file_info()),
-  mEndFileInfo(end_file_loc.file_info()),
-  mStartLineColumn(start_file_loc.mLineColumn),
-  mEndLineColumn(end_file_loc.mLineColumn)
-{
-}
-
-// @brief 内容を指定したコンストラクタ
-// @param[in] start_file_region 先頭のファイル上の位置
-// @param[in] end_file_region 末尾ののファイル上の位置
-inline
-FileRegion::FileRegion(const FileRegion& start_file_region,
-		       const FileRegion& end_file_region) :
-  mStartFileInfo(start_file_region.mStartFileInfo),
-  mEndFileInfo(end_file_region.mEndFileInfo),
-  mStartLineColumn(start_file_region.mStartLineColumn),
-  mEndLineColumn(end_file_region.mEndLineColumn)
-{
-}
-
-// @brief デストラクタ
-inline
-FileRegion::~FileRegion()
-{
-}
-
-// @brief データの妥当性のチェック
-// @return 意味のある値を持っているとき true を返す．
-inline
-bool
-FileRegion::is_valid() const
-{
-  return mStartFileInfo.is_valid();
-}
-
-// @brief 先頭のファイル位置の取得
-// @return ファイル位置
-inline
-FileLoc
-FileRegion::start_loc() const
-{
-  return FileLoc(mStartFileInfo, start_line(), start_column());
-}
-
-// @brief 先頭のファイル情報の取得
-// @return ファイル情報を返す．
-inline
-FileInfo
-FileRegion::start_file_info() const
-{
-  return mStartFileInfo;
-}
-
-// @brief 先頭の行番号の取得
-// @return 行番号
-inline
-int
-FileRegion::start_line() const
-{
-  return mStartLineColumn.line();
-}
-
-// @brief 先頭のコラム位置の取得
-// @return コラム位置
-inline
-int
-FileRegion::start_column() const
-{
-  return mStartLineColumn.column();
-}
-
-// @brief 末尾のファイル位置の取得
-// @return ファイル位置
-inline
-FileLoc
-FileRegion::end_loc() const
-{
-  return FileLoc(mEndFileInfo, end_line(), end_column());
-}
-
-// @brief 末尾のファイル情報の取得
-inline
-FileInfo
-FileRegion::end_file_info() const
-{
-  return mEndFileInfo;
-}
-
-// @brief 末尾の行番号の取得
-// @return 行番号
-inline
-int
-FileRegion::end_line() const
-{
-  return mEndLineColumn.line();
-}
-
-// @brief 末尾のコラム位置の取得
-// @return コラム位置
-inline
-int
-FileRegion::end_column() const
-{
-  return mEndLineColumn.column();
-}
 
 END_NAMESPACE_YM
 

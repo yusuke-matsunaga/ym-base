@@ -24,16 +24,16 @@ public:
 
   /// @brief コンストラクタ
   MultiSetPermGen(
-    const vector<SizeType>& num_array, ///< [in] 各要素の重複度を納めた配列
-    SizeType k                         ///< [in] 選び出す要素数
+    const std::vector<SizeType>& num_array, ///< [in] 各要素の重複度を納めた配列
+    SizeType k                              ///< [in] 選び出す要素数
   ) : MultiSetGenBase(num_array, k)
   {
   }
 
   /// @brief コンストラクタ
   MultiSetPermGen(
-    initializer_list<SizeType>& num_array, ///< [in] 各要素の重複度を納めた初期化配列
-    SizeType k                             ///< [in] 選び出す要素数
+    std::initializer_list<SizeType>& num_array, ///< [in] 各要素の重複度を納めた初期化配列
+    SizeType k                                  ///< [in] 選び出す要素数
   ) : MultiSetGenBase(num_array, k)
   {
   }

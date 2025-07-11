@@ -24,7 +24,9 @@ END_NONAMESPACE
 
 // 共有文字列を作ってセットする．
 void
-ShString::set(const char* str)
+ShString::set(
+  const char* str
+)
 {
   mPtr = thePool.reg(str);
 }
@@ -44,12 +46,14 @@ ShString::free_all_memory()
 }
 
 // ShString 用ストリーム出力演算子
-ostream&
-operator<<(ostream& s,
-	   const ShString& str)
+std::ostream&
+operator<<(
+  std::ostream& s,
+  const ShString& str
+)
 {
   // ちょっと見にくいけど ShString から const char* への変換演算子
-  const char* p = str.operator const char*();
+  auto p = str.operator const char*();
   if ( p ) {
     return s << p;
   }

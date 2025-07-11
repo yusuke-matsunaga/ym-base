@@ -118,10 +118,10 @@ private:
 /// @relates Loc
 /// @brief Loc を表示するための関数
 /// @return s をそのまま返す
-ostream&
+std::ostream&
 operator<<(
-  ostream& s,    ///< [in] 出力ストリーム
-  const Loc& loc ///< [in] 位置の情報
+  std::ostream& s, ///< [in] 出力ストリーム
+  const Loc& loc   ///< [in] 位置の情報
 );
 
 /// @}

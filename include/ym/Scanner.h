@@ -39,7 +39,7 @@ public:
 
   /// @brief コンストラクタ
   Scanner(
-    istream& s,               ///< [in] 入力ストリーム
+    std::istream& s,          ///< [in] 入力ストリーム
     const FileInfo& file_info ///< [in] ファイル情報
   );
 
@@ -150,7 +150,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 入力ストリーム
-  istream& mS;
+  std::istream& mS;
 
   // ファイル情報
   FileInfo mFileInfo;

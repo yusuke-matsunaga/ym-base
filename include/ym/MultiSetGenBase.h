@@ -23,8 +23,8 @@ public:
 
   /// @brief コンストラクタ
   MultiSetGenBase(
-    const vector<SizeType>& num_array, ///< [in] 各要素の重複度を納めた配列
-    SizeType k                         ///< [in] 選び出す要素数
+    const std::vector<SizeType>& num_array, ///< [in] 各要素の重複度を納めた配列
+    SizeType k                              ///< [in] 選び出す要素数
   ) : mNumArray{num_array},
       mK{k},
       mElem(mK)
@@ -34,8 +34,8 @@ public:
 
   /// @brief コンストラクタ
   MultiSetGenBase(
-    initializer_list<SizeType>& num_array, ///< [in] 各要素の重複度を納めた初期化リスト
-    SizeType k                             ///< [in] 選び出す要素数
+    std::initializer_list<SizeType>& num_array, ///< [in] 各要素の重複度を納めた初期化リスト
+    SizeType k                                  ///< [in] 選び出す要素数
   ) : mNumArray{num_array},
       mK{k},
       mElem(mK)
@@ -62,7 +62,7 @@ public:
     SizeType grp ///< [in] グループ番号 ( 0 <= grp < group_num() )
   ) const
   {
-    ASSERT_COND( 0 <= grp && grp < group_num() );
+    _check_group_id(grp);
     return mNumArray[grp];
   }
 
@@ -110,6 +110,17 @@ protected:
     return mElem[pos];
   }
 
+  /// @brief グループ番号をチェックする
+  void
+  _check_group_id(
+    SizeType grp
+  ) const
+  {
+    if ( grp >= group_num() ) {
+      throw std::out_of_range{"grp is out of range"};
+    }
+  }
+
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -117,13 +128,13 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 要素の重複度
-  vector<SizeType> mNumArray;
+  std::vector<SizeType> mNumArray;
 
   // 選択する要素数
   SizeType mK;
 
   // 現在の要素
-  vector<int> mElem;
+  std::vector<int> mElem;
 
 };
 

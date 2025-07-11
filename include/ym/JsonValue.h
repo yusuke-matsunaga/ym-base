@@ -61,7 +61,7 @@ public:
   /// @brief 文字列型のコンストラクタ
   explicit
   JsonValue(
-    const string& value ///< [in] 値
+    const std::string& value ///< [in] 値
   );
 
   /// @brief 整数型のコンストラクタ
@@ -85,13 +85,13 @@ public:
   /// @brief 配列型のコンストラクタ
   explicit
   JsonValue(
-    const vector<JsonValue>& value ///< [in] 値
+    const std::vector<JsonValue>& value ///< [in] 値
   );
 
   /// @brief オブジェクト型のコンストラクタ
   explicit
   JsonValue(
-    const unordered_map<string, JsonValue>& value ///< [in] 値
+    const std::unordered_map<std::string, JsonValue>& value ///< [in] 値
   );
 
   /// @brief 値を指定したコンストラクタ
@@ -154,19 +154,19 @@ public:
   /// - is_object() == false の時は std::invalid_argument 例外を送出する．
   bool
   has_key(
-    const string& key ///< [in] キー
+    const std::string& key ///< [in] キー
   ) const;
 
   /// @brief キーのリストを返す．
   ///
   /// - is_object() == false の時は std::invalid_argument 例外を送出する．
-  vector<string>
+  std::vector<std::string>
   key_list() const;
 
   /// @brief キーと値のリストを返す．
   ///
   /// - is_object() == false の時は std::invalid_argument 例外を送出する．
-  vector<pair<string, JsonValue>>
+  std::vector<std::pair<std::string, JsonValue>>
   item_list() const;
 
   /// @brief オブジェクトの要素を得る．
@@ -175,7 +175,7 @@ public:
   /// - key に対応する値がない場合は std::invalid_argument 例外を送出する．
   JsonValue
   operator[](
-    const string& key ///< [in] キー
+    const std::string& key ///< [in] キー
   ) const
   {
     return at(key);
@@ -187,7 +187,7 @@ public:
   /// - key に対応する値がない場合は std::invalid_argument 例外を送出する．
   JsonValue
   at(
-    const string& key ///< [in] キー
+    const std::string& key ///< [in] キー
   ) const;
 
   /// @brief キーに対応する要素を取り出す．
@@ -196,7 +196,7 @@ public:
   /// - key に対応する値がない場合には null を返す．
   JsonValue
   get(
-    const string& key ///< [in] キー
+    const std::string& key ///< [in] キー
   ) const;
 
   /// @brief 配列の要素を得る．
@@ -223,7 +223,7 @@ public:
   /// @brief 文字列を得る．
   ///
   /// - is_string() == false の時は std::invalid_argument 例外を送出する．
-  string
+  std::string
   get_string() const;
 
   /// @brief 整数値を得る．
@@ -249,7 +249,7 @@ public:
   static
   JsonValue
   read(
-    const string& filename ///< [in] ファイル名
+    const std::string& filename ///< [in] ファイル名
   );
 
   /// @brief JSON文字列をパースする．
@@ -257,11 +257,11 @@ public:
   static
   JsonValue
   parse(
-    const string& json_str ///< [in] JSON文字列
+    const std::string& json_str ///< [in] JSON文字列
   );
 
   /// @brief 内容を JSON 文字列に変換する．
-  string
+  std::string
   to_json(
     bool indent = false ///< [in] インデントフラグ
   ) const;
@@ -269,7 +269,7 @@ public:
   /// @brief 内容を書き出す．
   void
   write(
-    ostream& s,         ///< [in] 出力ストリーム
+    std::ostream& s,    ///< [in] 出力ストリーム
     bool indent = false ///< [in] インデントフラグ
   ) const
   {
@@ -367,21 +367,21 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 値の実体
-  shared_ptr<JsonObj> mPtr;
+  std::shared_ptr<JsonObj> mPtr;
 
 };
 
 /// @brief ストリーム入力演算子
-istream&
+std::istream&
 operator>>(
-  istream& s,         ///< [in] 入力ストリーム
+  std::istream& s,    ///< [in] 入力ストリーム
   JsonValue& json_obj ///< [out] 結果を格納するオブジェクト
 );
 
 /// @brief ストリーム出力演算子
-ostream&
+std::ostream&
 operator<<(
-  ostream& s,               ///< [in] 出力ストリーム
+  std::ostream& s,          ///< [in] 出力ストリーム
   const JsonValue& json_obj ///< [in] 体操のオブジェクト
 );
 

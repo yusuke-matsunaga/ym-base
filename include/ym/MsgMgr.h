@@ -80,7 +80,7 @@ public:
     const FileRegion& file_loc, ///< [in] ファイル位置
     MsgType type,		///< [in] メッセージの種類
     const char* label,	        ///< [in] メッセージラベル
-    const string& msg 	        ///< [in] メッセージ本文
+    const std::string& msg      ///< [in] メッセージ本文
   )
   {
     put_msg(src_file, src_line, file_loc, type, label, msg.c_str());
@@ -101,11 +101,11 @@ public:
   static
   void
   put_msg(
-    const char* src_file, ///< [in] この関数を呼んでいるソースファイル名
-    int src_line,	  ///< [in] この関数を呼んでいるソースの行番号
-    MsgType type,	  ///< [in] メッセージの種類
-    const char* label,    ///< [in] メッセージラベル
-    const string& msg     ///< [in] メッセージ本文
+    const char* src_file,  ///< [in] この関数を呼んでいるソースファイル名
+    int src_line,	   ///< [in] この関数を呼んでいるソースの行番号
+    MsgType type,	   ///< [in] メッセージの種類
+    const char* label,     ///< [in] メッセージラベル
+    const std::string& msg ///< [in] メッセージ本文
   )
   {
     put_msg(src_file, src_line, type, label, msg.c_str());

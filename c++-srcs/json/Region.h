@@ -155,9 +155,9 @@ private:
 /// @brief Region を表示するための関数
 /// @return s をそのまま返す
 inline
-ostream&
+std::ostream&
 operator<<(
-  ostream& s,          ///< [in] 出力ストリーム
+  std::ostream& s,     ///< [in] 出力ストリーム
   const Region& region ///< [in] ファイル領域の情報
 )
 {

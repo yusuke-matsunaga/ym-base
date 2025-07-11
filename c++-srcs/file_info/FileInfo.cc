@@ -28,46 +28,47 @@ END_NONAMESPACE
 //////////////////////////////////////////////////////////////////////
 
 // @brief ファイル名を指定したコンストラクタ
-// @param[in] filename ファイル名
-FileInfo::FileInfo(const char* filename)
+FileInfo::FileInfo(
+  const char* filename
+)
 {
   mId = gTheMgr.new_file_info(filename);
 }
 
 // @brief ファイル名を指定したコンストラクタ
-// @param[in] filename ファイル名
-FileInfo::FileInfo(const string& filename)
+FileInfo::FileInfo(
+  const std::string& filename
+)
 {
   mId = gTheMgr.new_file_info(filename.c_str());
 }
 
 // @brief ファイル名とインクルード元の親ファイルの情報
-// @param[in] filename ファイル名
-// @param[in] parent_loc インクルード元の親ファイルの情報
-FileInfo::FileInfo(const char* filename,
-		   const FileLoc& parent_loc)
+FileInfo::FileInfo(
+  const char* filename,
+  const FileLoc& parent_loc
+)
 {
   mId = gTheMgr.new_file_info(filename, parent_loc);
 }
 
 // @brief ファイル名とインクルード元の親ファイルの情報
-// @param[in] filename ファイル名
-// @param[in] parent_loc インクルード元の親ファイルの情報
-FileInfo::FileInfo(const string& filename,
-		   const FileLoc& parent_loc)
+FileInfo::FileInfo(
+  const std::string& filename,
+  const FileLoc& parent_loc
+)
 {
   mId = gTheMgr.new_file_info(filename.c_str(), parent_loc);
 }
 
 // @brief ファイル名を返す．
-string
+std::string
 FileInfo::filename() const
 {
   return gTheMgr.filename(mId);
 }
 
 // @brief インクルード元のファイル位置を返す．
-// @note インクルードされていないファイルの場合には無効なデータが返される．
 FileLoc
 FileInfo::parent_loc() const
 {
@@ -75,12 +76,12 @@ FileInfo::parent_loc() const
 }
 
 // @brief インクルード元のファイル位置の情報をすべてリストに積む．
-vector<FileLoc>
+std::vector<FileLoc>
 FileInfo::parent_loc_list() const
 {
   // 逆順にするために一旦 tmp_list に入れる．
-  vector<FileLoc> tmp_list;
-  for ( FileLoc loc = parent_loc(); loc.is_valid(); loc = loc.parent_loc() ) {
+  std::vector<FileLoc> tmp_list;
+  for ( auto loc = parent_loc(); loc.is_valid(); loc = loc.parent_loc() ) {
     tmp_list.push_back(loc);
   }
 
@@ -95,19 +96,17 @@ FileInfo::clear()
   gTheMgr.clear();
 }
 
-// @relates FileInfo
 // @brief FileInfo 用のストリーム出力演算子
-// @param[in] s 出力ストリーム
-// @param[in] file_info ファイル情報
-// @return s をそのまま返す
-ostream&
-operator<<(ostream& s,
-	   const FileInfo& file_info)
+std::ostream&
+operator<<(
+  std::ostream& s,
+  const FileInfo& file_info
+)
 {
-  auto loc_list{file_info.parent_loc_list()};
+  auto loc_list = file_info.parent_loc_list();
   for ( auto loc: loc_list ) {
     s << "In file included from " << loc.filename()
-      << ": line " << loc.line() << ":" << endl;
+      << ": line " << loc.line() << ":" << std::endl;
   }
   s << file_info.filename();
 
@@ -120,12 +119,11 @@ operator<<(ostream& s,
 //////////////////////////////////////////////////////////////////////
 
 // @brief FileLoc を表示するための関数
-// @param[in] s 出力ストリーム
-// @param[in] file_loc ファイル位置の情報
-// @return s をそのまま返す
-ostream&
-operator<<(ostream& s,
-	   const FileLoc& file_loc)
+std::ostream&
+operator<<(
+  std::ostream& s,
+  const FileLoc& file_loc
+)
 {
   if ( file_loc.is_valid() ) {
     s << file_loc.file_info()
@@ -140,15 +138,14 @@ operator<<(ostream& s,
 }
 
 // @brief FileRegion を表示するための関数
-// @param[in] s 出力ストリーム
-// @param[in] file_region ファイル領域の情報
-// @return s をそのまま返す
-ostream&
-operator<<(ostream& s,
-	   const FileRegion& file_region)
+std::ostream&
+operator<<(
+  std::ostream& s,
+  const FileRegion& file_region
+)
 {
-  FileInfo first_fi = file_region.start_file_info();
-  FileInfo last_fi = file_region.end_file_info();
+  auto first_fi = file_region.start_file_info();
+  auto last_fi = file_region.end_file_info();
   int first_line = file_region.start_line();
   int first_column = file_region.start_column();
   int last_line = file_region.end_line();

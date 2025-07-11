@@ -8,6 +8,7 @@
 
 #include "ym/NameMgr.h"
 #include "ItvlTree.h"
+#include <sstream>
 
 
 BEGIN_NAMESPACE_YM
@@ -28,8 +29,8 @@ NameMgr::NameMgr(
 
 // コンストラクタ
 NameMgr::NameMgr(
-  const string& prefix,
-  const string& suffix
+  const std::string& prefix,
+  const std::string& suffix
 ) : mPrefix{prefix},
     mSuffix{suffix},
     mInterval{new ItvlTree}
@@ -58,8 +59,8 @@ NameMgr::change(
 // @note 既に登録されている名前はクリアされる．
 void
 NameMgr::change(
-  const string& prefix,
-  const string& suffix
+  const std::string& prefix,
+  const std::string& suffix
 )
 {
   clear();
@@ -76,7 +77,7 @@ NameMgr::clear()
 
 // 次に使用可能な名前を接頭語も含めて返す．
 // 使用可能な名前がない場合(!!!)，アボートする．
-string
+std::string
 NameMgr::new_name(
   bool add_name
 )
@@ -84,7 +85,7 @@ NameMgr::new_name(
   int d = mInterval->get_min();
   ASSERT_COND( d >= 0 );
 
-  ostringstream buf;
+  std::ostringstream buf;
   buf << mPrefix << d << mSuffix;
   mTmpString = buf.str();
   mLastNum = d;
@@ -173,12 +174,12 @@ NameMgr::str_to_num(
 // 内容を表示する．
 void
 NameMgr::print(
-  ostream& s
+  std::ostream& s
 ) const
 {
-  s << "<<<<NameMgr>>>>" << endl
-    << "Prefix: '" << mPrefix << "'" << endl
-    << "Suffix: '" << mSuffix << "'" << endl;
+  s << "<<<<NameMgr>>>>" << std::endl
+    << "Prefix: '" << mPrefix << "'" << std::endl
+    << "Suffix: '" << mSuffix << "'" << std::endl;
   mInterval->print(s);
 }
 

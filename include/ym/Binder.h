@@ -164,7 +164,7 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief バインドされた binder のリスト
-  vector<Binder*> mList;
+  std::vector<Binder*> mList;
 
 };
 

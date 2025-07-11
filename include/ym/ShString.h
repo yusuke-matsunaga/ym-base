@@ -45,7 +45,7 @@ public:
   /// @brief string を指定したコンストラクタ
   explicit
   ShString(
-    const string& str ///< [in] 文字列 (string)
+    const std::string& str ///< [in] 文字列 (string)
   )
   {
     set(str.c_str());
@@ -84,7 +84,7 @@ public:
   /// @return 自分自身を返す．
   const ShString&
   operator=(
-    const string& src ///< [in] コピー元の string
+    const std::string& src ///< [in] コピー元の string
   )
   {
     set(src.c_str());
@@ -104,14 +104,12 @@ public:
   operator const char*() const { return mPtr; }
 
   /// @brief string に変換する．
-  operator string() const
+  operator std::string() const
   {
     if ( mPtr ) {
-      return string(mPtr);
+      return std::string(mPtr);
     }
-    else {
-      return string{};
-    }
+    return std::string{};
   }
 
   /// @brief id を返す．
@@ -123,7 +121,7 @@ public:
   SizeType
   hash() const
   {
-    PtrIntType tmp = reinterpret_cast<PtrIntType>(mPtr)/sizeof(void*);
+    auto tmp = reinterpret_cast<PtrIntType>(mPtr)/sizeof(void*);
     return static_cast<SizeType>(tmp);
   }
 
@@ -264,9 +262,9 @@ operator!=(
 /// @ingroup ym
 /// @brief ShString 用のストリーム出力演算子
 /// @return s をそのまま返す．
-ostream&
+std::ostream&
 operator<<(
-  ostream& s,         ///< [in] 出力ストリーム
+  std::ostream& s,    ///< [in] 出力ストリーム
   const ShString& str ///< [in] 出力対象の文字列
 );
 
@@ -281,7 +279,7 @@ operator<<(
   const ShString& str ///< [in] 出力対象の文字列
 )
 {
-  s << static_cast<string>(str);
+  s << static_cast<std::string>(str);
   return s;
 }
 
@@ -296,7 +294,7 @@ operator>>(
   ShString& str ///< [out] 対象の文字列
 )
 {
-  string tmp;
+  std::string tmp;
   s >> tmp;
   str = ShString{tmp};
   return s;

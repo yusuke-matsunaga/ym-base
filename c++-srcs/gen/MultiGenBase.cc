@@ -18,9 +18,8 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// 全要素数 n と選択する要素数 k のベクタを指定する．
 MultiGenBase::MultiGenBase(
-  const vector<pair<int, int>>& nk_array
+  const std::vector<std::pair<int, int>>& nk_array
 ) : mGroupNum{nk_array.size()},
     mNArray(mGroupNum),
     mKArray(mGroupNum),
@@ -40,9 +39,8 @@ MultiGenBase::MultiGenBase(
 }
 
 // @brief コンストラクタ
-// @param[in] nk_array 全要素数 n と選択する要素数 k のベクタ
 MultiGenBase::MultiGenBase(
-  initializer_list<pair<int, int>>& nk_array
+  std::initializer_list<std::pair<int, int>>& nk_array
 ) : mGroupNum{nk_array.size()},
     mNArray(mGroupNum),
     mKArray(mGroupNum),
@@ -71,8 +69,6 @@ MultiGenBase::init()
 }
 
 // @brief 要素配列の初期化
-// @param[in] grp グループ番号
-// @note grp 番目のグループの要素配列を初期化する．
 void
 MultiGenBase::init_group(
   SizeType grp
@@ -93,7 +89,7 @@ void
 MultiPermGen::operator++()
 {
   for ( int g = group_num(); g -- > 0; ) {
-    vector<int> bitmap(n(g), 0);
+    std::vector<int> bitmap(n(g), 0);
     for ( int pos = 0; pos < k(g); ++ pos) {
       bitmap[elem(g, pos)] = 1;
     }

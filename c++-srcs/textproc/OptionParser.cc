@@ -16,11 +16,11 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 
 // @grief デリミタを設定する．
-// @param[in] delim 区切り文字
-// @param[in] opt_delim オプション用区切り文字
 void
-OptionParser::set_delim(char delim,
-			char opt_delim)
+OptionParser::set_delim(
+  char delim,
+  char opt_delim
+)
 {
   mDelim = delim;
   mOptDelim = opt_delim;
@@ -30,12 +30,14 @@ BEGIN_NONAMESPACE
 
 // string::find_first_of() のバリエーション
 // 直前の '\' をエスケープ文字とみなす．
-string::size_type
-find_first_of(const string& input,
-	      char c)
+std::string::size_type
+find_first_of(
+  const std::string& input,
+  char c
+)
 {
-  string::size_type p = 0;
-  string::size_type end = input.size();
+  std::string::size_type p = 0;
+  std::string::size_type end = input.size();
   for ( ; p < end; ++ p ) {
     char c1 = input[p];
     if ( c1 == c ) {
@@ -44,27 +46,29 @@ find_first_of(const string& input,
     if ( c1 == '\\' ) {
       if ( p + 1 == end ) {
 	// 末尾が \ だった．
-	return string::npos;
+	return std::string::npos;
       }
       // 次の文字を読み飛ばす．
       ++ p;
     }
   }
-  return string::npos;
+  return std::string::npos;
 }
 
 // 前後の空白を取り除く
-string
-strip_wspace(const string& input)
+std::string
+strip_wspace(
+  const std::string& input
+)
 {
-  string::size_type p1 = 0;
-  string::size_type end = input.size();
+  std::string::size_type p1 = 0;
+  std::string::size_type end = input.size();
   for ( ; p1 < end; ++ p1 ) {
     if ( !isspace(input[p1]) ) {
       break;
     }
   }
-  string::size_type p2 = end;
+  std::string::size_type p2 = end;
   for ( ; p2 > p1; -- p2 ) {
     if ( !isspace(input[p2 - 1]) ) {
       break;
@@ -76,32 +80,34 @@ strip_wspace(const string& input)
 END_NONAMESPACE
 
 // @brief パースする．
-vector<pair<string, string>>
-OptionParser::parse(const string& input)
+std::vector<std::pair<std::string, std::string>>
+OptionParser::parse(
+  const std::string& input
+)
 {
-  vector<pair<string, string>> ans_list;
+  std::vector<std::pair<std::string, std::string>> ans_list;
   // mDelim で区切る
-  string tmp_str(input);
+  std::string tmp_str(input);
   for ( ; ; ) {
-    string::size_type p = find_first_of(tmp_str, mDelim);
-    string tmp = strip_wspace(tmp_str.substr(0, p));
+    std::string::size_type p = find_first_of(tmp_str, mDelim);
+    std::string tmp = strip_wspace(tmp_str.substr(0, p));
     // tmp を mOptDelim で区切る．
-    string::size_type q = find_first_of(tmp, mOptDelim);
-    if ( q == string::npos ) {
+    std::string::size_type q = find_first_of(tmp, mOptDelim);
+    if ( q == std::string::npos ) {
       // mOptDelim がなかった
-      ans_list.push_back(make_pair(tmp, string()));
+      ans_list.push_back(make_pair(tmp, std::string()));
     }
     else {
-      string l_str = strip_wspace(tmp.substr(0, q));
-      string r_str = strip_wspace(tmp.substr(q + 1, string::npos));
+      std::string l_str = strip_wspace(tmp.substr(0, q));
+      std::string r_str = strip_wspace(tmp.substr(q + 1, std::string::npos));
       ans_list.push_back(make_pair(l_str, r_str));
     }
-    if ( p == string::npos ) {
+    if ( p == std::string::npos ) {
       // 末尾だったので終わる．
       break;
     }
     // tmp_str を切り詰める．
-    tmp_str = tmp_str.substr(p + 1, string::npos);
+    tmp_str = tmp_str.substr(p + 1, std::string::npos);
   }
 
   return ans_list;

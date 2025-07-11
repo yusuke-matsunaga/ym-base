@@ -39,10 +39,11 @@ public:
   FileLoc() = default;
 
   /// @brief 内容を指定するコンストラクタ
-  FileLoc(FileInfo file_info, ///< [in] ファイル情報
-	  int line,           ///< [in] 行番号
-	  int column)         ///< [in] コラム番号
-    : mFileInfo{file_info},
+  FileLoc(
+    FileInfo file_info, ///< [in] ファイル情報
+    int line,           ///< [in] 行番号
+    int column          ///< [in] コラム番号
+  ) : mFileInfo{file_info},
       mLineColumn{line, column}
   {
   }
@@ -68,7 +69,7 @@ public:
   file_info() const { return mFileInfo; }
 
   /// @brief ファイル名を返す．
-  string
+  std::string
   filename() const { return file_info().filename(); }
 
   /// @brief インクルード元のファイル位置を返す．
@@ -78,7 +79,7 @@ public:
 
   /// @brief インクルード元のファイル位置の情報のリスト(vector)を返す．
   /// @note トップレベルのファイルが先頭になる．
-  vector<FileLoc>
+  std::vector<FileLoc>
   parent_loc_list() const { return file_info().parent_loc_list(); }
 
   /// @brief 行番号の取得
@@ -90,6 +91,36 @@ public:
   /// @return コラム位置
   int
   column() const { return mLineColumn.column(); }
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 演算子
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 等価比較演算子
+  /// @retval true 等しい
+  /// @retval false 等しくない
+  bool
+  operator==(
+    const FileLoc& right ///< [in] 右のオペランド
+  ) const
+  {
+    return file_info() == right.file_info() &&
+    line() == right.line() &&
+    column() == right.column();
+  }
+
+  /// @brief 非等価比較演算子
+  /// @retval true 等しくない．
+  /// @retval false 等しい．
+  bool
+  operator!=(
+    const FileLoc& right ///< [in] 右のオペランド
+  ) const
+  {
+    return !operator==(right);
+  }
 
 
 private:
@@ -111,38 +142,13 @@ private:
 /// @{
 
 /// @relates FileLoc
-/// @brief 等価比較演算子
-/// @retval true 等しい
-/// @retval false 等しくない
-inline
-bool
-operator==(const FileLoc& left,  ///< [in] 左のオペランド
-	   const FileLoc& right) ///< [in] 右のオペランド
-{
-  return left.file_info() == right.file_info() &&
-    left.line() == right.line() && left.column() == right.column();
-}
-
-/// @relates FileLoc
-/// @brief 非等価比較演算子
-/// @retval true 等しくない．
-/// @retval false 等しい．
-inline
-bool
-operator!=(const FileLoc& left,  ///< [in] 左のオペランド
-	   const FileLoc& right) ///< [in] 右のオペランド
-{
-  return !operator==(left, right);
-}
-
-/// @relates FileLoc
 /// @brief FileLoc を表示するための関数
-/// @param[in] s 出力ストリーム
-/// @param[in] file_loc ファイル位置の情報
 /// @return s をそのまま返す
-ostream&
-operator<<(ostream& s,
-	   const FileLoc& file_loc);
+std::ostream&
+operator<<(
+  std::ostream& s,        ///< [in] 出力ストリーム
+  const FileLoc& file_loc ///< [in] ファイル位置の情報
+);
 
 /// @}
 //////////////////////////////////////////////////////////////////////

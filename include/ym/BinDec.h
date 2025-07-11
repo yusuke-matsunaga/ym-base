@@ -26,7 +26,7 @@ public:
 
   /// @brief コンストラクタ
   BinDec(
-    istream& s ///< [in] 入力元のストリーム
+    std::istream& s ///< [in] 入力元のストリーム
   ) : mS{s}
   {
     // fail|bad の時に例外を送出するようにする．
@@ -128,7 +128,7 @@ public:
 
   /// @brief 文字列の読み出し
   /// @return 読み込んだ値を返す．
-  string
+  std::string
   read_string()
   {
     auto l = read_64();
@@ -136,13 +136,11 @@ public:
       std::uint8_t* buff = new std::uint8_t[l + 1];
       raw_read(buff, l);
       buff[l] = '\0';
-      string ans(reinterpret_cast<char*>(buff));
+      std::string ans(reinterpret_cast<char*>(buff));
       delete [] buff;
       return ans;
     }
-    else {
-      return string{};
-    }
+    return std::string{};
   }
 
   /// @brief ブロックの読み出し
@@ -159,14 +157,14 @@ public:
   /// @return 与えられたシグネチャと一致したら true を返す．
   bool
   read_signature(
-    const string& signature ///< [in] シグネチャ文字列
+    const std::string& signature ///< [in] シグネチャ文字列
   )
   {
     auto l = signature.size();
     std::uint8_t* buff = new std::uint8_t[l + 1];
     raw_read(buff, l);
     buff[l] = '\0';
-    string tmp{reinterpret_cast<char*>(buff)};
+    std::string tmp{reinterpret_cast<char*>(buff)};
     delete [] buff;
     return tmp == signature;
   }
@@ -194,7 +192,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 入力ストリーム
-  istream& mS;
+  std::istream& mS;
 
 };
 
@@ -352,7 +350,7 @@ inline
 BinDec&
 operator>>(
   BinDec& s,  ///< [in] 入力元のストリーム
-  string& val ///< [out] 値を格納する変数
+  std::string& val ///< [out] 値を格納する変数
 )
 {
   val = s.read_string();

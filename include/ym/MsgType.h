@@ -31,7 +31,7 @@ enum class MsgType {
 };
 
 /// @brief MsgType に対応するビットマスクの型
-using MsgBitMask = bitset<static_cast<size_t>(MsgType::End)>;
+using MsgBitMask = std::bitset<static_cast<size_t>(MsgType::End)>;
 
 /// @brief メッセージタイプからビットマスクを得る．
 constexpr
@@ -46,10 +46,10 @@ conv2bitmask(
 /// @brief MsgType のストリーム出力演算子
 /// @return s を返す．
 inline
-ostream&
+std::ostream&
 operator<<(
-  ostream& s,  ///< [in] 出力先のストリーム
-  MsgType type ///< [in] メッセージの種類
+  std::ostream& s, ///< [in] 出力先のストリーム
+  MsgType type     ///< [in] メッセージの種類
 )
 {
   switch ( type ) {

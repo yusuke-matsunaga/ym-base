@@ -25,7 +25,7 @@ public:
 
   /// @brief コンストラクタ
   StreamMsgHandler(
-    ostream& stream ///< [in] 出力先ストリーム
+    std::ostream& stream ///< [in] 出力先ストリーム
   ) : mStream{stream}
   {
   }
@@ -67,7 +67,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 出力先のストリーム
-  ostream& mStream;
+  std::ostream& mStream;
 
 };
 

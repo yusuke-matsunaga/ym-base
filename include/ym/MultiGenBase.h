@@ -24,12 +24,12 @@ public:
 
   /// @brief コンストラクタ
   MultiGenBase(
-    const vector<pair<int, int>>& nk_array ///< [in] 要素数 n と選択する要素数 k のベクタ
+    const std::vector<std::pair<int, int>>& nk_array ///< [in] 要素数 n と選択する要素数 k のベクタ
   );
 
   /// @brief コンストラクタ
   MultiGenBase(
-    initializer_list<pair<int, int>>& nk_array ///< [in] 要素数 n と選択する要素数 k の初期化リスト
+    std::initializer_list<std::pair<int, int>>& nk_array ///< [in] 要素数 n と選択する要素数 k の初期化リスト
   );
 
   /// @brief コピーコンストラクタ
@@ -49,7 +49,10 @@ public:
   /// @brief グループ数の取得
   /// @return グループ数
   SizeType
-  group_num() const { return mGroupNum; }
+  group_num() const
+  {
+    return mGroupNum;
+  }
 
   /// @brief 全要素数の取得
   /// @return grp 番目のグループの全要素数
@@ -58,7 +61,7 @@ public:
     SizeType grp ///< [in] グループ番号 ( 0 <= grp < group_num() )
   ) const
   {
-    ASSERT_COND( grp >= 0 && grp < mGroupNum );
+    _check_group_id(grp);
     return mNArray[grp];
   }
 
@@ -69,7 +72,7 @@ public:
     SizeType grp ///< [in] グループ番号 ( 0 <= grp < group_num() )
   ) const
   {
-    ASSERT_COND( grp >= 0 && grp < mGroupNum );
+    _check_group_id(grp);
     return mKArray[grp];
   }
 
@@ -85,7 +88,7 @@ public:
     SizeType pos        ///< [in] 要素の位置 ( 0 <= pos < k(grp) )
   ) const
   {
-    ASSERT_COND( grp >= 0 && grp < mGroupNum );
+    _check_group_id(grp);
     ASSERT_COND( pos >= 0 && pos < k(grp) );
     return mElemArray[mOffsetArray[grp] + pos];
   }
@@ -125,7 +128,7 @@ protected:
     SizeType pos  ///< [in] 要素の位置 ( 0 <= pos < k(grp) )
   )
   {
-    ASSERT_COND( 0 <= grp && grp < group_num() );
+    _check_group_id(grp);
     ASSERT_COND( 0 <= pos && pos < k(grp) );
     SizeType offset = mOffsetArray[grp];
     return mElemArray[offset + pos];
@@ -140,6 +143,17 @@ protected:
     return operator()(grp, 0) == n(grp);
   }
 
+  /// @brief グループ番号をチェックする
+  void
+  _check_group_id(
+    SizeType grp
+  ) const
+  {
+    if ( grp >= group_num() ) {
+      throw std::out_of_range{"grp is out of range"};
+    }
+  }
+
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -151,20 +165,20 @@ private:
 
   // 各グループごとの要素数の配列
   // サイズは mGroupNum
-  vector<SizeType> mNArray;
+  std::vector<SizeType> mNArray;
 
   // 各グループごとの選択数の配列
   // サイズは mGroupNum
-  vector<SizeType> mKArray;
+  std::vector<SizeType> mKArray;
 
   // 各グループごとのmElemArray上のオフセットの配列
   // = mOffsetArray[i] = sum_j^{i - 1} mKArray[j]
   // サイズは mGroupNum
-  vector<SizeType> mOffsetArray;
+  std::vector<SizeType> mOffsetArray;
 
   // 現在の要素(二重の配列を一次元の配列で表すので少しめんどくさい)
   // サイズは sum_i mKArray[i]
-  vector<int> mElemArray;
+  std::vector<int> mElemArray;
 
   // 末尾に到達したことを示すフラグ
   bool mDone{false};

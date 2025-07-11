@@ -48,13 +48,17 @@ public:
   /// @brief 新しい _FileInfo を生成する．
   /// @return 生成された _FileInfo の ID 番号
   int
-  new_file_info(const char* filename); ///< [in] ファイル名
+  new_file_info(
+    const char* filename ///< [in] ファイル名
+  );
 
   /// @brief 新しい _FileInfo を生成する．
   /// @return 生成された _FileInfo の ID 番号
   int
-  new_file_info(const char* filename,       ///< [in] ファイル名
-		const FileLoc& parent_loc); ///< [in] インクルード元の親ファイルの情報
+  new_file_info(
+    const char* filename,     ///< [in] ファイル名
+    const FileLoc& parent_loc ///< [in] インクルード元の親ファイルの情報
+  );
 
 
 public:
@@ -63,13 +67,18 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル名を返す．
-  string
-  filename(int id); ///< [in] _FileInfo の ID 番号
+  std::string
+  filename(
+    int id ///< [in] _FileInfo の ID 番号
+  );
 
   /// @brief インクルード元のファイル位置を返す．
-  /// @note インクルードされていないファイルの場合には無効なデータが返される．
+  ///
+  /// インクルードされていないファイルの場合には無効なデータが返される．
   FileLoc
-  parent_loc(int id); ///< [in] _FileInfo の ID 番号
+  parent_loc(
+    int id ///< [in] _FileInfo の ID 番号
+  );
 
 
 private:
@@ -84,15 +93,17 @@ private:
     _FileInfo() = default;
 
     /// @brief 親のない場合のコンストラクタ
-    _FileInfo(const char* filename) ///< [in] ファイル名
-      : mFileName{filename}
+    _FileInfo(
+      const char* filename ///< [in] ファイル名
+    ) : mFileName{filename}
     {
     }
 
     /// @brief 親のある場合(インクルードされている場合)のコンストラクタ
-    _FileInfo(const char* filename,    ///< [in] ファイル名
-	      const FileLoc& file_loc) ///< [in] インクルード元のファイル位置
-      : mFileName{filename},
+    _FileInfo(
+      const char* filename,   ///< [in] ファイル名
+      const FileLoc& file_loc ///< [in] インクルード元のファイル位置
+    ) : mFileName{filename},
 	mParentLoc{file_loc}
     {
     }
@@ -113,7 +124,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // FileInfo の配列
-  vector<_FileInfo> mFiArray;
+  std::vector<_FileInfo> mFiArray;
 
 };
 

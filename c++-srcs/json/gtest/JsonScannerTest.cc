@@ -8,15 +8,14 @@
 
 #include "gtest/gtest.h"
 #include "JsonScanner.h"
-//#include "ym/MsgMgr.h"
-//#include "ym/StreamMsgHandler.h"
+#include <sstream>
 
 
 BEGIN_NAMESPACE_YM_JSON
 
 TEST(JsonScannerTest, empty)
 {
-  istringstream s{""};
+  std::istringstream s{""};
 
   JsonScanner scanner{s};
 
@@ -27,7 +26,7 @@ TEST(JsonScannerTest, empty)
 
 TEST(JsonScannerTest, LCB)
 {
-  istringstream s{"{"};
+  std::istringstream s{"{"};
 
   JsonScanner scanner{s};
 
@@ -38,7 +37,7 @@ TEST(JsonScannerTest, LCB)
 
 TEST(JsonScannerTest, RCB)
 {
-  istringstream s{"}"};
+  std::istringstream s{"}"};
 
   JsonScanner scanner{s};
 
@@ -49,7 +48,7 @@ TEST(JsonScannerTest, RCB)
 
 TEST(JsonScannerTest, LBK)
 {
-  istringstream s{"["};
+  std::istringstream s{"["};
 
   JsonScanner scanner{s};
 
@@ -60,7 +59,7 @@ TEST(JsonScannerTest, LBK)
 
 TEST(JsonScannerTest, RBK)
 {
-  istringstream s{"]"};
+  std::istringstream s{"]"};
 
   JsonScanner scanner{s};
 
@@ -71,7 +70,7 @@ TEST(JsonScannerTest, RBK)
 
 TEST(JsonScannerTest, Comma)
 {
-  istringstream s{","};
+  std::istringstream s{","};
 
   JsonScanner scanner{s};
 
@@ -82,7 +81,7 @@ TEST(JsonScannerTest, Comma)
 
 TEST(JsonScannerTest, Colon)
 {
-  istringstream s{":"};
+  std::istringstream s{":"};
 
   JsonScanner scanner{s};
 
@@ -93,7 +92,7 @@ TEST(JsonScannerTest, Colon)
 
 TEST(JsonScannerTest, True)
 {
-  istringstream s{"true"};
+  std::istringstream s{"true"};
 
   JsonScanner scanner{s};
 
@@ -104,7 +103,7 @@ TEST(JsonScannerTest, True)
 
 TEST(JsonScannerTest, False)
 {
-  istringstream s{"false"};
+  std::istringstream s{"false"};
 
   JsonScanner scanner{s};
 
@@ -115,7 +114,7 @@ TEST(JsonScannerTest, False)
 
 TEST(JsonScannerTest, Null)
 {
-  istringstream s{"null"};
+  std::istringstream s{"null"};
 
   JsonScanner scanner{s};
 
@@ -126,7 +125,7 @@ TEST(JsonScannerTest, Null)
 
 TEST(JsonScannerTest, String)
 {
-  istringstream s{"\"abc\""};
+  std::istringstream s{"\"abc\""};
 
   JsonScanner scanner{s};
 
@@ -138,7 +137,7 @@ TEST(JsonScannerTest, String)
 
 TEST(JsonScannerTest, Int1)
 {
-  istringstream s{"0"};
+  std::istringstream s{"0"};
 
   JsonScanner scanner{s};
 
@@ -150,7 +149,7 @@ TEST(JsonScannerTest, Int1)
 
 TEST(JsonScannerTest, Int2)
 {
-  istringstream s{"-0"};
+  std::istringstream s{"-0"};
 
   JsonScanner scanner{s};
 
@@ -162,7 +161,7 @@ TEST(JsonScannerTest, Int2)
 
 TEST(JsonScannerTest, Int3)
 {
-  istringstream s{"123"};
+  std::istringstream s{"123"};
 
   JsonScanner scanner{s};
 
@@ -174,7 +173,7 @@ TEST(JsonScannerTest, Int3)
 
 TEST(JsonScannerTest, Int4)
 {
-  istringstream s{"-123"};
+  std::istringstream s{"-123"};
 
   JsonScanner scanner{s};
 
@@ -186,7 +185,7 @@ TEST(JsonScannerTest, Int4)
 
 TEST(JsonScannerTest, Float1)
 {
-  istringstream s{"0."};
+  std::istringstream s{"0."};
 
   JsonScanner scanner{s};
 
@@ -198,7 +197,7 @@ TEST(JsonScannerTest, Float1)
 
 TEST(JsonScannerTest, Float2)
 {
-  istringstream s{"0.1"};
+  std::istringstream s{"0.1"};
 
   JsonScanner scanner{s};
 
@@ -210,7 +209,7 @@ TEST(JsonScannerTest, Float2)
 
 TEST(JsonScannerTest, Float3)
 {
-  istringstream s{"0.1e10"};
+  std::istringstream s{"0.1e10"};
 
   JsonScanner scanner{s};
 
@@ -222,7 +221,7 @@ TEST(JsonScannerTest, Float3)
 
 TEST(JsonScannerTest, Float4)
 {
-  istringstream s{"-0.1E10"};
+  std::istringstream s{"-0.1E10"};
 
   JsonScanner scanner{s};
 
@@ -234,7 +233,7 @@ TEST(JsonScannerTest, Float4)
 
 TEST(JsonScannerTest, Float5)
 {
-  istringstream s{".1e10"};
+  std::istringstream s{".1e10"};
 
   JsonScanner scanner{s};
 
@@ -246,7 +245,7 @@ TEST(JsonScannerTest, Float5)
 
 TEST(JsonScannerTest, True_bad1)
 {
-  istringstream s{"tue"};
+  std::istringstream s{"tue"};
 
   JsonScanner scanner{s};
 
@@ -258,7 +257,7 @@ TEST(JsonScannerTest, True_bad1)
 
 TEST(JsonScannerTest, True_bad2)
 {
-  istringstream s{"trrue"};
+  std::istringstream s{"trrue"};
 
   JsonScanner scanner{s};
 
@@ -270,7 +269,7 @@ TEST(JsonScannerTest, True_bad2)
 
 TEST(JsonScannerTest, True_bad3)
 {
-  istringstream s{"tru"};
+  std::istringstream s{"tru"};
 
   JsonScanner scanner{s};
 
@@ -282,7 +281,7 @@ TEST(JsonScannerTest, True_bad3)
 
 TEST(JsonScannerTest, False_bad1)
 {
-  istringstream s{"ffalse"};
+  std::istringstream s{"ffalse"};
 
   JsonScanner scanner{s};
 
@@ -294,7 +293,7 @@ TEST(JsonScannerTest, False_bad1)
 
 TEST(JsonScannerTest, False_bad2)
 {
-  istringstream s{"fase"};
+  std::istringstream s{"fase"};
 
   JsonScanner scanner{s};
 
@@ -306,7 +305,7 @@ TEST(JsonScannerTest, False_bad2)
 
 TEST(JsonScannerTest, False_bad3)
 {
-  istringstream s{"fale"};
+  std::istringstream s{"fale"};
 
   JsonScanner scanner{s};
 
@@ -318,7 +317,7 @@ TEST(JsonScannerTest, False_bad3)
 
 TEST(JsonScannerTest, False_bad4)
 {
-  istringstream s{"fals"};
+  std::istringstream s{"fals"};
 
   JsonScanner scanner{s};
 
@@ -330,7 +329,7 @@ TEST(JsonScannerTest, False_bad4)
 
 TEST(JsonScannerTest, Null_bad1)
 {
-  istringstream s{"nl"};
+  std::istringstream s{"nl"};
 
   JsonScanner scanner{s};
 
@@ -342,7 +341,7 @@ TEST(JsonScannerTest, Null_bad1)
 
 TEST(JsonScannerTest, Null_bad2)
 {
-  istringstream s{"nual"};
+  std::istringstream s{"nual"};
 
   JsonScanner scanner{s};
 
@@ -354,7 +353,7 @@ TEST(JsonScannerTest, Null_bad2)
 
 TEST(JsonScannerTest, Null_bad3)
 {
-  istringstream s{"nul"};
+  std::istringstream s{"nul"};
 
   JsonScanner scanner{s};
 
@@ -366,7 +365,7 @@ TEST(JsonScannerTest, Null_bad3)
 
 TEST(JsonScannerTest, comment1)
 {
-  istringstream s{"/* comment */:"};
+  std::istringstream s{"/* comment */:"};
 
   JsonScanner scanner{s};
 
@@ -377,7 +376,7 @@ TEST(JsonScannerTest, comment1)
 
 TEST(JsonScannerTest, comment1_2)
 {
-  istringstream s{"/* **** comment */:"};
+  std::istringstream s{"/* **** comment */:"};
 
   JsonScanner scanner{s};
 
@@ -388,7 +387,7 @@ TEST(JsonScannerTest, comment1_2)
 
 TEST(JsonScannerTest, comment2)
 {
-  istringstream s{"//\n:"};
+  std::istringstream s{"//\n:"};
 
   JsonScanner scanner{s};
 
@@ -399,7 +398,7 @@ TEST(JsonScannerTest, comment2)
 
 TEST(JsonScannerTest, comment2_2)
 {
-  istringstream s{"//"};
+  std::istringstream s{"//"};
 
   JsonScanner scanner{s};
 
@@ -410,7 +409,7 @@ TEST(JsonScannerTest, comment2_2)
 
 TEST(JsonScannerTest, comment3)
 {
-  istringstream s{"#\n:"};
+  std::istringstream s{"#\n:"};
 
   JsonScanner scanner{s};
 
@@ -421,7 +420,7 @@ TEST(JsonScannerTest, comment3)
 
 TEST(JsonScannerTest, comment_bad1)
 {
-  istringstream s{"/ * comment */:"};
+  std::istringstream s{"/ * comment */:"};
 
   JsonScanner scanner{s};
 
@@ -433,7 +432,7 @@ TEST(JsonScannerTest, comment_bad1)
 
 TEST(JsonScannerTest, comment_bad2)
 {
-  istringstream s{"/ * comment "};
+  std::istringstream s{"/ * comment "};
 
   JsonScanner scanner{s};
 
@@ -445,7 +444,7 @@ TEST(JsonScannerTest, comment_bad2)
 
 TEST(JsonScannerTest, comment_bad3)
 {
-  istringstream s{"/ * comment *"};
+  std::istringstream s{"/ * comment *"};
 
   JsonScanner scanner{s};
 
@@ -457,7 +456,7 @@ TEST(JsonScannerTest, comment_bad3)
 
 TEST(JsonScannerTest, bad1)
 {
-  istringstream s{"abccomment "};
+  std::istringstream s{"abccomment "};
 
   JsonScanner scanner{s};
 
@@ -469,7 +468,7 @@ TEST(JsonScannerTest, bad1)
 
 TEST(JsonScannerTest, num_bad1)
 {
-  istringstream s{"-abccomment "};
+  std::istringstream s{"-abccomment "};
 
   JsonScanner scanner{s};
 
@@ -481,7 +480,7 @@ TEST(JsonScannerTest, num_bad1)
 
 TEST(JsonScannerTest, string_bad1)
 {
-  istringstream s{"\"abccomment "};
+  std::istringstream s{"\"abccomment "};
 
   JsonScanner scanner{s};
 
@@ -493,7 +492,7 @@ TEST(JsonScannerTest, string_bad1)
 
 TEST(JsonScannerTest, ustring)
 {
-  istringstream s{"\"\\u3042\""};
+  std::istringstream s{"\"\\u3042\""};
 
   JsonScanner scanner{s};
 
