@@ -8,7 +8,6 @@
 
 #include "gtest/gtest.h"
 #include "JsonScanner.h"
-#include <sstream>
 
 
 BEGIN_NAMESPACE_YM_JSON

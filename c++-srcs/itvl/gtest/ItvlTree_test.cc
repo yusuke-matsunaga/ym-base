@@ -18,7 +18,7 @@ TEST(ItvlTree, simple_1)
   ItvlTree it;
 
   int N = 10;
-  vector<int> id_list(N);
+  std::vector<int> id_list(N);
   for ( int i = 0; i < N; ++ i ) {
     auto id = id_list[i] = it.get_min();
     EXPECT_EQ( i, id );
@@ -36,7 +36,7 @@ TEST(ItvlTree, simple_2)
   ItvlTree it;
 
   int N = 10;
-  vector<int> id_list(N);
+  std::vector<int> id_list(N);
   for ( int i = 0; i < N; ++ i ) {
     auto id = id_list[i] = it.get_min();
     EXPECT_EQ( i, id );
@@ -59,7 +59,7 @@ TEST(ItvlTree, random_1)
   ItvlTree it;
 
   const int N = 10000;
-  vector<int> id_list;
+  std::vector<int> id_list;
   id_list.reserve(N);
 
   std::mt19937_64 randgen;

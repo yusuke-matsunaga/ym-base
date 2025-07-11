@@ -15,7 +15,7 @@ BEGIN_NAMESPACE_YM
 
 TEST(RangeTest, simple_1)
 {
-  vector<int> val_list;
+  std::vector<int> val_list;
 
   const int n = 10;
   for ( auto i: Range_<int, 1>(0, n) ) {
@@ -30,7 +30,7 @@ TEST(RangeTest, simple_1)
 
 TEST(RangeTest, simple_2)
 {
-  vector<int> val_list;
+  std::vector<int> val_list;
 
   const int n = 10;
   for ( auto i: Range(n) ) {
@@ -45,7 +45,7 @@ TEST(RangeTest, simple_2)
 
 TEST(RangeTest, step3_1)
 {
-  vector<int> val_list;
+  std::vector<int> val_list;
   for ( auto i: Range_<unsigned int, 3>(0, 10) ) {
     val_list.push_back(i);
   }
@@ -60,7 +60,7 @@ TEST(RangeTest, step3_1)
 
 TEST(RangeTest, step3_2)
 {
-  vector<int> val_list;
+  std::vector<int> val_list;
   for ( auto i: Range_<long, 3>(1, 11) ) {
     val_list.push_back(i);
   }
@@ -75,7 +75,7 @@ TEST(RangeTest, step3_2)
 
 TEST(RangeTest, negative_1)
 {
-  vector<int> val_list;
+  std::vector<int> val_list;
   for ( auto i: Range_<short, -1>(5, 0) ) {
     val_list.push_back(i);
   }
@@ -91,7 +91,7 @@ TEST(RangeTest, negative_1)
 
 TEST(RangeTest, negative_2)
 {
-  vector<int> val_list;
+  std::vector<int> val_list;
   for ( auto i: Range_<int, -2>(5, 0) ) {
     val_list.push_back(i);
   }
@@ -105,7 +105,7 @@ TEST(RangeTest, negative_2)
 
 TEST(RangeTest, negative_3)
 {
-  vector<int> val_list;
+  std::vector<int> val_list;
   for ( auto i: Range_<int, -2>(5, -1) ) {
     val_list.push_back(i);
   }
@@ -119,7 +119,7 @@ TEST(RangeTest, negative_3)
 
 TEST(RangeTest, negative_4)
 {
-  vector<int> val_list;
+  std::vector<int> val_list;
   for ( auto i: Range_<int, -2>(5, -2) ) {
     val_list.push_back(i);
   }

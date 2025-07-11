@@ -7,6 +7,7 @@
 /// All rights reserved.
 
 #include "pym/PyMt19937.h"
+#include <sstream>
 #include "pym/PyModule.h"
 
 

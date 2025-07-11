@@ -18,7 +18,7 @@ template<class RandSampler>
 void
 RandSamplerTest(
   RandSampler& rs,
-  const vector<int>& w_array
+  const std::vector<int>& w_array
 )
 {
   Timer timer;
@@ -34,7 +34,7 @@ RandSamplerTest(
 
   int sample_num = accum * 100000;
 
-  vector<int> count(num_data, 0);
+  std::vector<int> count(num_data, 0);
   for ( int i: Range(sample_num) ) {
     int pos = rs(rg);
     ASSERT_COND( pos >= 0 && pos < num_data );
@@ -43,15 +43,15 @@ RandSamplerTest(
 
   double err_accum = 0.0;
   for ( int i: Range(num_data) ) {
-    cout << "Data#" << i << ": " << count[i] << endl;
+    std::cout << "Data#" << i << ": " << count[i] << std::endl;
     double diff = count[i] - w_array[i] * 100000;
     err_accum += diff * diff;
   }
   double sqerr = sqrt(err_accum / (num_data * 100000));
-  cout << "Error: " << sqerr << endl;
+  std::cout << "Error: " << sqerr << std::endl;
   timer.stop();
-  cout << "CPU time: " << timer.get_time() << endl
-       << endl;
+  std::cout << "CPU time: " << timer.get_time() << std::endl
+	    << std::endl;
 }
 
 END_NAMESPACE_YM
@@ -64,17 +64,17 @@ main(
 {
   using namespace YM_NAMESPACE;
 
-  vector<int> w_array{2, 4, 10, 1};
-  cout << "discrete_distribution(small)" << endl;
+  std::vector<int> w_array{2, 4, 10, 1};
+  std::cout << "discrete_distribution(small)" << std::endl;
   std::discrete_distribution<int> dd1(w_array.begin(), w_array.end());
   RandSamplerTest(dd1, w_array);
 
-  vector<int> w_array2(100);
+  std::vector<int> w_array2(100);
   for ( int i: Range(100) ) {
     w_array2[i] = i + 1;
   }
 
-  cout << "discrete_distribution(large)" << endl;
+  std::cout << "discrete_distribution(large)" << std::endl;
   std::discrete_distribution<int> dd2(w_array2.begin(), w_array2.end());
   RandSamplerTest(dd2, w_array2);
 

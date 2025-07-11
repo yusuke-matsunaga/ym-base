@@ -49,7 +49,7 @@ public:
     URNG& randgen ///< [in] 乱数発生器
   )
   {
-    vector<int> src_array(num());
+    std::vector<int> src_array(num());
     for ( int i = 0; i < num(); ++ i ) {
       src_array[i] = i;
     }
@@ -81,7 +81,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 現在の順列
-  vector<int> mArray;
+  std::vector<int> mArray;
 
 };
 

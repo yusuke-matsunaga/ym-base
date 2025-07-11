@@ -29,7 +29,7 @@ TEST(JsonObjTest, string1)
 
 TEST(JsonObjTest, string2)
 {
-  string value = "abcde";
+  std::string value = "abcde";
   auto json_obj = new JsonString{value};
 
   EXPECT_TRUE( json_obj->is_string() );
@@ -102,7 +102,7 @@ TEST(JsonObjTest, bool_false)
 
 TEST(JsonObjTest, array1)
 {
-  string value1 = "xyz";
+  std::string value1 = "xyz";
   JsonValue json1{value1};
 
   int value2 = 2;
@@ -111,7 +111,7 @@ TEST(JsonObjTest, array1)
   float value3 = 0.99;
   JsonValue json3{value3};
 
-  vector<JsonValue> value{json1, json2, json3};
+  std::vector<JsonValue> value{json1, json2, json3};
   auto json_obj = new JsonArray{value};
 
   EXPECT_FALSE( json_obj->is_string() );
@@ -129,7 +129,7 @@ TEST(JsonObjTest, array1)
 
 TEST(JsonObjTest, object1)
 {
-  string value1 = "xyz";
+  std::string value1 = "xyz";
   JsonValue json1{value1};
 
   int value2 = 2;
@@ -138,7 +138,7 @@ TEST(JsonObjTest, object1)
   float value3 = 0.99;
   JsonValue json3{value3};
 
-  unordered_map<string, JsonValue> value{
+  std::unordered_map<std::string, JsonValue> value{
     {"key1", json1},
     {"key2", json2},
     {"key3", json3}

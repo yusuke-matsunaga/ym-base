@@ -33,7 +33,7 @@ itimer_test(
 )
 {
   if ( argc != 2 ) {
-    cerr << "USAGE: " << basename(argv[0]) << " <n>" << endl;
+    std::cerr << "USAGE: " << basename(argv[0]) << " <n>" << std::endl;
     return 1;
   }
 

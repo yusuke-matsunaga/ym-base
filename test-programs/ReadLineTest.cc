@@ -16,11 +16,11 @@ loop()
 {
   const char* prompt{"% "};
   for ( ; ; ) {
-    string linebuf;
+    std::string linebuf;
     if ( !ReadLine::get_line(prompt, linebuf) ) {
       break;
     }
-    cout << " " << linebuf << endl;
+    std::cout << " " << linebuf << std::endl;
   }
 }
 

@@ -8,7 +8,6 @@
 
 #include "ym/NameMgr.h"
 #include "ItvlTree.h"
-#include <sstream>
 
 
 BEGIN_NAMESPACE_YM

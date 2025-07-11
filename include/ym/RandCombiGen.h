@@ -94,7 +94,7 @@ private:
   SizeType mCombiNum;
 
   // 結果を収める配列
-  vector<int> mArray;
+  std::vector<int> mArray;
 
 };
 

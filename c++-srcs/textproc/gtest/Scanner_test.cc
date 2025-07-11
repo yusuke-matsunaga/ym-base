@@ -7,14 +7,13 @@
 /// All rights reserved.
 
 #include <gtest/gtest.h>
-#include <sstream>
 #include "ym/Scanner.h"
 
 
 BEGIN_NAMESPACE_YM
 
 class ScannerTest :
-public ::testing::TestWithParam<string>
+public ::testing::TestWithParam<std::string>
 {
 public:
 
@@ -27,7 +26,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // ファイル名
-  string mFileName;
+  std::string mFileName;
 
 };
 
@@ -38,8 +37,8 @@ ScannerTest::ScannerTest() :
 
 TEST_P(ScannerTest, get_test1)
 {
-  string path{DATAPATH + mFileName};
-  ifstream is{path};
+  auto path = std::string{DATAPATH} + mFileName;
+  std::ifstream is{path};
   ASSERT_TRUE( is.operator bool() );
 
   Scanner scan{is, FileInfo{path}};
@@ -88,8 +87,8 @@ TEST_P(ScannerTest, get_test1)
 
 TEST_P(ScannerTest, peek_test1)
 {
-  string path{DATAPATH + mFileName};
-  ifstream is{path};
+  auto path = std::string{DATAPATH} + mFileName;
+  std::ifstream is{path};
   ASSERT_TRUE( is.operator bool() );
 
   Scanner scan{is, FileInfo{path}};
@@ -141,8 +140,8 @@ TEST_P(ScannerTest, peek_test1)
 
 TEST_P(ScannerTest, cur_loc_test1)
 {
-  string path{DATAPATH + mFileName};
-  ifstream is{path};
+  auto path = std::string{DATAPATH} + mFileName;
+  std::ifstream is{path};
   ASSERT_TRUE( is.operator bool() );
 
   FileInfo file_info{path};

@@ -10,7 +10,6 @@
 #include "JsonScanner.h"
 #include "JsonObj.h"
 #include "ym/JsonValue.h"
-#include <sstream>
 
 
 BEGIN_NAMESPACE_YM_JSON

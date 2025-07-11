@@ -56,7 +56,7 @@ TEST(MultiSetCombiGenTest, basic_test1)
   const SizeType n2 = 20;
   const SizeType n3 = 25;
   const SizeType k = 40;
-  vector<SizeType> num_array{n1, n2, n3};
+  std::vector<SizeType> num_array{n1, n2, n3};
   MultiSetCombiGen gen(num_array, k);
 
   EXPECT_EQ( num_array.size(), gen.group_num() );

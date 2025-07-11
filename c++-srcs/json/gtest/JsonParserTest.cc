@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_YM_JSON
 
 TEST(JsonParserTest, int)
 {
-  istringstream s{"{ \"key\" : 123 }"};
+  std::istringstream s{"{ \"key\" : 123 }"};
 
   JsonParser parser{s};
 
@@ -29,7 +29,7 @@ TEST(JsonParserTest, int)
 
 TEST(JsonParserTest, float)
 {
-  istringstream s{"{ \"key\" : 123.456 }"};
+  std::istringstream s{"{ \"key\" : 123.456 }"};
 
   JsonParser parser{s};
 
@@ -42,7 +42,7 @@ TEST(JsonParserTest, float)
 
 TEST(JsonParserTest, string)
 {
-  istringstream s{"{ \"key\" : \"123\" }"};
+  std::istringstream s{"{ \"key\" : \"123\" }"};
 
   JsonParser parser{s};
 
@@ -55,7 +55,7 @@ TEST(JsonParserTest, string)
 
 TEST(JsonParserTest, true)
 {
-  istringstream s{"{ \"key\" : true }"};
+  std::istringstream s{"{ \"key\" : true }"};
 
   JsonParser parser{s};
 
@@ -68,7 +68,7 @@ TEST(JsonParserTest, true)
 
 TEST(JsonParserTest, false)
 {
-  istringstream s{"{ \"key\" : false }"};
+  std::istringstream s{"{ \"key\" : false }"};
 
   JsonParser parser{s};
 
@@ -81,7 +81,7 @@ TEST(JsonParserTest, false)
 
 TEST(JsonParserTest, null)
 {
-  istringstream s{"{ \"key\" : null }"};
+  std::istringstream s{"{ \"key\" : null }"};
 
   JsonParser parser{s};
 
@@ -93,7 +93,7 @@ TEST(JsonParserTest, null)
 
 TEST(JsonParserTest, object2)
 {
-  istringstream s{"{ \"key1\" : 1, \"key2\" : 2 }"};
+  std::istringstream s{"{ \"key1\" : 1, \"key2\" : 2 }"};
 
   JsonParser parser{s};
 
@@ -108,7 +108,7 @@ TEST(JsonParserTest, object2)
 
 TEST(JsonParserTest, array)
 {
-  istringstream s{"{ \"key\" : [ 1, 2, 3] }"};
+  std::istringstream s{"{ \"key\" : [ 1, 2, 3] }"};
 
   JsonParser parser{s};
 
@@ -127,7 +127,7 @@ TEST(JsonParserTest, array)
 
 TEST(JsonParserTest, null_array)
 {
-  istringstream s{"{ \"key\" : [ ] }"};
+  std::istringstream s{"{ \"key\" : [ ] }"};
 
   JsonParser parser{s};
 
@@ -141,7 +141,7 @@ TEST(JsonParserTest, null_array)
 TEST(JsonParserTest, null_object)
 {
   // 先頭の '{' が欠けている．
-  istringstream s{"\"key\" : null }"};
+  std::istringstream s{"\"key\" : null }"};
 
   JsonParser parser{s};
 
@@ -153,7 +153,7 @@ TEST(JsonParserTest, null_object)
 
 TEST(JsonParserTest, read_value_bad1)
 {
-  istringstream s{"{ \"key\" : , }"};
+  std::istringstream s{"{ \"key\" : , }"};
 
   JsonParser parser{s};
 
@@ -165,7 +165,7 @@ TEST(JsonParserTest, read_value_bad1)
 
 TEST(JsonParserTest, object_bad1)
 {
-  istringstream s{"{ \"key\" : null "};
+  std::istringstream s{"{ \"key\" : null "};
 
   JsonParser parser{s};
 
@@ -177,7 +177,7 @@ TEST(JsonParserTest, object_bad1)
 
 TEST(JsonParserTest, object_bad2)
 {
-  istringstream s{"{ \"key\"  null "};
+  std::istringstream s{"{ \"key\"  null "};
 
   JsonParser parser{s};
 
@@ -189,7 +189,7 @@ TEST(JsonParserTest, object_bad2)
 
 TEST(JsonParserTest, object_bad3)
 {
-  istringstream s{"{ \"key1\" : 1 :]"};
+  std::istringstream s{"{ \"key1\" : 1 :]"};
 
   JsonParser parser{s};
 
@@ -201,7 +201,7 @@ TEST(JsonParserTest, object_bad3)
 
 TEST(JsonParserTest, object_bad4)
 {
-  istringstream s{"{ \"key1\" : 1, 2 ]"};
+  std::istringstream s{"{ \"key1\" : 1, 2 ]"};
 
   JsonParser parser{s};
 
@@ -213,7 +213,7 @@ TEST(JsonParserTest, object_bad4)
 
 TEST(JsonParserTest, array_bad1)
 {
-  istringstream s{"{ \"key\" : [ "};
+  std::istringstream s{"{ \"key\" : [ "};
 
   JsonParser parser{s};
 
@@ -225,7 +225,7 @@ TEST(JsonParserTest, array_bad1)
 
 TEST(JsonParserTest, array_bad2)
 {
-  istringstream s{"{ \"key\" : [ 1 : ]"};
+  std::istringstream s{"{ \"key\" : [ 1 : ]"};
 
   JsonParser parser{s};
 

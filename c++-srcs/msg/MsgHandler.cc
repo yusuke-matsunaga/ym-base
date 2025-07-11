@@ -10,7 +10,6 @@
 #include "ym/StreamMsgHandler.h"
 #include "ym/StrListMsgHandler.h"
 #include "ym/FileRegion.h"
-#include <sstream>
 
 
 BEGIN_NAMESPACE_YM

@@ -455,7 +455,7 @@ write(
   auto& val = PyJsonValue::_get_ref(self);
   std::ofstream s;
   if ( !s ) {
-    std:ostringstream buff;
+    std::ostringstream buff;
     buff << filename << ": Could not open.";
     PyErr_SetString(PyExc_ValueError, buff.str().c_str());
     return nullptr;

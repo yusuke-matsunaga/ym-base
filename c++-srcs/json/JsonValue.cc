@@ -9,8 +9,6 @@
 #include "ym/JsonValue.h"
 #include "JsonObj.h"
 #include "JsonParser.h"
-#include <fstream>
-#include <sstream>
 
 
 BEGIN_NAMESPACE_YM_JSON

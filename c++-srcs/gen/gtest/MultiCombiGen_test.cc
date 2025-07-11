@@ -54,7 +54,7 @@ check_gen(
 // 空の組み合わせのテスト
 TEST(MultiCombiGenTest, empty_test)
 {
-  vector<pair<int, int>> nk_array{};
+  std::vector<std::pair<int, int>> nk_array{};
   MultiCombiGen gen{nk_array};
 
   EXPECT_EQ( nk_array.size(), gen.group_num() );
@@ -71,7 +71,7 @@ TEST(MultiCombiGenTest, basic_test1)
   const int k1 = 5;
   const int n2 = 20;
   const int k2 = 3;
-  vector<pair<int, int>> nk_array{ {n1, k1}, {n2, k2} };
+  std::vector<std::pair<int, int>> nk_array{ {n1, k1}, {n2, k2} };
   MultiCombiGen gen(nk_array);
 
   EXPECT_EQ( nk_array.size(), gen.group_num() );

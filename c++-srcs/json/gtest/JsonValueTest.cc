@@ -128,7 +128,7 @@ TEST(JsonValueTest, string1)
   // for Boolean-type
   EXPECT_THROW( {json_obj.get_bool();}, std::invalid_argument );
   // to_json()
-  ostringstream buf;
+  std::ostringstream buf;
   buf << '"' << value << '"';
   EXPECT_EQ( buf.str(), json_obj.to_json() );
   // parse()
@@ -143,7 +143,7 @@ TEST(JsonValueTest, string1)
 
 TEST(JsonValueTest, string2)
 {
-  string value = "abcde";
+  std::string value = "abcde";
   JsonValue json_obj{value};
 
   EXPECT_FALSE( json_obj.is_null() );
@@ -173,7 +173,7 @@ TEST(JsonValueTest, string2)
   // for Boolean-type
   EXPECT_THROW( {json_obj.get_bool();}, std::invalid_argument );
   // to_json()
-  ostringstream buf;
+  std::ostringstream buf;
   buf << '"' << value << '"';
   EXPECT_EQ( buf.str(), json_obj.to_json() );
   // parse()
@@ -188,7 +188,7 @@ TEST(JsonValueTest, string2)
 
 TEST(JsonValueTest, string_dq)
 {
-  string value = "\"abcde\"";
+  std::string value = "\"abcde\"";
   JsonValue json_obj{value};
 
   EXPECT_FALSE( json_obj.is_null() );
@@ -208,7 +208,7 @@ TEST(JsonValueTest, string_dq)
 
 TEST(JsonValueTest, string_sq)
 {
-  string value = "'abcde'";
+  std::string value = "'abcde'";
   JsonValue json_obj{value};
 
   EXPECT_FALSE( json_obj.is_null() );
@@ -228,7 +228,7 @@ TEST(JsonValueTest, string_sq)
 
 TEST(JsonValueTest, string_dqsq)
 {
-  string value = "\"'abcde'\"";
+  std::string value = "\"'abcde'\"";
   JsonValue json_obj{value};
 
   EXPECT_FALSE( json_obj.is_null() );
@@ -278,7 +278,7 @@ TEST(JsonValueTest, int)
   // for Boolean-type
   EXPECT_THROW( {json_obj.get_bool();}, std::invalid_argument );
   // to_json()
-  ostringstream buf;
+  std::ostringstream buf;
   buf << value;
   EXPECT_EQ( buf.str(), json_obj.to_json() );
   // parse()
@@ -323,7 +323,7 @@ TEST(JsonValueTest, float)
   // for Boolean-type
   EXPECT_THROW( {json_obj.get_bool();}, std::invalid_argument );
   // to_json()
-  ostringstream buf;
+  std::ostringstream buf;
   buf << value;
   EXPECT_EQ( buf.str(), json_obj.to_json() );
   // parse()
@@ -424,7 +424,7 @@ TEST(JsonValueTest, bool_false)
 
 TEST(JsonValueTest, array1)
 {
-  string value1 = "xyz";
+  std::string value1 = "xyz";
   JsonValue json1{value1};
 
   int value2 = 2;
@@ -433,7 +433,7 @@ TEST(JsonValueTest, array1)
   float value3 = 0.99;
   JsonValue json3{value3};
 
-  vector<JsonValue> value{json1, json2, json3};
+  std::vector<JsonValue> value{json1, json2, json3};
   JsonValue json_obj{value};
 
   EXPECT_FALSE( json_obj.is_null() );
@@ -483,7 +483,7 @@ TEST(JsonValueTest, array1)
 
 TEST(JsonValueTest, object1)
 {
-  string value1 = "xyz";
+  std::string value1 = "xyz";
   JsonValue json1{value1};
 
   int value2 = 2;
@@ -492,7 +492,7 @@ TEST(JsonValueTest, object1)
   float value3 = 0.99;
   JsonValue json3{value3};
 
-  unordered_map<string, JsonValue> value{
+  std::unordered_map<std::string, JsonValue> value{
     {"key1", json1},
     {"key2", json2},
     {"key3", json3}
@@ -520,9 +520,9 @@ TEST(JsonValueTest, object1)
   EXPECT_FALSE( json_obj.has_key("abc") );
   EXPECT_THROW( {json_obj["abc"];}, std::invalid_argument );
   EXPECT_THROW( {json_obj.at("abc");}, std::invalid_argument );
-  vector<string> exp_key_list{"key1", "key2", "key3"};
+  std::vector<std::string> exp_key_list{"key1", "key2", "key3"};
   EXPECT_EQ( exp_key_list, json_obj.key_list() );
-  vector<pair<string, JsonValue>> exp_item_list{
+  std::vector<std::pair<std::string, JsonValue>> exp_item_list{
     {"key1", json1},
     {"key2", json2},
     {"key3", json3}

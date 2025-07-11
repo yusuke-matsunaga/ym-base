@@ -102,7 +102,7 @@ def gen_write(writer):
     writer.gen_vardecl(typename='std::ofstream',
                        varname='s')
     with writer.gen_if_block('!s'):
-        writer.gen_vardecl(typename='std:ostringstream',
+        writer.gen_vardecl(typename='std::ostringstream',
                            varname='buff')
         writer.write_line('buff << filename << ": Could not open.";')
         writer.gen_value_error('buff.str().c_str()')

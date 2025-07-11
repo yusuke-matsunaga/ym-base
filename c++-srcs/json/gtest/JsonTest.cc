@@ -14,7 +14,7 @@ BEGIN_NAMESPACE_YM
 
 TEST(JsonTest, int)
 {
-  string json_str{"{ \"key\" : 123 }"};
+  std::string json_str{"{ \"key\" : 123 }"};
 
   auto value = JsonValue::parse(json_str);
   EXPECT_TRUE( value.is_object() );
@@ -25,7 +25,7 @@ TEST(JsonTest, int)
 
 TEST(JsonTest, float)
 {
-  string json_str{"{ \"key\" : 123.456 }"};
+  std::string json_str{"{ \"key\" : 123.456 }"};
 
   auto value = JsonValue::parse(json_str);
   EXPECT_TRUE( value.is_object() );
@@ -36,7 +36,7 @@ TEST(JsonTest, float)
 
 TEST(JsonTest, string)
 {
-  string json_str{"{ \"key\" : \"123\" }"};
+  std::string json_str{"{ \"key\" : \"123\" }"};
 
   auto value = JsonValue::parse(json_str);
   EXPECT_TRUE( value.is_object() );
@@ -47,7 +47,7 @@ TEST(JsonTest, string)
 
 TEST(JsonTest, true)
 {
-  string json_str{"{ \"key\" : true }"};
+  std::string json_str{"{ \"key\" : true }"};
 
   auto value = JsonValue::parse(json_str);
   EXPECT_TRUE( value.is_object() );
@@ -58,7 +58,7 @@ TEST(JsonTest, true)
 
 TEST(JsonTest, false)
 {
-  string json_str{"{ \"key\" : false }"};
+  std::string json_str{"{ \"key\" : false }"};
 
   auto value = JsonValue::parse(json_str);
   EXPECT_TRUE( value.is_object() );
@@ -69,7 +69,7 @@ TEST(JsonTest, false)
 
 TEST(JsonTest, null)
 {
-  string json_str{"{ \"key\" : null }"};
+  std::string json_str{"{ \"key\" : null }"};
 
   auto value = JsonValue::parse(json_str);
   EXPECT_TRUE( value.is_object() );
@@ -79,8 +79,8 @@ TEST(JsonTest, null)
 
 TEST(JsonTest, read)
 {
-  string filename{"test.json"};
-  auto path = string{TESTDATA_DIR} + "/" + filename;
+  std::string filename{"test.json"};
+  auto path = std::string{TESTDATA_DIR} + "/" + filename;
 
   auto value = JsonValue::read(path);
 
@@ -115,7 +115,7 @@ TEST(JsonTest, read)
 
 TEST(JsonTest, parse)
 {
-  string source_str;
+  std::string source_str;
   source_str += "{";
   source_str += "\"str_key\": \"abcd\",";
   source_str += "\"int_key\": 4,";
@@ -158,7 +158,7 @@ TEST(JsonTest, parse)
   auto value6 = value["array_key"];
   EXPECT_TRUE( value6.is_array() );
 
-  string exp_str;
+  std::string exp_str;
   exp_str += "{\n";
   exp_str += "    \"array_key\":[\n";
   exp_str += "        0,\n";
@@ -176,7 +176,7 @@ TEST(JsonTest, parse)
   exp_str += "    \"str_key\":\"abcd\"\n";
   exp_str += "}\n";
 
-  ostringstream os;
+  std::ostringstream os;
   value.write(os, true);
 
   EXPECT_EQ( exp_str, os.str() );

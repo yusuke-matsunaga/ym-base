@@ -19,7 +19,8 @@ class Mt19937Gen(PyObjGen):
                          pyname='Mt19937',
                          header_include_files=['ym_config.h',
                                                '<random>'],
-                         source_include_files=['pym/PyMt19937.h'])
+                         source_include_files=['pym/PyMt19937.h',
+                                               '<sstream>'])
 
         def dealloc_func(writer):
             writer.gen_comment('実は mt19937 はクラス名ではない．')
